@@ -1,0 +1,28 @@
+{
+  "name": "colyseus-examples",
+  "version": "1.0.0",
+  "description": "Usage Examples of Colyseus Game Server",
+  "main": "index.js",
+  "scripts": {
+    "start": "ts-node index.ts",
+    "heroku-postbuild": "npm run build"
+  },
+  "engines": {
+    "node": "8.9.1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@colyseus/monitor": "^0.10.0",
+    "colyseus": "^0.10.7",
+    "express": "^4.14.0",
+    "nodemon": "^1.11.0",
+    "serve-index": "^1.8.0",
+    "superagent": "^3.8.1"
+  },
+  "devDependencies": {
+    "browserify": "^14.4.0",
+    "ts-node": "^5.0.1",
+    "typescript": "^2.7.2"
+  }
+}
