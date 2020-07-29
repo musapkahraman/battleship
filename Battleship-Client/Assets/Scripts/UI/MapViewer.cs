@@ -121,9 +121,7 @@ namespace BattleshipGame.UI
 
         public void SetMarker(int index, Marker marker, bool radar)
         {
-            var f = index / (size - 1);
-            var coordinate = new Vector3Int(index % (size - 1) + 1, f, 0);
-            // Debug.Log("Coordinate: " + coordinate + ":" + index + ":" + size + ": ");
+            var coordinate = new Vector3Int(index % size, index / size, 0);
             if (radar) coordinate += new Vector3Int(size, 0, 0);
             markerLayer.SetTile(coordinate, cursorTiles[(int) marker]);
         }
