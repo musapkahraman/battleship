@@ -519,7 +519,7 @@ GameObject:
   - component: {fileID: 1560539549}
   - component: {fileID: 1560539548}
   m_Layer: 0
-  m_Name: ConnectingSceneController
+  m_Name: ConnectionManager
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

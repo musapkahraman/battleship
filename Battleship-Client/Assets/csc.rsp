@@ -1,0 +1,9 @@
+#_This_file_contains_command_line_options_for_C#_compiler
+ 
+#_Suppress_warning_CS0649:_Field_'xxx'_is_never_assigned_to,_and_will_always_have_its_default_value
+#_Roslyn_compiler_team_have_implemented_DiagnosticSuppressor_API. 
+#_Wait_until_Unity_team_utilizes_it,_then_remove_this_compiler_option.
+#_https://forum.unity.com/threads/feature-request-use-new-diagnosticsuppressor-api-to-suppress-cs0649-on-serializefield.697514
+#_https://issuetracker.unity3d.com/issues/serializedfield-fields-produce-field-is-never-assigned-to-dot-dot-dot-warning
+
+/nowarn:0649
