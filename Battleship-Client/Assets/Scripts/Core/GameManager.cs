@@ -26,7 +26,7 @@ namespace BattleshipGame.Core
         private int _shipsPlaced;
         private int[] _shots;
         private State _state;
-        [SerializeField] private int mapSize = 10;
+        [SerializeField] private int mapSize = 9;
         [SerializeField] private MapViewer mapViewer;
         [SerializeField] private TMP_Text messageField;
 
@@ -36,7 +36,7 @@ namespace BattleshipGame.Core
 
             if (!_client.Connected) SceneManager.LoadScene("ConnectingScene");
 
-            _cellCount = (mapSize - 1) * (mapSize - 1);
+            _cellCount = mapSize * mapSize;
             _placement = new int[_cellCount];
             _shots = new int[3];
 
@@ -94,6 +94,7 @@ namespace BattleshipGame.Core
 
         public void PlaceShip(Vector3Int coordinate)
         {
+            Debug.Log($"cell coordinate {coordinate}");
             if (_mode != GameMode.Placement) return;
 
             var shipWidth = 1;
@@ -120,21 +121,24 @@ namespace BattleshipGame.Core
                     break;
             }
 
-            if (coordinate.x < 1 || coordinate.x + (shipWidth - 1) >= mapSize ||
-                coordinate.y - (shipHeight - 1) < 0) return;
+            if (coordinate.x < 0 || coordinate.x + shipWidth > mapSize || coordinate.y - (shipHeight - 1) < 0) return;
 
-            // x - 1, y - height > x + width, y + 1;
             var xMin = coordinate.x - 1;
+            Debug.Log($"xMin {xMin}"); // -1
             var xMax = coordinate.x + shipWidth;
+            Debug.Log($"xMax {xMax}"); // 1
             var yMin = coordinate.y - shipHeight;
+            Debug.Log($"yMin {yMin}"); // -1
             var yMax = coordinate.y + 1;
+            Debug.Log($"yMax {yMax}"); // 2
 
             for (var y = yMin; y <= yMax; y++)
             {
-                if (y < 0 || y > mapSize - 2) continue;
+                if (y < 0 || y > mapSize - 1) continue;
                 for (var x = xMin; x <= xMax; x++)
                 {
-                    if (x < 1 || x > mapSize - 1) continue;
+                    if (x < 0 || x > mapSize - 1) continue;
+                    Debug.Log($"x {x}");
                     if (!SetPlacementCell(new Vector3Int(x, y, 0), shipType, true)) return;
                 }
             }
@@ -181,7 +185,7 @@ namespace BattleshipGame.Core
 
         public void TakeTurn(Vector3Int coordinate)
         {
-            var targetIndex = coordinate.y * (mapSize - 1) + (coordinate.x - 1);
+            var targetIndex = ConvertToCellIndex(coordinate);
             _shots[_currentShot] = targetIndex;
             if (_currentShot == 2) _client.SendTurn(_shots);
 
@@ -195,7 +199,8 @@ namespace BattleshipGame.Core
 
         private bool SetPlacementCell(Vector3Int coordinate, ShipType shipType, bool testOnly = false)
         {
-            var cellIndex = coordinate.y * (mapSize - 1) + (coordinate.x - 1);
+            var cellIndex = ConvertToCellIndex(coordinate);
+            Debug.Log($"cellIndex {cellIndex}");
 
             if (cellIndex < 0 || cellIndex >= _cellCount) return false;
             if (_placement[cellIndex] >= 0) return false;
@@ -203,6 +208,12 @@ namespace BattleshipGame.Core
 
             _placement[cellIndex] = _shipsPlaced;
             return true;
+        }
+
+        private int ConvertToCellIndex(Vector3Int coordinate)
+        {
+            var cellIndex = coordinate.y * mapSize + coordinate.x;
+            return cellIndex;
         }
 
         private void OnInitialStateReceived(object sender, State initialState)

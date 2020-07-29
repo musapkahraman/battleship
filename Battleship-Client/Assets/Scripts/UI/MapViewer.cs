@@ -45,7 +45,7 @@ namespace BattleshipGame.UI
         [SerializeField] private Tilemap fleetLayer;
         [SerializeField] private GameManager manager;
         [SerializeField] private Tilemap markerLayer;
-        [SerializeField] private int size = 10;
+        [SerializeField] private int size = 9;
 
         private void Start()
         {
@@ -55,9 +55,7 @@ namespace BattleshipGame.UI
 
         private void OnMouseDown()
         {
-            var worldPosition = cam.ScreenToWorldPoint(Input.mousePosition);
-            var cellPosition = _grid.WorldToCell(worldPosition);
-            cellPosition.Clamp(_minCellCoordinate, _maxCellCoordinate);
+            var cellPosition = ConvertToCellPosition();
             switch (_mode)
             {
                 case MapMode.Place:
@@ -77,12 +75,16 @@ namespace BattleshipGame.UI
         {
             cursorLayer.ClearAllTiles();
             if (_mode == MapMode.Disabled) return;
+            var cellPosition = ConvertToCellPosition();
+            cursorLayer.SetTile(cellPosition, _cursorTile);
+        }
 
+        private Vector3Int ConvertToCellPosition()
+        {
             var worldPosition = cam.ScreenToWorldPoint(Input.mousePosition);
             var cellPosition = _grid.WorldToCell(worldPosition);
             cellPosition.Clamp(_minCellCoordinate, _maxCellCoordinate);
-
-            cursorLayer.SetTile(cellPosition, _cursorTile);
+            return cellPosition;
         }
 
         public void SetDisabled()
@@ -93,16 +95,16 @@ namespace BattleshipGame.UI
         public void SetPlacementMode()
         {
             _mode = MapMode.Place;
-            _minCellCoordinate = new Vector3Int(1, 0, 0);
-            _maxCellCoordinate = new Vector3Int(size - 1, size - 2, 0);
+            _minCellCoordinate = new Vector3Int(0, 0, 0);
+            _maxCellCoordinate = new Vector3Int(size - 1, size - 1, 0);
         }
 
         public void SetAttackMode()
         {
             _mode = MapMode.Attack;
             _cursorTile = cursorTiles[(int) Marker.Target];
-            _minCellCoordinate = new Vector3Int(size + 1, 0, 0);
-            _maxCellCoordinate = new Vector3Int(size + size - 1, size - 2, 0);
+            _minCellCoordinate = new Vector3Int(size, 0, 0);
+            _maxCellCoordinate = new Vector3Int(size + size - 1, size - 1, 0);
         }
 
         public void SetShipCursor(ShipType shipType)
@@ -120,7 +122,7 @@ namespace BattleshipGame.UI
         public void SetMarker(int index, Marker marker, bool radar)
         {
             var f = index / (size - 1);
-            var coordinate = new Vector3Int(index % (size - 1) + 1, Mathf.FloorToInt(f), 0);
+            var coordinate = new Vector3Int(index % (size - 1) + 1, f, 0);
             // Debug.Log("Coordinate: " + coordinate + ":" + index + ":" + size + ": ");
             if (radar) coordinate += new Vector3Int(size, 0, 0);
             markerLayer.SetTile(coordinate, cursorTiles[(int) marker]);
