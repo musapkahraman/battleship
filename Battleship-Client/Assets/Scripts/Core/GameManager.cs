@@ -8,7 +8,7 @@ using UnityEngine.SceneManagement;
 
 namespace BattleshipGame.Core
 {
-    public class GameManager : Singleton<GameManager>
+    public class GameManager : MonoBehaviour
     {
         private static int _cellCount;
         private static GameClient _client;

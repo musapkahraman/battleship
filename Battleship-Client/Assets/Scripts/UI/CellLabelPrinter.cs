@@ -23,6 +23,7 @@ namespace BattleshipGame.UI
         [SerializeField] private Direction direction;
         [SerializeField] private Place place;
         [SerializeField] private Type type;
+        [SerializeField] private GameManager manager;
 
         private enum Axis
         {
@@ -51,7 +52,7 @@ namespace BattleshipGame.UI
 #if UNITY_EDITOR
         public void Print()
         {
-            _mapSize = GameManager.Instance.MapSize;
+            _mapSize = manager.MapSize;
             
             if (cellLabelPrefab.GetComponent<TMP_Text>() == null)
             {
