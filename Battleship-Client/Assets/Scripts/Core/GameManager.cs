@@ -8,7 +8,7 @@ using UnityEngine.SceneManagement;
 
 namespace BattleshipGame.Core
 {
-    public class GameManager : MonoBehaviour
+    public class GameManager : Singleton<GameManager>
     {
         private static int _cellCount;
         private static GameClient _client;
@@ -19,17 +19,19 @@ namespace BattleshipGame.Core
         private static int _shipsPlaced;
         private static int[] _shots;
         private static State _state;
-        [SerializeField] private UserMap userMap;
-        [SerializeField] private OpponentMap opponentMap;
+        [SerializeField] private MapViewer opponentMap;
+        [SerializeField] private MapViewer userMap;
         [SerializeField] private TMP_Text messageField;
+        [SerializeField] private int size = 9;
+        public int MapSize => size;
 
         private void Start()
         {
             _client = GameClient.Instance;
         
             if (!_client.Connected) SceneManager.LoadScene("ConnectingScene");
-        
-            _cellCount = userMap.MapSize * userMap.MapSize;
+            Debug.Log("Client is connected.");
+            _cellCount = size * size;
             _placement = new int[_cellCount];
             _shots = new int[3];
         
@@ -118,7 +120,7 @@ namespace BattleshipGame.Core
                     break;
             }
         
-            if (coordinate.x < 0 || coordinate.x + shipWidth > userMap.MapSize ||
+            if (coordinate.x < 0 || coordinate.x + shipWidth > size ||
                 coordinate.y - (shipHeight - 1) < 0) return;
         
             var xMin = coordinate.x - 1;
@@ -128,10 +130,10 @@ namespace BattleshipGame.Core
         
             for (var y = yMin; y <= yMax; y++)
             {
-                if (y < 0 || y > userMap.MapSize - 1) continue;
+                if (y < 0 || y > size - 1) continue;
                 for (var x = xMin; x <= xMax; x++)
                 {
-                    if (x < 0 || x > userMap.MapSize - 1) continue;
+                    if (x < 0 || x > size - 1) continue;
                     if (!SetPlacementCell(new Vector3Int(x, y, 0), shipType, true)) return;
                 }
             }
@@ -203,7 +205,7 @@ namespace BattleshipGame.Core
         
         private int ConvertToCellIndex(Vector3Int coordinate)
         {
-            var cellIndex = coordinate.y * userMap.MapSize + coordinate.x;
+            var cellIndex = coordinate.y * size + coordinate.x;
             return cellIndex;
         }
         
@@ -261,9 +263,10 @@ namespace BattleshipGame.Core
                 WaitForOpponentTurn();
         }
         
-        private void Leave()
+        private static void Leave()
         {
             _client.Leave();
+            Debug.Log("Leaving..");
             SceneManager.LoadScene("ConnectingScene");
         }
         

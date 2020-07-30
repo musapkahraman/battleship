@@ -39,6 +39,7 @@ namespace BattleshipGame.Network
 
         private static void OnGamePhaseChanged(object sender, string phase)
         {
+            Debug.Log("Game Phase Changed.");
             if (phase == "place") SceneManager.LoadScene("GameScene");
         }
 
