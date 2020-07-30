@@ -225,7 +225,13 @@ namespace BattleshipGame.Core
         
         private void OnStateChanged(object sender, OnChangeEventArgs args)
         {
-            foreach (var unused in args.Changes.Where(change => change.Field == "playerTurn")) CheckTurn();
+            foreach (var change in args.Changes)
+            {
+                if (change.Field == "playerTurn")
+                {
+                    CheckTurn();
+                }            
+            }
         }
         
         private void OnFirstPlayerShotsChanged(object sender, KeyValueEventArgs<short, int> change)
