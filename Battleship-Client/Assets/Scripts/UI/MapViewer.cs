@@ -25,13 +25,6 @@ namespace BattleshipGame.UI
         Miss
     }
 
-    public enum MapMode
-    {
-        Disabled,
-        Place,
-        Attack
-    }
-
     public class MapViewer : MonoBehaviour
     {
         private Tile _cursorTile;
@@ -46,6 +39,7 @@ namespace BattleshipGame.UI
         [SerializeField] private GameManager manager;
         [SerializeField] private Tilemap markerLayer;
         [SerializeField] private int size = 9;
+        public int MapSize => size;
 
         private void Start()
         {
@@ -124,6 +118,13 @@ namespace BattleshipGame.UI
             var coordinate = new Vector3Int(index % size, index / size, 0);
             if (radar) coordinate += new Vector3Int(size, 0, 0);
             markerLayer.SetTile(coordinate, cursorTiles[(int) marker]);
+        }
+
+        private enum MapMode
+        {
+            Disabled,
+            Place,
+            Attack
         }
     }
 }

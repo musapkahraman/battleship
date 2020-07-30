@@ -8,13 +8,6 @@ using UnityEngine.SceneManagement;
 
 namespace BattleshipGame.Core
 {
-    internal enum GameMode
-    {
-        Placement,
-        Battle,
-        Result
-    }
-
     public class GameManager : MonoBehaviour
     {
         private int _cellCount;
@@ -26,7 +19,6 @@ namespace BattleshipGame.Core
         private int _shipsPlaced;
         private int[] _shots;
         private State _state;
-        [SerializeField] private int mapSize = 9;
         [SerializeField] private MapViewer mapViewer;
         [SerializeField] private TMP_Text messageField;
 
@@ -36,7 +28,7 @@ namespace BattleshipGame.Core
 
             if (!_client.Connected) SceneManager.LoadScene("ConnectingScene");
 
-            _cellCount = mapSize * mapSize;
+            _cellCount = mapViewer.MapSize * mapViewer.MapSize;
             _placement = new int[_cellCount];
             _shots = new int[3];
 
@@ -94,7 +86,6 @@ namespace BattleshipGame.Core
 
         public void PlaceShip(Vector3Int coordinate)
         {
-            Debug.Log($"cell coordinate {coordinate}");
             if (_mode != GameMode.Placement) return;
 
             var shipWidth = 1;
@@ -121,24 +112,20 @@ namespace BattleshipGame.Core
                     break;
             }
 
-            if (coordinate.x < 0 || coordinate.x + shipWidth > mapSize || coordinate.y - (shipHeight - 1) < 0) return;
+            if (coordinate.x < 0 || coordinate.x + shipWidth > mapViewer.MapSize ||
+                coordinate.y - (shipHeight - 1) < 0) return;
 
             var xMin = coordinate.x - 1;
-            Debug.Log($"xMin {xMin}"); // -1
             var xMax = coordinate.x + shipWidth;
-            Debug.Log($"xMax {xMax}"); // 1
             var yMin = coordinate.y - shipHeight;
-            Debug.Log($"yMin {yMin}"); // -1
             var yMax = coordinate.y + 1;
-            Debug.Log($"yMax {yMax}"); // 2
 
             for (var y = yMin; y <= yMax; y++)
             {
-                if (y < 0 || y > mapSize - 1) continue;
+                if (y < 0 || y > mapViewer.MapSize - 1) continue;
                 for (var x = xMin; x <= xMax; x++)
                 {
-                    if (x < 0 || x > mapSize - 1) continue;
-                    Debug.Log($"x {x}");
+                    if (x < 0 || x > mapViewer.MapSize - 1) continue;
                     if (!SetPlacementCell(new Vector3Int(x, y, 0), shipType, true)) return;
                 }
             }
@@ -200,8 +187,6 @@ namespace BattleshipGame.Core
         private bool SetPlacementCell(Vector3Int coordinate, ShipType shipType, bool testOnly = false)
         {
             var cellIndex = ConvertToCellIndex(coordinate);
-            Debug.Log($"cellIndex {cellIndex}");
-
             if (cellIndex < 0 || cellIndex >= _cellCount) return false;
             if (_placement[cellIndex] >= 0) return false;
             if (testOnly) return true;
@@ -212,7 +197,7 @@ namespace BattleshipGame.Core
 
         private int ConvertToCellIndex(Vector3Int coordinate)
         {
-            var cellIndex = coordinate.y * mapSize + coordinate.x;
+            var cellIndex = coordinate.y * mapViewer.MapSize + coordinate.x;
             return cellIndex;
         }
 
@@ -278,6 +263,13 @@ namespace BattleshipGame.Core
                     ShowResult();
                     break;
             }
+        }
+
+        private enum GameMode
+        {
+            Placement,
+            Battle,
+            Result
         }
     }
 }
