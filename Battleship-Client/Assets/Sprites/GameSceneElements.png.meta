@@ -7,37 +7,40 @@ TextureImporter:
     second: Grid_0
   - first:
       213: 8119703020421595460
-    second: GameSceneElements_Scout
+    second: Scout
   - first:
       213: 6108982779496689341
-    second: GameSceneElements_HGunBoat
+    second: HGunBoat
   - first:
       213: 4927151648187961526
-    second: GameSceneElements_HCruiser
+    second: HCruiser
   - first:
       213: -4435417356244048945
-    second: GameSceneElements_VGunBoat
+    second: VGunBoat
   - first:
       213: 8868918045991000700
-    second: GameSceneElements_VCruiser
+    second: VCruiser
   - first:
       213: -8325962913616430414
-    second: GameSceneElements_Admiral
+    second: Admiral
   - first:
       213: 8485601669589115460
-    second: GameSceneElements_Sea
+    second: Sea
   - first:
       213: 1256899974826948278
-    second: GameSceneElements_Radar
+    second: Radar
   - first:
       213: 3134392563574524116
-    second: GameSceneElements_Target
+    second: Target
   - first:
       213: -9142349075121489125
-    second: GameSceneElements_Miss
+    second: Miss
   - first:
       213: -7857300941268490051
-    second: GameSceneElements_Hit
+    second: Hit
+  - first:
+      213: 5941352665731707020
+    second: Boom
   externalObjects: {}
   serializedVersion: 11
   mipmaps:
@@ -135,7 +138,7 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: GameSceneElements_Scout
+      name: Scout
       rect:
         serializedVersion: 2
         x: 0
@@ -156,7 +159,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: GameSceneElements_HGunBoat
+      name: HGunBoat
       rect:
         serializedVersion: 2
         x: 32
@@ -177,7 +180,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: GameSceneElements_HCruiser
+      name: HCruiser
       rect:
         serializedVersion: 2
         x: 0
@@ -198,7 +201,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: GameSceneElements_VGunBoat
+      name: VGunBoat
       rect:
         serializedVersion: 2
         x: 96
@@ -219,7 +222,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: GameSceneElements_VCruiser
+      name: VCruiser
       rect:
         serializedVersion: 2
         x: 0
@@ -240,7 +243,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: GameSceneElements_Admiral
+      name: Admiral
       rect:
         serializedVersion: 2
         x: 32
@@ -261,7 +264,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: GameSceneElements_Sea
+      name: Sea
       rect:
         serializedVersion: 2
         x: 128
@@ -282,7 +285,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: GameSceneElements_Radar
+      name: Radar
       rect:
         serializedVersion: 2
         x: 128
@@ -303,7 +306,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: GameSceneElements_Target
+      name: Target
       rect:
         serializedVersion: 2
         x: 192
@@ -324,7 +327,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: GameSceneElements_Miss
+      name: Miss
       rect:
         serializedVersion: 2
         x: 192
@@ -345,7 +348,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: GameSceneElements_Hit
+      name: Hit
       rect:
         serializedVersion: 2
         x: 192
@@ -361,6 +364,27 @@ TextureImporter:
       bones: []
       spriteID: db869567c6245f290800000000000000
       internalID: -7857300941268490051
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Boom
+      rect:
+        serializedVersion: 2
+        x: 192
+        y: 32
+        width: 32
+        height: 32
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: c80324655cce37250800000000000000
+      internalID: 5941352665731707020
       vertices: []
       indices: 
       edges: []
