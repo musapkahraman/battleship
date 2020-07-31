@@ -123,10 +123,13 @@ namespace BattleshipGame.UI
             fleetLayer.SetTile(coordinate, tile);
         }
 
-        public void SetMarker(int index, Marker marker)
+        public bool SetMarker(int index, Marker marker)
         {
             var coordinate = new Vector3Int(index % manager.MapSize, index / manager.MapSize, 0);
+            var tile = markerLayer.GetTile(coordinate);
+            if (tile && cursorTiles[(int) marker].name.Equals(cursorTiles[(int) Marker.Marked].name)) return false;
             markerLayer.SetTile(coordinate, cursorTiles[(int) marker]);
+            return true;
         }
 
         private enum ScreenType

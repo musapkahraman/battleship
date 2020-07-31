@@ -170,11 +170,13 @@ namespace BattleshipGame.Core
         public void TakeTurn(Vector3Int coordinate)
         {
             var targetIndex = ConvertToCellIndex(coordinate);
-            opponentMap.SetMarker(targetIndex, Marker.Marked);
-            _shots[_currentShot] = targetIndex;
-            if (_currentShot == 2) _client.SendTurn(_shots);
+            if (opponentMap.SetMarker(targetIndex, Marker.Marked))
+            {
+                _shots[_currentShot] = targetIndex;
+                if (_currentShot == 2) _client.SendTurn(_shots);
 
-            _currentShot++;
+                _currentShot++;
+            }
         }
 
         private void UpdateCursor()
