@@ -21,9 +21,9 @@ namespace BattleshipGame.UI
         [SerializeField] private Canvas canvas;
         [SerializeField] private GameObject cellLabelPrefab;
         [SerializeField] private Direction direction;
+        [SerializeField] private GameManager manager;
         [SerializeField] private Place place;
         [SerializeField] private Type type;
-        [SerializeField] private GameManager manager;
 
         private enum Axis
         {
@@ -53,7 +53,7 @@ namespace BattleshipGame.UI
         public void Print()
         {
             _mapSize = manager.MapSize;
-            
+
             if (cellLabelPrefab.GetComponent<TMP_Text>() == null)
             {
                 Debug.LogError($"{nameof(cellLabelPrefab)} does not have a {nameof(TMP_Text)}!");

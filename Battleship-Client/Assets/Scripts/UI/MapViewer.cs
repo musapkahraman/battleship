@@ -36,7 +36,6 @@ namespace BattleshipGame.UI
     {
         private Tile _cursorTile;
         private Grid _grid;
-        [SerializeField] private GameManager manager;
         private Vector3Int _maxCellCoordinate;
         private Vector3Int _minCellCoordinate;
         private MapMode _mode;
@@ -44,6 +43,7 @@ namespace BattleshipGame.UI
         [SerializeField] private Tilemap cursorLayer;
         [SerializeField] private Tile[] cursorTiles;
         [SerializeField] private Tilemap fleetLayer;
+        [SerializeField] private GameManager manager;
         [SerializeField] private Tilemap markerLayer;
         [SerializeField] private PlayerType playerType;
 
