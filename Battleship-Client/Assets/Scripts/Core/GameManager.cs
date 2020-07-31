@@ -174,13 +174,8 @@ namespace BattleshipGame.Core
         public void MarkTarget(Vector3Int targetCoordinate)
         {
             var targetIndex = ConvertToCellIndex(targetCoordinate);
-            if (++_currentShot > ShotsPerTurn)
-            {
-                _currentShot--;
-                return;
-            }
-
-            if (!opponentMap.SetMarker(targetIndex, Marker.Marked)) return;
+            if (_currentShot + 1 > ShotsPerTurn || !opponentMap.SetMarker(targetIndex, Marker.Marked)) return;
+            _currentShot++;
             _shots[_currentShot - 1] = targetIndex;
             if (_currentShot == ShotsPerTurn) FireReady?.Invoke();
         }
