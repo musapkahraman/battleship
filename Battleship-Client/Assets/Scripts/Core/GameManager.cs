@@ -1,4 +1,5 @@
 ﻿using System;
+using BattleshipGame.Common;
 using BattleshipGame.Network;
 using BattleshipGame.UI;
 using Colyseus.Schema;
@@ -174,18 +175,14 @@ namespace BattleshipGame.Core
 
         public void MarkTarget(Vector3Int targetCoordinate)
         {
-            var targetIndex = ConvertToCellIndex(targetCoordinate);
+            var targetIndex = Converter.ToCellIndex(targetCoordinate, size);
             if (_currentShot + 1 > ShotsPerTurn || !opponentMap.SetMarker(targetIndex, Marker.TargetMarked)) return;
             _currentShot++;
             _shots[_currentShot - 1] = targetIndex;
             if (_currentShot >= ShotsPerTurn)
-            {
                 FireReady?.Invoke();
-            }
             else
-            {
                 FireNotReady?.Invoke();
-            }
         }
 
         public static void FireShots()
@@ -200,18 +197,12 @@ namespace BattleshipGame.Core
 
         private bool SetPlacementCell(Vector3Int coordinate, bool testOnly = false)
         {
-            var cellIndex = ConvertToCellIndex(coordinate);
+            var cellIndex = Converter.ToCellIndex(coordinate, size);
             if (cellIndex < 0 || cellIndex >= _cellCount) return false;
             if (_placement[cellIndex] >= 0) return false;
             if (testOnly) return true;
             _placement[cellIndex] = _shipsPlaced;
             return true;
-        }
-
-        private int ConvertToCellIndex(Vector3Int coordinate)
-        {
-            var cellIndex = coordinate.y * size + coordinate.x;
-            return cellIndex;
         }
 
         private void OnInitialStateReceived(object sender, State initialState)

@@ -1,4 +1,5 @@
 ﻿using System;
+using BattleshipGame.Common;
 using BattleshipGame.Core;
 using UnityEngine;
 using UnityEngine.Tilemaps;
@@ -142,12 +143,18 @@ namespace BattleshipGame.UI
 
         public bool SetMarker(int index, Marker marker)
         {
-            var coordinate = new Vector3Int(index % manager.MapSize, index / manager.MapSize, 0);
+            var coordinate = Converter.ToCoordinate(index, manager.MapSize);
             var tile = markerLayer.GetTile(coordinate);
             if (tile && cursorTiles[(int) marker].name.Equals(cursorTiles[(int) Marker.TargetMarked].name))
                 return false;
             markerLayer.SetTile(coordinate, cursorTiles[(int) marker]);
             return true;
+        }
+
+        public void ClearTile(int index)
+        {
+            var coordinate = Converter.ToCoordinate(index, manager.MapSize);
+            if (markerLayer.HasTile(coordinate)) markerLayer.SetTile(coordinate, null);
         }
 
         private enum ScreenType
