@@ -8,8 +8,8 @@ namespace BattleshipGame.UI
     public class FireButtonManager : MonoBehaviour
     {
         private Button _button;
-        private TMP_Text _tmpText;
         private Color _textColorCache;
+        private TMP_Text _tmpText;
         [SerializeField] private GameManager manager;
 
         private void Start()
@@ -18,8 +18,8 @@ namespace BattleshipGame.UI
             _tmpText = GetComponentInChildren<TMP_Text>();
             _textColorCache = _tmpText.color;
             DisableButton();
-            
             manager.FireReady += EnableButton;
+            manager.FireNotReady += DisableButton;
             _button.onClick.AddListener(GameManager.FireShots);
             _button.onClick.AddListener(DisableButton);
         }
@@ -27,6 +27,7 @@ namespace BattleshipGame.UI
         private void OnDestroy()
         {
             manager.FireReady -= EnableButton;
+            manager.FireNotReady -= DisableButton;
         }
 
         private void EnableButton()

@@ -27,6 +27,7 @@ namespace BattleshipGame.Core
         public int MapSize => size;
 
         public event Action FireReady;
+        public event Action FireNotReady;
 
         private void Start()
         {
@@ -177,13 +178,19 @@ namespace BattleshipGame.Core
             if (_currentShot + 1 > ShotsPerTurn || !opponentMap.SetMarker(targetIndex, Marker.TargetMarked)) return;
             _currentShot++;
             _shots[_currentShot - 1] = targetIndex;
-            if (_currentShot == ShotsPerTurn) FireReady?.Invoke();
+            if (_currentShot >= ShotsPerTurn)
+            {
+                FireReady?.Invoke();
+            }
+            else
+            {
+                FireNotReady?.Invoke();
+            }
         }
 
         public static void FireShots()
         {
             _client.SendTurn(_shots);
-            Debug.Log("Firing shots");
         }
 
         private void UpdateCursor()

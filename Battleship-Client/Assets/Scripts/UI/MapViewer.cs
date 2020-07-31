@@ -54,6 +54,24 @@ namespace BattleshipGame.UI
         {
             if (cam == null) cam = Camera.main;
             _grid = GetComponent<Grid>();
+            manager.FireReady += DisableTargetCursor;
+            manager.FireNotReady += EnableTargetCursor;
+        }
+
+        private void OnDestroy()
+        {
+            manager.FireReady -= DisableTargetCursor;
+            manager.FireNotReady -= EnableTargetCursor;
+        }
+
+        private void DisableTargetCursor()
+        {
+            _cursorTile = cursorTiles[(int) Marker.TargetInactive];
+        }
+
+        private void EnableTargetCursor()
+        {
+            _cursorTile = cursorTiles[(int) Marker.TargetActive];
         }
 
         private void OnMouseDown()
