@@ -22,7 +22,9 @@ namespace BattleshipGame.UI
     {
         Target = 9,
         Hit,
-        Miss
+        Miss,
+        Marked,
+        Fired
     }
 
     public enum MapMode
@@ -45,7 +47,7 @@ namespace BattleshipGame.UI
         [SerializeField] private Tilemap fleetLayer;
         [SerializeField] private GameManager manager;
         [SerializeField] private Tilemap markerLayer;
-        [SerializeField] private PlayerType playerType;
+        [SerializeField] private ScreenType screenType;
 
         private void Start()
         {
@@ -59,11 +61,12 @@ namespace BattleshipGame.UI
             switch (_mode)
             {
                 case MapMode.Place:
-                    if (playerType == PlayerType.User) manager.PlaceShip(cellPosition);
+                    if (screenType == ScreenType.User) manager.PlaceShip(cellPosition);
 
                     break;
                 case MapMode.Attack:
-                    if (playerType == PlayerType.Opponent) manager.TakeTurn(cellPosition);
+                    if (screenType == ScreenType.Opponent) manager.TakeTurn(cellPosition);
+
                     break;
                 case MapMode.Disabled:
                     break;
@@ -126,7 +129,7 @@ namespace BattleshipGame.UI
             markerLayer.SetTile(coordinate, cursorTiles[(int) marker]);
         }
 
-        private enum PlayerType
+        private enum ScreenType
         {
             User,
             Opponent

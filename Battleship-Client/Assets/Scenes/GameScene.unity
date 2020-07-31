@@ -577,9 +577,9 @@ MonoBehaviour:
   cellLabelPrefab: {fileID: 4282153877496215032, guid: 111572eadcbe3ea42a19c0375b5f686e,
     type: 3}
   direction: 1
+  manager: {fileID: 1832216561}
   place: 0
   type: 1
-  manager: {fileID: 1832216561}
 --- !u!61 &167099664
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -618,7 +618,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6a2871fc316820e499e212ce6f7fda48, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  manager: {fileID: 1832216561}
   cam: {fileID: 519420031}
   cursorLayer: {fileID: 993690750}
   cursorTiles:
@@ -634,9 +633,12 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 47e6f4241d448624d9bdbdcd48cdf737, type: 2}
   - {fileID: 11400000, guid: f161dbc5e54e91d4088ff78e7bd1d4a5, type: 2}
   - {fileID: 11400000, guid: 54167e58c58633d4faeb4957594309f9, type: 2}
+  - {fileID: 11400000, guid: e356ec117ee123d4d894d9404a3baba3, type: 2}
+  - {fileID: 11400000, guid: 1981153f3531ff6499dcbf638477b9f8, type: 2}
   fleetLayer: {fileID: 1328256394}
+  manager: {fileID: 1832216561}
   markerLayer: {fileID: 576467931}
-  playerType: 0
+  screenType: 0
 --- !u!1001 &230196566
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1939,7 +1941,7 @@ GameObject:
   - component: {fileID: 576467931}
   - component: {fileID: 576467930}
   m_Layer: 0
-  m_Name: Marker
+  m_Name: UserMarkerLayer
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -3284,7 +3286,7 @@ GameObject:
   - component: {fileID: 785240423}
   - component: {fileID: 785240422}
   m_Layer: 0
-  m_Name: Ocean
+  m_Name: UserOceanLayer
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -4206,9 +4208,9 @@ MonoBehaviour:
   cellLabelPrefab: {fileID: 5100291273403820862, guid: 238593a5937c7c54aa63746657da7fe0,
     type: 3}
   direction: 1
+  manager: {fileID: 1832216561}
   place: 0
   type: 1
-  manager: {fileID: 1832216561}
 --- !u!114 &799895483
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4221,25 +4223,27 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6a2871fc316820e499e212ce6f7fda48, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  manager: {fileID: 1832216561}
   cam: {fileID: 519420031}
   cursorLayer: {fileID: 1893157501}
   cursorTiles:
-  - {fileID: 11400000, guid: 54167e58c58633d4faeb4957594309f9, type: 2}
-  - {fileID: 11400000, guid: 54167e58c58633d4faeb4957594309f9, type: 2}
-  - {fileID: 11400000, guid: 54167e58c58633d4faeb4957594309f9, type: 2}
-  - {fileID: 11400000, guid: 54167e58c58633d4faeb4957594309f9, type: 2}
-  - {fileID: 11400000, guid: 54167e58c58633d4faeb4957594309f9, type: 2}
-  - {fileID: 11400000, guid: 54167e58c58633d4faeb4957594309f9, type: 2}
-  - {fileID: 11400000, guid: 54167e58c58633d4faeb4957594309f9, type: 2}
-  - {fileID: 11400000, guid: 54167e58c58633d4faeb4957594309f9, type: 2}
-  - {fileID: 11400000, guid: 54167e58c58633d4faeb4957594309f9, type: 2}
+  - {fileID: 11400000, guid: f88dbbe2a212cb343a4dbc3140dd3764, type: 2}
+  - {fileID: 11400000, guid: cac3725cf43717747ae33588c2c84a99, type: 2}
+  - {fileID: 11400000, guid: 9d07cd04ab777084a94f231a1c40e112, type: 2}
+  - {fileID: 11400000, guid: 31deb3423deb3154f81d4f7a7be7aaa2, type: 2}
+  - {fileID: 11400000, guid: 4d885ffad1ae38945bde7c1d5a7d55be, type: 2}
+  - {fileID: 11400000, guid: 3a3fc01d0f72e0045a8d0eddd8a6e6c1, type: 2}
+  - {fileID: 11400000, guid: 3a3fc01d0f72e0045a8d0eddd8a6e6c1, type: 2}
+  - {fileID: 11400000, guid: 3a3fc01d0f72e0045a8d0eddd8a6e6c1, type: 2}
+  - {fileID: 11400000, guid: 3a3fc01d0f72e0045a8d0eddd8a6e6c1, type: 2}
   - {fileID: 11400000, guid: 47e6f4241d448624d9bdbdcd48cdf737, type: 2}
+  - {fileID: 11400000, guid: f161dbc5e54e91d4088ff78e7bd1d4a5, type: 2}
   - {fileID: 11400000, guid: 54167e58c58633d4faeb4957594309f9, type: 2}
-  - {fileID: 11400000, guid: 54167e58c58633d4faeb4957594309f9, type: 2}
+  - {fileID: 11400000, guid: e356ec117ee123d4d894d9404a3baba3, type: 2}
+  - {fileID: 11400000, guid: 1981153f3531ff6499dcbf638477b9f8, type: 2}
   fleetLayer: {fileID: 0}
+  manager: {fileID: 1832216561}
   markerLayer: {fileID: 1532680194}
-  playerType: 1
+  screenType: 1
 --- !u!156049354 &799895484
 Grid:
   m_ObjectHideFlags: 0
@@ -4282,7 +4286,7 @@ GameObject:
   - component: {fileID: 801994453}
   - component: {fileID: 801994452}
   m_Layer: 5
-  m_Name: CellLabelsCanvas
+  m_Name: UserLabelsCanvas
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -4980,7 +4984,7 @@ GameObject:
   - component: {fileID: 993690750}
   - component: {fileID: 993690749}
   m_Layer: 0
-  m_Name: Cursor
+  m_Name: UserCursorLayer
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -5247,7 +5251,7 @@ GameObject:
   - component: {fileID: 1081005661}
   - component: {fileID: 1081005660}
   m_Layer: 0
-  m_Name: Tilemap
+  m_Name: OpponentFleetLayer
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -5494,7 +5498,7 @@ GameObject:
   - component: {fileID: 1093841617}
   - component: {fileID: 1093841616}
   m_Layer: 0
-  m_Name: OpponentFleetStatus
+  m_Name: OpponentStatusMap
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -5690,7 +5694,7 @@ GameObject:
   - component: {fileID: 1268085860}
   - component: {fileID: 1268085859}
   m_Layer: 5
-  m_Name: StatusCanvas
+  m_Name: OpponentStatusCanvas
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -5779,7 +5783,7 @@ GameObject:
   - component: {fileID: 1328256394}
   - component: {fileID: 1328256393}
   m_Layer: 0
-  m_Name: Fleet
+  m_Name: UserFleetLayer
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -6960,7 +6964,7 @@ GameObject:
   - component: {fileID: 1532680194}
   - component: {fileID: 1532680193}
   m_Layer: 0
-  m_Name: Marker
+  m_Name: OpponentMarkerLayer
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -7708,10 +7712,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7ffbb156772f2784980f88cf4813414d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  opponentMap: {fileID: 799895483}
-  userMap: {fileID: 167099665}
   messageField: {fileID: 1483473440}
+  opponentMap: {fileID: 799895483}
   size: 9
+  userMap: {fileID: 167099665}
 --- !u!1001 &1836731099
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -8240,7 +8244,7 @@ GameObject:
   - component: {fileID: 1893157501}
   - component: {fileID: 1893157502}
   m_Layer: 0
-  m_Name: Cursor
+  m_Name: OpponentCursorLayer
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -8807,7 +8811,7 @@ GameObject:
   - component: {fileID: 2041949754}
   - component: {fileID: 2041949753}
   m_Layer: 0
-  m_Name: Ocean
+  m_Name: OpponentOceanLayer
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -10442,7 +10446,7 @@ GameObject:
   - component: {fileID: 2128735712}
   - component: {fileID: 2128735713}
   m_Layer: 5
-  m_Name: CellLabelsCanvas
+  m_Name: OpponentLabelsCanvas
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
