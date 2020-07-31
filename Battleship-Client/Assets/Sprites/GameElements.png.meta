@@ -7,46 +7,49 @@ TextureImporter:
     second: Grid_0
   - first:
       213: 8119703020421595460
-    second: Scout
+    second: Fleet_Scout
   - first:
       213: 6108982779496689341
-    second: HGunBoat
+    second: Fleet_HGunBoat
   - first:
       213: 4927151648187961526
-    second: HCruiser
+    second: Fleet_HCruiser
   - first:
       213: -4435417356244048945
-    second: VGunBoat
+    second: Fleet_VGunBoat
   - first:
       213: 8868918045991000700
-    second: VCruiser
+    second: Fleet_VCruiser
   - first:
       213: -8325962913616430414
-    second: Admiral
+    second: Fleet_Admiral
   - first:
       213: 8485601669589115460
-    second: Sea
+    second: Background_Sea
   - first:
       213: 1256899974826948278
-    second: Radar
+    second: Background_Radar
   - first:
       213: 3134392563574524116
-    second: Target
+    second: Cursor_Target
   - first:
       213: -9142349075121489125
-    second: Miss
+    second: Marker_Miss
   - first:
       213: -7857300941268490051
-    second: Hit
+    second: Marker_Hit
   - first:
       213: 5941352665731707020
-    second: Boom
+    second: Marker_Explosion
   - first:
       213: 7277177742205591692
-    second: Fired
+    second: Marker_TargetFired
   - first:
       213: -4466346963816401347
-    second: Marked
+    second: Marker_TargetMarked
+  - first:
+      213: -2980439902397685020
+    second: Cursor_Inactive
   externalObjects: {}
   serializedVersion: 11
   mipmaps:
@@ -144,7 +147,7 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: Scout
+      name: Fleet_Scout
       rect:
         serializedVersion: 2
         x: 0
@@ -165,7 +168,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: HGunBoat
+      name: Fleet_HGunBoat
       rect:
         serializedVersion: 2
         x: 32
@@ -186,7 +189,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: HCruiser
+      name: Fleet_HCruiser
       rect:
         serializedVersion: 2
         x: 0
@@ -207,7 +210,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: VGunBoat
+      name: Fleet_VGunBoat
       rect:
         serializedVersion: 2
         x: 96
@@ -228,7 +231,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: VCruiser
+      name: Fleet_VCruiser
       rect:
         serializedVersion: 2
         x: 0
@@ -249,7 +252,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Admiral
+      name: Fleet_Admiral
       rect:
         serializedVersion: 2
         x: 32
@@ -270,7 +273,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Sea
+      name: Background_Sea
       rect:
         serializedVersion: 2
         x: 128
@@ -291,7 +294,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Radar
+      name: Background_Radar
       rect:
         serializedVersion: 2
         x: 128
@@ -312,7 +315,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Target
+      name: Cursor_Target
       rect:
         serializedVersion: 2
         x: 192
@@ -333,7 +336,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Miss
+      name: Marker_Miss
       rect:
         serializedVersion: 2
         x: 192
@@ -354,7 +357,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Hit
+      name: Marker_Hit
       rect:
         serializedVersion: 2
         x: 192
@@ -375,7 +378,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Boom
+      name: Marker_Explosion
       rect:
         serializedVersion: 2
         x: 192
@@ -396,7 +399,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Fired
+      name: Marker_TargetFired
       rect:
         serializedVersion: 2
         x: 192
@@ -417,11 +420,32 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Marked
+      name: Marker_TargetMarked
       rect:
         serializedVersion: 2
         x: 160
         y: 192
+        width: 32
+        height: 32
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: d363412a9195402c0800000000000000
+      internalID: -4466346963816401347
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Cursor_Inactive
+      rect:
+        serializedVersion: 2
+        x: 160
+        y: 224
         width: 32
         height: 32
       alignment: 0
@@ -431,8 +455,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: d363412a9195402c0800000000000000
-      internalID: -4466346963816401347
+      spriteID: 4e2af2723b953a6d0800000000000000
+      internalID: -2980439902397685020
       vertices: []
       indices: 
       edges: []

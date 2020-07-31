@@ -20,7 +20,6 @@ namespace BattleshipGame.UI
             DisableButton();
             
             manager.FireReady += EnableButton;
-            Debug.Log("Subscribed to fire ready event");
             _button.onClick.AddListener(GameManager.FireShots);
             _button.onClick.AddListener(DisableButton);
         }
@@ -28,19 +27,16 @@ namespace BattleshipGame.UI
         private void OnDestroy()
         {
             manager.FireReady -= EnableButton;
-            Debug.Log("Unsubscribed from fire ready event");
         }
 
         private void EnableButton()
         {
-            Debug.Log("Button is enabled");
             _button.interactable = true;
             _tmpText.color = _textColorCache;
         }
 
         private void DisableButton()
         {
-            Debug.Log("Button is disabled");
             _button.interactable = false;
             _tmpText.color = Color.gray;
         }

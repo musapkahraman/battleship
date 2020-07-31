@@ -20,11 +20,12 @@ namespace BattleshipGame.UI
 
     public enum Marker
     {
-        Target = 9,
+        TargetActive = 9,
+        TargetInactive,
         Hit,
-        Miss,
-        Marked,
-        Fired
+        Missed,
+        TargetMarked,
+        TargetShot
     }
 
     public enum MapMode
@@ -106,7 +107,7 @@ namespace BattleshipGame.UI
         public void SetAttackMode()
         {
             _mode = MapMode.Attack;
-            _cursorTile = cursorTiles[(int) Marker.Target];
+            _cursorTile = cursorTiles[(int) Marker.TargetActive];
             _minCellCoordinate = new Vector3Int(0, 0, 0);
             _maxCellCoordinate = new Vector3Int(manager.MapSize - 1, manager.MapSize - 1, 0);
         }
@@ -127,7 +128,7 @@ namespace BattleshipGame.UI
         {
             var coordinate = new Vector3Int(index % manager.MapSize, index / manager.MapSize, 0);
             var tile = markerLayer.GetTile(coordinate);
-            if (tile && cursorTiles[(int) marker].name.Equals(cursorTiles[(int) Marker.Marked].name)) return false;
+            if (tile && cursorTiles[(int) marker].name.Equals(cursorTiles[(int) Marker.TargetMarked].name)) return false;
             markerLayer.SetTile(coordinate, cursorTiles[(int) marker]);
             return true;
         }
