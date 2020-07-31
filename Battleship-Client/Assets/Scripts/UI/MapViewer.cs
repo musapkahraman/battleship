@@ -65,7 +65,7 @@ namespace BattleshipGame.UI
 
                     break;
                 case MapMode.Attack:
-                    if (screenType == ScreenType.Opponent) manager.TakeTurn(cellPosition);
+                    if (screenType == ScreenType.Opponent) manager.MarkTarget(cellPosition);
 
                     break;
                 case MapMode.Disabled:

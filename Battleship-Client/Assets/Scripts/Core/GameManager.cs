@@ -1,4 +1,5 @@
-﻿using BattleshipGame.Network;
+﻿using System;
+using BattleshipGame.Network;
 using BattleshipGame.UI;
 using Colyseus.Schema;
 using TMPro;
@@ -9,6 +10,7 @@ namespace BattleshipGame.Core
 {
     public class GameManager : MonoBehaviour
     {
+        private const int ShotsPerTurn = 3;
         private static int _cellCount;
         private static GameClient _client;
         private static int _currentShot;
@@ -24,13 +26,15 @@ namespace BattleshipGame.Core
         [SerializeField] private MapViewer userMap;
         public int MapSize => size;
 
+        public event Action FireReady;
+
         private void Start()
         {
             _client = GameClient.Instance;
             if (!_client.Connected) SceneManager.LoadScene("ConnectingScene");
             _cellCount = size * size;
             _placement = new int[_cellCount];
-            _shots = new int[3];
+            _shots = new int[ShotsPerTurn];
             for (var i = 0; i < _cellCount; i++) _placement[i] = -1;
             _client.InitialStateReceived += OnInitialStateReceived;
             _client.GamePhaseChanged += OnGamePhaseChanged;
@@ -167,16 +171,24 @@ namespace BattleshipGame.Core
             WaitForOpponentPlaceShips();
         }
 
-        public void TakeTurn(Vector3Int coordinate)
+        public void MarkTarget(Vector3Int targetCoordinate)
         {
-            var targetIndex = ConvertToCellIndex(coordinate);
-            if (opponentMap.SetMarker(targetIndex, Marker.Marked))
+            var targetIndex = ConvertToCellIndex(targetCoordinate);
+            if (++_currentShot > ShotsPerTurn)
             {
-                _shots[_currentShot] = targetIndex;
-                if (_currentShot == 2) _client.SendTurn(_shots);
-
-                _currentShot++;
+                _currentShot--;
+                return;
             }
+
+            if (!opponentMap.SetMarker(targetIndex, Marker.Marked)) return;
+            _shots[_currentShot - 1] = targetIndex;
+            if (_currentShot == ShotsPerTurn) FireReady?.Invoke();
+        }
+
+        public static void FireShots()
+        {
+            _client.SendTurn(_shots);
+            Debug.Log("Firing shots");
         }
 
         private void UpdateCursor()
