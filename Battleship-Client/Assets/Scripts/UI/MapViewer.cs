@@ -58,16 +58,14 @@ namespace BattleshipGame.UI
 
         private void OnMouseDown()
         {
-            var cellPosition = ConvertToCellPosition();
+            var cell = ScreenToCell(Input.mousePosition);
             switch (_mode)
             {
                 case MapMode.Place:
-                    if (screenType == ScreenType.User) manager.PlaceShip(cellPosition);
-
+                    if (screenType == ScreenType.User) manager.PlaceShip(cell);
                     break;
                 case MapMode.Attack:
-                    if (screenType == ScreenType.Opponent) manager.MarkTarget(cellPosition);
-
+                    if (screenType == ScreenType.Opponent) manager.MarkTarget(cell);
                     break;
                 case MapMode.Disabled:
                     break;
@@ -76,20 +74,20 @@ namespace BattleshipGame.UI
             }
         }
 
-        private void Update()
+        private void OnMouseOver()
         {
             cursorLayer.ClearAllTiles();
             if (_mode == MapMode.Disabled) return;
-            var cellPosition = ConvertToCellPosition();
-            cursorLayer.SetTile(cellPosition, _cursorTile);
+            var cell = ScreenToCell(Input.mousePosition);
+            cursorLayer.SetTile(cell, _cursorTile);
         }
 
-        private Vector3Int ConvertToCellPosition()
+        private Vector3Int ScreenToCell(Vector3 screenPoint)
         {
-            var worldPosition = cam.ScreenToWorldPoint(Input.mousePosition);
-            var cellPosition = _grid.WorldToCell(worldPosition);
-            cellPosition.Clamp(_minCellCoordinate, _maxCellCoordinate);
-            return cellPosition;
+            var worldPoint = cam.ScreenToWorldPoint(screenPoint);
+            var cell = _grid.WorldToCell(worldPoint);
+            cell.Clamp(_minCellCoordinate, _maxCellCoordinate);
+            return cell;
         }
 
         public void SetDisabled()
@@ -128,7 +126,8 @@ namespace BattleshipGame.UI
         {
             var coordinate = new Vector3Int(index % manager.MapSize, index / manager.MapSize, 0);
             var tile = markerLayer.GetTile(coordinate);
-            if (tile && cursorTiles[(int) marker].name.Equals(cursorTiles[(int) Marker.TargetMarked].name)) return false;
+            if (tile && cursorTiles[(int) marker].name.Equals(cursorTiles[(int) Marker.TargetMarked].name))
+                return false;
             markerLayer.SetTile(coordinate, cursorTiles[(int) marker]);
             return true;
         }
