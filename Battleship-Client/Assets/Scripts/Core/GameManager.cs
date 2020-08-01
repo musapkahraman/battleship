@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using BattleshipGame.Common;
 using BattleshipGame.Network;
 using BattleshipGame.UI;
@@ -19,8 +20,9 @@ namespace BattleshipGame.Core
         private static int _myPlayerNumber;
         private static int[] _placement;
         private static int _shipsPlaced;
-        private static List<int> _shots = new List<int>();
+        private static readonly List<int> Shots = new List<int>();
         private static State _state;
+        [SerializeField] private bool hideOpponentShotDetails;
         [SerializeField] private TMP_Text messageField;
         [SerializeField] private MapViewer opponentMap;
         [SerializeField] private int size = 9;
@@ -76,7 +78,7 @@ namespace BattleshipGame.Core
 
         private void StartTurn()
         {
-            _shots.Clear();
+            Shots.Clear();
             _mode = GameMode.Battle;
             userMap.SetDisabled();
             opponentMap.SetAttackMode();
@@ -175,17 +177,17 @@ namespace BattleshipGame.Core
         public void MarkTarget(Vector3Int targetCoordinate)
         {
             var targetIndex = Converter.ToCellIndex(targetCoordinate, size);
-            if (_shots.Contains(targetIndex))
+            if (Shots.Contains(targetIndex))
             {
-                _shots.Remove(targetIndex);
+                Shots.Remove(targetIndex);
                 opponentMap.ClearTile(targetIndex);
             }
-            else if (_shots.Count < ShotsPerTurn && opponentMap.SetMarker(targetIndex, Marker.TargetMarked))
+            else if (Shots.Count < ShotsPerTurn && opponentMap.SetMarker(targetIndex, Marker.TargetMarked))
             {
-                _shots.Add(targetIndex);
+                Shots.Add(targetIndex);
             }
 
-            if (_shots.Count == ShotsPerTurn)
+            if (Shots.Count == ShotsPerTurn)
                 FireReady?.Invoke();
             else
                 FireNotReady?.Invoke();
@@ -193,7 +195,7 @@ namespace BattleshipGame.Core
 
         public static void FireShots()
         {
-            _client.SendTurn(_shots.ToArray());
+            _client.SendTurn(Shots.ToArray());
         }
 
         private void UpdateCursor()
@@ -214,8 +216,8 @@ namespace BattleshipGame.Core
         private void OnInitialStateReceived(object sender, State initialState)
         {
             _state = initialState;
-            var me = _state.players[_client.SessionId];
-            _myPlayerNumber = me?.seat ?? -1;
+            var user = _state.players[_client.SessionId];
+            _myPlayerNumber = user?.seat ?? -1;
             _state.OnChange += OnStateChanged;
             _state.player1Shots.OnChange += OnFirstPlayerShotsChanged;
             _state.player2Shots.OnChange += OnSecondPlayerShotsChanged;
@@ -224,9 +226,8 @@ namespace BattleshipGame.Core
 
         private void OnStateChanged(object sender, OnChangeEventArgs args)
         {
-            foreach (var change in args.Changes)
-                if (change.Field == "playerTurn")
-                    CheckTurn();
+            foreach (var _ in args.Changes.Where(change => change.Field == "playerTurn"))
+                CheckTurn();
         }
 
         private void OnFirstPlayerShotsChanged(object sender, KeyValueEventArgs<short, int> change)
@@ -245,9 +246,14 @@ namespace BattleshipGame.Core
         {
             var marker = change.Value == 1 ? Marker.Hit : Marker.Missed;
             if (_myPlayerNumber == playerNumber)
+            {
+                if (hideOpponentShotDetails) marker = Marker.TargetShot;
                 opponentMap.SetMarker(change.Key, marker);
+            }
             else
+            {
                 userMap.SetMarker(change.Key, marker);
+            }
         }
 
         private void CheckTurn()

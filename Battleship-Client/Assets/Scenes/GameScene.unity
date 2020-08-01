@@ -8104,6 +8104,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7ffbb156772f2784980f88cf4813414d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  hideOpponentShotDetails: 1
   messageField: {fileID: 1483473440}
   opponentMap: {fileID: 799895483}
   size: 9
