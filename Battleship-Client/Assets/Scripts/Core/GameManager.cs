@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using BattleshipGame.Common;
 using BattleshipGame.Network;
 using BattleshipGame.UI;
@@ -14,12 +15,11 @@ namespace BattleshipGame.Core
         private const int ShotsPerTurn = 3;
         private static int _cellCount;
         private static GameClient _client;
-        private static int _currentShot;
         private static GameMode _mode;
         private static int _myPlayerNumber;
         private static int[] _placement;
         private static int _shipsPlaced;
-        private static int[] _shots;
+        private static List<int> _shots = new List<int>();
         private static State _state;
         [SerializeField] private TMP_Text messageField;
         [SerializeField] private MapViewer opponentMap;
@@ -36,7 +36,6 @@ namespace BattleshipGame.Core
             if (!_client.Connected) SceneManager.LoadScene("ConnectingScene");
             _cellCount = size * size;
             _placement = new int[_cellCount];
-            _shots = new int[ShotsPerTurn];
             for (var i = 0; i < _cellCount; i++) _placement[i] = -1;
             _client.InitialStateReceived += OnInitialStateReceived;
             _client.GamePhaseChanged += OnGamePhaseChanged;
@@ -77,7 +76,7 @@ namespace BattleshipGame.Core
 
         private void StartTurn()
         {
-            _currentShot = 0;
+            _shots.Clear();
             _mode = GameMode.Battle;
             userMap.SetDisabled();
             opponentMap.SetAttackMode();
@@ -176,10 +175,9 @@ namespace BattleshipGame.Core
         public void MarkTarget(Vector3Int targetCoordinate)
         {
             var targetIndex = Converter.ToCellIndex(targetCoordinate, size);
-            if (_currentShot + 1 > ShotsPerTurn || !opponentMap.SetMarker(targetIndex, Marker.TargetMarked)) return;
-            _currentShot++;
-            _shots[_currentShot - 1] = targetIndex;
-            if (_currentShot >= ShotsPerTurn)
+            if (_shots.Count >= ShotsPerTurn || !opponentMap.SetMarker(targetIndex, Marker.TargetMarked)) return;
+            _shots.Add(targetIndex);
+            if (_shots.Count == ShotsPerTurn)
                 FireReady?.Invoke();
             else
                 FireNotReady?.Invoke();
@@ -187,7 +185,7 @@ namespace BattleshipGame.Core
 
         public static void FireShots()
         {
-            _client.SendTurn(_shots);
+            _client.SendTurn(_shots.ToArray());
         }
 
         private void UpdateCursor()
