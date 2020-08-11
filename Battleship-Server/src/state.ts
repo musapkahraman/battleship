@@ -15,15 +15,24 @@ export class State extends Schema {
     @type('string')
     phase: string = 'waiting';
 
-    @type('int16')
+    @type('int8')
     playerTurn: number = 1;
 
-    @type('int16')
+    @type('int8')
     winningPlayer: number = -1;
 
-    @type(['int16'])
+    @type('int8')
+    currentTurn: number = 1;
+
+    @type(['int8'])
     player1Shots: ArraySchema<number> = new ArraySchema<number>();
     
-    @type(['int16'])
+    @type(['int8'])
     player2Shots: ArraySchema<number> = new ArraySchema<number>();
+    
+    @type(['int8'])
+    player1Ships: ArraySchema<number> = new ArraySchema<number>();
+    
+    @type(['int8'])
+    player2Ships: ArraySchema<number> = new ArraySchema<number>();
 }

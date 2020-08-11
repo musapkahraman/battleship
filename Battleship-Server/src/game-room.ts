@@ -16,8 +16,6 @@ export class GameRoom extends Room<State> {
 
     playerCount: number = 0;
 
-    currentTurn: number = 0;
-
     onInit(option) {
         console.log('room created!');
         this.reset();
@@ -79,15 +77,39 @@ export class GameRoom extends Room<State> {
                 console.log('player ' + player.seat + ' targets ' + targetIndexes);
 
                 let shots = player.seat == 1 ? this.state.player1Shots : this.state.player2Shots;
+                let targetShips = player.seat == 1 ? this.state.player2Ships : this.state.player1Ships;
                 let targetPlayerIndex = player.seat == 1 ? 1 : 0;
                 let targetedPlacement = this.placements[targetPlayerIndex];
 
                 for (const targetIndex of targetIndexes) {
-                    if(targetedPlacement[targetIndex] >= 0 && shots[targetIndex] == -1){
-                        shots[targetIndex] = 1;
-                        this.playerHealth[targetPlayerIndex]--;
-                    } else if(targetedPlacement[targetIndex] == -1 && shots[targetIndex] == -1){
-                        shots[targetIndex] = 2;
+                    if(shots[targetIndex] == -1){
+                        shots[targetIndex] = this.state.currentTurn;
+                        if(targetedPlacement[targetIndex] >= 0){
+                            this.playerHealth[targetPlayerIndex]--;
+                            switch(targetedPlacement[targetIndex]){
+                                case 0: // Admiral
+                                    this.updateShips(targetShips, 0, 5, this.state.currentTurn);
+                                    break;
+                                case 1: // VTrio
+                                    this.updateShips(targetShips, 5, 8, this.state.currentTurn);
+                                    break;
+                                case 2: // HTrio
+                                    this.updateShips(targetShips, 8, 11, this.state.currentTurn);
+                                    break;
+                                case 3: // VDuo
+                                    this.updateShips(targetShips, 11, 13, this.state.currentTurn);
+                                    break;
+                                case 4: // HDuo
+                                    this.updateShips(targetShips, 13, 15, this.state.currentTurn);
+                                    break;
+                                case 5: // S
+                                case 6: // S
+                                case 7: // S
+                                case 8: // S
+                                    this.updateShips(targetShips, 15, 19, this.state.currentTurn);
+                                    break;
+                            }
+                        }
                     }
                 }
     
@@ -95,7 +117,12 @@ export class GameRoom extends Room<State> {
                     this.state.winningPlayer = player.seat;
                     this.state.phase = 'result';
                 } else {
-                    this.state.playerTurn = this.state.playerTurn == 1 ? 2 : 1;
+                    if( this.state.playerTurn === 1){
+                        this.state.playerTurn = 2;
+                    } else {
+                        this.state.playerTurn = 1;
+                        this.state.currentTurn++;
+                    }
                 }
                 break;
             default:
@@ -131,8 +158,22 @@ export class GameRoom extends Room<State> {
             state.player2Shots[i] = -1
         }
 
+        for (let i = 0; i < this.startingFleetHealth; i++){
+            state.player1Ships[i] = -1;
+            state.player2Ships[i] = -1;
+        }
+
         this.setState(state);
         this.playersPlaced = 0;
         this.currentTurn = 0;
+    }
+
+    updateShips(arr: number[], s:number, e: number, t: number){
+        for(let i = s; i < e; i++){
+            if (arr[i] != -1){
+                arr[i] = t;
+                break;
+            }
+        }
     }
 }
