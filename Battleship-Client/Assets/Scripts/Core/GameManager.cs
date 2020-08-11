@@ -244,14 +244,15 @@ namespace BattleshipGame.Core
 
         private void SetMarker(KeyValueEventArgs<int, int> change, int playerNumber)
         {
-            var marker = change.Value == 1 ? Marker.Hit : Marker.Missed;
+            Marker marker;
             if (_myPlayerNumber == playerNumber)
             {
-                if (hideOpponentShotDetails) marker = Marker.TargetShot;
+                marker = Marker.TargetShot;
                 opponentMap.SetMarker(change.Key, marker);
             }
             else
             {
+                marker = _placement[change.Key] == -1 ? Marker.Missed : Marker.Hit;
                 userMap.SetMarker(change.Key, marker);
             }
         }
