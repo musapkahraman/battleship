@@ -58,8 +58,6 @@ export class GameRoom extends Room<State> {
 
         switch (command) {
             case 'place':
-                console.log('player ' + player.seat + ' placed ships');
-
                 this.placements[player.seat - 1] = message['placement'];
                 this.playersPlaced++;
 
@@ -73,8 +71,6 @@ export class GameRoom extends Room<State> {
                 let targetIndexes: number[] = message['targetIndexes'];
 
                 if(targetIndexes.length != 3) return;
-
-                console.log('player ' + player.seat + ' targets ' + targetIndexes);
 
                 let shots = player.seat == 1 ? this.state.player1Shots : this.state.player2Shots;
                 let targetShips = player.seat == 1 ? this.state.player2Ships : this.state.player1Ships;
@@ -165,12 +161,12 @@ export class GameRoom extends Room<State> {
 
         this.setState(state);
         this.playersPlaced = 0;
-        this.currentTurn = 0;
+        this.state.currentTurn = 1;
     }
 
     updateShips(arr: number[], s:number, e: number, t: number){
         for(let i = s; i < e; i++){
-            if (arr[i] != -1){
+            if (arr[i] == -1){
                 arr[i] = t;
                 break;
             }
