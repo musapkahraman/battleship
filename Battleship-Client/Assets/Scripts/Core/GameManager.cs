@@ -221,6 +221,8 @@ namespace BattleshipGame.Core
             _state.OnChange += OnStateChanged;
             _state.player1Shots.OnChange += OnFirstPlayerShotsChanged;
             _state.player2Shots.OnChange += OnSecondPlayerShotsChanged;
+            _state.player1Ships.OnChange += OnFirstPlayerShipsChanged;
+            _state.player2Ships.OnChange += OnSecondPlayerShipsChanged;
             OnGamePhaseChanged(this, _state.phase);
         }
 
@@ -254,6 +256,26 @@ namespace BattleshipGame.Core
             {
                 marker = _placement[change.Key] == -1 ? Marker.Missed : Marker.Hit;
                 userMap.SetMarker(change.Key, marker);
+            }
+        }
+        
+        private void OnFirstPlayerShipsChanged(object sender, KeyValueEventArgs<int, int> change)
+        {
+            const int playerNumber = 1;
+            SetHealth(change, playerNumber);
+        }
+
+        private void OnSecondPlayerShipsChanged(object sender, KeyValueEventArgs<int, int> change)
+        {
+            const int playerNumber = 2;
+            SetHealth(change, playerNumber);
+        }
+        
+        private void SetHealth(KeyValueEventArgs<int, int> change, int playerNumber)
+        {
+            if (_myPlayerNumber != playerNumber)
+            {
+                // Update health display!
             }
         }
 
