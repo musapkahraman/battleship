@@ -230,19 +230,19 @@ namespace BattleshipGame.Core
                 CheckTurn();
         }
 
-        private void OnFirstPlayerShotsChanged(object sender, KeyValueEventArgs<short, int> change)
+        private void OnFirstPlayerShotsChanged(object sender, KeyValueEventArgs<int, int> change)
         {
             const int playerNumber = 1;
             SetMarker(change, playerNumber);
         }
 
-        private void OnSecondPlayerShotsChanged(object sender, KeyValueEventArgs<short, int> change)
+        private void OnSecondPlayerShotsChanged(object sender, KeyValueEventArgs<int, int> change)
         {
             const int playerNumber = 2;
             SetMarker(change, playerNumber);
         }
 
-        private void SetMarker(KeyValueEventArgs<short, int> change, int playerNumber)
+        private void SetMarker(KeyValueEventArgs<int, int> change, int playerNumber)
         {
             var marker = change.Value == 1 ? Marker.Hit : Marker.Missed;
             if (_myPlayerNumber == playerNumber)
