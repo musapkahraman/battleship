@@ -262,12 +262,14 @@ namespace BattleshipGame.Core
         private void OnFirstPlayerShipsChanged(object sender, KeyValueEventArgs<int, int> change)
         {
             const int playerNumber = 1;
+            Debug.Log($"Player {playerNumber} | change[{change.Key}, {change.Value}]");
             SetHealth(change, playerNumber);
         }
 
         private void OnSecondPlayerShipsChanged(object sender, KeyValueEventArgs<int, int> change)
         {
             const int playerNumber = 2;
+            Debug.Log($"Player {playerNumber} | change[{change.Key}, {change.Value}]");
             SetHealth(change, playerNumber);
         }
         
