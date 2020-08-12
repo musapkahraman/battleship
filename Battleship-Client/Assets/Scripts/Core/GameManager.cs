@@ -22,7 +22,7 @@ namespace BattleshipGame.Core
         private static int _shipsPlaced;
         private static readonly List<int> Shots = new List<int>();
         private static State _state;
-        [SerializeField] private bool hideOpponentShotDetails;
+        [SerializeField] private OpponentStatusMaskPlacer opponentStatusMaskPlacer;
         [SerializeField] private TMP_Text messageField;
         [SerializeField] private MapViewer opponentMap;
         [SerializeField] private int size = 9;
@@ -262,14 +262,12 @@ namespace BattleshipGame.Core
         private void OnFirstPlayerShipsChanged(object sender, KeyValueEventArgs<int, int> change)
         {
             const int playerNumber = 1;
-            Debug.Log($"Player {playerNumber} | change[{change.Key}, {change.Value}]");
             SetHealth(change, playerNumber);
         }
 
         private void OnSecondPlayerShipsChanged(object sender, KeyValueEventArgs<int, int> change)
         {
             const int playerNumber = 2;
-            Debug.Log($"Player {playerNumber} | change[{change.Key}, {change.Value}]");
             SetHealth(change, playerNumber);
         }
         
@@ -277,7 +275,7 @@ namespace BattleshipGame.Core
         {
             if (_myPlayerNumber != playerNumber)
             {
-                // Update health display!
+                opponentStatusMaskPlacer.PlaceMask(change.Key,change.Value);
             }
         }
 
