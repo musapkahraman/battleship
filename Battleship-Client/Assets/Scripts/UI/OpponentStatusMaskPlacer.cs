@@ -25,7 +25,7 @@ namespace BattleshipGame.UI
             {
                 for (var i = 0; i < ship.amount; i++)
                 {
-                    foreach (var coordinate in ship.partCoordinates)
+                    foreach (var coordinate in ship.PartCoordinates)
                     {
                         _opponentShipPart.Add(new ShipPart(-1, coordinate, ship.sprite.GetInstanceID()));
                     }

@@ -2,7 +2,7 @@
 
 namespace BattleshipGame.Common
 {
-    public static class Converter
+    public static class GridConverter
     {
         public static Vector3Int ToCoordinate(int cellIndex, int mapSize)
         {

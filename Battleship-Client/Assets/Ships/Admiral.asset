@@ -13,11 +13,11 @@ MonoBehaviour:
   m_Name: Admiral
   m_EditorClassIdentifier: 
   sprite: {fileID: -8325962913616430414, guid: 07250fcc871756246be609926cd790c9, type: 3}
-  partCoordinates:
+  PartCoordinates:
   - {x: 0, y: 0}
   - {x: 2, y: 0}
   - {x: 1, y: -1}
   - {x: 0, y: -2}
   - {x: 2, y: -2}
-  amount: 1
   rankOrder: 0
+  amount: 1

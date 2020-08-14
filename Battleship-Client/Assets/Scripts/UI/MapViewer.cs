@@ -143,7 +143,7 @@ namespace BattleshipGame.UI
 
         public bool SetMarker(int index, Marker marker)
         {
-            var coordinate = Converter.ToCoordinate(index, manager.MapSize);
+            var coordinate = GridConverter.ToCoordinate(index, manager.MapSize);
             var tile = markerLayer.GetTile(coordinate);
             if (tile && cursorTiles[(int) marker].name.Equals(cursorTiles[(int) Marker.TargetMarked].name))
                 return false;
@@ -153,7 +153,7 @@ namespace BattleshipGame.UI
 
         public void ClearTile(int index)
         {
-            var coordinate = Converter.ToCoordinate(index, manager.MapSize);
+            var coordinate = GridConverter.ToCoordinate(index, manager.MapSize);
             if (markerLayer.HasTile(coordinate)) markerLayer.SetTile(coordinate, null);
         }
 

@@ -27,6 +27,7 @@ namespace BattleshipGame.Core
         [SerializeField] private MapViewer opponentMap;
         [SerializeField] private int size = 9;
         [SerializeField] private MapViewer userMap;
+        [SerializeField] private List<Ship> ships;
         public int MapSize => size;
 
         public event Action FireReady;
@@ -96,77 +97,29 @@ namespace BattleshipGame.Core
         public void PlaceShip(Vector3Int coordinate)
         {
             if (_mode != GameMode.Placement) return;
-            var shipWidth = 1;
-            var shipHeight = 1;
-            var shipType = (ShipType) _shipsPlaced;
-            switch (shipType)
-            {
-                case ShipType.Admiral:
-                    shipWidth = 3;
-                    shipHeight = 3;
-                    break;
-                case ShipType.VCruiser:
-                    shipHeight = 3;
-                    break;
-                case ShipType.HCruiser:
-                    shipWidth = 3;
-                    break;
-                case ShipType.VGunBoat:
-                    shipHeight = 2;
-                    break;
-                case ShipType.HGunBoat:
-                    shipWidth = 2;
-                    break;
-            }
-
+            var ship = ships[_shipsPlaced];
+            (int shipWidth, int shipHeight) = ship.GetShipSize();
             if (coordinate.x < 0 || coordinate.x + shipWidth > size || coordinate.y - (shipHeight - 1) < 0) return;
-            var xMin = coordinate.x - 1;
-            var xMax = coordinate.x + shipWidth;
-            var yMin = coordinate.y - shipHeight;
-            var yMax = coordinate.y + 1;
-            for (var y = yMin; y <= yMax; y++)
+            int xMin = coordinate.x - 1;
+            int xMax = coordinate.x + shipWidth;
+            int yMin = coordinate.y - shipHeight;
+            int yMax = coordinate.y + 1;
+            for (int y = yMin; y <= yMax; y++)
             {
                 if (y < 0 || y > size - 1) continue;
-                for (var x = xMin; x <= xMax; x++)
+                for (int x = xMin; x <= xMax; x++)
                 {
                     if (x < 0 || x > size - 1) continue;
                     if (!SetPlacementCell(new Vector3Int(x, y, 0), true)) return;
                 }
             }
 
-            switch (shipType)
+            foreach (var p in ship.PartCoordinates)
             {
-                case ShipType.Admiral:
-                    SetPlacementCell(new Vector3Int(coordinate.x, coordinate.y, 0));
-                    SetPlacementCell(new Vector3Int(coordinate.x + 2, coordinate.y, 0));
-                    SetPlacementCell(new Vector3Int(coordinate.x + 1, coordinate.y - 1, 0));
-                    SetPlacementCell(new Vector3Int(coordinate.x, coordinate.y - 2, 0));
-                    SetPlacementCell(new Vector3Int(coordinate.x + 2, coordinate.y - 2, 0));
-                    break;
-                case ShipType.VCruiser:
-                    SetPlacementCell(new Vector3Int(coordinate.x, coordinate.y, 0));
-                    SetPlacementCell(new Vector3Int(coordinate.x, coordinate.y - 1, 0));
-                    SetPlacementCell(new Vector3Int(coordinate.x, coordinate.y - 2, 0));
-                    break;
-                case ShipType.HCruiser:
-                    SetPlacementCell(new Vector3Int(coordinate.x, coordinate.y, 0));
-                    SetPlacementCell(new Vector3Int(coordinate.x + 1, coordinate.y, 0));
-                    SetPlacementCell(new Vector3Int(coordinate.x + 2, coordinate.y, 0));
-                    break;
-                case ShipType.VGunBoat:
-                    SetPlacementCell(new Vector3Int(coordinate.x, coordinate.y, 0));
-                    SetPlacementCell(new Vector3Int(coordinate.x, coordinate.y - 1, 0));
-                    break;
-                case ShipType.HGunBoat:
-                    SetPlacementCell(new Vector3Int(coordinate.x, coordinate.y, 0));
-                    SetPlacementCell(new Vector3Int(coordinate.x + 1, coordinate.y, 0));
-                    break;
-                default:
-                    SetPlacementCell(new Vector3Int(coordinate.x, coordinate.y, 0));
-                    break;
+                SetPlacementCell(new Vector3Int(coordinate.x + p.x, coordinate.y+ p.y, 0));
             }
 
-            userMap.SetShip(shipType, coordinate);
+            userMap.SetShip((ShipType) _shipsPlaced, coordinate);
             _shipsPlaced++;
             UpdateCursor();
             if (_shipsPlaced != 9) return;
@@ -176,7 +129,7 @@ namespace BattleshipGame.Core
 
         public void MarkTarget(Vector3Int targetCoordinate)
         {
-            var targetIndex = Converter.ToCellIndex(targetCoordinate, size);
+            int targetIndex = GridConverter.ToCellIndex(targetCoordinate, size);
             if (Shots.Contains(targetIndex))
             {
                 Shots.Remove(targetIndex);
@@ -205,7 +158,7 @@ namespace BattleshipGame.Core
 
         private bool SetPlacementCell(Vector3Int coordinate, bool testOnly = false)
         {
-            var cellIndex = Converter.ToCellIndex(coordinate, size);
+            int cellIndex = GridConverter.ToCellIndex(coordinate, size);
             if (cellIndex < 0 || cellIndex >= _cellCount) return false;
             if (_placement[cellIndex] >= 0) return false;
             if (testOnly) return true;
@@ -258,7 +211,7 @@ namespace BattleshipGame.Core
                 userMap.SetMarker(change.Key, marker);
             }
         }
-        
+
         private void OnFirstPlayerShipsChanged(object sender, KeyValueEventArgs<int, int> change)
         {
             const int playerNumber = 1;
@@ -270,12 +223,12 @@ namespace BattleshipGame.Core
             const int playerNumber = 2;
             SetHealth(change, playerNumber);
         }
-        
+
         private void SetHealth(KeyValueEventArgs<int, int> change, int playerNumber)
         {
             if (_myPlayerNumber != playerNumber)
             {
-                opponentStatusMaskPlacer.PlaceMask(change.Key,change.Value);
+                opponentStatusMaskPlacer.PlaceMask(change.Key, change.Value);
             }
         }
 

@@ -13,8 +13,8 @@ MonoBehaviour:
   m_Name: GunBoatHorizontal
   m_EditorClassIdentifier: 
   sprite: {fileID: 6108982779496689341, guid: 07250fcc871756246be609926cd790c9, type: 3}
-  partCoordinates:
+  PartCoordinates:
   - {x: 0, y: 0}
   - {x: 1, y: 0}
-  amount: 1
   rankOrder: 4
+  amount: 1

@@ -13,9 +13,9 @@ MonoBehaviour:
   m_Name: CruiserHorizontal
   m_EditorClassIdentifier: 
   sprite: {fileID: 4927151648187961526, guid: 07250fcc871756246be609926cd790c9, type: 3}
-  partCoordinates:
+  PartCoordinates:
   - {x: 0, y: 0}
   - {x: 1, y: 0}
   - {x: 2, y: 0}
-  amount: 1
   rankOrder: 2
+  amount: 1
