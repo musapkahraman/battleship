@@ -1,4 +1,4 @@
-﻿namespace BattleshipGame.UI
+﻿namespace BattleshipGame.Common
 {
     public enum Marker
     {
