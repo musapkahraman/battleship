@@ -66,6 +66,21 @@ namespace BattleshipGame.Core
 
         public event Action FireReady;
         public event Action FireNotReady;
+        public event Action RandomAvailable;
+        public event Action RandomHidden;
+        public event Action ContinueAvailable;
+        public event Action ContinueHidden;
+
+        private void BeginShipPlacement()
+        {
+            _mode = GameMode.Placement;
+            RandomAvailable?.Invoke();
+            messageField.text = "Place your Ships!";
+            userMap.SetPlacementMode();
+            PopulateShipsToBePlaced();
+            _currentShipToBePlaced = _shipsToBePlaced.Dequeue();
+            UpdateCursor();
+        }
 
         private void PopulateShipsToBePlaced()
         {
@@ -75,14 +90,47 @@ namespace BattleshipGame.Core
                     _shipsToBePlaced.Enqueue(ship);
         }
 
-        private void BeginShipPlacement()
+        public void PlaceShip(Vector3Int coordinate)
         {
-            _mode = GameMode.Placement;
-            messageField.text = "Place your Ships!";
-            userMap.SetPlacementMode();
-            PopulateShipsToBePlaced();
-            _currentShipToBePlaced = _shipsToBePlaced.Dequeue();
-            UpdateCursor();
+            if (_mode != GameMode.Placement) return;
+            (int shipWidth, int shipHeight) = _currentShipToBePlaced.GetShipSize();
+            if (coordinate.x < 0 || coordinate.x + shipWidth > areaSize || coordinate.y - (shipHeight - 1) < 0) return;
+            int xMin = coordinate.x - 1;
+            int xMax = coordinate.x + shipWidth;
+            int yMin = coordinate.y - shipHeight;
+            int yMax = coordinate.y + 1;
+            for (int y = yMin; y <= yMax; y++)
+            {
+                if (y < 0 || y > areaSize - 1) continue;
+                for (int x = xMin; x <= xMax; x++)
+                {
+                    if (x < 0 || x > areaSize - 1) continue;
+                    if (!SetPlacementCell(new Vector3Int(x, y, 0), true)) return;
+                }
+            }
+
+            foreach (var p in _currentShipToBePlaced.PartCoordinates)
+                SetPlacementCell(new Vector3Int(coordinate.x + p.x, coordinate.y + p.y, 0));
+
+            userMap.SetShip(_currentShipToBePlaced, coordinate);
+            if (_shipsToBePlaced.Count > 0)
+            {
+                _currentShipToBePlaced = _shipsToBePlaced.Dequeue();
+                _shipsPlaced++;
+                UpdateCursor();
+                return;
+            }
+
+            userMap.SetDisabled();
+            ContinueAvailable?.Invoke();
+        }
+
+        public void ContinueAfterPlacementComplete()
+        {
+            ContinueHidden?.Invoke();
+            RandomHidden?.Invoke();
+            _client.SendPlacement(_placementMap);
+            WaitForOpponentPlaceShips();
         }
 
         private void WaitForOpponentPlaceShips()
@@ -118,41 +166,6 @@ namespace BattleshipGame.Core
             messageField.text = _state.winningPlayer == _myPlayerNumber ? "You Win!" : "You Lost!!!";
         }
 
-        public void PlaceShip(Vector3Int coordinate)
-        {
-            if (_mode != GameMode.Placement) return;
-            (int shipWidth, int shipHeight) = _currentShipToBePlaced.GetShipSize();
-            if (coordinate.x < 0 || coordinate.x + shipWidth > areaSize || coordinate.y - (shipHeight - 1) < 0) return;
-            int xMin = coordinate.x - 1;
-            int xMax = coordinate.x + shipWidth;
-            int yMin = coordinate.y - shipHeight;
-            int yMax = coordinate.y + 1;
-            for (int y = yMin; y <= yMax; y++)
-            {
-                if (y < 0 || y > areaSize - 1) continue;
-                for (int x = xMin; x <= xMax; x++)
-                {
-                    if (x < 0 || x > areaSize - 1) continue;
-                    if (!SetPlacementCell(new Vector3Int(x, y, 0), true)) return;
-                }
-            }
-
-            foreach (var p in _currentShipToBePlaced.PartCoordinates)
-                SetPlacementCell(new Vector3Int(coordinate.x + p.x, coordinate.y + p.y, 0));
-
-            userMap.SetShip(_currentShipToBePlaced, coordinate);
-            if (_shipsToBePlaced.Count > 0)
-            {
-                _currentShipToBePlaced = _shipsToBePlaced.Dequeue();
-                _shipsPlaced++;
-                UpdateCursor();
-                return;
-            }
-
-            _client.SendPlacement(_placementMap);
-            WaitForOpponentPlaceShips();
-        }
-
         public void MarkTarget(Vector3Int targetCoordinate)
         {
             int targetIndex = GridConverter.ToCellIndex(targetCoordinate, areaSize);
@@ -174,7 +187,13 @@ namespace BattleshipGame.Core
 
         public static void FireShots()
         {
-            _client.SendTurn(Shots.ToArray());
+            if (Shots.Count == ShotsPerTurn)
+                _client.SendTurn(Shots.ToArray());
+        }
+
+        public void PlaceShipsRandomly()
+        {
+            Debug.Log("Placing ships randomly");
         }
 
         private void UpdateCursor()
