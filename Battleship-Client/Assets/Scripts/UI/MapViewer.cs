@@ -6,54 +6,33 @@ using UnityEngine.Tilemaps;
 
 namespace BattleshipGame.UI
 {
-    public enum ShipType
-    {
-        Admiral = 0,
-        VCruiser,
-        HCruiser,
-        VGunBoat,
-        HGunBoat,
-        Scout1,
-        Scout2,
-        Scout3,
-        Scout4
-    }
-
-    public enum Marker
-    {
-        TargetActive = 9,
-        TargetInactive,
-        Hit,
-        Missed,
-        TargetMarked,
-        TargetShot
-    }
-
-    public enum MapMode
-    {
-        Disabled,
-        Place,
-        Attack
-    }
-
     public class MapViewer : MonoBehaviour
     {
+        // @formatter:off
+        [Header("Layers")]
+        [SerializeField] private Tilemap cursorLayer;
+        [SerializeField] private Tilemap markerLayer;
+        [SerializeField] private Tilemap fleetLayer;
+        [Space] 
+        [Header("Cursors")] 
+        [SerializeField] private Tile inactiveCursor;
+        [SerializeField] private Tile activeCursor;
+        [Space] 
+        // @formatter:on
+        
+        [SerializeField] private Camera sceneCamera;
+        [SerializeField] private ScreenType screenType;
+        [SerializeField] private GameManager manager;
+        [SerializeField] private Tile[] cursorTiles;
         private Tile _cursorTile;
         private Grid _grid;
         private Vector3Int _maxCellCoordinate;
         private Vector3Int _minCellCoordinate;
         private MapMode _mode;
-        [SerializeField] private Camera cam;
-        [SerializeField] private Tilemap cursorLayer;
-        [SerializeField] private Tile[] cursorTiles;
-        [SerializeField] private Tilemap fleetLayer;
-        [SerializeField] private GameManager manager;
-        [SerializeField] private Tilemap markerLayer;
-        [SerializeField] private ScreenType screenType;
 
         private void Start()
         {
-            if (cam == null) cam = Camera.main;
+            if (sceneCamera == null) sceneCamera = Camera.main;
             _grid = GetComponent<Grid>();
             manager.FireReady += DisableTargetCursor;
             manager.FireNotReady += EnableTargetCursor;
@@ -63,16 +42,6 @@ namespace BattleshipGame.UI
         {
             manager.FireReady -= DisableTargetCursor;
             manager.FireNotReady -= EnableTargetCursor;
-        }
-
-        private void DisableTargetCursor()
-        {
-            _cursorTile = cursorTiles[(int) Marker.TargetInactive];
-        }
-
-        private void EnableTargetCursor()
-        {
-            _cursorTile = cursorTiles[(int) Marker.TargetActive];
         }
 
         private void OnMouseDown()
@@ -101,9 +70,19 @@ namespace BattleshipGame.UI
             cursorLayer.SetTile(cell, _cursorTile);
         }
 
+        private void DisableTargetCursor()
+        {
+            _cursorTile = cursorTiles[(int) Marker.TargetInactive];
+        }
+
+        private void EnableTargetCursor()
+        {
+            _cursorTile = cursorTiles[(int) Marker.TargetActive];
+        }
+
         private Vector3Int ScreenToCell(Vector3 screenPoint)
         {
-            var worldPoint = cam.ScreenToWorldPoint(screenPoint);
+            var worldPoint = sceneCamera.ScreenToWorldPoint(screenPoint);
             var cell = _grid.WorldToCell(worldPoint);
             cell.Clamp(_minCellCoordinate, _maxCellCoordinate);
             return cell;

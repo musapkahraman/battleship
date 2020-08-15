@@ -7,10 +7,10 @@ namespace BattleshipGame.UI
 {
     public class FireButtonManager : MonoBehaviour
     {
+        [SerializeField] private GameManager manager;
         private Button _button;
         private Color _textColorCache;
         private TMP_Text _tmpText;
-        [SerializeField] private GameManager manager;
 
         private void Start()
         {

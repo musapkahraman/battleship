@@ -461,8 +461,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6a2871fc316820e499e212ce6f7fda48, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  cam: {fileID: 519420031}
   cursorLayer: {fileID: 993690750}
+  markerLayer: {fileID: 576467931}
+  fleetLayer: {fileID: 1328256394}
+  inactiveCursor: {fileID: 11400000, guid: 04a17b6852e966a43aedcad76ba13a2d, type: 2}
+  activeCursor: {fileID: 11400000, guid: 47e6f4241d448624d9bdbdcd48cdf737, type: 2}
+  sceneCamera: {fileID: 519420031}
+  screenType: 0
+  manager: {fileID: 1832216561}
   cursorTiles:
   - {fileID: 11400000, guid: f88dbbe2a212cb343a4dbc3140dd3764, type: 2}
   - {fileID: 11400000, guid: cac3725cf43717747ae33588c2c84a99, type: 2}
@@ -479,10 +485,6 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 54167e58c58633d4faeb4957594309f9, type: 2}
   - {fileID: 11400000, guid: e356ec117ee123d4d894d9404a3baba3, type: 2}
   - {fileID: 11400000, guid: 1981153f3531ff6499dcbf638477b9f8, type: 2}
-  fleetLayer: {fileID: 1328256394}
-  manager: {fileID: 1832216561}
-  markerLayer: {fileID: 576467931}
-  screenType: 0
 --- !u!1001 &230196566
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -3282,8 +3284,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6a2871fc316820e499e212ce6f7fda48, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  cam: {fileID: 519420031}
   cursorLayer: {fileID: 1893157501}
+  markerLayer: {fileID: 1532680194}
+  fleetLayer: {fileID: 0}
+  inactiveCursor: {fileID: 0}
+  activeCursor: {fileID: 0}
+  sceneCamera: {fileID: 519420031}
+  screenType: 1
+  manager: {fileID: 1832216561}
   cursorTiles:
   - {fileID: 11400000, guid: f88dbbe2a212cb343a4dbc3140dd3764, type: 2}
   - {fileID: 11400000, guid: cac3725cf43717747ae33588c2c84a99, type: 2}
@@ -3300,10 +3308,6 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 54167e58c58633d4faeb4957594309f9, type: 2}
   - {fileID: 11400000, guid: e356ec117ee123d4d894d9404a3baba3, type: 2}
   - {fileID: 11400000, guid: 1981153f3531ff6499dcbf638477b9f8, type: 2}
-  fleetLayer: {fileID: 0}
-  manager: {fileID: 1832216561}
-  markerLayer: {fileID: 1532680194}
-  screenType: 1
 --- !u!156049354 &799895484
 Grid:
   m_ObjectHideFlags: 0

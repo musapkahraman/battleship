@@ -9,8 +9,8 @@ namespace BattleshipGame.UI
     {
         [SerializeField] private GameObject maskPrefab;
         [SerializeField] private List<Ship> ships;
-        private readonly Dictionary<int, Stack<Vector3Int>> _spritePositions = new Dictionary<int, Stack<Vector3Int>>();
         private readonly List<ShipPart> _opponentShipPart = new List<ShipPart>();
+        private readonly Dictionary<int, Stack<Vector3Int>> _spritePositions = new Dictionary<int, Stack<Vector3Int>>();
 
         private void Start()
         {
@@ -22,15 +22,9 @@ namespace BattleshipGame.UI
         {
             var rankOrderedShips = ships.OrderBy(ship => ship.rankOrder);
             foreach (var ship in rankOrderedShips)
-            {
                 for (var i = 0; i < ship.amount; i++)
-                {
                     foreach (var coordinate in ship.PartCoordinates)
-                    {
                         _opponentShipPart.Add(new ShipPart(-1, coordinate, ship.sprite.GetInstanceID()));
-                    }
-                }
-            }
         }
 
         private void CacheSpritePositions()

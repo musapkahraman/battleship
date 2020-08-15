@@ -16,7 +16,6 @@ namespace BattleshipGame.UI
         private const string Alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
         private const int CellSize = 50;
         private static readonly Stack<GameObject> PrintedObjects = new Stack<GameObject>();
-        private int _mapSize;
         [SerializeField] private Axis axis;
         [SerializeField] private Canvas canvas;
         [SerializeField] private GameObject cellLabelPrefab;
@@ -24,6 +23,7 @@ namespace BattleshipGame.UI
         [SerializeField] private GameManager manager;
         [SerializeField] private Place place;
         [SerializeField] private Type type;
+        private int _mapSize;
 
         private enum Axis
         {
@@ -66,7 +66,7 @@ namespace BattleshipGame.UI
             var verticalInterval = Vector2.up * CellSize * (grid.cellGap.y + grid.cellSize.y);
 
             var interval = axis == Axis.Horizontal ? horizontalInterval : verticalInterval;
-            var director = direction == Direction.Forward ? 1 : -1;
+            int director = direction == Direction.Forward ? 1 : -1;
 
             Vector2 startingPoint;
             switch (place)
