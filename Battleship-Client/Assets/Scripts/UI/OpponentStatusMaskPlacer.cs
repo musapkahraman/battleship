@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using System.Linq;
 using BattleshipGame.Core;
 using UnityEngine;
 using UnityEngine.Tilemaps;

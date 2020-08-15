@@ -7,8 +7,8 @@ namespace BattleshipGame.Network
 {
     public class ConnectionManager : MonoBehaviour
     {
-        private GameClient _client;
         [SerializeField] private TMP_Text messageField;
+        private GameClient _client;
 
         private void Start()
         {
@@ -20,6 +20,14 @@ namespace BattleshipGame.Network
                 _client.Connect();
             else
                 OnConnected(this, null);
+        }
+
+        private void OnDestroy()
+        {
+            if (_client == null) return;
+            _client.ConnectionOpened -= OnConnected;
+            _client.JoinedIn -= OnJoined;
+            _client.GamePhaseChanged -= OnGamePhaseChanged;
         }
 
         private void OnConnected(object sender, EventArgs e)
@@ -40,14 +48,6 @@ namespace BattleshipGame.Network
         private static void OnGamePhaseChanged(object sender, string phase)
         {
             if (phase == "place") SceneManager.LoadScene("GameScene");
-        }
-
-        private void OnDestroy()
-        {
-            if (_client == null) return;
-            _client.ConnectionOpened -= OnConnected;
-            _client.JoinedIn -= OnJoined;
-            _client.GamePhaseChanged -= OnGamePhaseChanged;
         }
     }
 }

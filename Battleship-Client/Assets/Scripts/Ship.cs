@@ -11,15 +11,15 @@ namespace BattleshipGame
         public Sprite sprite;
         public Tile tile;
 
-        [Tooltip("Start with the sprite's pivot. First value must be (0, 0)")]
-        // ReSharper disable once FieldCanBeMadeReadOnly.Global
-        public List<Vector2Int> PartCoordinates = new List<Vector2Int>();
-
         [Tooltip("Smallest number means the highest rank.")]
         public int rankOrder;
 
         [Tooltip("How many of this ship does each player have?")]
         public int amount;
+
+        [Tooltip("Start with the sprite's pivot. First value must be (0, 0)")]
+        // ReSharper disable once FieldCanBeMadeReadOnly.Global
+        public List<Vector2Int> PartCoordinates = new List<Vector2Int>();
 
         private void OnValidate()
         {

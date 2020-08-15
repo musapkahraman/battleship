@@ -16,12 +16,6 @@ namespace BattleshipGame.Network
         public bool Connected => ClientId != null;
         public State State => _room?.State;
         public bool Joined => _room != null && _room.Connection.IsOpen;
-        public event EventHandler ConnectionClosed;
-        public event EventHandler ConnectionOpened;
-        public event EventHandler<string> GamePhaseChanged;
-        public event EventHandler<State> InitialStateReceived;
-        public event EventHandler JoinedIn;
-        public event EventHandler<object> MessageReceived;
 
         private void OnDestroy()
         {
@@ -33,6 +27,13 @@ namespace BattleshipGame.Network
             _room?.Leave();
             _client?.Close();
         }
+
+        public event EventHandler ConnectionClosed;
+        public event EventHandler ConnectionOpened;
+        public event EventHandler<string> GamePhaseChanged;
+        public event EventHandler<State> InitialStateReceived;
+        public event EventHandler JoinedIn;
+        public event EventHandler<object> MessageReceived;
 
         public void Connect()
         {

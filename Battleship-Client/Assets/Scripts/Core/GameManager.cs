@@ -26,26 +26,16 @@ namespace BattleshipGame.Core
         [SerializeField] private MapViewer opponentMap;
         [SerializeField] private OpponentStatusMaskPlacer opponentStatusMaskPlacer;
         [SerializeField] private int areaSize = 9;
+
         [Tooltip("Add the types of ships only. Amounts and the sorting order are determined by the ship itself.")]
-        [SerializeField] private List<Ship> ships;
+        [SerializeField]
+        private List<Ship> ships;
+
         private Ship _currentShipToBePlaced;
         private int _shipsPlaced;
         private Queue<Ship> _shipsToBePlaced;
         public int MapAreaSize => areaSize;
         public IEnumerable<Ship> Ships => ships;
-        public event Action FireReady;
-        public event Action FireNotReady;
-
-        private void OnValidate()
-        {
-            var hashSet = new HashSet<Ship>();
-            foreach (var ship in ships)
-            {
-                hashSet.Add(ship);
-            }
-
-            ships = hashSet.OrderBy(ship => ship.rankOrder).ToList();
-        }
 
         private void Start()
         {
@@ -65,6 +55,17 @@ namespace BattleshipGame.Core
             _client.InitialStateReceived -= OnInitialStateReceived;
             _client.GamePhaseChanged -= OnGamePhaseChanged;
         }
+
+        private void OnValidate()
+        {
+            var hashSet = new HashSet<Ship>();
+            foreach (var ship in ships) hashSet.Add(ship);
+
+            ships = hashSet.OrderBy(ship => ship.rankOrder).ToList();
+        }
+
+        public event Action FireReady;
+        public event Action FireNotReady;
 
         private void PopulateShipsToBePlaced()
         {
