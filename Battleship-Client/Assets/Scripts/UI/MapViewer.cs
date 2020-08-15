@@ -122,6 +122,17 @@ namespace BattleshipGame.UI
             fleetLayer.SetTile(coordinate, ship.tile);
         }
 
+        public void ClearAllShips()
+        {
+            fleetLayer.ClearAllTiles();
+        }
+
+        public void ClearMarkerTile(int index)
+        {
+            var coordinate = GridConverter.ToCoordinate(index, manager.MapAreaSize);
+            if (markerLayer.HasTile(coordinate)) markerLayer.SetTile(coordinate, null);
+        }
+
         public bool SetMarker(int index, Marker marker)
         {
             Tile markerTile;
@@ -149,12 +160,6 @@ namespace BattleshipGame.UI
                 return false;
             markerLayer.SetTile(coordinate, markerTile);
             return true;
-        }
-
-        public void ClearTile(int index)
-        {
-            var coordinate = GridConverter.ToCoordinate(index, manager.MapAreaSize);
-            if (markerLayer.HasTile(coordinate)) markerLayer.SetTile(coordinate, null);
         }
 
         private enum ScreenType

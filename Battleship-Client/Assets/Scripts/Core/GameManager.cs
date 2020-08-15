@@ -8,6 +8,7 @@ using Colyseus.Schema;
 using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using Random = UnityEngine.Random;
 
 namespace BattleshipGame.Core
 {
@@ -33,6 +34,7 @@ namespace BattleshipGame.Core
 
         private Ship _currentShipToBePlaced;
         private int _shipsPlaced;
+        private bool _isShipPlacementComplete;
         private Queue<Ship> _shipsToBePlaced;
         public int MapAreaSize => areaSize;
         public IEnumerable<Ship> Ships => ships;
@@ -42,8 +44,7 @@ namespace BattleshipGame.Core
             _client = GameClient.Instance;
             if (!_client.Connected) SceneManager.LoadScene("ConnectingScene");
             _cellCount = areaSize * areaSize;
-            _placementMap = new int[_cellCount];
-            for (var i = 0; i < _cellCount; i++) _placementMap[i] = -1;
+            ResetPlacementMap();
             _client.InitialStateReceived += OnInitialStateReceived;
             _client.GamePhaseChanged += OnGamePhaseChanged;
             if (_client.State != null) OnInitialStateReceived(this, _client.State);
@@ -70,6 +71,26 @@ namespace BattleshipGame.Core
         public event Action RandomHidden;
         public event Action ContinueAvailable;
         public event Action ContinueHidden;
+
+        private void ResetPlacementMap()
+        {
+            _shipsPlaced = 0;
+            _placementMap = new int[_cellCount];
+            for (var i = 0; i < _cellCount; i++) _placementMap[i] = -1;
+            userMap.ClearAllShips();
+            _isShipPlacementComplete = false;
+        }
+
+        public void PlaceShipsRandomly()
+        {
+            ResetPlacementMap();
+            PopulateShipsToBePlaced();
+            _currentShipToBePlaced = _shipsToBePlaced.Dequeue();
+            while (!_isShipPlacementComplete)
+            {
+                PlaceShip(new Vector3Int(Random.Range(0, areaSize), Random.Range(0, areaSize), 0));
+            }
+        }
 
         private void BeginShipPlacement()
         {
@@ -121,6 +142,7 @@ namespace BattleshipGame.Core
                 return;
             }
 
+            _isShipPlacementComplete = true;
             userMap.SetDisabled();
             ContinueAvailable?.Invoke();
         }
@@ -172,7 +194,7 @@ namespace BattleshipGame.Core
             if (Shots.Contains(targetIndex))
             {
                 Shots.Remove(targetIndex);
-                opponentMap.ClearTile(targetIndex);
+                opponentMap.ClearMarkerTile(targetIndex);
             }
             else if (Shots.Count < ShotsPerTurn && opponentMap.SetMarker(targetIndex, Marker.MarkedTarget))
             {
@@ -189,11 +211,6 @@ namespace BattleshipGame.Core
         {
             if (Shots.Count == ShotsPerTurn)
                 _client.SendTurn(Shots.ToArray());
-        }
-
-        public void PlaceShipsRandomly()
-        {
-            Debug.Log("Placing ships randomly");
         }
 
         private void UpdateCursor()
