@@ -8,6 +8,9 @@ namespace BattleshipGame.UI
 {
     public class MapViewer : MonoBehaviour
     {
+        [SerializeField] private Camera sceneCamera;
+        [SerializeField] private GameManager manager;
+        [SerializeField] private ScreenType screenType;
         // @formatter:off
         [Header("Layers")]
         [SerializeField] private Tilemap cursorLayer;
@@ -15,15 +18,16 @@ namespace BattleshipGame.UI
         [SerializeField] private Tilemap fleetLayer;
         [Space] 
         [Header("Cursors")] 
-        [SerializeField] private Tile inactiveCursor;
         [SerializeField] private Tile activeCursor;
+        [SerializeField] private Tile inactiveCursor;
+        [Space] 
+        [Header("Markers")] 
+        [SerializeField] private Tile hitMarker;
+        [SerializeField] private Tile missedMarker;
+        [SerializeField] private Tile markedTargetMarker;
+        [SerializeField] private Tile shotTargetMarker;
         [Space] 
         // @formatter:on
-        
-        [SerializeField] private Camera sceneCamera;
-        [SerializeField] private ScreenType screenType;
-        [SerializeField] private GameManager manager;
-        [SerializeField] private Tile[] cursorTiles;
         private Tile _cursorTile;
         private Grid _grid;
         private Vector3Int _maxCellCoordinate;
@@ -72,12 +76,12 @@ namespace BattleshipGame.UI
 
         private void DisableTargetCursor()
         {
-            _cursorTile = cursorTiles[(int) Marker.TargetInactive];
+            _cursorTile = inactiveCursor;
         }
 
         private void EnableTargetCursor()
         {
-            _cursorTile = cursorTiles[(int) Marker.TargetActive];
+            _cursorTile = activeCursor;
         }
 
         private Vector3Int ScreenToCell(Vector3 screenPoint)
@@ -97,42 +101,59 @@ namespace BattleshipGame.UI
         {
             _mode = MapMode.Place;
             _minCellCoordinate = new Vector3Int(0, 0, 0);
-            _maxCellCoordinate = new Vector3Int(manager.MapSize - 1, manager.MapSize - 1, 0);
+            _maxCellCoordinate = new Vector3Int(manager.MapAreaSize - 1, manager.MapAreaSize - 1, 0);
         }
 
         public void SetAttackMode()
         {
             _mode = MapMode.Attack;
-            _cursorTile = cursorTiles[(int) Marker.TargetActive];
+            _cursorTile = activeCursor;
             _minCellCoordinate = new Vector3Int(0, 0, 0);
-            _maxCellCoordinate = new Vector3Int(manager.MapSize - 1, manager.MapSize - 1, 0);
+            _maxCellCoordinate = new Vector3Int(manager.MapAreaSize - 1, manager.MapAreaSize - 1, 0);
         }
 
-        public void SetShipCursor(ShipType shipType)
+        public void SetCursorTile(Tile tile)
         {
-            _cursorTile = cursorTiles[(int) shipType];
+            _cursorTile = tile;
         }
 
-        public void SetShip(ShipType shipType, Vector3Int coordinate)
+        public void SetShip(Ship ship, Vector3Int coordinate)
         {
-            var index = (int) shipType;
-            var tile = cursorTiles[index];
-            fleetLayer.SetTile(coordinate, tile);
+            fleetLayer.SetTile(coordinate, ship.tile);
         }
 
         public bool SetMarker(int index, Marker marker)
         {
-            var coordinate = GridConverter.ToCoordinate(index, manager.MapSize);
+            Tile markerTile;
+            switch (marker)
+            {
+                case Marker.Missed:
+                    markerTile = missedMarker;
+                    break;
+                case Marker.Hit:
+                    markerTile = hitMarker;
+                    break;
+                case Marker.MarkedTarget:
+                    markerTile = markedTargetMarker;
+                    break;
+                case Marker.ShotTarget:
+                    markerTile = shotTargetMarker;
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(marker), marker, null);
+            }
+
+            var coordinate = GridConverter.ToCoordinate(index, manager.MapAreaSize);
             var tile = markerLayer.GetTile(coordinate);
-            if (tile && cursorTiles[(int) marker].name.Equals(cursorTiles[(int) Marker.TargetMarked].name))
+            if (tile && !(markerTile is null) && markerTile.name.Equals(markedTargetMarker.name))
                 return false;
-            markerLayer.SetTile(coordinate, cursorTiles[(int) marker]);
+            markerLayer.SetTile(coordinate, markerTile);
             return true;
         }
 
         public void ClearTile(int index)
         {
-            var coordinate = GridConverter.ToCoordinate(index, manager.MapSize);
+            var coordinate = GridConverter.ToCoordinate(index, manager.MapAreaSize);
             if (markerLayer.HasTile(coordinate)) markerLayer.SetTile(coordinate, null);
         }
 
@@ -140,6 +161,13 @@ namespace BattleshipGame.UI
         {
             User,
             Opponent
+        }
+
+        private enum MapMode
+        {
+            Disabled,
+            Place,
+            Attack
         }
     }
 }

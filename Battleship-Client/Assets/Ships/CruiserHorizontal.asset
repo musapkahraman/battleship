@@ -13,6 +13,7 @@ MonoBehaviour:
   m_Name: CruiserHorizontal
   m_EditorClassIdentifier: 
   sprite: {fileID: 4927151648187961526, guid: 07250fcc871756246be609926cd790c9, type: 3}
+  tile: {fileID: 11400000, guid: 9d07cd04ab777084a94f231a1c40e112, type: 2}
   PartCoordinates:
   - {x: 0, y: 0}
   - {x: 1, y: 0}

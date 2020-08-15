@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Tilemaps;
 
 namespace BattleshipGame
 {
@@ -8,6 +9,7 @@ namespace BattleshipGame
     public class Ship : ScriptableObject
     {
         public Sprite sprite;
+        public Tile tile;
 
         [Tooltip("Start with the sprite's pivot. First value must be (0, 0)")]
         // ReSharper disable once FieldCanBeMadeReadOnly.Global

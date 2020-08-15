@@ -13,6 +13,7 @@ MonoBehaviour:
   m_Name: Admiral
   m_EditorClassIdentifier: 
   sprite: {fileID: -8325962913616430414, guid: 07250fcc871756246be609926cd790c9, type: 3}
+  tile: {fileID: 11400000, guid: f88dbbe2a212cb343a4dbc3140dd3764, type: 2}
   PartCoordinates:
   - {x: 0, y: 0}
   - {x: 2, y: 0}

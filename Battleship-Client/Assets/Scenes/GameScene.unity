@@ -461,30 +461,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6a2871fc316820e499e212ce6f7fda48, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  cursorLayer: {fileID: 993690750}
-  markerLayer: {fileID: 576467931}
-  fleetLayer: {fileID: 1328256394}
-  inactiveCursor: {fileID: 11400000, guid: 04a17b6852e966a43aedcad76ba13a2d, type: 2}
-  activeCursor: {fileID: 11400000, guid: 47e6f4241d448624d9bdbdcd48cdf737, type: 2}
   sceneCamera: {fileID: 519420031}
   screenType: 0
   manager: {fileID: 1832216561}
-  cursorTiles:
-  - {fileID: 11400000, guid: f88dbbe2a212cb343a4dbc3140dd3764, type: 2}
-  - {fileID: 11400000, guid: cac3725cf43717747ae33588c2c84a99, type: 2}
-  - {fileID: 11400000, guid: 9d07cd04ab777084a94f231a1c40e112, type: 2}
-  - {fileID: 11400000, guid: 31deb3423deb3154f81d4f7a7be7aaa2, type: 2}
-  - {fileID: 11400000, guid: 4d885ffad1ae38945bde7c1d5a7d55be, type: 2}
-  - {fileID: 11400000, guid: 3a3fc01d0f72e0045a8d0eddd8a6e6c1, type: 2}
-  - {fileID: 11400000, guid: 3a3fc01d0f72e0045a8d0eddd8a6e6c1, type: 2}
-  - {fileID: 11400000, guid: 3a3fc01d0f72e0045a8d0eddd8a6e6c1, type: 2}
-  - {fileID: 11400000, guid: 3a3fc01d0f72e0045a8d0eddd8a6e6c1, type: 2}
-  - {fileID: 11400000, guid: 47e6f4241d448624d9bdbdcd48cdf737, type: 2}
-  - {fileID: 11400000, guid: 04a17b6852e966a43aedcad76ba13a2d, type: 2}
-  - {fileID: 11400000, guid: f161dbc5e54e91d4088ff78e7bd1d4a5, type: 2}
-  - {fileID: 11400000, guid: 54167e58c58633d4faeb4957594309f9, type: 2}
-  - {fileID: 11400000, guid: e356ec117ee123d4d894d9404a3baba3, type: 2}
-  - {fileID: 11400000, guid: 1981153f3531ff6499dcbf638477b9f8, type: 2}
+  cursorLayer: {fileID: 993690750}
+  markerLayer: {fileID: 576467931}
+  fleetLayer: {fileID: 1328256394}
+  activeCursor: {fileID: 11400000, guid: 47e6f4241d448624d9bdbdcd48cdf737, type: 2}
+  inactiveCursor: {fileID: 11400000, guid: 04a17b6852e966a43aedcad76ba13a2d, type: 2}
+  hitMarker: {fileID: 11400000, guid: f161dbc5e54e91d4088ff78e7bd1d4a5, type: 2}
+  missedMarker: {fileID: 11400000, guid: 54167e58c58633d4faeb4957594309f9, type: 2}
+  markedTargetMarker: {fileID: 11400000, guid: e356ec117ee123d4d894d9404a3baba3, type: 2}
+  shotTargetMarker: {fileID: 11400000, guid: 1981153f3531ff6499dcbf638477b9f8, type: 2}
 --- !u!1001 &230196566
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -3284,30 +3272,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6a2871fc316820e499e212ce6f7fda48, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  cursorLayer: {fileID: 1893157501}
-  markerLayer: {fileID: 1532680194}
-  fleetLayer: {fileID: 0}
-  inactiveCursor: {fileID: 0}
-  activeCursor: {fileID: 0}
   sceneCamera: {fileID: 519420031}
   screenType: 1
   manager: {fileID: 1832216561}
-  cursorTiles:
-  - {fileID: 11400000, guid: f88dbbe2a212cb343a4dbc3140dd3764, type: 2}
-  - {fileID: 11400000, guid: cac3725cf43717747ae33588c2c84a99, type: 2}
-  - {fileID: 11400000, guid: 9d07cd04ab777084a94f231a1c40e112, type: 2}
-  - {fileID: 11400000, guid: 31deb3423deb3154f81d4f7a7be7aaa2, type: 2}
-  - {fileID: 11400000, guid: 4d885ffad1ae38945bde7c1d5a7d55be, type: 2}
-  - {fileID: 11400000, guid: 3a3fc01d0f72e0045a8d0eddd8a6e6c1, type: 2}
-  - {fileID: 11400000, guid: 3a3fc01d0f72e0045a8d0eddd8a6e6c1, type: 2}
-  - {fileID: 11400000, guid: 3a3fc01d0f72e0045a8d0eddd8a6e6c1, type: 2}
-  - {fileID: 11400000, guid: 3a3fc01d0f72e0045a8d0eddd8a6e6c1, type: 2}
-  - {fileID: 11400000, guid: 47e6f4241d448624d9bdbdcd48cdf737, type: 2}
-  - {fileID: 11400000, guid: 04a17b6852e966a43aedcad76ba13a2d, type: 2}
-  - {fileID: 11400000, guid: f161dbc5e54e91d4088ff78e7bd1d4a5, type: 2}
-  - {fileID: 11400000, guid: 54167e58c58633d4faeb4957594309f9, type: 2}
-  - {fileID: 11400000, guid: e356ec117ee123d4d894d9404a3baba3, type: 2}
-  - {fileID: 11400000, guid: 1981153f3531ff6499dcbf638477b9f8, type: 2}
+  cursorLayer: {fileID: 1893157501}
+  markerLayer: {fileID: 1532680194}
+  fleetLayer: {fileID: 0}
+  activeCursor: {fileID: 11400000, guid: 47e6f4241d448624d9bdbdcd48cdf737, type: 2}
+  inactiveCursor: {fileID: 11400000, guid: 04a17b6852e966a43aedcad76ba13a2d, type: 2}
+  hitMarker: {fileID: 11400000, guid: f161dbc5e54e91d4088ff78e7bd1d4a5, type: 2}
+  missedMarker: {fileID: 11400000, guid: 54167e58c58633d4faeb4957594309f9, type: 2}
+  markedTargetMarker: {fileID: 11400000, guid: e356ec117ee123d4d894d9404a3baba3, type: 2}
+  shotTargetMarker: {fileID: 11400000, guid: 1981153f3531ff6499dcbf638477b9f8, type: 2}
 --- !u!156049354 &799895484
 Grid:
   m_ObjectHideFlags: 0
@@ -6898,18 +6874,15 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   opponentStatusMaskPlacer: {fileID: 1093841618}
   messageField: {fileID: 1483473440}
-  opponentMap: {fileID: 799895483}
-  size: 9
   userMap: {fileID: 167099665}
+  opponentMap: {fileID: 799895483}
+  areaSize: 9
   ships:
   - {fileID: 11400000, guid: 239d254dca950cc45b37d1e1b7f15410, type: 2}
-  - {fileID: 11400000, guid: ec4b44c4f82ab6d458a2bf97b74c7352, type: 2}
   - {fileID: 11400000, guid: 36ca0037cd6c62e4c8de18b6c9d57c7a, type: 2}
-  - {fileID: 11400000, guid: 1cb9faa54e35a9d48889969c0669d2c2, type: 2}
+  - {fileID: 11400000, guid: ec4b44c4f82ab6d458a2bf97b74c7352, type: 2}
   - {fileID: 11400000, guid: f8874e7b665575b4f8f031a95342dea3, type: 2}
-  - {fileID: 11400000, guid: 1f850cf7c4a63e949a987393be9478f4, type: 2}
-  - {fileID: 11400000, guid: 1f850cf7c4a63e949a987393be9478f4, type: 2}
-  - {fileID: 11400000, guid: 1f850cf7c4a63e949a987393be9478f4, type: 2}
+  - {fileID: 11400000, guid: 1cb9faa54e35a9d48889969c0669d2c2, type: 2}
   - {fileID: 11400000, guid: 1f850cf7c4a63e949a987393be9478f4, type: 2}
 --- !u!1001 &1836731099
 PrefabInstance:

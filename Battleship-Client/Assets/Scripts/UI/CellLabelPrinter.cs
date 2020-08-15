@@ -52,7 +52,7 @@ namespace BattleshipGame.UI
 #if UNITY_EDITOR
         public void Print()
         {
-            _mapSize = manager.MapSize;
+            _mapSize = manager.MapAreaSize;
 
             if (cellLabelPrefab.GetComponent<TMP_Text>() == null)
             {
