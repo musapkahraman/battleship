@@ -10,7 +10,9 @@ namespace BattleshipGame.UI
     {
         [SerializeField] private Camera sceneCamera;
         [SerializeField] private GameManager manager;
+
         [SerializeField] private ScreenType screenType;
+
         // @formatter:off
         [Header("Layers")]
         [SerializeField] private Tilemap cursorLayer;
@@ -29,9 +31,8 @@ namespace BattleshipGame.UI
         [Space] 
         // @formatter:on
         private Tile _cursorTile;
+
         private Grid _grid;
-        private Vector3Int _maxCellCoordinate;
-        private Vector3Int _minCellCoordinate;
         private MapMode _mode;
 
         private void Start()
@@ -50,7 +51,7 @@ namespace BattleshipGame.UI
 
         private void OnMouseDown()
         {
-            var cell = ScreenToCell(Input.mousePosition);
+            var cell = GridConverter.ScreenToCell(Input.mousePosition, _grid, sceneCamera, manager.MapAreaSize);
             switch (_mode)
             {
                 case MapMode.Place:
@@ -70,7 +71,7 @@ namespace BattleshipGame.UI
         {
             cursorLayer.ClearAllTiles();
             if (_mode == MapMode.Disabled) return;
-            var cell = ScreenToCell(Input.mousePosition);
+            var cell = GridConverter.ScreenToCell(Input.mousePosition, _grid, sceneCamera, manager.MapAreaSize);
             cursorLayer.SetTile(cell, _cursorTile);
         }
 
@@ -84,14 +85,6 @@ namespace BattleshipGame.UI
             _cursorTile = activeCursor;
         }
 
-        private Vector3Int ScreenToCell(Vector3 screenPoint)
-        {
-            var worldPoint = sceneCamera.ScreenToWorldPoint(screenPoint);
-            var cell = _grid.WorldToCell(worldPoint);
-            cell.Clamp(_minCellCoordinate, _maxCellCoordinate);
-            return cell;
-        }
-
         public void SetDisabled()
         {
             _mode = MapMode.Disabled;
@@ -100,16 +93,12 @@ namespace BattleshipGame.UI
         public void SetPlacementMode()
         {
             _mode = MapMode.Place;
-            _minCellCoordinate = new Vector3Int(0, 0, 0);
-            _maxCellCoordinate = new Vector3Int(manager.MapAreaSize - 1, manager.MapAreaSize - 1, 0);
         }
 
         public void SetAttackMode()
         {
             _mode = MapMode.Attack;
             _cursorTile = activeCursor;
-            _minCellCoordinate = new Vector3Int(0, 0, 0);
-            _maxCellCoordinate = new Vector3Int(manager.MapAreaSize - 1, manager.MapAreaSize - 1, 0);
         }
 
         public void SetCursorTile(Tile tile)

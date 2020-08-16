@@ -13,5 +13,13 @@ namespace BattleshipGame.Common
         {
             return coordinate.y * size + coordinate.x;
         }
+
+        public static Vector3Int ScreenToCell(Vector3 screenPoint, Grid grid, Camera sceneCamera, int areaSize)
+        {
+            var worldPoint = sceneCamera.ScreenToWorldPoint(screenPoint);
+            var cell = grid.WorldToCell(worldPoint);
+            cell.Clamp(new Vector3Int(0, 0, 0), new Vector3Int(areaSize - 1, areaSize - 1, 0));
+            return cell;
+        }
     }
 }
