@@ -32,7 +32,7 @@ namespace BattleshipGame.UI
             foreach (var vector3Int in tilemap.cellBounds.allPositionsWithin)
             {
                 var sprite = tilemap.GetSprite(vector3Int);
-                if (sprite != null)
+                if (sprite)
                 {
                     int id = sprite.GetInstanceID();
                     if (!_sprites.ContainsKey(id))

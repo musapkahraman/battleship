@@ -1,4 +1,5 @@
-﻿using BattleshipGame.Common;
+﻿using System.Linq;
+using BattleshipGame.Common;
 using BattleshipGame.Core;
 using UnityEngine;
 
@@ -25,25 +26,30 @@ namespace BattleshipGame.UI
         private void OnMouseDown()
         {
             var clickedCell = GridConverter.ScreenToCell(Input.mousePosition, _grid, sceneCamera, manager.MapAreaSize);
-            foreach (var spriteIdPositionPair in _spriteMapper.GetSpritePositions())
-            {
-                foreach (var spritePosition in spriteIdPositionPair.Value)
-                {
-                    foreach (var shipPart in _spriteMapper.GetPartsList())
-                    {
-                        var cell = Vector3Int.FloorToInt(spritePosition + (Vector3) shipPart.Coordinate);
-                        if (cell.Equals(clickedCell))
-                        {
-                            _spriteMapper.GetSprites().TryGetValue(spriteIdPositionPair.Key, out _sprite);
-                        }
-                    }
-                }
-            }
-
+            SearchForClickedSprite(clickedCell);
             if (_sprite)
             {
                 _draggable = Instantiate(dragShipPrefab, GetMousePositionOnZeroZ(), Quaternion.identity);
                 _draggable.GetComponent<SpriteRenderer>().sprite = _sprite;
+            }
+        }
+
+        private void SearchForClickedSprite(Vector3Int clickedCell)
+        {
+            foreach (var spriteIdPositionPair in _spriteMapper.GetSpritePositions())
+            {
+                foreach (var spritePosition in spriteIdPositionPair.Value)
+                {
+                    foreach (var shipPartCoordinate in FindShip(spriteIdPositionPair.Key).PartCoordinates)
+                    {
+                        var cell = spritePosition + (Vector3Int) shipPartCoordinate;
+                        if (cell.Equals(clickedCell))
+                        {
+                            _spriteMapper.GetSprites().TryGetValue(spriteIdPositionPair.Key, out _sprite);
+                            return;
+                        }
+                    }
+                }
             }
         }
 
@@ -82,6 +88,12 @@ namespace BattleshipGame.UI
         {
             var position = sceneCamera.ScreenToWorldPoint(Input.mousePosition);
             return new Vector3(position.x, position.y, 0);
+        }
+
+        private Ship FindShip(int spriteId)
+        {
+            _spriteMapper.GetSprites().TryGetValue(spriteId, out var sprite);
+            return sprite is null ? null : manager.Ships.FirstOrDefault(ship => ship.sprite.Equals(sprite));
         }
     }
 }

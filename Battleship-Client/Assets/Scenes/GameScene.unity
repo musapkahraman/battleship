@@ -4892,8 +4892,8 @@ GameObject:
   - component: {fileID: 1093841616}
   - component: {fileID: 1093841621}
   - component: {fileID: 1093841618}
-  - component: {fileID: 1093841620}
   - component: {fileID: 1093841619}
+  - component: {fileID: 1093841620}
   m_Layer: 0
   m_Name: OpponentStatusMap
   m_TagString: Untagged
