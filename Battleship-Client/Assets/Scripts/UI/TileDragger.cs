@@ -1,26 +1,37 @@
-﻿using System;
+﻿using BattleshipGame.Common;
+using BattleshipGame.Core;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 
 namespace BattleshipGame.UI
 {
-    [RequireComponent(typeof(Tilemap),typeof(Collider))]
+    [RequireComponent(typeof(Grid), typeof(BoxCollider2D), typeof(GridSpriteMapper))]
     public class TileDragger : MonoBehaviour
     {
-        private Tilemap _tilemap;
+        [SerializeField] private Camera sceneCamera;
+        [SerializeField] private GameManager manager;
+        [SerializeField] private Tilemap tilemap;
+        private GridSpriteMapper _spriteMapper;
+        private Grid _grid;
+
         private void Start()
         {
-            _tilemap = GetComponent<Tilemap>();
+            _spriteMapper = GetComponent<GridSpriteMapper>();
+            _grid = GetComponent<Grid>();
         }
 
         private void OnMouseDown()
         {
-            throw new NotImplementedException();
-        }
-
-        private void OnMouseDrag()
-        {
-            throw new NotImplementedException();
+            var cell = GridConverter.ScreenToCell(Input.mousePosition, _grid, sceneCamera, manager.MapAreaSize);
+            print(cell);
+            foreach (var part in _spriteMapper.GetPartsList())
+            {
+                print(part.Coordinate);
+                if (((Vector3) part.Coordinate).Equals(cell))
+                {
+                    print("Found one!");
+                }
+            }
         }
     }
 }

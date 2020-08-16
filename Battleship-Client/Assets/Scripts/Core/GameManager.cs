@@ -111,15 +111,16 @@ namespace BattleshipGame.Core
                     _shipsToBePlaced.Enqueue(ship);
         }
 
-        public void PlaceShip(Vector3Int coordinate)
+        public void PlaceShip(Vector3Int cellCoordinate)
         {
             if (_mode != GameMode.Placement) return;
             (int shipWidth, int shipHeight) = _currentShipToBePlaced.GetShipSize();
-            if (coordinate.x < 0 || coordinate.x + shipWidth > areaSize || coordinate.y - (shipHeight - 1) < 0) return;
-            int xMin = coordinate.x - 1;
-            int xMax = coordinate.x + shipWidth;
-            int yMin = coordinate.y - shipHeight;
-            int yMax = coordinate.y + 1;
+            if (cellCoordinate.x < 0 || cellCoordinate.x + shipWidth > areaSize ||
+                cellCoordinate.y - (shipHeight - 1) < 0) return;
+            int xMin = cellCoordinate.x - 1;
+            int xMax = cellCoordinate.x + shipWidth;
+            int yMin = cellCoordinate.y - shipHeight;
+            int yMax = cellCoordinate.y + 1;
             for (int y = yMin; y <= yMax; y++)
             {
                 if (y < 0 || y > areaSize - 1) continue;
@@ -131,9 +132,9 @@ namespace BattleshipGame.Core
             }
 
             foreach (var p in _currentShipToBePlaced.PartCoordinates)
-                SetPlacementCell(new Vector3Int(coordinate.x + p.x, coordinate.y + p.y, 0));
+                SetPlacementCell(new Vector3Int(cellCoordinate.x + p.x, cellCoordinate.y + p.y, 0));
 
-            userMap.SetShip(_currentShipToBePlaced, coordinate);
+            userMap.SetShip(_currentShipToBePlaced, cellCoordinate);
             if (_shipsToBePlaced.Count > 0)
             {
                 _currentShipToBePlaced = _shipsToBePlaced.Dequeue();

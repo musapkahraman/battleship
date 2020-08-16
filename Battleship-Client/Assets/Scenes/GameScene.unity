@@ -4890,7 +4890,10 @@ GameObject:
   m_Component:
   - component: {fileID: 1093841617}
   - component: {fileID: 1093841616}
+  - component: {fileID: 1093841621}
   - component: {fileID: 1093841618}
+  - component: {fileID: 1093841620}
+  - component: {fileID: 1093841619}
   m_Layer: 0
   m_Name: OpponentStatusMap
   m_TagString: Untagged
@@ -4940,7 +4943,61 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   maskPrefab: {fileID: 6800722550282205898, guid: 510c3b7b453046d48805242dd2a27f2b,
     type: 3}
+--- !u!114 &1093841619
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1093841615}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 059758128364ef8469c6a5fb005071ee, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  sceneCamera: {fileID: 519420031}
+  manager: {fileID: 1832216561}
+  tilemap: {fileID: 1081005661}
+--- !u!61 &1093841620
+BoxCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1093841615}
+  m_Enabled: 1
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_UsedByEffector: 0
+  m_UsedByComposite: 0
+  m_Offset: {x: 1.5, y: 4.5}
+  m_SpriteTilingProperty:
+    border: {x: 0, y: 0, z: 0, w: 0}
+    pivot: {x: 0, y: 0}
+    oldSize: {x: 0, y: 0}
+    newSize: {x: 0, y: 0}
+    adaptiveTilingThreshold: 0
+    drawMode: 0
+    adaptiveTiling: 0
+  m_AutoTiling: 0
+  serializedVersion: 2
+  m_Size: {x: 3, y: 9}
+  m_EdgeRadius: 0
+--- !u!114 &1093841621
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1093841615}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d28512955ed194b48b2ad189bafe2f8c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
   gameManager: {fileID: 1832216561}
+  tilemap: {fileID: 1081005661}
 --- !u!1 &1119096993
 GameObject:
   m_ObjectHideFlags: 0

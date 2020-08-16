@@ -10,7 +10,6 @@ namespace BattleshipGame.UI
     {
         [SerializeField] private Camera sceneCamera;
         [SerializeField] private GameManager manager;
-
         [SerializeField] private ScreenType screenType;
 
         // @formatter:off
@@ -51,14 +50,14 @@ namespace BattleshipGame.UI
 
         private void OnMouseDown()
         {
-            var cell = GridConverter.ScreenToCell(Input.mousePosition, _grid, sceneCamera, manager.MapAreaSize);
+            var cellCoordinate = GridConverter.ScreenToCell(Input.mousePosition, _grid, sceneCamera, manager.MapAreaSize);
             switch (_mode)
             {
                 case MapMode.Place:
-                    if (screenType == ScreenType.User) manager.PlaceShip(cell);
+                    if (screenType == ScreenType.User) manager.PlaceShip(cellCoordinate);
                     break;
                 case MapMode.Attack:
-                    if (screenType == ScreenType.Opponent) manager.MarkTarget(cell);
+                    if (screenType == ScreenType.Opponent) manager.MarkTarget(cellCoordinate);
                     break;
                 case MapMode.Disabled:
                     break;
