@@ -114,9 +114,8 @@ namespace BattleshipGame.Core
         public void PlaceShip(Vector3Int cellCoordinate)
         {
             if (_mode != GameMode.Placement) return;
+            if (!DoesShipFitIn(_currentShipToBePlaced, cellCoordinate)) return;
             (int shipWidth, int shipHeight) = _currentShipToBePlaced.GetShipSize();
-            if (cellCoordinate.x < 0 || cellCoordinate.x + shipWidth > areaSize ||
-                cellCoordinate.y - (shipHeight - 1) < 0) return;
             int xMin = cellCoordinate.x - 1;
             int xMax = cellCoordinate.x + shipWidth;
             int yMin = cellCoordinate.y - shipHeight;
@@ -127,12 +126,12 @@ namespace BattleshipGame.Core
                 for (int x = xMin; x <= xMax; x++)
                 {
                     if (x < 0 || x > areaSize - 1) continue;
-                    if (!SetPlacementCell(new Vector3Int(x, y, 0), true)) return;
+                    if (!AddCellToPlacementMap(new Vector3Int(x, y, 0), true)) return;
                 }
             }
 
             foreach (var p in _currentShipToBePlaced.PartCoordinates)
-                SetPlacementCell(new Vector3Int(cellCoordinate.x + p.x, cellCoordinate.y + p.y, 0));
+                AddCellToPlacementMap(new Vector3Int(cellCoordinate.x + p.x, cellCoordinate.y + p.y, 0));
 
             userMap.SetShip(_currentShipToBePlaced, cellCoordinate);
             if (_shipsToBePlaced.Count > 0)
@@ -146,6 +145,13 @@ namespace BattleshipGame.Core
             _isShipPlacementComplete = true;
             userMap.SetDisabled();
             ContinueAvailable?.Invoke();
+        }
+
+        public bool DoesShipFitIn(Ship ship, Vector3Int cellCoordinate)
+        {
+            (int shipWidth, int shipHeight) = ship.GetShipSize();
+            return cellCoordinate.x >= 0 && cellCoordinate.x + shipWidth <= areaSize &&
+                   cellCoordinate.y - (shipHeight - 1) >= 0;
         }
 
         public void ContinueAfterPlacementComplete()
@@ -219,7 +225,7 @@ namespace BattleshipGame.Core
             userMap.SetCursorTile(_currentShipToBePlaced.tile);
         }
 
-        private bool SetPlacementCell(Vector3Int coordinate, bool testOnly = false)
+        private bool AddCellToPlacementMap(Vector3Int coordinate, bool testOnly = false)
         {
             int cellIndex = GridConverter.ToCellIndex(coordinate, areaSize);
             if (cellIndex < 0 || cellIndex >= _cellCount) return false;

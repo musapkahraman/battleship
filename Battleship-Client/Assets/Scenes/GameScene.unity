@@ -4957,7 +4957,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   sceneCamera: {fileID: 519420031}
   manager: {fileID: 1832216561}
-  tilemap: {fileID: 1081005661}
+  opponentMap: {fileID: 799895483}
+  dragShipPrefab: {fileID: 4988197857823769414, guid: d549e7c6e46ec1f459d4fd859bd28e60,
+    type: 3}
 --- !u!61 &1093841620
 BoxCollider2D:
   m_ObjectHideFlags: 0

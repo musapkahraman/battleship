@@ -11,6 +11,8 @@ namespace BattleshipGame.UI
         [SerializeField] private Tilemap tilemap;
         private readonly List<ShipPart> _opponentShipPart = new List<ShipPart>();
         private readonly Dictionary<int, List<Vector3Int>> _spritePositions = new Dictionary<int, List<Vector3Int>>();
+        private readonly Dictionary<int, Sprite> _sprites = new Dictionary<int, Sprite>();
+
         private void Awake()
         {
             InitializeStatusList();
@@ -33,24 +35,32 @@ namespace BattleshipGame.UI
                 if (sprite != null)
                 {
                     int id = sprite.GetInstanceID();
-                    if (!_spritePositions.ContainsKey(id))
-                    {
-                        _spritePositions.Add(sprite.GetInstanceID(), new List<Vector3Int> {vector3Int});
-                    }
+                    if (!_sprites.ContainsKey(id))
+                        _sprites.Add(id, sprite);
                     else
-                    {
+                        _sprites[id] = sprite;
+
+                    if (!_spritePositions.ContainsKey(id))
+                        _spritePositions.Add(sprite.GetInstanceID(), new List<Vector3Int> {vector3Int});
+                    else
                         _spritePositions[sprite.GetInstanceID()].Add(vector3Int);
-                    }
                 }
             }
         }
+
         public IEnumerable<ShipPart> GetPartsList()
         {
             return new List<ShipPart>(_opponentShipPart);
         }
+
         public Dictionary<int, List<Vector3Int>> GetSpritePositions()
         {
             return new Dictionary<int, List<Vector3Int>>(_spritePositions);
+        }
+
+        public Dictionary<int, Sprite> GetSprites()
+        {
+            return new Dictionary<int, Sprite>(_sprites);
         }
 
         public struct ShipPart
