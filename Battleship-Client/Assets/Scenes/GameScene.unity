@@ -3208,6 +3208,8 @@ GameObject:
   - component: {fileID: 799895483}
   - component: {fileID: 799895481}
   - component: {fileID: 799895482}
+  - component: {fileID: 799895487}
+  - component: {fileID: 799895486}
   m_Layer: 0
   m_Name: OpponentMap
   m_TagString: Untagged
@@ -3317,6 +3319,39 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &799895486
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 799895480}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 059758128364ef8469c6a5fb005071ee, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  dragShipPrefab: {fileID: 4988197857823769414, guid: d549e7c6e46ec1f459d4fd859bd28e60,
+    type: 3}
+  sceneCamera: {fileID: 519420031}
+  manager: {fileID: 1832216561}
+  targetMapViewer: {fileID: 799895483}
+  sourceTileMap: {fileID: 888988788}
+  removeTileFromSource: 1
+--- !u!114 &799895487
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 799895480}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d28512955ed194b48b2ad189bafe2f8c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  gameManager: {fileID: 1832216561}
+  tilemap: {fileID: 888988788}
 --- !u!1 &801994451
 GameObject:
   m_ObjectHideFlags: 0

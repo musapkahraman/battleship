@@ -48,6 +48,27 @@ namespace BattleshipGame.UI
             }
         }
 
+        public void ChangeSpritePosition(Sprite sprite, Vector3Int oldPosition, Vector3Int newPosition)
+        {
+            int spriteId = sprite.GetInstanceID();
+
+            if (!_sprites.ContainsKey(spriteId))
+                _sprites.Add(spriteId, sprite);
+            else
+                _sprites[spriteId] = sprite;
+
+            if (_spritePositions.ContainsKey(spriteId))
+            {
+                var oldPositionsList = _spritePositions[spriteId];
+                oldPositionsList.Remove(oldPosition);
+                oldPositionsList.Add(newPosition);
+            }
+            else
+            {
+                _spritePositions.Add(spriteId, new List<Vector3Int> {newPosition});
+            }
+        }
+
         public IEnumerable<ShipPart> GetPartsList()
         {
             return new List<ShipPart>(_opponentShipPart);

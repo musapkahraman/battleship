@@ -15,11 +15,11 @@ namespace BattleshipGame.UI
         [SerializeField] private MapViewer targetMapViewer;
         [SerializeField] private Tilemap sourceTileMap;
         [SerializeField] private bool removeTileFromSource;
+        private Vector3Int _grabbedFrom;
+        private GameObject _grabbedShip;
+        private Grid _grid;
         private GridSpriteMapper _gridSpriteMapper;
         private Sprite _sprite;
-        private Grid _grid;
-        private GameObject _draggable;
-        private Vector3Int _grabbedCell;
 
         private void Start()
         {
@@ -29,64 +29,62 @@ namespace BattleshipGame.UI
 
         private void OnMouseDown()
         {
-            _grabbedCell = GridConverter.ScreenToCell(Input.mousePosition, _grid, sceneCamera, manager.MapAreaSize);
+            _grabbedFrom = GridConverter.ScreenToCell(Input.mousePosition, _grid, sceneCamera, manager.MapAreaSize);
             SearchForClickedSprite();
             if (_sprite)
             {
-                _draggable = Instantiate(dragShipPrefab, GetMousePositionOnZeroZ(), Quaternion.identity);
-                _draggable.GetComponent<SpriteRenderer>().sprite = _sprite;
+                _grabbedShip = Instantiate(dragShipPrefab, GetMousePositionOnZeroZ(), Quaternion.identity);
+                _grabbedShip.GetComponent<SpriteRenderer>().sprite = _sprite;
+                if (removeTileFromSource) sourceTileMap.SetTile(_grabbedFrom, null);
+            }
+        }
+
+        private void OnMouseDrag()
+        {
+            if (_grabbedShip) _grabbedShip.transform.position = GetMousePositionOnZeroZ();
+        }
+
+        private void OnMouseUp()
+        {
+            if (_grabbedShip)
+            {
+                foreach (var ship in manager.Ships)
+                    if (ship.sprite.Equals(_sprite))
+                    {
+                        var droppedTo = GridConverter.ScreenToCell(Input.mousePosition,
+                            targetMapViewer.GetComponent<Grid>(), sceneCamera, manager.MapAreaSize);
+
+                        if (manager.DoesShipFitIn(ship, droppedTo))
+                        {
+                            targetMapViewer.SetShip(ship, droppedTo);
+                            var targetGridSpriteMapper = targetMapViewer.GetComponent<GridSpriteMapper>();
+                            if (targetGridSpriteMapper)
+                                targetGridSpriteMapper.ChangeSpritePosition(_sprite, _grabbedFrom, droppedTo);
+                        }
+                        else if (removeTileFromSource)
+                        {
+                            sourceTileMap.SetTile(_grabbedFrom, ship.tile);
+                        }
+                    }
+
+                _sprite = null;
+                Destroy(_grabbedShip);
             }
         }
 
         private void SearchForClickedSprite()
         {
             foreach (var spriteIdPositionPair in _gridSpriteMapper.GetSpritePositions())
+            foreach (var spritePosition in spriteIdPositionPair.Value)
+            foreach (var shipPartCoordinate in FindShip(spriteIdPositionPair.Key).PartCoordinates)
             {
-                foreach (var spritePosition in spriteIdPositionPair.Value)
+                var cell = spritePosition + (Vector3Int) shipPartCoordinate;
+                if (cell.Equals(_grabbedFrom))
                 {
-                    foreach (var shipPartCoordinate in FindShip(spriteIdPositionPair.Key).PartCoordinates)
-                    {
-                        var cell = spritePosition + (Vector3Int) shipPartCoordinate;
-                        if (cell.Equals(_grabbedCell))
-                        {
-                            _gridSpriteMapper.GetSprites().TryGetValue(spriteIdPositionPair.Key, out _sprite);
-                            _grabbedCell = spritePosition;
-                            return;
-                        }
-                    }
+                    _gridSpriteMapper.GetSprites().TryGetValue(spriteIdPositionPair.Key, out _sprite);
+                    _grabbedFrom = spritePosition;
+                    return;
                 }
-            }
-        }
-
-        private void OnMouseDrag()
-        {
-            if (_draggable)
-            {
-                _draggable.transform.position = GetMousePositionOnZeroZ();
-            }
-        }
-
-        private void OnMouseUp()
-        {
-            if (_draggable)
-            {
-                foreach (var ship in manager.Ships)
-                {
-                    if (ship.sprite.Equals(_sprite))
-                    {
-                        var droppedCell = GridConverter.ScreenToCell(Input.mousePosition,
-                            targetMapViewer.GetComponent<Grid>(), sceneCamera, manager.MapAreaSize);
-
-                        if (manager.DoesShipFitIn(ship, droppedCell))
-                        {
-                            targetMapViewer.SetShip(ship, droppedCell);
-                            if (removeTileFromSource) sourceTileMap.SetTile(_grabbedCell, null);
-                        }
-                    }
-                }
-
-                _sprite = null;
-                Destroy(_draggable);
             }
         }
 
