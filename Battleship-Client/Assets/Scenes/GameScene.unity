@@ -4955,11 +4955,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 059758128364ef8469c6a5fb005071ee, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  sceneCamera: {fileID: 519420031}
-  manager: {fileID: 1832216561}
-  opponentMap: {fileID: 799895483}
   dragShipPrefab: {fileID: 4988197857823769414, guid: d549e7c6e46ec1f459d4fd859bd28e60,
     type: 3}
+  sceneCamera: {fileID: 519420031}
+  manager: {fileID: 1832216561}
+  targetMapViewer: {fileID: 799895483}
+  sourceTileMap: {fileID: 0}
+  removeTileFromSource: 0
 --- !u!61 &1093841620
 BoxCollider2D:
   m_ObjectHideFlags: 0

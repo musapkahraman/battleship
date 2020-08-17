@@ -2,31 +2,35 @@
 using BattleshipGame.Common;
 using BattleshipGame.Core;
 using UnityEngine;
+using UnityEngine.Tilemaps;
 
 namespace BattleshipGame.UI
 {
     [RequireComponent(typeof(Grid), typeof(BoxCollider2D), typeof(GridSpriteMapper))]
     public class TileDragger : MonoBehaviour
     {
+        [SerializeField] private GameObject dragShipPrefab;
         [SerializeField] private Camera sceneCamera;
         [SerializeField] private GameManager manager;
-        [SerializeField] private MapViewer opponentMap;
-        [SerializeField] private GameObject dragShipPrefab;
-        private GridSpriteMapper _spriteMapper;
+        [SerializeField] private MapViewer targetMapViewer;
+        [SerializeField] private Tilemap sourceTileMap;
+        [SerializeField] private bool removeTileFromSource;
+        private GridSpriteMapper _gridSpriteMapper;
         private Sprite _sprite;
         private Grid _grid;
         private GameObject _draggable;
+        private Vector3Int _grabbedCell;
 
         private void Start()
         {
-            _spriteMapper = GetComponent<GridSpriteMapper>();
+            _gridSpriteMapper = GetComponent<GridSpriteMapper>();
             _grid = GetComponent<Grid>();
         }
 
         private void OnMouseDown()
         {
-            var clickedCell = GridConverter.ScreenToCell(Input.mousePosition, _grid, sceneCamera, manager.MapAreaSize);
-            SearchForClickedSprite(clickedCell);
+            _grabbedCell = GridConverter.ScreenToCell(Input.mousePosition, _grid, sceneCamera, manager.MapAreaSize);
+            SearchForClickedSprite();
             if (_sprite)
             {
                 _draggable = Instantiate(dragShipPrefab, GetMousePositionOnZeroZ(), Quaternion.identity);
@@ -34,18 +38,19 @@ namespace BattleshipGame.UI
             }
         }
 
-        private void SearchForClickedSprite(Vector3Int clickedCell)
+        private void SearchForClickedSprite()
         {
-            foreach (var spriteIdPositionPair in _spriteMapper.GetSpritePositions())
+            foreach (var spriteIdPositionPair in _gridSpriteMapper.GetSpritePositions())
             {
                 foreach (var spritePosition in spriteIdPositionPair.Value)
                 {
                     foreach (var shipPartCoordinate in FindShip(spriteIdPositionPair.Key).PartCoordinates)
                     {
                         var cell = spritePosition + (Vector3Int) shipPartCoordinate;
-                        if (cell.Equals(clickedCell))
+                        if (cell.Equals(_grabbedCell))
                         {
-                            _spriteMapper.GetSprites().TryGetValue(spriteIdPositionPair.Key, out _sprite);
+                            _gridSpriteMapper.GetSprites().TryGetValue(spriteIdPositionPair.Key, out _sprite);
+                            _grabbedCell = spritePosition;
                             return;
                         }
                     }
@@ -69,12 +74,13 @@ namespace BattleshipGame.UI
                 {
                     if (ship.sprite.Equals(_sprite))
                     {
-                        var clickedCell = GridConverter.ScreenToCell(Input.mousePosition,
-                            opponentMap.GetComponent<Grid>(), sceneCamera, manager.MapAreaSize);
+                        var droppedCell = GridConverter.ScreenToCell(Input.mousePosition,
+                            targetMapViewer.GetComponent<Grid>(), sceneCamera, manager.MapAreaSize);
 
-                        if (manager.DoesShipFitIn(ship, clickedCell))
+                        if (manager.DoesShipFitIn(ship, droppedCell))
                         {
-                            opponentMap.SetShip(ship, clickedCell);
+                            targetMapViewer.SetShip(ship, droppedCell);
+                            if (removeTileFromSource) sourceTileMap.SetTile(_grabbedCell, null);
                         }
                     }
                 }
@@ -92,7 +98,7 @@ namespace BattleshipGame.UI
 
         private Ship FindShip(int spriteId)
         {
-            _spriteMapper.GetSprites().TryGetValue(spriteId, out var sprite);
+            _gridSpriteMapper.GetSprites().TryGetValue(spriteId, out var sprite);
             return sprite is null ? null : manager.Ships.FirstOrDefault(ship => ship.sprite.Equals(sprite));
         }
     }
