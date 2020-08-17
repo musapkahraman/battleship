@@ -20,15 +20,18 @@ namespace BattleshipGame.UI
         private Grid _grid;
         private GridSpriteMapper _gridSpriteMapper;
         private Sprite _sprite;
+        private MapViewer _selfMapViewer;
 
         private void Start()
         {
             _gridSpriteMapper = GetComponent<GridSpriteMapper>();
             _grid = GetComponent<Grid>();
+            _selfMapViewer = GetComponent<MapViewer>();
         }
 
         private void OnMouseDown()
         {
+            if (_selfMapViewer && _selfMapViewer.Mode == MapViewer.MapMode.Attack) return;
             _grabbedFrom = GridConverter.ScreenToCell(Input.mousePosition, _grid, sceneCamera, manager.MapAreaSize);
             SearchForClickedSprite();
             if (!_sprite) return;

@@ -30,7 +30,8 @@ namespace BattleshipGame.UI
         // @formatter:on
         private Tile _cursorTile;
         private Grid _grid;
-        private MapMode _mode;
+
+        public MapMode Mode { get; private set; }
 
         private void Start()
         {
@@ -50,7 +51,7 @@ namespace BattleshipGame.UI
         {
             var cellCoordinate =
                 GridConverter.ScreenToCell(Input.mousePosition, _grid, sceneCamera, manager.MapAreaSize);
-            switch (_mode)
+            switch (Mode)
             {
                 case MapMode.Place:
                     if (screenType == ScreenType.User) manager.PlaceShip(cellCoordinate);
@@ -68,7 +69,7 @@ namespace BattleshipGame.UI
         private void OnMouseOver()
         {
             cursorLayer.ClearAllTiles();
-            if (_mode == MapMode.Disabled) return;
+            if (Mode == MapMode.Disabled) return;
             var cell = GridConverter.ScreenToCell(Input.mousePosition, _grid, sceneCamera, manager.MapAreaSize);
             cursorLayer.SetTile(cell, _cursorTile);
         }
@@ -85,17 +86,17 @@ namespace BattleshipGame.UI
 
         public void SetDisabled()
         {
-            _mode = MapMode.Disabled;
+            Mode = MapMode.Disabled;
         }
 
         public void SetPlacementMode()
         {
-            _mode = MapMode.Place;
+            Mode = MapMode.Place;
         }
 
         public void SetAttackMode()
         {
-            _mode = MapMode.Attack;
+            Mode = MapMode.Attack;
             _cursorTile = activeCursor;
         }
 
@@ -155,7 +156,7 @@ namespace BattleshipGame.UI
             Opponent
         }
 
-        private enum MapMode
+        public enum MapMode
         {
             Disabled,
             Place,
