@@ -18,7 +18,7 @@ namespace BattleshipGame.Core
         private static int _cellCount;
         private static GameClient _client;
         private static GameMode _mode;
-        private static int _myPlayerNumber;
+        private static int _playerNumber;
         private static int[] _placementMap;
         private static readonly List<int> Shots = new List<int>();
         private static State _state;
@@ -192,7 +192,7 @@ namespace BattleshipGame.Core
             _mode = GameMode.Result;
             userMap.SetDisabled();
             opponentMap.SetDisabled();
-            messageField.text = _state.winningPlayer == _myPlayerNumber ? "You Win!" : "You Lost!!!";
+            messageField.text = _state.winningPlayer == _playerNumber ? "You Win!" : "You Lost!!!";
         }
 
         public void MarkTarget(Vector3Int targetCoordinate)
@@ -238,8 +238,11 @@ namespace BattleshipGame.Core
         private void OnInitialStateReceived(object sender, State initialState)
         {
             _state = initialState;
-            var user = _state.players[_client.SessionId];
-            _myPlayerNumber = user?.seat ?? -1;
+            var player = _state.players[_client.SessionId];
+            if (player != null)
+                _playerNumber = player.seat;
+            else
+                _playerNumber = -1;
             _state.OnChange += OnStateChanged;
             _state.player1Shots.OnChange += OnFirstPlayerShotsChanged;
             _state.player2Shots.OnChange += OnSecondPlayerShotsChanged;
@@ -269,7 +272,7 @@ namespace BattleshipGame.Core
         private void SetMarker(KeyValueEventArgs<int, int> change, int playerNumber)
         {
             Marker marker;
-            if (_myPlayerNumber == playerNumber)
+            if (_playerNumber == playerNumber)
             {
                 marker = Marker.ShotTarget;
                 opponentMap.SetMarker(change.Key, marker);
@@ -295,12 +298,12 @@ namespace BattleshipGame.Core
 
         private void SetHealth(KeyValueEventArgs<int, int> change, int playerNumber)
         {
-            if (_myPlayerNumber != playerNumber) opponentStatusMaskPlacer.PlaceMask(change.Key, change.Value);
+            if (_playerNumber != playerNumber) opponentStatusMaskPlacer.PlaceMask(change.Key, change.Value);
         }
 
         private void CheckTurn()
         {
-            if (_state.playerTurn == _myPlayerNumber)
+            if (_state.playerTurn == _playerNumber)
                 StartTurn();
             else
                 WaitForOpponentTurn();
