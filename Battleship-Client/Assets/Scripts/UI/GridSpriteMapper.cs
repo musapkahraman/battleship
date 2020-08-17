@@ -52,8 +52,6 @@ namespace BattleshipGame.UI
 
             if (!_sprites.ContainsKey(spriteId))
                 _sprites.Add(spriteId, sprite);
-            else
-                _sprites[spriteId] = sprite;
 
             if (_spritePositions.ContainsKey(spriteId))
             {
@@ -65,6 +63,11 @@ namespace BattleshipGame.UI
             {
                 _spritePositions.Add(spriteId, new List<Vector3Int> {newPosition});
             }
+        }
+
+        public void RemoveSpritePosition(int spriteId, Vector3Int oldPosition)
+        {
+            if (_spritePositions.ContainsKey(spriteId)) _spritePositions[spriteId].Remove(oldPosition);
         }
 
         public IEnumerable<ShipPart> GetPartsList()

@@ -3337,7 +3337,8 @@ MonoBehaviour:
   manager: {fileID: 1832216561}
   targetMapViewer: {fileID: 799895483}
   sourceTileMap: {fileID: 888988788}
-  removeTileFromSource: 1
+  removeFromSource: 1
+  removeIfDraggedOut: 1
 --- !u!114 &799895487
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4995,8 +4996,9 @@ MonoBehaviour:
   sceneCamera: {fileID: 519420031}
   manager: {fileID: 1832216561}
   targetMapViewer: {fileID: 799895483}
-  sourceTileMap: {fileID: 0}
-  removeTileFromSource: 0
+  sourceTileMap: {fileID: 1081005661}
+  removeFromSource: 0
+  removeIfDraggedOut: 0
 --- !u!61 &1093841620
 BoxCollider2D:
   m_ObjectHideFlags: 0
