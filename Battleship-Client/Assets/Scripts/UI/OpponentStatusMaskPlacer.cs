@@ -8,8 +8,8 @@ namespace BattleshipGame.UI
     public class OpponentStatusMaskPlacer : MonoBehaviour
     {
         [SerializeField] private GameObject maskPrefab;
-        private List<GridSpriteMapper.ShipPart> _opponentShipPart;
         private readonly Dictionary<int, Stack<Vector3Int>> _spritePositions = new Dictionary<int, Stack<Vector3Int>>();
+        private List<GridSpriteMapper.ShipPart> _opponentShipPart;
         private GridSpriteMapper _spriteMapper;
 
         private void Start()
@@ -17,9 +17,7 @@ namespace BattleshipGame.UI
             _spriteMapper = GetComponent<GridSpriteMapper>();
             _opponentShipPart = _spriteMapper.GetPartsList().ToList();
             foreach (var spritePosition in _spriteMapper.GetSpritePositions())
-            {
                 _spritePositions.Add(spritePosition.Key, spritePosition.Value.CloneToStack());
-            }
         }
 
         private Vector3 GetPosition(int changedShipPart, int status)

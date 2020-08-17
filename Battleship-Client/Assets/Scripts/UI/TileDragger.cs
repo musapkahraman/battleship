@@ -31,12 +31,10 @@ namespace BattleshipGame.UI
         {
             _grabbedFrom = GridConverter.ScreenToCell(Input.mousePosition, _grid, sceneCamera, manager.MapAreaSize);
             SearchForClickedSprite();
-            if (_sprite)
-            {
-                _grabbedShip = Instantiate(dragShipPrefab, GetMousePositionOnZeroZ(), Quaternion.identity);
-                _grabbedShip.GetComponent<SpriteRenderer>().sprite = _sprite;
-                if (removeTileFromSource) sourceTileMap.SetTile(_grabbedFrom, null);
-            }
+            if (!_sprite) return;
+            _grabbedShip = Instantiate(dragShipPrefab, GetMousePositionOnZeroZ(), Quaternion.identity);
+            _grabbedShip.GetComponent<SpriteRenderer>().sprite = _sprite;
+            if (removeTileFromSource) sourceTileMap.SetTile(_grabbedFrom, null);
         }
 
         private void OnMouseDrag()
@@ -46,30 +44,29 @@ namespace BattleshipGame.UI
 
         private void OnMouseUp()
         {
-            if (_grabbedShip)
-            {
-                foreach (var ship in manager.Ships)
-                    if (ship.sprite.Equals(_sprite))
+            if (!_grabbedShip) return;
+
+            foreach (var ship in manager.Ships)
+                if (ship.sprite.Equals(_sprite))
+                {
+                    var droppedTo = GridConverter.ScreenToCell(Input.mousePosition,
+                        targetMapViewer.GetComponent<Grid>(), sceneCamera, manager.MapAreaSize);
+
+                    if (manager.DoesShipFitIn(ship, droppedTo))
                     {
-                        var droppedTo = GridConverter.ScreenToCell(Input.mousePosition,
-                            targetMapViewer.GetComponent<Grid>(), sceneCamera, manager.MapAreaSize);
-
-                        if (manager.DoesShipFitIn(ship, droppedTo))
-                        {
-                            targetMapViewer.SetShip(ship, droppedTo);
-                            var targetGridSpriteMapper = targetMapViewer.GetComponent<GridSpriteMapper>();
-                            if (targetGridSpriteMapper)
-                                targetGridSpriteMapper.ChangeSpritePosition(_sprite, _grabbedFrom, droppedTo);
-                        }
-                        else if (removeTileFromSource)
-                        {
-                            sourceTileMap.SetTile(_grabbedFrom, ship.tile);
-                        }
+                        targetMapViewer.SetShip(ship, droppedTo);
+                        var targetGridSpriteMapper = targetMapViewer.GetComponent<GridSpriteMapper>();
+                        if (targetGridSpriteMapper)
+                            targetGridSpriteMapper.ChangeSpritePosition(_sprite, _grabbedFrom, droppedTo);
                     }
+                    else if (removeTileFromSource)
+                    {
+                        sourceTileMap.SetTile(_grabbedFrom, ship.tile);
+                    }
+                }
 
-                _sprite = null;
-                Destroy(_grabbedShip);
-            }
+            _sprite = null;
+            Destroy(_grabbedShip);
         }
 
         private void SearchForClickedSprite()
@@ -79,12 +76,10 @@ namespace BattleshipGame.UI
             foreach (var shipPartCoordinate in FindShip(spriteIdPositionPair.Key).PartCoordinates)
             {
                 var cell = spritePosition + (Vector3Int) shipPartCoordinate;
-                if (cell.Equals(_grabbedFrom))
-                {
-                    _gridSpriteMapper.GetSprites().TryGetValue(spriteIdPositionPair.Key, out _sprite);
-                    _grabbedFrom = spritePosition;
-                    return;
-                }
+                if (!cell.Equals(_grabbedFrom)) continue;
+                _gridSpriteMapper.GetSprites().TryGetValue(spriteIdPositionPair.Key, out _sprite);
+                _grabbedFrom = spritePosition;
+                return;
             }
         }
 

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Linq;
+using BattleshipGame.Common;
 using Colyseus;
 using Colyseus.Schema;
 

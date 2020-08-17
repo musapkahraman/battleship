@@ -23,11 +23,10 @@ namespace BattleshipGame
 
         private void OnValidate()
         {
-            var origin = Vector2Int.zero;
             if (PartCoordinates.Count == 0)
-                PartCoordinates.Add(origin);
+                PartCoordinates.Add(Vector2Int.zero);
             else
-                PartCoordinates[0] = origin;
+                PartCoordinates[0] = Vector2Int.zero;
         }
 
         public (int width, int height) GetShipSize()

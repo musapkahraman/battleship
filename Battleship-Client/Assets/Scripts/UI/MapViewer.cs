@@ -11,7 +11,6 @@ namespace BattleshipGame.UI
         [SerializeField] private Camera sceneCamera;
         [SerializeField] private GameManager manager;
         [SerializeField] private ScreenType screenType;
-
         // @formatter:off
         [Header("Layers")]
         [SerializeField] private Tilemap cursorLayer;
@@ -30,7 +29,6 @@ namespace BattleshipGame.UI
         [Space] 
         // @formatter:on
         private Tile _cursorTile;
-
         private Grid _grid;
         private MapMode _mode;
 
@@ -50,7 +48,8 @@ namespace BattleshipGame.UI
 
         private void OnMouseDown()
         {
-            var cellCoordinate = GridConverter.ScreenToCell(Input.mousePosition, _grid, sceneCamera, manager.MapAreaSize);
+            var cellCoordinate =
+                GridConverter.ScreenToCell(Input.mousePosition, _grid, sceneCamera, manager.MapAreaSize);
             switch (_mode)
             {
                 case MapMode.Place:
