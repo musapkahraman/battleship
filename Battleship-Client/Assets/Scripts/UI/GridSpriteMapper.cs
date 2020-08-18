@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using BattleshipGame.Core;
 using UnityEngine;
 using UnityEngine.Tilemaps;
@@ -9,22 +10,14 @@ namespace BattleshipGame.UI
     {
         [SerializeField] private GameManager gameManager;
         [SerializeField] private Tilemap tilemap;
-        private readonly List<ShipPart> _opponentShipPart = new List<ShipPart>();
-        private readonly Dictionary<int, List<Vector3Int>> _spritePositions = new Dictionary<int, List<Vector3Int>>();
         private readonly Dictionary<int, Sprite> _sprites = new Dictionary<int, Sprite>();
+
+        private readonly Dictionary<int, List<Vector3Int>> _spritePositionsOnTileMap =
+            new Dictionary<int, List<Vector3Int>>();
 
         private void Awake()
         {
-            InitializeStatusList();
             CacheSpritePositions();
-        }
-
-        private void InitializeStatusList()
-        {
-            foreach (var ship in gameManager.Ships)
-                for (var i = 0; i < ship.amount; i++)
-                    foreach (var coordinate in ship.PartCoordinates)
-                        _opponentShipPart.Add(new ShipPart(-1, coordinate, ship.sprite.GetInstanceID()));
         }
 
         private void CacheSpritePositions()
@@ -39,10 +32,10 @@ namespace BattleshipGame.UI
                 else
                     _sprites[id] = sprite;
 
-                if (!_spritePositions.ContainsKey(id))
-                    _spritePositions.Add(sprite.GetInstanceID(), new List<Vector3Int> {vector3Int});
+                if (!_spritePositionsOnTileMap.ContainsKey(id))
+                    _spritePositionsOnTileMap.Add(sprite.GetInstanceID(), new List<Vector3Int> {vector3Int});
                 else
-                    _spritePositions[sprite.GetInstanceID()].Add(vector3Int);
+                    _spritePositionsOnTileMap[sprite.GetInstanceID()].Add(vector3Int);
             }
         }
 
@@ -53,50 +46,56 @@ namespace BattleshipGame.UI
             if (!_sprites.ContainsKey(spriteId))
                 _sprites.Add(spriteId, sprite);
 
-            if (_spritePositions.ContainsKey(spriteId))
+            if (_spritePositionsOnTileMap.ContainsKey(spriteId))
             {
-                var oldPositionsList = _spritePositions[spriteId];
+                var oldPositionsList = _spritePositionsOnTileMap[spriteId];
                 oldPositionsList.Remove(oldPosition);
                 oldPositionsList.Add(newPosition);
             }
             else
             {
-                _spritePositions.Add(spriteId, new List<Vector3Int> {newPosition});
+                _spritePositionsOnTileMap.Add(spriteId, new List<Vector3Int> {newPosition});
             }
         }
 
         public void RemoveSpritePosition(int spriteId, Vector3Int oldPosition)
         {
-            if (_spritePositions.ContainsKey(spriteId)) _spritePositions[spriteId].Remove(oldPosition);
-        }
-
-        public IEnumerable<ShipPart> GetPartsList()
-        {
-            return new List<ShipPart>(_opponentShipPart);
+            if (_spritePositionsOnTileMap.ContainsKey(spriteId))
+                _spritePositionsOnTileMap[spriteId].Remove(oldPosition);
         }
 
         public Dictionary<int, List<Vector3Int>> GetSpritePositions()
         {
-            return new Dictionary<int, List<Vector3Int>>(_spritePositions);
+            return new Dictionary<int, List<Vector3Int>>(_spritePositionsOnTileMap);
         }
 
-        public Dictionary<int, Sprite> GetSprites()
+        public Sprite GetSpriteAt(ref Vector3Int position)
         {
-            return new Dictionary<int, Sprite>(_sprites);
-        }
-
-        public struct ShipPart
-        {
-            public int Status;
-            public readonly Vector2 Coordinate;
-            public readonly int SpriteId;
-
-            public ShipPart(int status, Vector2 coordinate, int spriteId)
+            foreach (var keyValuePair in _spritePositionsOnTileMap)
             {
-                Status = status;
-                Coordinate = coordinate;
-                SpriteId = spriteId;
+                int spriteId = keyValuePair.Key;
+                var spritePositions = keyValuePair.Value;
+                if (!_sprites.TryGetValue(spriteId, out var sprite)) continue;
+                Ship ship = null;
+                foreach (var s in gameManager.Ships)
+                {
+                    if (s.sprite.Equals(sprite)) ship = s;
+                }
+
+                if (ship is null) continue;
+                foreach (var spritePosition in spritePositions)
+                {
+                    foreach (var cell in ship.PartCoordinates.Select(part => spritePosition + (Vector3Int) part))
+                    {
+                        if (!cell.Equals(position)) continue;
+                        _sprites.TryGetValue(spriteId, out var result);
+                        position = spritePosition;
+                        return result;
+                    }
+                }
             }
+
+            return null;
         }
     }
 }

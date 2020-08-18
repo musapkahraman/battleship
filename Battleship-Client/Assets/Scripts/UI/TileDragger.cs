@@ -18,7 +18,7 @@ namespace BattleshipGame.UI
         [SerializeField] private bool removeIfDraggedOut;
         private Grid _grid;
         private MapViewer _selfMapViewer;
-        private GridSpriteMapper _gridSpriteMapper;
+        private GridSpriteMapper _selfGridSpriteMapper;
         private GridSpriteMapper _targetGridSpriteMapper;
         private Sprite _sprite;
         private GameObject _grabbedShip;
@@ -29,7 +29,7 @@ namespace BattleshipGame.UI
         {
             _grid = GetComponent<Grid>();
             _selfMapViewer = GetComponent<MapViewer>();
-            _gridSpriteMapper = GetComponent<GridSpriteMapper>();
+            _selfGridSpriteMapper = GetComponent<GridSpriteMapper>();
             _targetGridSpriteMapper = targetMapViewer.GetComponent<GridSpriteMapper>();
         }
 
@@ -38,7 +38,7 @@ namespace BattleshipGame.UI
             _isReleasedInside = false;
             if (_selfMapViewer && _selfMapViewer.Mode == MapViewer.MapMode.Attack) return;
             _grabbedFrom = GridConverter.ScreenToCell(Input.mousePosition, _grid, sceneCamera, manager.MapAreaSize);
-            SearchForClickedSprite();
+            _sprite = _selfGridSpriteMapper.GetSpriteAt(ref _grabbedFrom);
             if (!_sprite) return;
             _grabbedShip = Instantiate(dragShipPrefab, GetMousePositionOnZeroZ(), Quaternion.identity);
             _grabbedShip.GetComponent<SpriteRenderer>().sprite = _sprite;
@@ -89,31 +89,10 @@ namespace BattleshipGame.UI
             _isReleasedInside = true;
         }
 
-        private void SearchForClickedSprite()
-        {
-            _sprite = null;
-            foreach (var spriteIdPositionPair in _gridSpriteMapper.GetSpritePositions())
-            foreach (var spritePosition in spriteIdPositionPair.Value)
-            foreach (var shipPartCoordinate in FindShip(spriteIdPositionPair.Key).PartCoordinates)
-            {
-                var cell = spritePosition + (Vector3Int) shipPartCoordinate;
-                if (!cell.Equals(_grabbedFrom)) continue;
-                _gridSpriteMapper.GetSprites().TryGetValue(spriteIdPositionPair.Key, out _sprite);
-                _grabbedFrom = spritePosition;
-                return;
-            }
-        }
-
         private Vector3 GetMousePositionOnZeroZ()
         {
             var position = sceneCamera.ScreenToWorldPoint(Input.mousePosition);
             return new Vector3(position.x, position.y, 0);
-        }
-
-        private Ship FindShip(int spriteId)
-        {
-            _gridSpriteMapper.GetSprites().TryGetValue(spriteId, out var sprite);
-            return sprite is null ? null : manager.Ships.FirstOrDefault(ship => ship.sprite.Equals(sprite));
         }
     }
 }

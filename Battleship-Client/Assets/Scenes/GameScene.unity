@@ -841,6 +841,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   maskPrefab: {fileID: 6800722550282205898, guid: 510c3b7b453046d48805242dd2a27f2b,
     type: 3}
+  gameManager: {fileID: 1832216561}
 --- !u!114 &1093841619
 MonoBehaviour:
   m_ObjectHideFlags: 0
