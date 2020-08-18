@@ -515,6 +515,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   messageField: {fileID: 322319179}
+  progressBar: {fileID: 1649524957}
 --- !u!4 &1560539549
 Transform:
   m_ObjectHideFlags: 0
@@ -529,6 +530,12 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!95 &1649524957 stripped
+Animator:
+  m_CorrespondingSourceObject: {fileID: 868588383712907703, guid: b5624325612bcf0438993606f5726bef,
+    type: 3}
+  m_PrefabInstance: {fileID: 1902651316}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &1902651316
 PrefabInstance:
   m_ObjectHideFlags: 0

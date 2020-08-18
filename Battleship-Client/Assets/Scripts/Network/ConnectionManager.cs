@@ -8,7 +8,14 @@ namespace BattleshipGame.Network
     public class ConnectionManager : MonoBehaviour
     {
         [SerializeField] private TMP_Text messageField;
+        [SerializeField] private Animator progressBar;
         private GameClient _client;
+        private Canvas _pBarCanvas;
+
+        private void Awake()
+        {
+            _pBarCanvas = progressBar.transform.parent.GetComponent<Canvas>();
+        }
 
         private void Start()
         {
@@ -32,6 +39,8 @@ namespace BattleshipGame.Network
 
         private void OnConnected(object sender, EventArgs e)
         {
+            progressBar.enabled = false;
+            _pBarCanvas.enabled = false;
             messageField.text = "Connection successful. Finding a game to join...";
             if (!_client.Joined)
                 _client.Join();
