@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta name="viewport" content="width=device-width" />
+
+    <style>
+      body { font-family: Tahoma, Geneva, sans-serif; }
+    </style>
+
+    <!-- colyseus.js client -->
+    <script type="text/javascript" src="https://raw.githack.com/colyseus/colyseus.js/master/dist/colyseus.js"></script>
+
+  </head>
+  <body>
+    <p>Lobby. It just broadcast messages through "broadcast" method.</p>
+
+    <script>
+      var client = new Colyseus.Client("ws://localhost:2567");
+      var n = 0;
+      client.joinOrCreate("game", {password: '123', name: 'Jamy'}).then(room => {
+        console.log("joined");
+        room.onStateChange.once(function(state) {
+            console.log("initial room state:", state);
+        });
+
+        // listen to patches coming from the server
+        room.onMessage("messages", function(message) {
+            console.log( ++n + ":" + message);
+        });
+
+        room.onStateChange((state) => {
+          console.log("the room state has been updated:", state.phase);
+        });
+      });
+
+      // client.joinById(roomId, options).then(room => {
+      //   // ...
+      // });
+
+    </script>
+  </body>
+</html>

@@ -1,28 +1,33 @@
 import {Room, Client} from "colyseus";
 
-import {State, Player} from './state';
+import {State, Player} from './game-state';
 
 export class GameRoom extends Room<State> {
-
+    maxClients: number = 2;
+    password: string;
+    name: string;
     gridSize: number = 9;
-
     startingFleetHealth: number = 19;
-
     placements: Array<Array<number>>;
-
     playerHealth: Array<number>;
-
     playersPlaced: number = 0;
-
     playerCount: number = 0;
 
-    onInit(option) {
-        console.log('room created!');
+    onCreate(options) {
+        console.log(options);
+        if(options.password){
+            this.password = options.password;
+            this.name = options.name;
+            // this.setPrivate();
+        }
         this.reset();
+        this.onMessage("place", (client, message) => this.playerPlace(client, message));
+        this.onMessage("turn", (client, message) => this.playerTurn(client, message));
+        console.log('room created!');
     }
 
     onJoin(client: Client) {
-        console.log('client coined!', client.sessionId);
+        console.log('client joined!', client.sessionId);
 
         let player: Player =  new Player();
         player.sessionId = client.sessionId;
@@ -37,6 +42,21 @@ export class GameRoom extends Room<State> {
         }
     }
 
+    onAuth(client: Client, options: any) {
+        if(!this.password) {
+            return true
+        };
+
+        if(!options.password) {
+            throw new Error("This room requires a password!")
+        };
+
+        if (this.password === options.password){
+            return true;
+        }
+        throw new Error("Invalid Password!");
+    }
+
     onLeave(client: Client) {
         console.log('client left!', client.sessionId);
         
@@ -45,84 +65,72 @@ export class GameRoom extends Room<State> {
         this.state.phase = 'waiting';
     }
 
-    onMessage (client, message) {
-        console.log("message received", message);
+    playerPlace(client: Client, message: any){
+        let player: Player = this.state.players[client.sessionId];
+        this.placements[player.seat - 1] = message['placement'];
+        this.playersPlaced++;
 
-        if (!message) return;
+        if (this.playersPlaced == 2) {
+            this.state.phase = 'battle';
+        }
+    }
 
+    playerTurn(client: Client, message: any){
         let player: Player = this.state.players[client.sessionId];
 
-        if (!player) return;
+        if (this.state.playerTurn != player.seat) return;
 
-        let command: string = message['command'];
+        let targetIndexes: number[] = message['targetIndexes'];
 
-        switch (command) {
-            case 'place':
-                this.placements[player.seat - 1] = message['placement'];
-                this.playersPlaced++;
+        if(targetIndexes.length != 3) return;
 
-                if (this.playersPlaced == 2) {
-                    this.state.phase = 'battle';
-                }
-                break;
-            case 'turn':
-                if (this.state.playerTurn != player.seat) return;
+        let shots = player.seat == 1 ? this.state.player1Shots : this.state.player2Shots;
+        let targetShips = player.seat == 1 ? this.state.player2Ships : this.state.player1Ships;
+        let targetPlayerIndex = player.seat == 1 ? 1 : 0;
+        let targetedPlacement = this.placements[targetPlayerIndex];
 
-                let targetIndexes: number[] = message['targetIndexes'];
-
-                if(targetIndexes.length != 3) return;
-
-                let shots = player.seat == 1 ? this.state.player1Shots : this.state.player2Shots;
-                let targetShips = player.seat == 1 ? this.state.player2Ships : this.state.player1Ships;
-                let targetPlayerIndex = player.seat == 1 ? 1 : 0;
-                let targetedPlacement = this.placements[targetPlayerIndex];
-
-                for (const targetIndex of targetIndexes) {
-                    if(shots[targetIndex] == -1){
-                        shots[targetIndex] = this.state.currentTurn;
-                        if(targetedPlacement[targetIndex] >= 0){
-                            this.playerHealth[targetPlayerIndex]--;
-                            switch(targetedPlacement[targetIndex]){
-                                case 0: // Admiral
-                                    this.updateShips(targetShips, 0, 5, this.state.currentTurn);
-                                    break;
-                                case 1: // VTrio
-                                    this.updateShips(targetShips, 5, 8, this.state.currentTurn);
-                                    break;
-                                case 2: // HTrio
-                                    this.updateShips(targetShips, 8, 11, this.state.currentTurn);
-                                    break;
-                                case 3: // VDuo
-                                    this.updateShips(targetShips, 11, 13, this.state.currentTurn);
-                                    break;
-                                case 4: // HDuo
-                                    this.updateShips(targetShips, 13, 15, this.state.currentTurn);
-                                    break;
-                                case 5: // S
-                                case 6: // S
-                                case 7: // S
-                                case 8: // S
-                                    this.updateShips(targetShips, 15, 19, this.state.currentTurn);
-                                    break;
-                            }
-                        }
+        for (const targetIndex of targetIndexes) {
+            if(shots[targetIndex] == -1){
+                shots[targetIndex] = this.state.currentTurn;
+                if(targetedPlacement[targetIndex] >= 0){
+                    this.playerHealth[targetPlayerIndex]--;
+                    switch(targetedPlacement[targetIndex]){
+                        case 0: // Admiral
+                            this.updateShips(targetShips, 0, 5, this.state.currentTurn);
+                            break;
+                        case 1: // VTrio
+                            this.updateShips(targetShips, 5, 8, this.state.currentTurn);
+                            break;
+                        case 2: // HTrio
+                            this.updateShips(targetShips, 8, 11, this.state.currentTurn);
+                            break;
+                        case 3: // VDuo
+                            this.updateShips(targetShips, 11, 13, this.state.currentTurn);
+                            break;
+                        case 4: // HDuo
+                            this.updateShips(targetShips, 13, 15, this.state.currentTurn);
+                            break;
+                        case 5: // S
+                        case 6: // S
+                        case 7: // S
+                        case 8: // S
+                            this.updateShips(targetShips, 15, 19, this.state.currentTurn);
+                            break;
                     }
                 }
-    
-                if(this.playerHealth[targetPlayerIndex] <= 0){
-                    this.state.winningPlayer = player.seat;
-                    this.state.phase = 'result';
-                } else {
-                    if( this.state.playerTurn === 1){
-                        this.state.playerTurn = 2;
-                    } else {
-                        this.state.playerTurn = 1;
-                        this.state.currentTurn++;
-                    }
-                }
-                break;
-            default:
-                console.log('unknown command');
+            }
+        }
+
+        if(this.playerHealth[targetPlayerIndex] <= 0){
+            this.state.winningPlayer = player.seat;
+            this.state.phase = 'result';
+        } else {
+            if( this.state.playerTurn === 1){
+                this.state.playerTurn = 2;
+            } else {
+                this.state.playerTurn = 1;
+                this.state.currentTurn++;
+            }
         }
     }
 
