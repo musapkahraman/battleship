@@ -1,12 +1,44 @@
 using System;
 using System.IO;
-using System.Collections;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 using GameDevWare.Serialization;
 
+using UnityEngine;
+using UnityEngine.Networking;
+
 namespace Colyseus
 {
+	[Serializable]
+	public class RoomAvailable
+	{
+		public uint clients;
+		public uint maxClients;
+		public string name;
+		public string roomId;
+		public string processId;
+		// public object metadata;
+	}
+
+	[Serializable]
+	public class RoomAvailableCollection<T>
+	{
+		public T[] rooms;
+	}
+
+	[Serializable]
+	public class MatchMakeResponse
+	{
+		// success
+		public RoomAvailable room;
+		public string sessionId;
+		// error
+		public int code;
+		public string error;
+	}
+
+
 	/// <summary>
 	/// Colyseus.Client
 	/// </summary>
@@ -15,38 +47,8 @@ namespace Colyseus
 	/// </remarks>
 	public class Client
 	{
-		/// <summary>
-		/// Unique <see cref="Client"/> identifier.
-		/// </summary>
-		public string Id;
-
 		public Auth Auth;
-
-		/// <summary>
-		/// Occurs when the <see cref="Client"/> connection has been established, and Client <see cref="Id"/> is available.
-		/// </summary>
-		public event EventHandler OnOpen;
-
-		/// <summary>
-		/// Occurs when the <see cref="Client"/> connection has been closed.
-		/// </summary>
-		public event EventHandler OnClose;
-
-		/// <summary>
-		/// Occurs when the <see cref="Client"/> gets an error.
-		/// </summary>
-		public event EventHandler<ErrorEventArgs> OnError;
-
-		protected UriBuilder endpoint;
-		protected Connection connection;
-
-		protected Dictionary<string, IRoom> rooms = new Dictionary<string, IRoom> ();
-		protected Dictionary<int, IRoom> connectingRooms = new Dictionary<int, IRoom> ();
-
-		protected int _requestId;
-		protected Dictionary<int, Action<RoomAvailable[]>> roomsAvailableRequests = new Dictionary<int, Action<RoomAvailable[]>>();
-
-		protected byte previousCode = 0;
+		public UriBuilder Endpoint;
 
 		/// <summary>
 		/// Initializes a new instance of the <see cref="Client"/> class with
@@ -55,120 +57,199 @@ namespace Colyseus
 		/// <param name="endpoint">
 		/// A <see cref="string"/> that represents the WebSocket URL to connect.
 		/// </param>
-		public Client (string _endpoint, string _id = null)
+		public Client (string endpoint)
 		{
-			Id = _id;
-			endpoint = new UriBuilder(new Uri (_endpoint));
-			Auth = new Auth(endpoint.Uri);
+			Endpoint = new UriBuilder(new Uri (endpoint));
+			Auth = new Auth(Endpoint.Uri);
+		}
 
-			connection = CreateConnection();
-			connection.OnClose += (sender, e) =>
+		/**
+		 * Join
+		 */
+		public async Task<Room<T>> JoinOrCreate<T>(string roomName, Dictionary<string, object> options = null, Dictionary<string, string> headers = null)
+		{
+			return await CreateMatchMakeRequest<T>("joinOrCreate", roomName, options, headers);
+		}
+
+		public async Task<Room<T>> Create<T>(string roomName, Dictionary<string, object> options = null, Dictionary<string, string> headers = null)
+		{
+			return await CreateMatchMakeRequest<T>("create", roomName, options, headers);
+		}
+
+		public async Task<Room<T>> Join<T>(string roomName, Dictionary<string, object> options = null, Dictionary<string, string> headers = null)
+		{
+			return await CreateMatchMakeRequest<T>("join", roomName, options, headers);
+		}
+
+		public async Task<Room<T>> JoinById<T>(string roomId, Dictionary<string, object> options = null, Dictionary<string, string> headers = null)
+		{
+			return await CreateMatchMakeRequest<T>("joinById", roomId, options, headers);
+		}
+
+		public async Task<Room<T>> Reconnect<T>(string roomId, string sessionId, Dictionary<string, string> headers = null)
+		{
+			Dictionary<string, object> options = new Dictionary<string, object>();
+			options.Add("sessionId", sessionId);
+			return await CreateMatchMakeRequest<T>("joinById", roomId, options, headers);
+		}
+
+		//
+		// Fossil-Delta versions for joining the state
+		//
+		public async Task<Room<IndexedDictionary<string, object>>> JoinOrCreate(string roomName, Dictionary<string, object> options = null, Dictionary<string, string> headers = null)
+		{
+			return await CreateMatchMakeRequest<IndexedDictionary<string, object>>("joinOrCreate", roomName, options, headers);
+		}
+
+		public async Task<Room<IndexedDictionary<string, object>>> Create(string roomName, Dictionary<string, object> options = null, Dictionary<string, string> headers = null)
+		{
+			return await CreateMatchMakeRequest<IndexedDictionary<string, object>>("create", roomName, options, headers);
+		}
+
+		public async Task<Room<IndexedDictionary<string, object>>> Join(string roomName, Dictionary<string, object> options = null, Dictionary<string, string> headers = null)
+		{
+			return await CreateMatchMakeRequest<IndexedDictionary<string, object>>("join", roomName, options, headers);
+		}
+
+		public async Task<Room<IndexedDictionary<string, object>>> JoinById(string roomId, Dictionary<string, object> options = null, Dictionary<string, string> headers = null)
+		{
+			return await CreateMatchMakeRequest<IndexedDictionary<string, object>>("joinById", roomId, options, headers);
+		}
+
+		public async Task<Room<IndexedDictionary<string, object>>> Reconnect(string roomId, string sessionId, Dictionary<string, string> headers = null)
+		{
+			Dictionary<string, object> options = new Dictionary<string, object>();
+			options.Add("sessionId", sessionId);
+			return await CreateMatchMakeRequest<IndexedDictionary<string, object>>("joinById", roomId, options, headers);
+		}
+
+		public async Task<RoomAvailable[]> GetAvailableRooms(string roomName = "")
+		{
+			return await GetAvailableRooms<RoomAvailable>(roomName);
+		}
+
+		public async Task<T[]> GetAvailableRooms<T> (string roomName = "")
+		{
+			var uriBuilder = new UriBuilder(Endpoint.Uri);
+			uriBuilder.Path += "matchmake/" + roomName;
+			uriBuilder.Scheme = uriBuilder.Scheme.Replace("ws", "http"); // FIXME: replacing "ws" with "http" is too hacky!
+
+			var req = new UnityWebRequest();
+			req.method = "GET";
+			req.url = uriBuilder.Uri.ToString();
+
+			req.SetRequestHeader("Accept", "application/json");
+
+			req.downloadHandler = new DownloadHandlerBuffer();
+			await req.SendWebRequest();
+
+			var json = req.downloadHandler.text;
+			if (json.StartsWith("[", StringComparison.CurrentCulture))
 			{
-				if (OnClose != null)
-					OnClose.Invoke(sender, e);
+				json = "{\"rooms\":" + json + "}";
+			}
+
+			var response = JsonUtility.FromJson<RoomAvailableCollection<T>>(json);
+			return response.rooms;
+		}
+
+		public async Task<Room<T>> ConsumeSeatReservation<T>(MatchMakeResponse response, Dictionary<string, string> headers = null)
+		{
+			var room = new Room<T>(response.room.name)
+			{
+				Id = response.room.roomId,
+				SessionId = response.sessionId
 			};
 
-		}
+			var queryString = new Dictionary<string, object>();
+			queryString.Add("sessionId", room.SessionId);
 
-		public IEnumerator Connect()
-		{
-			return connection.Connect ();
-		}
+			room.SetConnection(CreateConnection(response.room.processId + "/" + room.Id, queryString, headers));
 
-		public void Recv()
-		{
-			byte[] data = connection.Recv();
-            while (data != null)
-            {
-                ParseMessage(data);
-                data = connection.Recv();
-            }
+			var tcs = new TaskCompletionSource<Room<T>>();
 
-			// TODO: this may not be a good idea?
-			foreach (var room in rooms) {
-				room.Value.Recv ();
+			void OnError(int code, string message)
+			{
+				room.OnError -= OnError;
+				tcs.SetException(new MatchMakeException(code, message));
+			};
+
+			void OnJoin()
+			{
+				room.OnError -= OnError;
+				tcs.TrySetResult(room);
 			}
+
+			room.OnError += OnError;
+			room.OnJoin += OnJoin;
+
+			_ = ColyseusManager.Instance.AddRoom(room);
+
+			return await tcs.Task;
 		}
 
-		/// <summary>
-		/// Request <see cref="Client"/> to join in a <see cref="Room"/>.
-		/// </summary>
-		/// <param name="roomName">The name of the Room to join.</param>
-		/// <param name="options">Custom join request options</param>
-		public Room<T> Join<T>(string roomName, Dictionary<string, object> options = null)
+		protected async Task<Room<T>> CreateMatchMakeRequest<T>(string method, string roomName, Dictionary<string, object> options, Dictionary<string, string> headers)
 		{
 			if (options == null)
 			{
 				options = new Dictionary<string, object>();
 			}
 
-			int requestId = ++_requestId;
-			options.Add("requestId", requestId);
+			if (headers == null)
+			{
+				headers = new Dictionary<string, string>();
+			}
 
 			if (Auth.HasToken)
 			{
 				options.Add("token", Auth.Token);
 			}
 
-			var room = new Room<T>(roomName, options);
-			connectingRooms.Add(requestId, room);
+			var uriBuilder = new UriBuilder(Endpoint.Uri);
+			uriBuilder.Path += "matchmake/" + method + "/" + roomName;
+			uriBuilder.Scheme = uriBuilder.Scheme.Replace("ws", "http"); // FIXME: replacing "ws" with "http" is too hacky!
 
-			connection.Send(new object[] { Protocol.JOIN_REQUEST, roomName, options });
+			var req = new UnityWebRequest();
+			req.method = "POST";
 
-			return room;
+			req.url = uriBuilder.Uri.ToString();
+
+			// Send JSON options on request body
+			var jsonBodyStream = new MemoryStream();
+			Json.Serialize(options, jsonBodyStream);
+
+			req.uploadHandler = new UploadHandlerRaw(jsonBodyStream.ToArray())
+			{
+				contentType = "application/json"
+			};
+			req.SetRequestHeader("Content-Type", "application/json");
+			req.SetRequestHeader("Accept", "application/json");
+
+			foreach (var header in headers) {
+				req.SetRequestHeader(header.Key, header.Value);
+			}
+
+			req.downloadHandler = new DownloadHandlerBuffer();
+			await req.SendWebRequest();
+
+			if (req.isNetworkError || req.isHttpError)
+			{
+				throw new Exception(req.error);
+			}
+
+			var response = JsonUtility.FromJson<MatchMakeResponse>(req.downloadHandler.text);
+			if (!string.IsNullOrEmpty(response.error))
+			{
+				throw new MatchMakeException(response.code, response.error);
+			}
+
+			return await ConsumeSeatReservation<T>(response, headers);
 		}
 
-		public Room<IndexedDictionary<string, object>> Join (string roomName, Dictionary<string, object> options = null)
-		{
-			return Join<IndexedDictionary<string, object>>(roomName, options);
-		}
-
-		/// <summary>
-		/// Request <see cref="Client"/> to rejoin a <see cref="Room"/>.
-		/// </summary>
-		/// <param name="roomName">The name of the Room to rejoin.</param>
-		/// <param name="sessionId">sessionId of client's previous connection</param>
-		public Room<T> ReJoin<T>(string roomName, string sessionId)
-		{
-			Dictionary<string, object> options = new Dictionary<string, object>();
-			options.Add("sessionId", sessionId);
-
-			return Join<T>(roomName, options);
-		}
-
-		public Room<IndexedDictionary<string, object>> ReJoin (string roomName, string sessionId)
-		{
-			return ReJoin<IndexedDictionary<string, object>>(roomName, sessionId);
-		}
-
-		/// <summary>
-		/// Request <see cref="Client"/> to join in a <see cref="Room"/>.
-		/// </summary>
-		/// <param name="roomName">The name of the Room to join.</param>
-		/// <param name="callback">Callback to receive list of available rooms</param>
-		public void GetAvailableRooms (string roomName, Action<RoomAvailable[]> callback)
-		{
-			int requestId = ++_requestId;
-			connection.Send (new object[]{Protocol.ROOM_LIST, requestId, roomName});
-			roomsAvailableRequests.Add (requestId, callback);
-		}
-
-		/// <summary>
-		/// Close <see cref="Client"/> connection and leave all joined rooms.
-		/// </summary>
-		public void Close()
-		{
-			connection.Close();
-		}
-
-		protected Connection CreateConnection (string path = "", Dictionary<string, object> options = null)
+		protected Connection CreateConnection (string path = "", Dictionary<string, object> options = null, Dictionary<string, string> headers = null)
 		{
 			if (options == null) {
 				options = new Dictionary<string, object> ();
-			}
-
-			if (Id != null) {
-				options.Add ("colyseusid", Id);
 			}
 
 			var list = new List<string>();
@@ -177,107 +258,13 @@ namespace Colyseus
 				list.Add(item.Key + "=" + ((item.Value != null) ? Convert.ToString(item.Value) : "null") );
 			}
 
-			UriBuilder uriBuilder = new UriBuilder(endpoint.Uri)
+			UriBuilder uriBuilder = new UriBuilder(Endpoint.Uri)
 			{
 				Path = path,
 				Query = string.Join("&", list.ToArray())
 			};
 
-			return new Connection (uriBuilder.Uri);
-		}
-
-        private void ParseMessage (byte[] bytes)
-		{
-
-			if (previousCode == 0)
-			{
-				var code = bytes[0];
-
-				if (code == Protocol.USER_ID)
-				{
-					Id = System.Text.Encoding.UTF8.GetString(bytes, 2, bytes[1]);
-
-					if (OnOpen != null)
-						OnOpen.Invoke(this, EventArgs.Empty);
-
-				}
-				else if (code == Protocol.JOIN_REQUEST)
-				{
-					var requestId = bytes[1];
-
-					IRoom room;
-					if (connectingRooms.TryGetValue(requestId, out room))
-					{
-						room.Id = System.Text.Encoding.UTF8.GetString(bytes, 3, bytes[2]);
-
-						endpoint.Path = "/" + room.Id;
-						endpoint.Query = "colyseusid=" + this.Id;
-
-						var processPath = "";
-						var nextIndex = 3 + room.Id.Length;
-						if (bytes.Length > nextIndex)
-						{
-							processPath = System.Text.Encoding.UTF8.GetString(bytes, nextIndex + 1, bytes[nextIndex]) + "/";
-						}
-
-						room.SetConnection(CreateConnection(processPath + room.Id, room.Options));
-						room.OnLeave += OnLeaveRoom;
-
-						if (rooms.ContainsKey(room.Id))
-						{
-							rooms.Remove(room.Id);
-						}
-						rooms.Add(room.Id, room);
-						connectingRooms.Remove(requestId);
-
-					}
-					else
-					{
-						throw new Exception("can't join room using requestId " + requestId.ToString());
-					}
-
-				}
-				else if (code == Protocol.JOIN_ERROR)
-				{
-					string message = System.Text.Encoding.UTF8.GetString(bytes, 2, bytes[1]);
-					if (OnError != null)
-						OnError.Invoke(this, new ErrorEventArgs(message));
-
-				}
-				else if (code == Protocol.ROOM_LIST)
-				{
-					previousCode = code;
-				}
-			}
-			else
-			{
-				if (previousCode == Protocol.ROOM_LIST)
-				{
-					var message = MsgPack.Deserialize<List<object>>(new MemoryStream(bytes));
-					var requestId = Convert.ToInt32(message[0]);
-					List<object> _rooms = (List<object>)message[1];
-					RoomAvailable[] availableRooms = new RoomAvailable[_rooms.Count];
-
-					for (int i = 0; i < _rooms.Count; i++)
-					{
-						IDictionary<string, object> room = (IDictionary<string, object>)_rooms[i];
-						RoomAvailable _room = ObjectExtensions.ToObject<RoomAvailable>(_rooms[i]);
-						availableRooms[i] = _room;
-					}
-
-					roomsAvailableRequests[requestId].Invoke(availableRooms);
-					roomsAvailableRequests.Remove(requestId);
-				}
-
-				previousCode = 0;
-			}
-
-		}
-
-		protected void OnLeaveRoom (object sender, EventArgs args)
-		{
-			IRoom room = (IRoom) sender;
-			rooms.Remove (room.Id);
+			return new Connection (uriBuilder.ToString(), headers);
 		}
 
 	}
