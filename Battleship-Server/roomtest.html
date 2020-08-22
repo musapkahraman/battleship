@@ -15,6 +15,7 @@
     <p>Lobby. It just broadcast messages through "broadcast" method.</p>
 
     <script>
+      // var client = new Colyseus.Client("ws://bronzehero.herokuapp.com");
       var client = new Colyseus.Client("ws://localhost:2567");
       var n = 0;
       client.joinOrCreate("game", {password: '123', name: 'Jamy'}).then(room => {

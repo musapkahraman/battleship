@@ -15,9 +15,12 @@
     <p>Lobby. It just broadcast messages through "broadcast" method.</p>
 
     <script>
-      var client = new Colyseus.Client("ws://bronzehero.herokuapp.com");
+      // var client = new Colyseus.Client("ws://bronzehero.herokuapp.com");
+      var client = new Colyseus.Client("ws://localhost:2567");
       var n = 0;
+      var lobby;
       client.joinOrCreate("lobby", {name: 'Jacks'}).then(room => {
+        lobby = room;
         console.log("joined");
         room.onStateChange.once(function(state) {
             console.log("initial room state:", state);
@@ -43,6 +46,10 @@
           console.log("Room removed!", roomId);
         });
 
+        room.onMessage("query", (roomId) => {
+          console.log(roomId);
+        });
+
         room.onStateChange.once((state) => {
           console.log("this is the first room state!", state);
         });
@@ -53,6 +60,10 @@
       });
       //client.message("query", {name:"Poke"});
       setInterval(getNPrint, 5000);
+
+      function queryRoom(name){
+        lobby.send("query", {name});
+      }
 
       function getNPrint(){
         console.log("printting...");
