@@ -12,7 +12,6 @@ namespace BattleshipGame.Network
     {
         private const string LocalEndpoint = "ws://localhost:2567";
         private const string HerokuEndpoint = "ws://bronzehero.herokuapp.com";
-        private Client _client;
         private bool _initialStateReceived;
         private Room<State> _room;
         public string SessionId => _room?.SessionId;
@@ -21,7 +20,7 @@ namespace BattleshipGame.Network
 
         private void OnApplicationQuit()
         {
-            _room?.Leave();
+            Leave();
         }
 
         public event Action ConnectionOpened;
@@ -29,12 +28,28 @@ namespace BattleshipGame.Network
         public event Action<string> GamePhaseChanged;
         public event Action<State> InitialStateReceived;
 
+        public void Leave()
+        {
+            _room?.Leave();
+            _room = null;
+        }
+
+        public void SendPlacement(int[] placement)
+        {
+            _room.Send("place", placement);
+        }
+
+        public void SendTurn(int[] targetIndexes)
+        {
+            _room.Send("turn", targetIndexes);
+        }
+
         public async void Connect()
         {
-            _client = new Client(HerokuEndpoint);
+            var client = new Client(HerokuEndpoint);
             try
             {
-                _room = await _client.JoinOrCreate<State>("game");
+                _room = await client.JoinOrCreate<State>("game");
                 ConnectionOpened?.Invoke();
                 Debug.Log("Joined successfully!");
                 _room.OnStateChange += OnRoomStateChange;
@@ -70,7 +85,7 @@ namespace BattleshipGame.Network
             }
         }
 
-        void OnRoomStateChange(State state, bool isFirstState)
+        private void OnRoomStateChange(State state, bool isFirstState)
         {
             if (isFirstState)
             {
@@ -84,22 +99,6 @@ namespace BattleshipGame.Network
                 // Further updates on your client state
                 Debug.Log(state);
             }
-        }
-
-        public void Leave()
-        {
-            _room?.Leave();
-            _room = null;
-        }
-
-        public void SendPlacement(int[] placement)
-        {
-            _room.Send("place", placement);
-        }
-
-        public void SendTurn(int[] targetIndexes)
-        {
-            _room.Send("turn", targetIndexes);
         }
 
         private void OnRoomJoin()

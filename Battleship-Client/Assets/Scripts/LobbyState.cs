@@ -7,11 +7,8 @@
 
 using Colyseus.Schema;
 
-public class Player : Schema {
-	[Type(0, "int16")]
-	public short seat = 0;
-
-	[Type(1, "string")]
-	public string sessionId = "";
+public class LobbyState : Schema {
+	[Type(0, "string")]
+	public string custom = "";
 }
 
