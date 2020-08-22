@@ -1,37 +1,48 @@
-﻿using System;
+﻿using BattleshipGame.Common;
 using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
 namespace BattleshipGame.Network
 {
-    public class ConnectionManager : MonoBehaviour
+    public class ConnectionManager : Singleton<ConnectionManager>
     {
-        [SerializeField] private TMP_Text messageField;
-        [SerializeField] private Animator progressBar;
-        private GameClient _client;
-        private Canvas _pBarCanvas;
-
-        private void Awake()
+        public enum ServerType
         {
-            _pBarCanvas = progressBar.transform.parent.GetComponent<Canvas>();
+            Local,
+            Online
         }
 
-        private void Start()
+        [SerializeField] private TMP_Text messageField;
+        [SerializeField] private Animator progressBar;
+
+        [SerializeField] private ServerType serverType = ServerType.Online;
+        private Canvas _pBarCanvas;
+
+        public GameClient Client { get; private set; }
+
+        public override void Awake()
         {
-            messageField.text = "Connecting to server...";
-            _client = GameClient.Instance;
-            _client.ConnectionOpened += OnConnected;
-            _client.JoinedIn += OnJoined;
-            _client.Connect();
+            base.Awake();
+            _pBarCanvas = progressBar.transform.parent.GetComponent<Canvas>();
+            Client = new GameClient();
+            Client.ConnectionOpened += OnConnected;
+            Client.JoinedInTheRoom += OnJoined;
+            messageField.text = $"Connecting to {serverType.ToString()} server...";
+            Client.Connect(serverType);
         }
 
         private void OnDestroy()
         {
-            if (_client == null) return;
-            _client.ConnectionOpened -= OnConnected;
-            _client.JoinedIn -= OnJoined;
-            _client.GamePhaseChanged -= OnGamePhaseChanged;
+            if (Client == null) return;
+            Client.ConnectionOpened -= OnConnected;
+            Client.JoinedInTheRoom -= OnJoined;
+            Client.GamePhaseChanged -= OnGamePhaseChanged;
+        }
+
+        private void OnApplicationQuit()
+        {
+            Client.Leave();
         }
 
         private void OnConnected()
@@ -39,14 +50,14 @@ namespace BattleshipGame.Network
             progressBar.enabled = false;
             _pBarCanvas.enabled = false;
             messageField.text = "Connection successful. Finding a game to join...";
-            if (_client.Joined)
+            if (Client.Joined)
                 OnJoined();
         }
 
         private void OnJoined()
         {
             messageField.text = "Successfully joined in. Waiting for the other player...";
-            _client.GamePhaseChanged += OnGamePhaseChanged;
+            Client.GamePhaseChanged += OnGamePhaseChanged;
         }
 
         private static void OnGamePhaseChanged(string phase)

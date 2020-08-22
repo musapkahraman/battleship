@@ -41,7 +41,7 @@ namespace BattleshipGame.Core
 
         private void Start()
         {
-            _client = GameClient.Instance;
+            _client = ConnectionManager.Instance.Client;
             if (!_client.Joined) SceneManager.LoadScene("ConnectingScene");
             _cellCount = areaSize * areaSize;
             ResetPlacementMap();
@@ -53,7 +53,7 @@ namespace BattleshipGame.Core
 
         private void OnDestroy()
         {
-            if (!_client) return;
+            if (_client == null) return;
             _client.InitialStateReceived -= OnInitialStateReceived;
             _client.GamePhaseChanged -= OnGamePhaseChanged;
         }
@@ -254,20 +254,23 @@ namespace BattleshipGame.Core
 
         private void OnStateChanged(List<DataChange> changes)
         {
+            Debug.Log("OnStateChanged");
             foreach (var _ in changes.Where(change => change.Field == "playerTurn"))
                 CheckTurn();
         }
 
-        private void OnFirstPlayerShotsChanged(int item, int index)
+        private void OnFirstPlayerShotsChanged(int value, int key)
         {
+            Debug.Log($"Player1ShotsChanged: {key},{value}");
             const int playerNumber = 1;
-            SetMarker(item, index, playerNumber);
+            SetMarker(key, value, playerNumber);
         }
 
-        private void OnSecondPlayerShotsChanged(int item, int index)
+        private void OnSecondPlayerShotsChanged(int value, int key)
         {
+            Debug.Log($"Player2ShotsChanged: {key},{value}");
             const int playerNumber = 2;
-            SetMarker(item, index, playerNumber);
+            SetMarker(key, value, playerNumber);
         }
 
         private void SetMarker(int item, int index, int playerNumber)
@@ -276,25 +279,27 @@ namespace BattleshipGame.Core
             if (_playerNumber == playerNumber)
             {
                 marker = Marker.ShotTarget;
+                Debug.Log($"SetMarker at opponentMap: {item}");
                 opponentMap.SetMarker(item, marker);
             }
             else
             {
                 marker = _placementMap[item] == -1 ? Marker.Missed : Marker.Hit;
+                Debug.Log($"SetMarker at userMap: {item}");
                 userMap.SetMarker(item, marker);
             }
         }
 
-        private void OnFirstPlayerShipsChanged(int item, int index)
+        private void OnFirstPlayerShipsChanged(int value, int key)
         {
             const int playerNumber = 1;
-            SetHealth(item, index, playerNumber);
+            SetHealth(key, value, playerNumber);
         }
 
-        private void OnSecondPlayerShipsChanged(int item, int index)
+        private void OnSecondPlayerShipsChanged(int value, int key)
         {
             const int playerNumber = 2;
-            SetHealth(item, index, playerNumber);
+            SetHealth(key, value, playerNumber);
         }
 
         private void SetHealth(int item, int index, int playerNumber)
