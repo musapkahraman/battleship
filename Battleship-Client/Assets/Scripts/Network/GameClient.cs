@@ -1,59 +1,89 @@
 ﻿using System;
-using System.Collections;
+using System.Collections.Generic;
 using System.Linq;
 using BattleshipGame.Common;
 using Colyseus;
-using Colyseus.Schema;
+using UnityEngine;
+using DataChange = Colyseus.Schema.DataChange;
 
 namespace BattleshipGame.Network
 {
     public class GameClient : Singleton<GameClient>
     {
+        private const string LocalEndpoint = "ws://localhost:2567";
+        private const string HerokuEndpoint = "ws://bronzehero.herokuapp.com";
         private Client _client;
         private bool _initialStateReceived;
         private Room<State> _room;
-        private string ClientId => _client?.Id;
         public string SessionId => _room?.SessionId;
-        public bool Connected => ClientId != null;
         public State State => _room?.State;
         public bool Joined => _room != null && _room.Connection.IsOpen;
-
-        private void OnDestroy()
-        {
-            _client?.Close();
-        }
 
         private void OnApplicationQuit()
         {
             _room?.Leave();
-            _client?.Close();
         }
 
-        public event EventHandler ConnectionClosed;
-        public event EventHandler ConnectionOpened;
-        public event EventHandler<string> GamePhaseChanged;
-        public event EventHandler<State> InitialStateReceived;
-        public event EventHandler JoinedIn;
-        public event EventHandler<object> MessageReceived;
+        public event Action ConnectionOpened;
+        public event Action JoinedIn;
+        public event Action<string> GamePhaseChanged;
+        public event Action<State> InitialStateReceived;
 
-        public void Connect()
+        public async void Connect()
         {
-            // const string uri = "ws://localhost:2567";
-            const string uri = "ws://bronzehero.herokuapp.com";
-            _client = new Client(uri);
-            _client.OnOpen += OnConnectionOpened;
-            _client.OnClose += OnConnectionClosed;
+            _client = new Client(HerokuEndpoint);
+            try
+            {
+                _room = await _client.JoinOrCreate<State>("game");
+                ConnectionOpened?.Invoke();
+                Debug.Log("Joined successfully!");
+                _room.OnStateChange += OnRoomStateChange;
+                _room.OnJoin += OnRoomJoin;
+                _room.State.players.OnAdd += OnPlayerAdd;
+                _room.State.players.OnRemove += OnPlayerRemove;
+                _room.State.players.OnChange += OnPlayerChange;
 
-            StartCoroutine(ConnectAndListen());
+                void OnPlayerAdd(Player player, string key)
+                {
+                    Debug.Log("player added!");
+                    Debug.Log(player); // Here's your `Player` instance
+                    Debug.Log(key); // Here's your `Player` key
+                }
+
+                void OnPlayerRemove(Player player, string key)
+                {
+                    Debug.Log("player removed!");
+                    Debug.Log(player); // Here's your `Player` instance
+                    Debug.Log(key); // Here's your `Player` key
+                }
+
+                void OnPlayerChange(Player player, string key)
+                {
+                    Debug.Log("player moved!");
+                    Debug.Log(player); // Here's your `Player` instance
+                    Debug.Log(key); // Here's your `Player` key
+                }
+            }
+            catch (Exception exception)
+            {
+                Debug.Log("Error joining: " + exception.Message);
+            }
         }
 
-        public void Join()
+        void OnRoomStateChange(State state, bool isFirstState)
         {
-            _room = _client.Join<State>("game");
-            _room.OnReadyToConnect += (sender, e) => StartCoroutine(_room.Connect());
-            _room.OnMessage += OnServerMessageReceived;
-            _room.OnJoin += OnJoined;
-            _room.OnStateChange += OnRoomStateApplied;
+            if (isFirstState)
+            {
+                // First setup of your client state
+                Debug.Log(state);
+                _initialStateReceived = true;
+                InitialStateReceived?.Invoke(state);
+            }
+            else
+            {
+                // Further updates on your client state
+                Debug.Log(state);
+            }
         }
 
         public void Leave()
@@ -64,60 +94,26 @@ namespace BattleshipGame.Network
 
         public void SendPlacement(int[] placement)
         {
-            _room.Send(new {command = "place", placement});
+            _room.Send("place", placement);
         }
 
         public void SendTurn(int[] targetIndexes)
         {
-            _room.Send(new {command = "turn", targetIndexes});
+            _room.Send("turn", targetIndexes);
         }
 
-        private void OnConnectionOpened(object sender, EventArgs e)
+        private void OnRoomJoin()
         {
-            ConnectionOpened?.Invoke(this, e);
-        }
-
-        private void OnConnectionClosed(object sender, EventArgs e)
-        {
-            ConnectionClosed?.Invoke(this, e);
-        }
-
-        private void OnJoined(object sender, EventArgs e)
-        {
+            Debug.Log("Joined successfully!");
             _room.State.OnChange += OnRoomStateChanged;
-
-            JoinedIn?.Invoke(this, e);
+            JoinedIn?.Invoke();
         }
 
-        private void OnRoomStateApplied(object sender, StateChangeEventArgs<State> e)
-        {
-            if (!e.IsFirstState || _initialStateReceived) return;
-            _initialStateReceived = true;
-            InitialStateReceived?.Invoke(this, e.State);
-        }
-
-        private void OnRoomStateChanged(object sender, OnChangeEventArgs e)
+        private void OnRoomStateChanged(List<DataChange> changes)
         {
             if (!_initialStateReceived) return;
-
-            foreach (var change in e.Changes.Where(change => change.Field == "phase"))
-                GamePhaseChanged?.Invoke(this, (string) change.Value);
-        }
-
-        private void OnServerMessageReceived(object sender, MessageEventArgs e)
-        {
-            MessageReceived?.Invoke(this, e.Message);
-        }
-
-        private IEnumerator ConnectAndListen()
-        {
-            yield return StartCoroutine(_client.Connect());
-
-            while (true)
-            {
-                _client.Recv();
-                yield return 0;
-            }
+            foreach (var change in changes.Where(change => change.Field == "phase"))
+                GamePhaseChanged?.Invoke((string) change.Value);
         }
     }
 }

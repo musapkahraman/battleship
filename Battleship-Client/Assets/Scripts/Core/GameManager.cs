@@ -42,12 +42,12 @@ namespace BattleshipGame.Core
         private void Start()
         {
             _client = GameClient.Instance;
-            if (!_client.Connected) SceneManager.LoadScene("ConnectingScene");
+            if (!_client.Joined) SceneManager.LoadScene("ConnectingScene");
             _cellCount = areaSize * areaSize;
             ResetPlacementMap();
             _client.InitialStateReceived += OnInitialStateReceived;
             _client.GamePhaseChanged += OnGamePhaseChanged;
-            if (_client.State != null) OnInitialStateReceived(this, _client.State);
+            if (_client.State != null) OnInitialStateReceived(_client.State);
             opponentMap.SetDisabled();
         }
 
@@ -235,7 +235,7 @@ namespace BattleshipGame.Core
             return true;
         }
 
-        private void OnInitialStateReceived(object sender, State initialState)
+        private void OnInitialStateReceived(State initialState)
         {
             _state = initialState;
             var player = _state.players[_client.SessionId];
@@ -248,57 +248,57 @@ namespace BattleshipGame.Core
             _state.player2Shots.OnChange += OnSecondPlayerShotsChanged;
             _state.player1Ships.OnChange += OnFirstPlayerShipsChanged;
             _state.player2Ships.OnChange += OnSecondPlayerShipsChanged;
-            OnGamePhaseChanged(this, _state.phase);
+            OnGamePhaseChanged(_state.phase);
         }
 
-        private void OnStateChanged(object sender, OnChangeEventArgs args)
+        private void OnStateChanged(List<DataChange> changes)
         {
-            foreach (var _ in args.Changes.Where(change => change.Field == "playerTurn"))
+            foreach (var _ in changes.Where(change => change.Field == "playerTurn"))
                 CheckTurn();
         }
 
-        private void OnFirstPlayerShotsChanged(object sender, KeyValueEventArgs<int, int> change)
+        private void OnFirstPlayerShotsChanged(int item, int index)
         {
             const int playerNumber = 1;
-            SetMarker(change, playerNumber);
+            SetMarker(item, index, playerNumber);
         }
 
-        private void OnSecondPlayerShotsChanged(object sender, KeyValueEventArgs<int, int> change)
+        private void OnSecondPlayerShotsChanged(int item, int index)
         {
             const int playerNumber = 2;
-            SetMarker(change, playerNumber);
+            SetMarker(item, index, playerNumber);
         }
 
-        private void SetMarker(KeyValueEventArgs<int, int> change, int playerNumber)
+        private void SetMarker(int item, int index, int playerNumber)
         {
             Marker marker;
             if (_playerNumber == playerNumber)
             {
                 marker = Marker.ShotTarget;
-                opponentMap.SetMarker(change.Key, marker);
+                opponentMap.SetMarker(item, marker);
             }
             else
             {
-                marker = _placementMap[change.Key] == -1 ? Marker.Missed : Marker.Hit;
-                userMap.SetMarker(change.Key, marker);
+                marker = _placementMap[item] == -1 ? Marker.Missed : Marker.Hit;
+                userMap.SetMarker(item, marker);
             }
         }
 
-        private void OnFirstPlayerShipsChanged(object sender, KeyValueEventArgs<int, int> change)
+        private void OnFirstPlayerShipsChanged(int item, int index)
         {
             const int playerNumber = 1;
-            SetHealth(change, playerNumber);
+            SetHealth(item, index, playerNumber);
         }
 
-        private void OnSecondPlayerShipsChanged(object sender, KeyValueEventArgs<int, int> change)
+        private void OnSecondPlayerShipsChanged(int item, int index)
         {
             const int playerNumber = 2;
-            SetHealth(change, playerNumber);
+            SetHealth(item, index, playerNumber);
         }
 
-        private void SetHealth(KeyValueEventArgs<int, int> change, int playerNumber)
+        private void SetHealth(int item, int index, int playerNumber)
         {
-            if (_playerNumber != playerNumber) opponentStatusMaskPlacer.PlaceMask(change.Key, change.Value);
+            if (_playerNumber != playerNumber) opponentStatusMaskPlacer.PlaceMask(item, index);
         }
 
         private void CheckTurn()
@@ -315,7 +315,7 @@ namespace BattleshipGame.Core
             SceneManager.LoadScene("ConnectingScene");
         }
 
-        private void OnGamePhaseChanged(object sender, string phase)
+        private void OnGamePhaseChanged(string phase)
         {
             switch (phase)
             {

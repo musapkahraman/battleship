@@ -23,10 +23,7 @@ namespace BattleshipGame.Network
             _client = GameClient.Instance;
             _client.ConnectionOpened += OnConnected;
             _client.JoinedIn += OnJoined;
-            if (!_client.Connected)
-                _client.Connect();
-            else
-                OnConnected(this, null);
+            _client.Connect();
         }
 
         private void OnDestroy()
@@ -37,24 +34,22 @@ namespace BattleshipGame.Network
             _client.GamePhaseChanged -= OnGamePhaseChanged;
         }
 
-        private void OnConnected(object sender, EventArgs e)
+        private void OnConnected()
         {
             progressBar.enabled = false;
             _pBarCanvas.enabled = false;
             messageField.text = "Connection successful. Finding a game to join...";
-            if (!_client.Joined)
-                _client.Join();
-            else
-                OnJoined(this, null);
+            if (_client.Joined)
+                OnJoined();
         }
 
-        private void OnJoined(object sender, EventArgs e)
+        private void OnJoined()
         {
             messageField.text = "Successfully joined in. Waiting for the other player...";
             _client.GamePhaseChanged += OnGamePhaseChanged;
         }
 
-        private static void OnGamePhaseChanged(object sender, string phase)
+        private static void OnGamePhaseChanged(string phase)
         {
             if (phase == "place") SceneManager.LoadScene("GameScene");
         }
