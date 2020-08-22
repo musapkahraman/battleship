@@ -13,18 +13,24 @@ namespace BattleshipGame.Network
             Online
         }
 
+        [SerializeField] private GameObject progressBarCanvasPrefab;
         [SerializeField] private TMP_Text messageField;
-        [SerializeField] private Animator progressBar;
-
         [SerializeField] private ServerType serverType = ServerType.Online;
-        private Canvas _pBarCanvas;
-
+        private Animator _progressBarAnimator;
+        private Canvas _progressBarCanvas;
         public GameClient Client { get; private set; }
 
-        public override void Awake()
+        protected override void Awake()
         {
             base.Awake();
-            _pBarCanvas = progressBar.transform.parent.GetComponent<Canvas>();
+            if (SceneManager.GetActiveScene().Equals(SceneManager.GetSceneAt(0))) DontDestroyOnLoad(gameObject);
+            
+            if (progressBarCanvasPrefab)
+            {
+                _progressBarCanvas = Instantiate(progressBarCanvasPrefab).GetComponent<Canvas>();
+                _progressBarAnimator = _progressBarCanvas.transform.GetComponentInChildren<Animator>();
+            }
+
             Client = new GameClient();
             Client.ConnectionOpened += OnConnected;
             Client.JoinedInTheRoom += OnJoined;
@@ -32,23 +38,27 @@ namespace BattleshipGame.Network
             Client.Connect(serverType);
         }
 
-        private void OnDestroy()
+        protected override void OnDestroy()
         {
-            if (Client == null) return;
-            Client.ConnectionOpened -= OnConnected;
-            Client.JoinedInTheRoom -= OnJoined;
-            Client.GamePhaseChanged -= OnGamePhaseChanged;
+            if (Client != null)
+            {
+                Client.ConnectionOpened -= OnConnected;
+                Client.JoinedInTheRoom -= OnJoined;
+                Client.GamePhaseChanged -= OnGamePhaseChanged;
+            }
+
+            base.OnDestroy();
         }
 
         private void OnApplicationQuit()
         {
-            Client.Leave();
+            Client?.Leave();
         }
 
         private void OnConnected()
         {
-            progressBar.enabled = false;
-            _pBarCanvas.enabled = false;
+            if (_progressBarAnimator) _progressBarAnimator.enabled = false;
+            if (_progressBarCanvas) _progressBarCanvas.enabled = false;
             messageField.text = "Connection successful. Finding a game to join...";
             if (Client.Joined)
                 OnJoined();
@@ -62,7 +72,7 @@ namespace BattleshipGame.Network
 
         private static void OnGamePhaseChanged(string phase)
         {
-            if (phase == "place") SceneManager.LoadScene("GameScene");
+            if (phase == "place") SceneManager.LoadScene(1);
         }
     }
 }

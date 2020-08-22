@@ -93,13 +93,13 @@ namespace BattleshipGame.Network
             Debug.Log($"Room state is changed. Phase: {state.phase} | Player count: {state.players.Items.Count}" +
                       $" | Current turn: {state.currentTurn} | Player turn: {state.playerTurn} | Winning player: {state.winningPlayer}");
 
-            foreach (var item in state.player1Shots.Items) Debug.Log($"Player1 shot: [{item.Key}, {item.Value}]");
-
-            foreach (var item in state.player2Shots.Items) Debug.Log($"Player2 shot: [{item.Key}, {item.Value}]");
-
-            foreach (var item in state.player1Ships.Items) Debug.Log($"Player1 ship: [{item.Key}, {item.Value}]");
-
-            foreach (var item in state.player2Ships.Items) Debug.Log($"Player2 ship: [{item.Key}, {item.Value}]");
+            // foreach (var item in state.player1Shots.Items) Debug.Log($"Player1 shot: [{item.Key}, {item.Value}]");
+            //
+            // foreach (var item in state.player2Shots.Items) Debug.Log($"Player2 shot: [{item.Key}, {item.Value}]");
+            //
+            // foreach (var item in state.player1Ships.Items) Debug.Log($"Player1 ship: [{item.Key}, {item.Value}]");
+            //
+            // foreach (var item in state.player2Ships.Items) Debug.Log($"Player2 ship: [{item.Key}, {item.Value}]");
         }
 
         public void Leave()

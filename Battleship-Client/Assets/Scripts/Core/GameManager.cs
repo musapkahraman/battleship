@@ -33,22 +33,29 @@ namespace BattleshipGame.Core
         private List<Ship> ships;
 
         private Ship _currentShipToBePlaced;
-        private int _shipsPlaced;
         private bool _isShipPlacementComplete;
+        private int _shipsPlaced;
+        private ConnectionManager _connectionManager;
         private Queue<Ship> _shipsToBePlaced;
         public int MapAreaSize => areaSize;
         public IEnumerable<Ship> Ships => ships;
 
         private void Start()
         {
-            _client = ConnectionManager.Instance.Client;
-            if (!_client.Joined) SceneManager.LoadScene("ConnectingScene");
-            _cellCount = areaSize * areaSize;
-            ResetPlacementMap();
-            _client.InitialStateReceived += OnInitialStateReceived;
-            _client.GamePhaseChanged += OnGamePhaseChanged;
-            if (_client.State != null) OnInitialStateReceived(_client.State);
-            opponentMap.SetDisabled();
+            if (ConnectionManager.TryGetInstance(out _connectionManager))
+            {
+                _client = _connectionManager.Client;
+                _cellCount = areaSize * areaSize;
+                ResetPlacementMap();
+                _client.InitialStateReceived += OnInitialStateReceived;
+                _client.GamePhaseChanged += OnGamePhaseChanged;
+                if (_client.State != null) OnInitialStateReceived(_client.State);
+                opponentMap.SetDisabled();
+            }
+            else
+            {
+                SceneManager.LoadScene(0);
+            }
         }
 
         private void OnDestroy()
@@ -88,9 +95,7 @@ namespace BattleshipGame.Core
             PopulateShipsToBePlaced();
             _currentShipToBePlaced = _shipsToBePlaced.Dequeue();
             while (!_isShipPlacementComplete)
-            {
                 PlaceShip(new Vector3Int(Random.Range(0, areaSize), Random.Range(0, areaSize), 0));
-            }
         }
 
         private void BeginShipPlacement()
@@ -318,7 +323,7 @@ namespace BattleshipGame.Core
         private static void Leave()
         {
             _client.Leave();
-            SceneManager.LoadScene("ConnectingScene");
+            SceneManager.LoadScene(0);
         }
 
         private void OnGamePhaseChanged(string phase)

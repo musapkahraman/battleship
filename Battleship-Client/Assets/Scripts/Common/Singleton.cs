@@ -2,33 +2,58 @@
 
 namespace BattleshipGame.Common
 {
-    public class Singleton<T> : MonoBehaviour where T : MonoBehaviour
+    /// <summary>
+    /// Singleton class.
+    /// </summary>
+    /// <typeparam name="T">Type of the singleton.</typeparam>
+    public abstract class Singleton<T> : MonoBehaviour where T : Singleton<T>
     {
-        private static T _instance;
+        /// <summary>
+        /// The static reference to the instance.
+        /// </summary>
+        public static T Instance { get; private set; }
 
-        public static T Instance
+        /// <summary>
+        /// Gets whether an instance of this singleton exists.
+        /// </summary>
+        public static bool InstanceExists => Instance != null;
+
+
+        /// <summary>
+        /// Gets the instance of this singleton, and returns true if it is not null.
+        /// Prefer this whenever you would otherwise use InstanceExists and Instance together.
+        /// </summary>
+        public static bool TryGetInstance(out T result)
         {
-            get
-            {
-                if (_instance != null) return _instance;
-                _instance = FindObjectOfType<T>();
-                if (_instance != null) return _instance;
-                var obj = new GameObject {name = typeof(T).Name};
-                _instance = obj.AddComponent<T>();
-                return _instance;
-            }
+            result = Instance;
+
+            return result != null;
         }
 
-        public virtual void Awake()
+        /// <summary>
+        /// Awake method to associate singleton with instance.
+        /// </summary>
+        protected virtual void Awake()
         {
-            if (_instance == null)
+            if (Instance != null)
             {
-                _instance = this as T;
-                DontDestroyOnLoad(gameObject);
+                Debug.LogWarningFormat("Trying to create a second instance of {0}", typeof(T));
+                Destroy(gameObject);
             }
             else
             {
-                Destroy(gameObject);
+                Instance = (T)this;
+            }
+        }
+
+        /// <summary>
+        /// OnDestroy method to clear singleton association.
+        /// </summary>
+        protected virtual void OnDestroy()
+        {
+            if (Instance == this)
+            {
+                Instance = null;
             }
         }
     }
