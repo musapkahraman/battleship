@@ -53,6 +53,7 @@ namespace BattleshipGame.Core
 
         private void OnDestroy()
         {
+            if (!_client) return;
             _client.InitialStateReceived -= OnInitialStateReceived;
             _client.GamePhaseChanged -= OnGamePhaseChanged;
         }

@@ -12,6 +12,8 @@ namespace BattleshipGame.Network
     {
         private const string LocalEndpoint = "ws://localhost:2567";
         private const string HerokuEndpoint = "ws://bronzehero.herokuapp.com";
+        private const string RoomName = "game";
+
         private bool _initialStateReceived;
         private Room<State> _room;
         public string SessionId => _room?.SessionId;
@@ -49,14 +51,22 @@ namespace BattleshipGame.Network
             var client = new Client(HerokuEndpoint);
             try
             {
-                _room = await client.JoinOrCreate<State>("game");
+                Debug.Log($"Joining in \'{RoomName}\'");
+                _room = await client.JoinOrCreate<State>(RoomName);
+                Debug.Log($"Joined successfully in \'{RoomName}\'!");
                 ConnectionOpened?.Invoke();
-                Debug.Log("Joined successfully!");
+                OnRoomJoin();
                 _room.OnStateChange += OnRoomStateChange;
-                _room.OnJoin += OnRoomJoin;
                 _room.State.players.OnAdd += OnPlayerAdd;
                 _room.State.players.OnRemove += OnPlayerRemove;
                 _room.State.players.OnChange += OnPlayerChange;
+
+                void OnRoomJoin()
+                {
+                    Debug.Log("OnRoomJoin() :  Joined successfully!");
+                    _room.State.OnChange += OnRoomStateChanged;
+                    JoinedIn?.Invoke();
+                }
 
                 void OnPlayerAdd(Player player, string key)
                 {
@@ -101,15 +111,16 @@ namespace BattleshipGame.Network
             }
         }
 
-        private void OnRoomJoin()
-        {
-            Debug.Log("Joined successfully!");
-            _room.State.OnChange += OnRoomStateChanged;
-            JoinedIn?.Invoke();
-        }
-
         private void OnRoomStateChanged(List<DataChange> changes)
         {
+            Debug.Log("************************************ OnRoomStateChanged(List<DataChange> changes)");
+            Debug.Log("changes are:");
+            foreach (var dataChange in changes)
+            {
+                Debug.Log("Field: " + dataChange.Field + " Value: " + dataChange.Value + " PreviousValue: " +
+                          dataChange.PreviousValue);
+            }
+
             if (!_initialStateReceived) return;
             foreach (var change in changes.Where(change => change.Field == "phase"))
                 GamePhaseChanged?.Invoke((string) change.Value);
