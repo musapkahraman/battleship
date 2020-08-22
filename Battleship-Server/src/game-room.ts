@@ -67,7 +67,7 @@ export class GameRoom extends Room<State> {
 
     playerPlace(client: Client, message: any){
         let player: Player = this.state.players[client.sessionId];
-        this.placements[player.seat - 1] = message['placement'];
+        this.placements[player.seat - 1] = message;
         this.playersPlaced++;
 
         if (this.playersPlaced == 2) {
@@ -80,7 +80,7 @@ export class GameRoom extends Room<State> {
 
         if (this.state.playerTurn != player.seat) return;
 
-        let targetIndexes: number[] = message['targetIndexes'];
+        let targetIndexes: number[] = message;
 
         if(targetIndexes.length != 3) return;
 
