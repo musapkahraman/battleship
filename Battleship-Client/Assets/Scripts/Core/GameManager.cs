@@ -32,30 +32,35 @@ namespace BattleshipGame.Core
         [SerializeField]
         private List<Ship> ships;
 
+        private ConnectionManager _connectionManager;
+
         private Ship _currentShipToBePlaced;
         private bool _isShipPlacementComplete;
         private int _shipsPlaced;
-        private ConnectionManager _connectionManager;
         private Queue<Ship> _shipsToBePlaced;
         public int MapAreaSize => areaSize;
         public IEnumerable<Ship> Ships => ships;
 
-        private void Start()
+        private void Awake()
         {
             if (ConnectionManager.TryGetInstance(out _connectionManager))
             {
                 _client = _connectionManager.Client;
-                _cellCount = areaSize * areaSize;
-                ResetPlacementMap();
                 _client.InitialStateReceived += OnInitialStateReceived;
                 _client.GamePhaseChanged += OnGamePhaseChanged;
-                if (_client.State != null) OnInitialStateReceived(_client.State);
-                opponentMap.SetDisabled();
             }
             else
             {
                 SceneManager.LoadScene(0);
             }
+        }
+
+        private void Start()
+        {
+            _cellCount = areaSize * areaSize;
+            ResetPlacementMap();
+            if (_client.State != null) OnInitialStateReceived(_client.State);
+            opponentMap.SetDisabled();
         }
 
         private void OnDestroy()
@@ -323,7 +328,7 @@ namespace BattleshipGame.Core
         private static void Leave()
         {
             _client.Leave();
-            SceneManager.LoadScene(0);
+            SceneManager.LoadScene(1);
         }
 
         private void OnGamePhaseChanged(string phase)

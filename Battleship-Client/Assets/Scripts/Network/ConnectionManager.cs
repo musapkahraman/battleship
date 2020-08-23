@@ -16,25 +16,22 @@ namespace BattleshipGame.Network
         [SerializeField] private GameObject progressBarCanvasPrefab;
         [SerializeField] private TMP_Text messageField;
         [SerializeField] private ServerType serverType = ServerType.Online;
-        private Animator _progressBarAnimator;
-        private Canvas _progressBarCanvas;
         public GameClient Client { get; private set; }
 
         protected override void Awake()
         {
             base.Awake();
-            if (SceneManager.GetActiveScene().Equals(SceneManager.GetSceneAt(0))) DontDestroyOnLoad(gameObject);
-            
-            if (progressBarCanvasPrefab)
-            {
-                _progressBarCanvas = Instantiate(progressBarCanvasPrefab).GetComponent<Canvas>();
-                _progressBarAnimator = _progressBarCanvas.transform.GetComponentInChildren<Animator>();
-            }
-
+            if (SceneManager.GetActiveScene().buildIndex == 0) DontDestroyOnLoad(gameObject);
+            if (progressBarCanvasPrefab) Instantiate(progressBarCanvasPrefab);
             Client = new GameClient();
-            Client.ConnectionOpened += OnConnected;
-            Client.JoinedInTheRoom += OnJoined;
+            Client.Connected += OnConnected;
+            Client.GamePhaseChanged += OnGamePhaseChanged;
             messageField.text = $"Connecting to {serverType.ToString()} server...";
+            ConnectToServer();
+        }
+
+        public void ConnectToServer()
+        {
             Client.Connect(serverType);
         }
 
@@ -42,8 +39,7 @@ namespace BattleshipGame.Network
         {
             if (Client != null)
             {
-                Client.ConnectionOpened -= OnConnected;
-                Client.JoinedInTheRoom -= OnJoined;
+                Client.Connected -= OnConnected;
                 Client.GamePhaseChanged -= OnGamePhaseChanged;
             }
 
@@ -55,24 +51,17 @@ namespace BattleshipGame.Network
             Client?.Leave();
         }
 
-        private void OnConnected()
+        private static void OnConnected()
         {
-            if (_progressBarAnimator) _progressBarAnimator.enabled = false;
-            if (_progressBarCanvas) _progressBarCanvas.enabled = false;
-            messageField.text = "Connection successful. Finding a game to join...";
-            if (Client.Joined)
-                OnJoined();
-        }
-
-        private void OnJoined()
-        {
-            messageField.text = "Successfully joined in. Waiting for the other player...";
-            Client.GamePhaseChanged += OnGamePhaseChanged;
+            // Connection established. Go to the lobby.
+            SceneManager.LoadScene(1);
         }
 
         private static void OnGamePhaseChanged(string phase)
         {
-            if (phase == "place") SceneManager.LoadScene(1);
+            if (phase == "place")
+                // Another player is joined in the game. Phase is changed. Go to place mode.
+                SceneManager.LoadScene(2);
         }
     }
 }

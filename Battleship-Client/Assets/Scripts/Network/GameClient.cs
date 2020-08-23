@@ -16,25 +16,23 @@ namespace BattleshipGame.Network
         private Room<State> _room;
         public string SessionId => _room?.SessionId;
         public State State => _room?.State;
-        public bool Joined => _room != null && _room.Connection.IsOpen;
-
-        public event Action ConnectionOpened;
-        public event Action JoinedInTheRoom;
+        public event Action Connected;
         public event Action<string> GamePhaseChanged;
         public event Action<State> InitialStateReceived;
 
         public async void Connect(ConnectionManager.ServerType serverType)
         {
+            if (_room != null && _room.Connection.IsOpen) return;
             string endPoint = serverType == ConnectionManager.ServerType.Online ? OnlineEndpoint : LocalEndpoint;
             var client = new Client(endPoint);
             try
             {
-                Debug.Log($"Joining in \'{RoomName}\'");
+                Debug.Log($"Joining in the room: \'{RoomName}\'");
                 _room = await client.JoinOrCreate<State>(RoomName);
-                Debug.Log($"Joined successfully in \'{RoomName}\'!");
-                ConnectionOpened?.Invoke();
-                OnRoomJoin();
+                Debug.Log($"Joined successfully in the room: \'{RoomName}\'!");
+                Connected?.Invoke();
                 _room.OnStateChange += OnStateChange;
+                _room.State.OnChange += OnRoomStateChange;
                 _room.State.players.OnAdd += OnPlayerAdd;
                 _room.State.players.OnRemove += OnPlayerRemove;
                 _room.State.players.OnChange += OnPlayerChange;
@@ -42,12 +40,6 @@ namespace BattleshipGame.Network
             catch (Exception exception)
             {
                 Debug.Log($"Error joining: {exception.Message}");
-            }
-
-            void OnRoomJoin()
-            {
-                _room.State.OnChange += OnRoomStateChange;
-                JoinedInTheRoom?.Invoke();
             }
 
             void OnStateChange(State state, bool isFirstState)
