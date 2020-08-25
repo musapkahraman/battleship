@@ -6,13 +6,14 @@ namespace BattleshipGame.Network
 {
     public class LobbyManager : MonoBehaviour
     {
-        [SerializeField] private RoomsListManager roomsList;
+        [SerializeField] private RoomListManager roomList;
+
         private void Start()
         {
             if (ConnectionManager.TryGetInstance(out var connectionManager))
             {
                 connectionManager.ConnectToServer();
-                PopulateRoomsList();
+                PopulateRoomList();
             }
             else
             {
@@ -20,10 +21,9 @@ namespace BattleshipGame.Network
             }
         }
 
-        private void PopulateRoomsList()
+        private void PopulateRoomList()
         {
-            
-            roomsList.SetRooms(15);
+            roomList.PopulateRoomList(30);
         }
     }
 }

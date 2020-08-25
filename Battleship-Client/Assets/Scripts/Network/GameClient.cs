@@ -82,8 +82,9 @@ namespace BattleshipGame.Network
 
         private static void LogState(State state)
         {
-            Debug.Log($"Room state is changed. Phase: {state.phase} | Player count: {state.players.Items.Count}" +
-                      $" | Current turn: {state.currentTurn} | Player turn: {state.playerTurn} | Winning player: {state.winningPlayer}");
+            Debug.Log($"<color=#33F4FF>Room state is changed.</color> Phase: {state.phase}" +
+                      $" | Player count: {state.players.Items.Count} | Current turn: {state.currentTurn}" +
+                      $" | Player turn: {state.playerTurn} | Winning player: {state.winningPlayer}");
 
             // foreach (var item in state.player1Shots.Items) Debug.Log($"Player1 shot: [{item.Key}, {item.Value}]");
             //
