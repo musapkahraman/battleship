@@ -21,7 +21,7 @@ export class GameRoom extends Room<State> {
             // this.setPrivate();
         }
         this.reset();
-        this.setMetadata({name: options.name});
+        this.setMetadata({name: options.name, requiresPassword: !!this.password});
         this.onMessage("place", (client, message) => this.playerPlace(client, message));
         this.onMessage("turn", (client, message) => this.playerTurn(client, message));
         console.log('room created!');
