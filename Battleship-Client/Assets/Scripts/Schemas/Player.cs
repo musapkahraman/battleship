@@ -7,11 +7,12 @@
 
 using Colyseus.Schema;
 
-public class Player : Schema {
-	[Type(0, "int16")]
-	public short seat = 0;
+namespace BattleshipGame.Schemas
+{
+    public class Player : Schema
+    {
+        [Type(0, "int16")] public short seat = 0;
 
-	[Type(1, "string")]
-	public string sessionId = "";
+        [Type(1, "string")] public string sessionId = "";
+    }
 }
-

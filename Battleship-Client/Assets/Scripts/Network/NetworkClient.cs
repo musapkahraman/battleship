@@ -1,13 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using BattleshipGame.Schemas;
 using Colyseus;
 using UnityEngine;
 using DataChange = Colyseus.Schema.DataChange;
 
 namespace BattleshipGame.Network
 {
-    public class GameClient
+    public class NetworkClient
     {
         private const string LocalEndpoint = "ws://localhost:2567";
         private const string OnlineEndpoint = "ws://bronzehero.herokuapp.com";
@@ -20,10 +21,10 @@ namespace BattleshipGame.Network
         public event Action<string> GamePhaseChanged;
         public event Action<State> InitialStateReceived;
 
-        public async void Connect(ConnectionManager.ServerType serverType)
+        public async void Connect(NetworkManager.ServerType serverType)
         {
             if (_room != null && _room.Connection.IsOpen) return;
-            string endPoint = serverType == ConnectionManager.ServerType.Online ? OnlineEndpoint : LocalEndpoint;
+            string endPoint = serverType == NetworkManager.ServerType.Online ? OnlineEndpoint : LocalEndpoint;
             var client = new Client(endPoint);
             try
             {

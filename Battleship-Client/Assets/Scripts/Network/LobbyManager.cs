@@ -10,7 +10,7 @@ namespace BattleshipGame.Network
 
         private void Start()
         {
-            if (ConnectionManager.TryGetInstance(out var connectionManager))
+            if (NetworkManager.TryGetInstance(out var connectionManager))
             {
                 connectionManager.ConnectToServer();
                 PopulateRoomList();

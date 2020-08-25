@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using BattleshipGame.Common;
 using BattleshipGame.Network;
+using BattleshipGame.Schemas;
+using BattleshipGame.Scriptables;
 using BattleshipGame.UI;
 using Colyseus.Schema;
 using TMPro;
@@ -16,7 +18,7 @@ namespace BattleshipGame.Core
     {
         private const int ShotsPerTurn = 3;
         private static int _cellCount;
-        private static GameClient _client;
+        private static NetworkClient _client;
         private static GameMode _mode;
         private static int _playerNumber;
         private static int[] _placementMap;
@@ -32,10 +34,10 @@ namespace BattleshipGame.Core
         [SerializeField]
         private List<Ship> ships;
 
-        private ConnectionManager _connectionManager;
-
         private Ship _currentShipToBePlaced;
         private bool _isShipPlacementComplete;
+
+        private NetworkManager _networkManager;
         private int _shipsPlaced;
         private Queue<Ship> _shipsToBePlaced;
         public int MapAreaSize => areaSize;
@@ -43,9 +45,9 @@ namespace BattleshipGame.Core
 
         private void Awake()
         {
-            if (ConnectionManager.TryGetInstance(out _connectionManager))
+            if (NetworkManager.TryGetInstance(out _networkManager))
             {
-                _client = _connectionManager.Client;
+                _client = _networkManager.Client;
                 _client.InitialStateReceived += OnInitialStateReceived;
                 _client.GamePhaseChanged += OnGamePhaseChanged;
             }

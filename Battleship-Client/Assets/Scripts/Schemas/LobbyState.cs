@@ -7,8 +7,10 @@
 
 using Colyseus.Schema;
 
-public class LobbyState : Schema {
-	[Type(0, "string")]
-	public string custom = "";
+namespace BattleshipGame.Schemas
+{
+    public class LobbyState : Schema
+    {
+        [Type(0, "string")] public string custom = "";
+    }
 }
-

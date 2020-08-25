@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 
-namespace BattleshipGame
+namespace BattleshipGame.Scriptables
 {
     [CreateAssetMenu]
     public class Ship : ScriptableObject

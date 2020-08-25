@@ -20,7 +20,7 @@ namespace BattleshipGame.UI
             foreach (var spritePosition in _spriteMapper.GetSpritePositions())
                 _spritePositions.Add(spritePosition.Key, spritePosition.Value.CloneToStack());
         }
-        
+
         private void InitializeStatusList()
         {
             foreach (var ship in gameManager.Ships)

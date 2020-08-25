@@ -5,7 +5,7 @@ using UnityEngine.SceneManagement;
 
 namespace BattleshipGame.Network
 {
-    public class ConnectionManager : Singleton<ConnectionManager>
+    public class NetworkManager : Singleton<NetworkManager>
     {
         public enum ServerType
         {
@@ -16,23 +16,18 @@ namespace BattleshipGame.Network
         [SerializeField] private GameObject progressBarCanvasPrefab;
         [SerializeField] private TMP_Text messageField;
         [SerializeField] private ServerType serverType = ServerType.Online;
-        public GameClient Client { get; private set; }
+        public NetworkClient Client { get; private set; }
 
         protected override void Awake()
         {
             base.Awake();
             if (SceneManager.GetActiveScene().buildIndex == 0) DontDestroyOnLoad(gameObject);
             if (progressBarCanvasPrefab) Instantiate(progressBarCanvasPrefab);
-            Client = new GameClient();
+            Client = new NetworkClient();
             Client.Connected += OnConnected;
             Client.GamePhaseChanged += OnGamePhaseChanged;
             messageField.text = $"Connecting to {serverType.ToString()} server...";
             ConnectToServer();
-        }
-
-        public void ConnectToServer()
-        {
-            Client.Connect(serverType);
         }
 
         protected override void OnDestroy()
@@ -49,6 +44,11 @@ namespace BattleshipGame.Network
         private void OnApplicationQuit()
         {
             Client?.Leave();
+        }
+
+        public void ConnectToServer()
+        {
+            Client.Connect(serverType);
         }
 
         private static void OnConnected()

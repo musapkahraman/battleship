@@ -1,5 +1,4 @@
-﻿using System.Linq;
-using BattleshipGame.Common;
+﻿using BattleshipGame.Common;
 using BattleshipGame.Core;
 using UnityEngine;
 using UnityEngine.Tilemaps;
@@ -16,14 +15,14 @@ namespace BattleshipGame.UI
         [SerializeField] private Tilemap sourceTileMap;
         [SerializeField] private bool removeFromSource;
         [SerializeField] private bool removeIfDraggedOut;
-        private Grid _grid;
-        private MapViewer _selfMapViewer;
-        private GridSpriteMapper _selfGridSpriteMapper;
-        private GridSpriteMapper _targetGridSpriteMapper;
-        private Sprite _sprite;
-        private GameObject _grabbedShip;
         private Vector3Int _grabbedFrom;
+        private GameObject _grabbedShip;
+        private Grid _grid;
         private bool _isReleasedInside;
+        private GridSpriteMapper _selfGridSpriteMapper;
+        private MapViewer _selfMapViewer;
+        private Sprite _sprite;
+        private GridSpriteMapper _targetGridSpriteMapper;
 
         private void Start()
         {

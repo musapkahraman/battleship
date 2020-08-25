@@ -1,6 +1,7 @@
 ﻿using System;
 using BattleshipGame.Common;
 using BattleshipGame.Core;
+using BattleshipGame.Scriptables;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 
@@ -8,6 +9,13 @@ namespace BattleshipGame.UI
 {
     public class MapViewer : MonoBehaviour
     {
+        public enum MapMode
+        {
+            Disabled,
+            Place,
+            Attack
+        }
+
         [SerializeField] private Camera sceneCamera;
         [SerializeField] private GameManager manager;
         [SerializeField] private ScreenType screenType;
@@ -154,13 +162,6 @@ namespace BattleshipGame.UI
         {
             User,
             Opponent
-        }
-
-        public enum MapMode
-        {
-            Disabled,
-            Place,
-            Attack
         }
     }
 }
