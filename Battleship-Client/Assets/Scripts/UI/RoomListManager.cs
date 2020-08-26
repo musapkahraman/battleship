@@ -1,6 +1,8 @@
 ﻿using System.Collections.Generic;
+using BattleshipGame.Schemas;
 using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 
 namespace BattleshipGame.UI
 {
@@ -16,20 +18,24 @@ namespace BattleshipGame.UI
             _rectTransform = GetComponent<RectTransform>();
         }
 
-        public void PopulateRoomList(int size)
+        public void PopulateRoomList(Dictionary<string, Room> rooms)
         {
             Elements.Clear();
-            for (var i = 0; i < size; i++)
+            var i = 0;
+            foreach (var room in rooms)
             {
                 var element = Instantiate(roomListElementPrefab, transform).GetComponent<RoomListElement>();
+                element.RoomId = room.Key;
+                element.roomName.text = room.Value.metadata.name;
+                element.locked.enabled = room.Value.metadata.requiresPassword;
+                element.clients.text= $"{room.Value.clients}/{room.Value.maxClients}";
                 Elements.Add(element);
                 element.OnClick += OnRoomClicked;
                 var elementRectTransform = element.GetComponent<RectTransform>();
                 float elementHeight = elementRectTransform.rect.height;
                 var listSize = _rectTransform.sizeDelta;
                 _rectTransform.sizeDelta = new Vector2(listSize.x, listSize.y + elementHeight);
-                elementRectTransform.anchoredPosition = new Vector2(0, i * -elementHeight);
-                element.GetComponentInChildren<TMP_Text>().text = $"Room {i + 1}";
+                elementRectTransform.anchoredPosition = new Vector2(0, i++ * -elementHeight);
             }
         }
 

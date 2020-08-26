@@ -1,4 +1,8 @@
-﻿using BattleshipGame.UI;
+﻿using System;
+using System.Collections.Generic;
+using BattleshipGame.Schemas;
+using BattleshipGame.UI;
+using Colyseus;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -7,13 +11,15 @@ namespace BattleshipGame.Network
     public class LobbyManager : MonoBehaviour
     {
         [SerializeField] private RoomListManager roomList;
+        private NetworkClient _client;
 
         private void Start()
         {
             if (NetworkManager.TryGetInstance(out var connectionManager))
             {
                 connectionManager.ConnectToServer();
-                PopulateRoomList();
+                _client = connectionManager.Client;
+                _client.RoomsChanged += PopulateRoomList;
             }
             else
             {
@@ -21,9 +27,15 @@ namespace BattleshipGame.Network
             }
         }
 
-        private void PopulateRoomList()
+        private void OnDestroy()
         {
-            roomList.PopulateRoomList(30);
+            if (_client != null)
+                _client.RoomsChanged -= PopulateRoomList;
+        }
+
+        private void PopulateRoomList(Dictionary<string, Room> rooms)
+        {
+            roomList.PopulateRoomList(rooms);
         }
     }
 }
