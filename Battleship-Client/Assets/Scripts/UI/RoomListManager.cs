@@ -1,8 +1,8 @@
 ﻿using System.Collections.Generic;
+using BattleshipGame.Network;
 using BattleshipGame.Schemas;
 using TMPro;
 using UnityEngine;
-using UnityEngine.UI;
 
 namespace BattleshipGame.UI
 {
@@ -11,6 +11,7 @@ namespace BattleshipGame.UI
     {
         private static readonly List<RoomListElement> Elements = new List<RoomListElement>();
         [SerializeField] private GameObject roomListElementPrefab;
+        [SerializeField] private LobbyManager lobbyManager;
         private RectTransform _rectTransform;
 
         private void Awake()
@@ -20,6 +21,10 @@ namespace BattleshipGame.UI
 
         public void PopulateRoomList(Dictionary<string, Room> rooms)
         {
+            foreach (var roomListElement in Elements)
+            {
+                Destroy(roomListElement.gameObject);
+            }
             Elements.Clear();
             var i = 0;
             foreach (var room in rooms)
@@ -39,13 +44,12 @@ namespace BattleshipGame.UI
             }
         }
 
-        private static void OnRoomClicked(RoomListElement roomListElement)
+        private void OnRoomClicked(RoomListElement roomListElement)
         {
             foreach (var element in Elements) element.ChangeBackgroundColorAsDefault();
 
             roomListElement.ChangeBackgroundColorAsSelected();
-            Debug.Log("<color=green>Selected room: " +
-                      $"\'{roomListElement.GetComponentInChildren<TMP_Text>().text}\'</color>");
+            lobbyManager.SetRoomId(roomListElement.RoomId);
         }
     }
 }

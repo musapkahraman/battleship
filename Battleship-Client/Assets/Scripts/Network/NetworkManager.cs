@@ -25,7 +25,7 @@ namespace BattleshipGame.Network
             if (progressBarCanvasPrefab) Instantiate(progressBarCanvasPrefab);
             Client = new NetworkClient();
             Client.Connected += OnConnected;
-            // Client.GamePhaseChanged += OnGamePhaseChanged;
+            Client.GamePhaseChanged += OnGamePhaseChanged;
             messageField.text = $"Connecting to {serverType.ToString()} server...";
             ConnectToServer();
         }
@@ -35,7 +35,7 @@ namespace BattleshipGame.Network
             if (Client != null)
             {
                 Client.Connected -= OnConnected;
-                // Client.GamePhaseChanged -= OnGamePhaseChanged;
+                Client.GamePhaseChanged -= OnGamePhaseChanged;
             }
 
             base.OnDestroy();
