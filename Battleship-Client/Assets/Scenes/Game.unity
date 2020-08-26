@@ -1695,7 +1695,7 @@ MonoBehaviour:
   userMap: {fileID: 167099665}
   opponentMap: {fileID: 1804129002}
   opponentStatusMaskPlacer: {fileID: 1093841618}
-  areaSize: 9
+  rules: {fileID: 11400000, guid: 536a0464e90bd734190c1b8189b64ddd, type: 2}
   ships:
   - {fileID: 11400000, guid: 239d254dca950cc45b37d1e1b7f15410, type: 2}
   - {fileID: 11400000, guid: ec4b44c4f82ab6d458a2bf97b74c7352, type: 2}

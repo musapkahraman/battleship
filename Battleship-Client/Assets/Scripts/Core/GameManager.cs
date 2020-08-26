@@ -4,7 +4,7 @@ using System.Linq;
 using BattleshipGame.Common;
 using BattleshipGame.Network;
 using BattleshipGame.Schemas;
-using BattleshipGame.Scriptables;
+using BattleshipGame.ScriptableObjects;
 using BattleshipGame.UI;
 using Colyseus.Schema;
 using TMPro;
@@ -16,7 +16,6 @@ namespace BattleshipGame.Core
 {
     public class GameManager : MonoBehaviour
     {
-        private const int ShotsPerTurn = 3;
         private static int _cellCount;
         private static NetworkClient _client;
         private static GameMode _mode;
@@ -28,28 +27,22 @@ namespace BattleshipGame.Core
         [SerializeField] private MapViewer userMap;
         [SerializeField] private MapViewer opponentMap;
         [SerializeField] private OpponentStatusMaskPlacer opponentStatusMaskPlacer;
-        [SerializeField] private int areaSize = 9;
-
-        [Tooltip("Add the types of ships only. Amounts and the sorting order are determined by the ship itself.")]
-        [SerializeField]
-        private List<Ship> ships;
+        [SerializeField] private Rules rules;
 
         private Ship _currentShipToBePlaced;
         private bool _isShipPlacementComplete;
-
-        private NetworkManager _networkManager;
         private int _shipsPlaced;
         private Queue<Ship> _shipsToBePlaced;
-        public int MapAreaSize => areaSize;
-        public IEnumerable<Ship> Ships => ships;
+        public Vector2Int MapAreaSize => rules.AreaSize;
+        public IEnumerable<Ship> Ships => rules.ships;
 
         private void Awake()
         {
-            if (NetworkManager.TryGetInstance(out _networkManager))
+            if (NetworkManager.TryGetInstance(out var networkManager))
             {
-                _client = _networkManager.Client;
-                 _client.InitialStateReceived += OnInitialStateReceived;
-                 _client.GamePhaseChanged += OnGamePhaseChanged;
+                _client = networkManager.Client;
+                _client.InitialStateReceived += OnInitialStateReceived;
+                _client.GamePhaseChanged += OnGamePhaseChanged;
             }
             else
             {
@@ -59,7 +52,7 @@ namespace BattleshipGame.Core
 
         private void Start()
         {
-            _cellCount = areaSize * areaSize;
+            _cellCount = MapAreaSize.x * MapAreaSize.y;
             ResetPlacementMap();
             if (_client.State != null) OnInitialStateReceived(_client.State);
             opponentMap.SetDisabled();
@@ -68,17 +61,9 @@ namespace BattleshipGame.Core
         private void OnDestroy()
         {
             if (_client == null) return;
-             _client.InitialStateReceived -= OnInitialStateReceived;
-             _client.GamePhaseChanged -= OnGamePhaseChanged;
-             UnRegisterFromStateEvents();
-        }
-
-        private void OnValidate()
-        {
-            var hashSet = new HashSet<Ship>();
-            foreach (var ship in ships) hashSet.Add(ship);
-
-            ships = hashSet.OrderBy(ship => ship.rankOrder).ToList();
+            _client.InitialStateReceived -= OnInitialStateReceived;
+            _client.GamePhaseChanged -= OnGamePhaseChanged;
+            UnRegisterFromStateEvents();
         }
 
         public event Action FireReady;
@@ -103,7 +88,7 @@ namespace BattleshipGame.Core
             PopulateShipsToBePlaced();
             _currentShipToBePlaced = _shipsToBePlaced.Dequeue();
             while (!_isShipPlacementComplete)
-                PlaceShip(new Vector3Int(Random.Range(0, areaSize), Random.Range(0, areaSize), 0));
+                PlaceShip(new Vector3Int(Random.Range(0, MapAreaSize.x), Random.Range(0, MapAreaSize.y), 0));
         }
 
         private void BeginShipPlacement()
@@ -120,7 +105,7 @@ namespace BattleshipGame.Core
         private void PopulateShipsToBePlaced()
         {
             _shipsToBePlaced = new Queue<Ship>();
-            foreach (var ship in ships)
+            foreach (var ship in Ships)
                 for (var i = 0; i < ship.amount; i++)
                     _shipsToBePlaced.Enqueue(ship);
         }
@@ -136,10 +121,10 @@ namespace BattleshipGame.Core
             int yMax = cellCoordinate.y + 1;
             for (int y = yMin; y <= yMax; y++)
             {
-                if (y < 0 || y > areaSize - 1) continue;
+                if (y < 0 || y > MapAreaSize.y - 1) continue;
                 for (int x = xMin; x <= xMax; x++)
                 {
-                    if (x < 0 || x > areaSize - 1) continue;
+                    if (x < 0 || x > MapAreaSize.x - 1) continue;
                     if (!AddCellToPlacementMap(new Vector3Int(x, y, 0), true)) return;
                 }
             }
@@ -164,7 +149,7 @@ namespace BattleshipGame.Core
         public bool DoesShipFitIn(Ship ship, Vector3Int cellCoordinate)
         {
             (int shipWidth, int shipHeight) = ship.GetShipSize();
-            return cellCoordinate.x >= 0 && cellCoordinate.x + shipWidth <= areaSize &&
+            return cellCoordinate.x >= 0 && cellCoordinate.x + shipWidth <= MapAreaSize.x &&
                    cellCoordinate.y - (shipHeight - 1) >= 0;
         }
 
@@ -211,26 +196,26 @@ namespace BattleshipGame.Core
 
         public void MarkTarget(Vector3Int targetCoordinate)
         {
-            int targetIndex = GridConverter.ToCellIndex(targetCoordinate, areaSize);
+            int targetIndex = GridConverter.ToCellIndex(targetCoordinate, MapAreaSize.y);
             if (Shots.Contains(targetIndex))
             {
                 Shots.Remove(targetIndex);
                 opponentMap.ClearMarkerTile(targetIndex);
             }
-            else if (Shots.Count < ShotsPerTurn && opponentMap.SetMarker(targetIndex, Marker.MarkedTarget))
+            else if (Shots.Count < rules.shotsPerTurn && opponentMap.SetMarker(targetIndex, Marker.MarkedTarget))
             {
                 Shots.Add(targetIndex);
             }
 
-            if (Shots.Count == ShotsPerTurn)
+            if (Shots.Count == rules.shotsPerTurn)
                 FireReady?.Invoke();
             else
                 FireNotReady?.Invoke();
         }
 
-        public static void FireShots()
+        public void FireShots()
         {
-            if (Shots.Count == ShotsPerTurn)
+            if (Shots.Count == rules.shotsPerTurn)
                 _client.SendTurn(Shots.ToArray());
         }
 
@@ -241,7 +226,7 @@ namespace BattleshipGame.Core
 
         private bool AddCellToPlacementMap(Vector3Int coordinate, bool testOnly = false)
         {
-            int cellIndex = GridConverter.ToCellIndex(coordinate, areaSize);
+            int cellIndex = GridConverter.ToCellIndex(coordinate, MapAreaSize.y);
             if (cellIndex < 0 || cellIndex >= _cellCount) return false;
             if (_placementMap[cellIndex] >= 0) return false;
             if (testOnly) return true;
@@ -269,7 +254,7 @@ namespace BattleshipGame.Core
             _state.player1Ships.OnChange += OnFirstPlayerShipsChanged;
             _state.player2Ships.OnChange += OnSecondPlayerShipsChanged;
         }
-        
+
         private void UnRegisterFromStateEvents()
         {
             _state.OnChange -= OnStateChanged;
@@ -290,17 +275,17 @@ namespace BattleshipGame.Core
         {
             Debug.Log($"Player1ShotsChanged: {key},{value}");
             const int playerNumber = 1;
-            SetMarker(key, value, playerNumber);
+            SetMarker(key, playerNumber);
         }
 
         private void OnSecondPlayerShotsChanged(int value, int key)
         {
             Debug.Log($"Player2ShotsChanged: {key},{value}");
             const int playerNumber = 2;
-            SetMarker(key, value, playerNumber);
+            SetMarker(key, playerNumber);
         }
 
-        private void SetMarker(int item, int index, int playerNumber)
+        private void SetMarker(int item, int playerNumber)
         {
             Marker marker;
             if (_playerNumber == playerNumber)

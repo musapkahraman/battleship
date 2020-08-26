@@ -23,7 +23,7 @@ namespace BattleshipGame.UI
         [SerializeField] private GameManager manager;
         [SerializeField] private Place place;
         [SerializeField] private Type type;
-        private int _mapSize;
+        private Vector2Int _mapSize;
 
         private enum Axis
         {
@@ -75,8 +75,8 @@ namespace BattleshipGame.UI
                     startingPoint = axis == Axis.Horizontal ? -verticalInterval : -horizontalInterval;
                     if (direction == Direction.Backward)
                         startingPoint += axis == Axis.Vertical
-                            ? verticalInterval * (_mapSize - 1)
-                            : horizontalInterval * (_mapSize - 1);
+                            ? verticalInterval * (_mapSize.y - 1)
+                            : horizontalInterval * (_mapSize.x - 1);
 
                     break;
                 case Place.End:
@@ -85,27 +85,29 @@ namespace BattleshipGame.UI
                         : horizontalInterval * _mapSize;
                     if (direction == Direction.Backward)
                         startingPoint += axis == Axis.Vertical
-                            ? verticalInterval * (_mapSize - 1)
-                            : horizontalInterval * (_mapSize - 1);
+                            ? verticalInterval * (_mapSize.y - 1)
+                            : horizontalInterval * (_mapSize.x - 1);
                     break;
                 default:
                     throw new ArgumentOutOfRangeException();
             }
 
-            for (var i = 0; i < _mapSize; i++)
+            int size = axis == Axis.Horizontal ? _mapSize.x : _mapSize.y;
+            for (var i = 0; i < size; i++)
             {
-                var o = (GameObject) PrefabUtility.InstantiatePrefab(cellLabelPrefab, canvas.transform);
-                o.name = axis + "CellLabel_" + i;
-                o.GetComponent<RectTransform>().anchoredPosition = startingPoint + i * director * interval;
-                o.GetComponent<TMP_Text>().text = type == Type.Digits ? (i + 1).ToString() : Alphabet[i].ToString();
-                PrintedObjects.Push(o);
+                var label = (GameObject) PrefabUtility.InstantiatePrefab(cellLabelPrefab, canvas.transform);
+                label.name = axis + "CellLabel_" + i;
+                label.GetComponent<RectTransform>().anchoredPosition = startingPoint + i * director * interval;
+                label.GetComponent<TMP_Text>().text = type == Type.Digits ? (i + 1).ToString() : Alphabet[i].ToString();
+                PrintedObjects.Push(label);
             }
         }
 
         public void Undo()
         {
             if (PrintedObjects.Count <= 0) return;
-            for (var i = 0; i < _mapSize; i++) DestroyImmediate(PrintedObjects.Pop());
+            int size = axis == Axis.Horizontal ? _mapSize.x : _mapSize.y;
+            for (var i = 0; i < size; i++) DestroyImmediate(PrintedObjects.Pop());
         }
 #endif
     }
