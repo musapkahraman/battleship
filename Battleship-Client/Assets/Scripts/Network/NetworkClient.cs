@@ -47,16 +47,14 @@ namespace BattleshipGame.Network
                     RoomsChanged?.Invoke(_rooms);
                 });
 
-                _lobby.OnMessage<object[]>("+", message =>
-                {
-                    if (_rooms.ContainsKey(message[0].ToString())) return;
-                    _lobby.Send("roomInfo", message[0]);
-                });
+                _lobby.OnMessage<object[]>("+", message => { _lobby.Send("roomInfo", message[0]); });
 
                 _lobby.OnMessage<Room>("roomInfo", room =>
                 {
-                    if (_rooms.ContainsKey(room.roomId)) return;
-                    _rooms.Add(room.roomId, room);
+                    if (_rooms.ContainsKey(room.roomId))
+                        _rooms[room.roomId] = room;
+                    else
+                        _rooms.Add(room.roomId, room);
                     RoomsChanged?.Invoke(_rooms);
                 });
 
