@@ -33,68 +33,54 @@ namespace BattleshipGame.Network
             if (_lobby != null && _lobby.Connection.IsOpen) return;
             string endPoint = serverType == NetworkManager.ServerType.Online ? OnlineEndpoint : LocalEndpoint;
             _client = new Client(endPoint);
-            try
-            {
-                Debug.Log($"Joining in the room: \'{LobbyName}\'");
-                _lobby = await _client.JoinOrCreate<LobbyState>(LobbyName);
-                Debug.Log($"Joined successfully in the room: \'{LobbyName}\'!");
-                Connected?.Invoke();
-
-                _lobby.OnMessage<Room[]>("rooms", message =>
-                {
-                    foreach (var room in message) _rooms.Add(room.roomId, room);
-                    RoomsChanged?.Invoke(_rooms);
-                });
-
-                _lobby.OnMessage<object[]>("+", message => { _lobby.Send("roomInfo", message[0]); });
-
-                _lobby.OnMessage<Room>("roomInfo", room =>
-                {
-                    if (_rooms.ContainsKey(room.roomId))
-                        _rooms[room.roomId] = room;
-                    else
-                        _rooms.Add(room.roomId, room);
-                    RoomsChanged?.Invoke(_rooms);
-                });
-
-                _lobby.OnMessage<string>("-", roomId =>
-                {
-                    if (!_rooms.ContainsKey(roomId)) return;
-                    _rooms.Remove(roomId);
-                    RoomsChanged?.Invoke(_rooms);
-                });
-            }
-            catch (Exception exception)
-            {
-                Debug.LogError($"Error connecting to server. {exception.Message}");
-            }
+            Debug.Log($"<color=#DAA520>Joining in the room: \'{LobbyName}\'</color>");
+            _lobby = await _client.JoinOrCreate<LobbyState>(LobbyName);
+            Debug.Log($"<color=green>Joined successfully in the room: \'{LobbyName}\'</color>");
+            Connected?.Invoke();
+            RegisterLobbyHandlers();
         }
 
-        // private async void GetAvailableRooms()
-        // {
-        //     var roomsAvailable = await _client.GetAvailableRooms<CustomRoomAvailable>(RoomName);
-        //
-        //     Debug.Log("<color=green>Available rooms (" + roomsAvailable.Length + ")</color>");
-        //     foreach (var t in roomsAvailable)
-        //     {
-        //         Debug.Log("roomId: " + t.roomId);
-        //         Debug.Log("maxClients: " + t.maxClients);
-        //         Debug.Log("clients: " + t.clients);
-        //         Debug.Log("metadata.name: " + t.metadata.name);
-        //         Debug.Log("metadata.passwordRequired: " + t.metadata.passwordRequired);
-        //     }
-        // }
+        private void RegisterLobbyHandlers()
+        {
+            _lobby.OnMessage<Room[]>("rooms", message =>
+            {
+                foreach (var room in message) _rooms.Add(room.roomId, room);
+                RoomsChanged?.Invoke(_rooms);
+            });
+
+            _lobby.OnMessage<object[]>("+", message => { _lobby.Send("roomInfo", message[0]); });
+
+            _lobby.OnMessage<Room>("roomInfo", room =>
+            {
+                if (_rooms.ContainsKey(room.roomId))
+                    _rooms[room.roomId] = room;
+                else
+                    _rooms.Add(room.roomId, room);
+                RoomsChanged?.Invoke(_rooms);
+            });
+
+            _lobby.OnMessage<string>("-", roomId =>
+            {
+                if (!_rooms.ContainsKey(roomId)) return;
+                _rooms.Remove(roomId);
+                RoomsChanged?.Invoke(_rooms);
+            });
+        }
 
         public async void CreateRoom(string name, string password)
         {
+            Debug.Log($"<color=#DAA520>Creating the room: \'{RoomName}\'</color>");
             _room = await _client.Create<State>(RoomName,
                 new Dictionary<string, object> {{"name", name}, {"password", password}});
+            Debug.Log($"<color=green>Created successfully the room: \'{RoomName}\'</color>");
             RegisterRoomHandlers();
         }
 
         public async void JoinRoom(string roomId, string password)
         {
+            Debug.Log($"<color=#DAA520>Joining in the room: \'{RoomName}\'</color>");
             _room = await _client.JoinById<State>(roomId, new Dictionary<string, object> {{"password", password}});
+            Debug.Log($"<color=green>Joined successfully in the room: \'{RoomName}\'</color>");
             RegisterRoomHandlers();
         }
 
@@ -121,7 +107,8 @@ namespace BattleshipGame.Network
             void OnRoomStateChange(List<DataChange> changes)
             {
                 foreach (var dataChange in changes)
-                    Debug.Log($"{dataChange.Field}: {dataChange.PreviousValue} -> {dataChange.Value}");
+                    Debug.Log($"<color=#63B5B5>{dataChange.Field}:</color> " +
+                              $"{dataChange.PreviousValue} <color=green>-></color> {dataChange.Value}");
 
                 if (!_initialStateReceived) return;
                 foreach (var change in changes.Where(change => change.Field == "phase"))
@@ -130,23 +117,23 @@ namespace BattleshipGame.Network
 
             void OnPlayerAdd(Player player, string key)
             {
-                Debug.Log($"player added: {key}");
+                Debug.Log($"player added: <color=#63B5B5>{key}</color>");
             }
 
             void OnPlayerRemove(Player player, string key)
             {
-                Debug.Log($"player removed: {key}");
+                Debug.Log($"player removed: <color=#63B5B5>{key}</color>");
             }
 
             void OnPlayerChange(Player player, string key)
             {
-                Debug.Log($"player moved: {key}");
+                Debug.Log($"player moved: <color=#63B5B5>{key}</color>");
             }
         }
 
         private static void LogState(State state)
         {
-            Debug.Log($"<color=#33F4FF>Room state is changed.</color> Phase: {state.phase}" +
+            Debug.Log($"<color=#63B5B5>Room state is changed.</color> Phase: {state.phase}" +
                       $" | Player count: {state.players.Items.Count} | Current turn: {state.currentTurn}" +
                       $" | Player turn: {state.playerTurn} | Winning player: {state.winningPlayer}");
 

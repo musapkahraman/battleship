@@ -70,6 +70,7 @@ namespace BattleshipGame.Core
             if (_client == null) return;
              _client.InitialStateReceived -= OnInitialStateReceived;
              _client.GamePhaseChanged -= OnGamePhaseChanged;
+             UnRegisterFromStateEvents();
         }
 
         private void OnValidate()
@@ -256,12 +257,26 @@ namespace BattleshipGame.Core
                 _playerNumber = player.seat;
             else
                 _playerNumber = -1;
+            RegisterToStateEvents();
+            OnGamePhaseChanged(_state.phase);
+        }
+
+        private void RegisterToStateEvents()
+        {
             _state.OnChange += OnStateChanged;
             _state.player1Shots.OnChange += OnFirstPlayerShotsChanged;
             _state.player2Shots.OnChange += OnSecondPlayerShotsChanged;
             _state.player1Ships.OnChange += OnFirstPlayerShipsChanged;
             _state.player2Ships.OnChange += OnSecondPlayerShipsChanged;
-            OnGamePhaseChanged(_state.phase);
+        }
+        
+        private void UnRegisterFromStateEvents()
+        {
+            _state.OnChange -= OnStateChanged;
+            _state.player1Shots.OnChange -= OnFirstPlayerShotsChanged;
+            _state.player2Shots.OnChange -= OnSecondPlayerShotsChanged;
+            _state.player1Ships.OnChange -= OnFirstPlayerShipsChanged;
+            _state.player2Ships.OnChange -= OnSecondPlayerShipsChanged;
         }
 
         private void OnStateChanged(List<DataChange> changes)
@@ -335,6 +350,7 @@ namespace BattleshipGame.Core
 
         private void OnGamePhaseChanged(string phase)
         {
+            Debug.Log($"Changing phase to <color=#63B5B5>{phase}</color> in GameManager.");
             switch (phase)
             {
                 case "waiting":
