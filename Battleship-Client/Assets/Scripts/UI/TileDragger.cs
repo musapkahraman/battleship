@@ -62,7 +62,7 @@ namespace BattleshipGame.UI
             }
 
             foreach (var ship in manager.Ships)
-                if (ship.sprite.Equals(_sprite))
+                if (ship.tile.sprite.Equals(_sprite))
                 {
                     var droppedTo = GridConverter.ScreenToCell(Input.mousePosition,
                         targetMapViewer.GetComponent<Grid>(), sceneCamera, manager.MapAreaSize);

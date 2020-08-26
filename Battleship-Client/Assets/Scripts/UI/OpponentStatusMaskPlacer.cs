@@ -26,7 +26,7 @@ namespace BattleshipGame.UI
             foreach (var ship in gameManager.Ships)
                 for (var i = 0; i < ship.amount; i++)
                     foreach (var coordinate in ship.PartCoordinates)
-                        _shipParts.Add(new ShipPart(-1, coordinate, ship.sprite.GetInstanceID()));
+                        _shipParts.Add(new ShipPart(-1, coordinate, ship.tile.sprite.GetInstanceID()));
         }
 
         private Vector3 GetPosition(int changedShipPart, int status)

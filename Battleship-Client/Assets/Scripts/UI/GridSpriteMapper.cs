@@ -80,7 +80,7 @@ namespace BattleshipGame.UI
                 if (!_sprites.TryGetValue(spriteId, out var sprite)) continue;
                 Ship ship = null;
                 foreach (var s in gameManager.Ships)
-                    if (s.sprite.Equals(sprite))
+                    if (s.tile.sprite.Equals(sprite))
                         ship = s;
 
                 if (ship is null) continue;
