@@ -64,6 +64,7 @@ export class GameRoom extends Room<State> {
         delete this.state.players[client.sessionId];
         this.playerCount--;
         this.state.phase = 'waiting';
+        this.unlock();
     }
 
     playerPlace(client: Client, message: any){
