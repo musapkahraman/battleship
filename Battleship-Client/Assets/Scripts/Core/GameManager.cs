@@ -48,8 +48,8 @@ namespace BattleshipGame.Core
             if (NetworkManager.TryGetInstance(out _networkManager))
             {
                 _client = _networkManager.Client;
-                // _client.InitialStateReceived += OnInitialStateReceived;
-                // _client.GamePhaseChanged += OnGamePhaseChanged;
+                 _client.InitialStateReceived += OnInitialStateReceived;
+                 _client.GamePhaseChanged += OnGamePhaseChanged;
             }
             else
             {
@@ -68,8 +68,8 @@ namespace BattleshipGame.Core
         private void OnDestroy()
         {
             if (_client == null) return;
-            // _client.InitialStateReceived -= OnInitialStateReceived;
-            // _client.GamePhaseChanged -= OnGamePhaseChanged;
+             _client.InitialStateReceived -= OnInitialStateReceived;
+             _client.GamePhaseChanged -= OnGamePhaseChanged;
         }
 
         private void OnValidate()

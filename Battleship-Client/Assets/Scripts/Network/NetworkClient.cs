@@ -25,7 +25,6 @@ namespace BattleshipGame.Network
         public event Action Connected;
 
         public event Action<Dictionary<string, Room>> RoomsChanged;
-        public event Action ConnectedToRoom;
         public event Action<string> GamePhaseChanged;
         public event Action<State> InitialStateReceived;
 
