@@ -12,6 +12,11 @@ export class CustomLobbyRoom extends LobbyRoom {
             const matched = this.rooms.filter(room => room.metadata.name == message.name);
             client.send("query", matched[0] ? matched[0].roomId: null);
         });
+
+        this.onMessage("roomInfo", (client, message)=>{
+            const roomInfo = this.rooms.filter(room => room.roomId == message);
+            client.send("roomInfo", roomInfo[0] || null);
+        });
     }
 
     onJoin(client: Client, options) {
