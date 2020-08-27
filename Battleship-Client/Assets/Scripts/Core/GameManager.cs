@@ -266,6 +266,7 @@ namespace BattleshipGame.Core
                 _mode = GameMode.Result;
                 userMap.SetDisabled();
                 opponentMap.SetDisabled();
+                messageField.text = "";
                 resultCanvas.Show(_client,_state.winningPlayer == _playerNumber);
             }
         }
