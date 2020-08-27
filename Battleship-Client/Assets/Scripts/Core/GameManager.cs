@@ -18,7 +18,6 @@ namespace BattleshipGame.Core
     {
         [SerializeField] private TMP_Text messageField;
         [SerializeField] private GameObject popUpPrefab;
-        [SerializeField] private ResultCanvasManager resultCanvas;
         [SerializeField] private MapViewer userMap;
         [SerializeField] private MapViewer opponentMap;
         [SerializeField] private OpponentStatusMaskPlacer opponentStatusMaskPlacer;
@@ -234,7 +233,6 @@ namespace BattleshipGame.Core
             switch (phase)
             {
                 case "place":
-                    resultCanvas.Close();
                     BeginShipPlacement();
                     break;
                 case "battle":
@@ -247,7 +245,6 @@ namespace BattleshipGame.Core
                     BuildPopUp().Show("Game Over", "Opponent has left the game.", "OK", Leave);
                     break;
                 case "leave":
-                    resultCanvas.Close();
                     Leave();
                     break;
             }
@@ -269,7 +266,20 @@ namespace BattleshipGame.Core
                 userMap.SetDisabled();
                 opponentMap.SetDisabled();
                 messageField.text = "";
-                resultCanvas.Show(_client, _state.winningPlayer == _playerNumber);
+
+                bool isWinner = _state.winningPlayer == _playerNumber;
+                string headerText = isWinner ? "You Win!" : "You Lost!!!";
+                string messageText = isWinner ? "Winners never quit!" : "Quitters never win!";
+                string declineButtonText = isWinner ? "Quit" : "Give Up";
+                BuildPopUp().Show(headerText, messageText, "Rematch", declineButtonText, () =>
+                {
+                    _client.SendRematch(true);
+                    messageField.text = "Waiting for the opponent decide.";
+                }, () =>
+                {
+                    _client.SendRematch(false);
+                    Leave();
+                });
             }
         }
 
