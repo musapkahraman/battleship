@@ -20,7 +20,7 @@ namespace BattleshipGame.UI
             DisableButton();
             manager.FireReady += EnableButton;
             manager.FireNotReady += DisableButton;
-            _button.onClick.AddListener(GameManager.FireShots);
+            _button.onClick.AddListener(manager.FireShots);
             _button.onClick.AddListener(DisableButton);
         }
 

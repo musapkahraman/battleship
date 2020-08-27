@@ -3,12 +3,11 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 
-namespace BattleshipGame.Scriptables
+namespace BattleshipGame.ScriptableObjects
 {
-    [CreateAssetMenu]
+    [CreateAssetMenu(fileName = "New Ship", menuName = "Battleship/Ship", order = 0)]
     public class Ship : ScriptableObject
     {
-        public Sprite sprite;
         public Tile tile;
 
         [Tooltip("Smallest number means the highest rank.")]

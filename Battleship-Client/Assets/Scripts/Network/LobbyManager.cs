@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using BattleshipGame.Schemas;
 using BattleshipGame.UI;
 using TMPro;
@@ -17,8 +18,9 @@ namespace BattleshipGame.Network
         [SerializeField] private TMP_InputField passwordField;
         [SerializeField] private TMP_Text message;
         private NetworkClient _client;
-        private string _roomId;
+        private string _cachedRoomId = string.Empty;
         private bool _isJoinLocked;
+        private bool _cachedRoomIdIsNotValid;
 
         private void Start()
         {
@@ -30,7 +32,8 @@ namespace BattleshipGame.Network
                 joinButton.interactable = false;
                 joinButton.onClick.AddListener(() =>
                 {
-                    _client.JoinRoom(_roomId,passwordField.text);
+                    if (_cachedRoomIdIsNotValid) return;
+                    _client.JoinRoom(_cachedRoomId, passwordField.text);
                 });
                 createButton.onClick.AddListener(() =>
                 {
@@ -49,13 +52,6 @@ namespace BattleshipGame.Network
             }
         }
 
-        public void SetRoomId(string roomId)
-        {
-            if (_isJoinLocked) return;
-            _roomId = roomId;
-            joinButton.interactable = true;
-        }
-
         private void OnDestroy()
         {
             if (_client != null)
@@ -64,7 +60,21 @@ namespace BattleshipGame.Network
 
         private void PopulateRoomList(Dictionary<string, Room> rooms)
         {
+            if (!rooms.ContainsKey(_cachedRoomId))
+            {
+                _cachedRoomIdIsNotValid = true;
+                joinButton.interactable = false;
+            }
+
             roomList.PopulateRoomList(rooms);
+        }
+
+        public void SetRoomId(string roomId)
+        {
+            if (_isJoinLocked) return;
+            _cachedRoomId = roomId;
+            _cachedRoomIdIsNotValid = false;
+            joinButton.interactable = true;
         }
     }
 }

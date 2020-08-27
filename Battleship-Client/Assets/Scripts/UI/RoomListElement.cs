@@ -24,10 +24,10 @@ namespace BattleshipGame.UI
 
         public void OnPointerClick(PointerEventData eventData)
         {
-            OnClick?.Invoke(this);
+            OnClick?.Invoke(RoomId);
         }
 
-        public event Action<RoomListElement> OnClick;
+        public event Action<string> OnClick;
 
         public void ChangeBackgroundColorAsSelected()
         {
