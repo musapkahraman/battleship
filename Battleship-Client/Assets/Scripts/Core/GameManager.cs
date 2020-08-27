@@ -33,6 +33,7 @@ namespace BattleshipGame.Core
         private int _shipsPlaced;
         private Queue<Ship> _shipsToBePlaced;
         private State _state;
+        private bool _leavePopUpIsOn;
         public Vector2Int MapAreaSize => rules.AreaSize;
         public IEnumerable<Ship> Ships => rules.ships;
 
@@ -242,11 +243,20 @@ namespace BattleshipGame.Core
                     ShowResult();
                     break;
                 case "waiting":
-                    BuildPopUp().Show("Game Over", "Opponent has left the game.", "OK", Leave);
+                    if (_leavePopUpIsOn) break;
+                    BuildPopUp().Show("Sorry..", "Your opponent has quit the game.", "OK", Leave);
                     break;
                 case "leave":
-                    Leave();
+                    _leavePopUpIsOn = true;
+                    BuildPopUp()
+                        .Show("Sorry..", "Your opponent has decided not to continue for another round.", "OK", Leave);
                     break;
+            }
+
+            void Leave()
+            {
+                _client.LeaveRoom();
+                SceneManager.LoadScene(1);
             }
 
             void BeginShipPlacement()
@@ -283,15 +293,29 @@ namespace BattleshipGame.Core
             }
         }
 
-        private PopUpCanvas BuildPopUp()
+        private void CheckTurn()
         {
-            return Instantiate(popUpPrefab).GetComponent<PopUpCanvas>();
-        }
+            if (_state.playerTurn == _playerNumber)
+                StartTurn();
+            else
+                WaitForOpponentTurn();
 
-        private void Leave()
-        {
-            _client.LeaveRoom();
-            SceneManager.LoadScene(1);
+            void StartTurn()
+            {
+                _shots.Clear();
+                _mode = GameMode.Battle;
+                userMap.SetDisabled();
+                opponentMap.SetAttackMode();
+                messageField.text = "It's Your Turn!";
+            }
+
+            void WaitForOpponentTurn()
+            {
+                _mode = GameMode.Battle;
+                userMap.SetDisabled();
+                opponentMap.SetDisabled();
+                messageField.text = "Waiting for the Opponent to Attack!";
+            }
         }
 
         private void OnStateChanged(List<DataChange> changes)
@@ -348,29 +372,9 @@ namespace BattleshipGame.Core
             if (_playerNumber != playerNumber) opponentStatusMaskPlacer.PlaceMask(item, index);
         }
 
-        private void CheckTurn()
+        private PopUpCanvas BuildPopUp()
         {
-            if (_state.playerTurn == _playerNumber)
-                StartTurn();
-            else
-                WaitForOpponentTurn();
-
-            void StartTurn()
-            {
-                _shots.Clear();
-                _mode = GameMode.Battle;
-                userMap.SetDisabled();
-                opponentMap.SetAttackMode();
-                messageField.text = "It's Your Turn!";
-            }
-
-            void WaitForOpponentTurn()
-            {
-                _mode = GameMode.Battle;
-                userMap.SetDisabled();
-                opponentMap.SetDisabled();
-                messageField.text = "Waiting for the Opponent to Attack!";
-            }
+            return Instantiate(popUpPrefab).GetComponent<PopUpCanvas>();
         }
 
         private enum GameMode
