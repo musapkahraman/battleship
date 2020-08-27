@@ -17,6 +17,7 @@ namespace BattleshipGame.Core
     public class GameManager : MonoBehaviour
     {
         [SerializeField] private TMP_Text messageField;
+        [SerializeField] private ResultCanvasManager resultCanvas;
         [SerializeField] private MapViewer userMap;
         [SerializeField] private MapViewer opponentMap;
         [SerializeField] private OpponentStatusMaskPlacer opponentStatusMaskPlacer;
@@ -232,6 +233,7 @@ namespace BattleshipGame.Core
             switch (phase)
             {
                 case "place":
+                    resultCanvas.Close();
                     BeginShipPlacement();
                     break;
                 case "battle":
@@ -241,6 +243,9 @@ namespace BattleshipGame.Core
                     ShowResult();
                     break;
                 case "waiting":
+                    break;
+                case "leave":
+                    resultCanvas.Close();
                     Leave();
                     break;
             }
@@ -261,7 +266,7 @@ namespace BattleshipGame.Core
                 _mode = GameMode.Result;
                 userMap.SetDisabled();
                 opponentMap.SetDisabled();
-                messageField.text = _state.winningPlayer == _playerNumber ? "You Win!" : "You Lost!!!";
+                resultCanvas.Show(_client,_state.winningPlayer == _playerNumber);
             }
         }
 

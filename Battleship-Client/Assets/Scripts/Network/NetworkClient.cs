@@ -120,5 +120,10 @@ namespace BattleshipGame.Network
         {
             _room.Send("turn", targetIndexes);
         }
+
+        public void SendRematch(bool isRematching)
+        {
+            _room.Send("rematch", isRematching);
+        }
     }
 }
