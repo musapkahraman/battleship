@@ -3,6 +3,7 @@ import {Room, Client} from "colyseus";
 import {State, Player} from './game-state';
 
 export class GameRoom extends Room<State> {
+    rematchCount: any = {};
     maxClients: number = 2;
     password: string;
     name: string;
@@ -24,6 +25,7 @@ export class GameRoom extends Room<State> {
         this.setMetadata({name: options.name || this.roomId, requiresPassword: !!this.password});
         this.onMessage("place", (client, message) => this.playerPlace(client, message));
         this.onMessage("turn", (client, message) => this.playerTurn(client, message));
+        this.onMessage("rematch", (client, message) => this.rematch(client, message));
         console.log('room created!');
     }
 
@@ -140,7 +142,19 @@ export class GameRoom extends Room<State> {
         console.log('room disposed!');
     }
 
+    rematch(client: Client, message: Boolean){
+        if(!message){
+            return this.disconnect();
+        }
+        this.rematchCount[client.sessionId] = message;
+        if(Object.keys(this.rematchCount).length == 2){
+            this.reset();
+            this.state.phase = 'place';
+        }
+    }
+
     reset() {
+        this.rematchCount = {};
         this.playerHealth = new Array<number>();
         this.playerHealth[0] = this.startingFleetHealth;
         this.playerHealth[1] = this.startingFleetHealth;
