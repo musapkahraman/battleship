@@ -21,7 +21,7 @@ export class GameRoom extends Room<State> {
             this.name = options.name;
             // this.setPrivate();
         }
-        this.reset();
+        this.reset(false);
         this.setMetadata({name: options.name || this.roomId, requiresPassword: !!this.password});
         this.onMessage("place", (client, message) => this.playerPlace(client, message));
         this.onMessage("turn", (client, message) => this.playerTurn(client, message));
@@ -148,12 +148,11 @@ export class GameRoom extends Room<State> {
         }
         this.rematchCount[client.sessionId] = message;
         if(Object.keys(this.rematchCount).length == 2){
-            this.reset();
-            this.state.phase = 'place';
+            this.reset(true);
         }
     }
 
-    reset() {
+    reset(rematch) {
         this.rematchCount = {};
         this.playerHealth = new Array<number>();
         this.playerHealth[0] = this.startingFleetHealth;
@@ -166,9 +165,12 @@ export class GameRoom extends Room<State> {
         let cellCount = this.gridSize * this.gridSize;
         let state = new State();
 
-        state.phase = 'waiting';
+        state.phase = rematch ? 'place': 'waiting';
         state.playerTurn = 1;
         state.winningPlayer = -1;
+        if(rematch){
+            state.players = this.state.players;
+        }
 
         for (let i = 0; i < cellCount; i++) {
             this.placements[0][i] = -1;        
