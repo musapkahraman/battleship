@@ -43,7 +43,8 @@ namespace BattleshipGame.Network
 
         private void OnApplicationQuit()
         {
-            Client?.Leave();
+            Client?.LeaveRoom();
+            Client?.LeaveLobby();
         }
 
         public void ConnectToServer()
