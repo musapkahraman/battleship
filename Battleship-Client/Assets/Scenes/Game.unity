@@ -2124,6 +2124,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   messageField: {fileID: 1483473440}
+  popUpPrefab: {fileID: 7357745371994881862, guid: ba583779d4e278147998a361ee83dd31,
+    type: 3}
   resultCanvas: {fileID: 1829763281}
   userMap: {fileID: 167099665}
   opponentMap: {fileID: 1804129002}

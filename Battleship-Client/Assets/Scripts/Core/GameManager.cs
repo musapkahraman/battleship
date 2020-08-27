@@ -17,6 +17,7 @@ namespace BattleshipGame.Core
     public class GameManager : MonoBehaviour
     {
         [SerializeField] private TMP_Text messageField;
+        [SerializeField] private GameObject popUpPrefab;
         [SerializeField] private ResultCanvasManager resultCanvas;
         [SerializeField] private MapViewer userMap;
         [SerializeField] private MapViewer opponentMap;
@@ -243,6 +244,7 @@ namespace BattleshipGame.Core
                     ShowResult();
                     break;
                 case "waiting":
+                    BuildPopUp().Show("Game Over", "Opponent has left the game.", "OK", Leave);
                     break;
                 case "leave":
                     resultCanvas.Close();
@@ -267,8 +269,13 @@ namespace BattleshipGame.Core
                 userMap.SetDisabled();
                 opponentMap.SetDisabled();
                 messageField.text = "";
-                resultCanvas.Show(_client,_state.winningPlayer == _playerNumber);
+                resultCanvas.Show(_client, _state.winningPlayer == _playerNumber);
             }
+        }
+
+        private PopUpCanvas BuildPopUp()
+        {
+            return Instantiate(popUpPrefab).GetComponent<PopUpCanvas>();
         }
 
         private void Leave()

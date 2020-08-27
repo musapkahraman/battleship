@@ -41,7 +41,7 @@ namespace BattleshipGame.UI
 
         public void Close()
         {
-            _canvas.enabled = false;
+            if (_canvas) _canvas.enabled = false;
             rematchButton.onClick.RemoveAllListeners();
             giveUpButton.onClick.RemoveAllListeners();
         }
