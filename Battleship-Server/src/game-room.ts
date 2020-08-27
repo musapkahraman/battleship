@@ -144,7 +144,7 @@ export class GameRoom extends Room<State> {
 
     rematch(client: Client, message: Boolean){
         if(!message){
-            return this.disconnect();
+            return this.state.phase ="leave";
         }
         this.rematchCount[client.sessionId] = message;
         if(Object.keys(this.rematchCount).length == 2){
