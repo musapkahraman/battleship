@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using BattleshipGame.Schemas;
 using BattleshipGame.UI;
 using TMPro;
@@ -14,9 +13,8 @@ namespace BattleshipGame.Network
         [SerializeField] private RoomListManager roomList;
         [SerializeField] private Button joinButton;
         [SerializeField] private Button createButton;
-        [SerializeField] private TMP_InputField nameField;
-        [SerializeField] private TMP_InputField passwordField;
         [SerializeField] private TMP_Text message;
+        [SerializeField] private GameObject popUpPrefab;
         private NetworkClient _client;
         private string _cachedRoomId = string.Empty;
         private bool _isJoinLocked;
@@ -30,25 +28,39 @@ namespace BattleshipGame.Network
                 _client = connectionManager.Client;
                 _client.RoomsChanged += PopulateRoomList;
                 joinButton.interactable = false;
-                joinButton.onClick.AddListener(() =>
-                {
-                    if (_cachedRoomIdIsNotValid) return;
-                    _client.JoinRoom(_cachedRoomId, passwordField.text);
-                });
-                createButton.onClick.AddListener(() =>
-                {
-                    _client.CreateRoom(nameField.text, passwordField.text);
-                    _isJoinLocked = true;
-                    createButton.interactable = false;
-                    joinButton.interactable = false;
-                    nameField.enabled = false;
-                    passwordField.enabled = false;
-                    message.text = "Waiting for another player to join.";
-                });
+                joinButton.onClick.AddListener(JoinGame);
+                createButton.onClick.AddListener(CreateGame);
             }
             else
             {
                 SceneManager.LoadScene(0);
+            }
+
+            void JoinGame()
+            {
+                if (_cachedRoomIdIsNotValid) return;
+                BuildPopUp().Show("Join Game", "This game needs a password to join.",
+                    "Join", "Cancel", null, null, false, OnJoin);
+
+                void OnJoin(string gameName, string password)
+                {
+                    _client.JoinRoom(_cachedRoomId, password);
+                }
+            }
+
+            void CreateGame()
+            {
+                BuildPopUp().Show("Create Game", "Write an name and a password for your game.",
+                    "Create", "Cancel", null, null, true, OnCreate);
+
+                void OnCreate(string gameName, string password)
+                {
+                    _client.CreateRoom(gameName, password);
+                    _isJoinLocked = true;
+                    createButton.interactable = false;
+                    joinButton.interactable = false;
+                    message.text = "Waiting for another player to join.";
+                }
             }
         }
 
@@ -75,6 +87,11 @@ namespace BattleshipGame.Network
             _cachedRoomId = roomId;
             _cachedRoomIdIsNotValid = false;
             joinButton.interactable = true;
+        }
+
+        private PopUpCanvas BuildPopUp()
+        {
+            return Instantiate(popUpPrefab).GetComponent<PopUpCanvas>();
         }
     }
 }
