@@ -11,7 +11,7 @@ namespace BattleshipGame.UI
         [SerializeField] private TMP_Text header;
         [SerializeField] private TMP_Text message;
         [SerializeField] private Button confirm;
-        [SerializeField] private Button cancel;
+        [SerializeField] private Button decline;
         [SerializeField] private TMP_InputField nameInput;
         [SerializeField] private TMP_InputField passwordInput;
         private Canvas _canvas;
@@ -22,36 +22,46 @@ namespace BattleshipGame.UI
             _canvas.enabled = false;
         }
 
-        public void Show(string headerText, string messageText, string acceptButtonText, UnityAction acceptCall = null)
+        public void Show(string headerText, string messageText, string confirmButtonText,
+            UnityAction confirmCall = null)
         {
             _canvas.enabled = true;
             header.text = headerText;
             message.text = messageText;
-            confirm.GetComponentInChildren<TMP_Text>().text = acceptButtonText;
+            confirm.GetComponentInChildren<TMP_Text>().text = confirmButtonText;
             var rectTransform = confirm.GetComponent<RectTransform>();
             rectTransform.anchoredPosition = new Vector2(0, rectTransform.anchoredPosition.y);
-            if (acceptCall != null) confirm.onClick.AddListener(acceptCall);
+            if (confirmCall != null) confirm.onClick.AddListener(confirmCall);
             confirm.onClick.AddListener(Close);
-            Destroy(cancel.gameObject);
+            Destroy(decline.gameObject);
         }
 
-        public void Show(string headerText, string messageText, string acceptButtonText, string declineButtonText,
-            UnityAction acceptCall = null, UnityAction declineCall = null, bool showNameInputIfAvailable = true,
-            Action<string, string> confirmed = null)
+        public void Show(string headerText, string messageText, string confirmButtonText, string declineButtonText,
+            UnityAction confirmCall = null, UnityAction declineCall = null, bool showNameInputIfAvailable = true,
+            Action<string, string> confirmPasswordCallback = null)
         {
             _canvas.enabled = true;
             header.text = headerText;
             message.text = messageText;
-            if (nameInput && !showNameInputIfAvailable) Destroy(nameInput.gameObject);
+            if (nameInput && !showNameInputIfAvailable)
+            {
+                var nameRectPos = nameInput.GetComponent<RectTransform>().anchoredPosition;
+                Destroy(nameInput.gameObject);
+                var passwordRect = passwordInput.GetComponent<RectTransform>();
+                var middlePoint = Vector2.Lerp(nameRectPos, passwordRect.anchoredPosition, 0.5f);
+                passwordRect.anchoredPosition = middlePoint;
+            }
+
             if (passwordInput)
                 confirm.onClick.AddListener(() =>
-                    confirmed?.Invoke(nameInput && showNameInputIfAvailable ? nameInput.text : "", passwordInput.text));
-            confirm.GetComponentInChildren<TMP_Text>().text = acceptButtonText;
-            cancel.GetComponentInChildren<TMP_Text>().text = declineButtonText;
-            if (acceptCall != null) confirm.onClick.AddListener(acceptCall);
-            if (declineCall != null) cancel.onClick.AddListener(declineCall);
+                    confirmPasswordCallback?.Invoke(nameInput && showNameInputIfAvailable ? nameInput.text : "",
+                        passwordInput.text));
+            confirm.GetComponentInChildren<TMP_Text>().text = confirmButtonText;
+            decline.GetComponentInChildren<TMP_Text>().text = declineButtonText;
+            if (confirmCall != null) confirm.onClick.AddListener(confirmCall);
+            if (declineCall != null) decline.onClick.AddListener(declineCall);
             confirm.onClick.AddListener(Close);
-            cancel.onClick.AddListener(Close);
+            decline.onClick.AddListener(Close);
         }
 
         private void Close()

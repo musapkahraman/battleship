@@ -11,8 +11,8 @@ namespace BattleshipGame.Network
     public class LobbyManager : MonoBehaviour
     {
         [SerializeField] private RoomListManager roomList;
+        [SerializeField] private Button newGameButton;
         [SerializeField] private Button joinButton;
-        [SerializeField] private Button createButton;
         [SerializeField] private Button leaveButton;
         [SerializeField] private TMP_Text message;
         [SerializeField] private GameObject popUpPrefab;
@@ -28,21 +28,40 @@ namespace BattleshipGame.Network
                 connectionManager.ConnectToServer();
                 _client = connectionManager.Client;
                 _client.RoomsChanged += PopulateRoomList;
+
+                newGameButton.GetComponentInChildren<TMP_Text>().text = "New Game";
+                joinButton.GetComponentInChildren<TMP_Text>().text = "Join";
+                leaveButton.GetComponentInChildren<TMP_Text>().text = "Leave";
+                
+                newGameButton.onClick.AddListener(NewGame);
+                joinButton.onClick.AddListener(JoinGame);
+                leaveButton.onClick.AddListener(LeaveGame);
+
                 joinButton.interactable = false;
                 leaveButton.interactable = false;
+                
                 if (_client.SessionId != null)
                 {
                     _client.RefreshRoomsList();
                     WaitForOpponent();
                 }
-
-                joinButton.onClick.AddListener(JoinGame);
-                createButton.onClick.AddListener(CreateGame);
-                leaveButton.onClick.AddListener(LeaveGame);
             }
             else
             {
                 SceneManager.LoadScene(0);
+            }
+
+            void NewGame()
+            {
+                BuildPopUp().Show("New Game", "Create a new game with a name and a password if you like.",
+                    "Create", "Cancel", null, null, true, OnCreate);
+
+                void OnCreate(string gameName, string password)
+                {
+                    _client.CreateRoom(gameName, password);
+                    WaitForOpponent();
+                    joinButton.interactable = false;
+                }
             }
 
             void JoinGame()
@@ -61,23 +80,10 @@ namespace BattleshipGame.Network
                 }
             }
 
-            void CreateGame()
-            {
-                BuildPopUp().Show("Create Game", "Write an name and a password for your game.",
-                    "Create", "Cancel", null, null, true, OnCreate);
-
-                void OnCreate(string gameName, string password)
-                {
-                    _client.CreateRoom(gameName, password);
-                    WaitForOpponent();
-                    joinButton.interactable = false;
-                }
-            }
-
             void LeaveGame()
             {
                 leaveButton.interactable = false;
-                createButton.interactable = true;
+                newGameButton.interactable = true;
                 _client.LeaveRoom();
             }
         }
@@ -99,7 +105,7 @@ namespace BattleshipGame.Network
         private void WaitForOpponent()
         {
             _isJoiningLocked = true;
-            createButton.interactable = false;
+            newGameButton.interactable = false;
             leaveButton.interactable = true;
             message.text = "Waiting for another player to join.";
         }
