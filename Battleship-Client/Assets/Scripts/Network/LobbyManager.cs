@@ -15,10 +15,10 @@ namespace BattleshipGame.Network
         [SerializeField] private Button createButton;
         [SerializeField] private TMP_Text message;
         [SerializeField] private GameObject popUpPrefab;
-        private NetworkClient _client;
         private string _cachedRoomId = string.Empty;
-        private bool _isJoinLocked;
         private bool _cachedRoomIdIsNotValid;
+        private NetworkClient _client;
+        private bool _isJoinLocked;
 
         private void Start()
         {
@@ -39,8 +39,12 @@ namespace BattleshipGame.Network
             void JoinGame()
             {
                 if (_cachedRoomIdIsNotValid) return;
-                BuildPopUp().Show("Join Game", "This game needs a password to join.",
-                    "Join", "Cancel", null, null, false, OnJoin);
+
+                if (_client.IsRoomPasswordProtected(_cachedRoomId))
+                    BuildPopUp().Show("Join Game", "This game needs a password to join.",
+                        "Join", "Cancel", null, null, false, OnJoin);
+                else
+                    OnJoin("", "");
 
                 void OnJoin(string gameName, string password)
                 {

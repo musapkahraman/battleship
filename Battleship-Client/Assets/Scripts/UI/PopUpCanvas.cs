@@ -42,6 +42,7 @@ namespace BattleshipGame.UI
             _canvas.enabled = true;
             header.text = headerText;
             message.text = messageText;
+            if (nameInput && !showNameInputIfAvailable) Destroy(nameInput.gameObject);
             if (passwordInput)
                 confirm.onClick.AddListener(() =>
                     confirmed?.Invoke(nameInput && showNameInputIfAvailable ? nameInput.text : "", passwordInput.text));

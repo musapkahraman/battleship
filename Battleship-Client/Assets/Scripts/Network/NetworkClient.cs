@@ -125,5 +125,10 @@ namespace BattleshipGame.Network
         {
             _room.Send("rematch", isRematching);
         }
+
+        public bool IsRoomPasswordProtected(string id)
+        {
+            return _rooms.TryGetValue(id, out var room) && room.metadata.requiresPassword;
+        }
     }
 }
