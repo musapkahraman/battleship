@@ -27,6 +27,14 @@ namespace BattleshipGame.Network
                 connectionManager.ConnectToServer();
                 _client = connectionManager.Client;
                 _client.RoomsChanged += PopulateRoomList;
+                if (_client.SessionId != null)
+                {
+                    _client.RefreshRoomsList();
+                    _isJoinLocked = true;
+                    createButton.interactable = false;
+                    message.text = "Waiting for another player to join.";
+                }
+
                 joinButton.interactable = false;
                 joinButton.onClick.AddListener(JoinGame);
                 createButton.onClick.AddListener(CreateGame);

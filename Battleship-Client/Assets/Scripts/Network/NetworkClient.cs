@@ -130,5 +130,10 @@ namespace BattleshipGame.Network
         {
             return _rooms.TryGetValue(id, out var room) && room.metadata.requiresPassword;
         }
+
+        public void RefreshRoomsList()
+        {
+            RoomsChanged?.Invoke(_rooms);
+        }
     }
 }

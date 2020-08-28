@@ -244,18 +244,17 @@ namespace BattleshipGame.Core
                     break;
                 case "waiting":
                     if (_leavePopUpIsOn) break;
-                    BuildPopUp().Show("Sorry..", "Your opponent has quit the game.", "OK", Leave);
+                    BuildPopUp().Show("Sorry..", "Your opponent has quit the game.", "OK", GoBackToLobby);
                     break;
                 case "leave":
                     _leavePopUpIsOn = true;
                     BuildPopUp()
-                        .Show("Sorry..", "Your opponent has decided not to continue for another round.", "OK", Leave);
+                        .Show("Sorry..", "Your opponent has decided not to continue for another round.", "OK", GoBackToLobby);
                     break;
             }
 
-            void Leave()
+            void GoBackToLobby()
             {
-                _client.LeaveRoom();
                 SceneManager.LoadScene(1);
             }
 
@@ -288,9 +287,15 @@ namespace BattleshipGame.Core
                 }, () =>
                 {
                     _client.SendRematch(false);
-                    Leave();
+                    LeaveGame();
                 });
             }
+        }
+
+        private void LeaveGame()
+        {
+            _client.LeaveRoom();
+            SceneManager.LoadScene(1);
         }
 
         private void CheckTurn()
