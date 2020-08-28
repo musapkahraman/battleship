@@ -13,12 +13,13 @@ namespace BattleshipGame.Network
         [SerializeField] private RoomListManager roomList;
         [SerializeField] private Button joinButton;
         [SerializeField] private Button createButton;
+        [SerializeField] private Button leaveButton;
         [SerializeField] private TMP_Text message;
         [SerializeField] private GameObject popUpPrefab;
         private string _cachedRoomId = string.Empty;
         private bool _cachedRoomIdIsNotValid;
         private NetworkClient _client;
-        private bool _isJoinLocked;
+        private bool _isJoiningLocked;
 
         private void Start()
         {
@@ -27,17 +28,17 @@ namespace BattleshipGame.Network
                 connectionManager.ConnectToServer();
                 _client = connectionManager.Client;
                 _client.RoomsChanged += PopulateRoomList;
+                joinButton.interactable = false;
+                leaveButton.interactable = false;
                 if (_client.SessionId != null)
                 {
                     _client.RefreshRoomsList();
-                    _isJoinLocked = true;
-                    createButton.interactable = false;
-                    message.text = "Waiting for another player to join.";
+                    WaitForOpponent();
                 }
 
-                joinButton.interactable = false;
                 joinButton.onClick.AddListener(JoinGame);
                 createButton.onClick.AddListener(CreateGame);
+                leaveButton.onClick.AddListener(LeaveGame);
             }
             else
             {
@@ -68,11 +69,16 @@ namespace BattleshipGame.Network
                 void OnCreate(string gameName, string password)
                 {
                     _client.CreateRoom(gameName, password);
-                    _isJoinLocked = true;
-                    createButton.interactable = false;
+                    WaitForOpponent();
                     joinButton.interactable = false;
-                    message.text = "Waiting for another player to join.";
                 }
+            }
+
+            void LeaveGame()
+            {
+                leaveButton.interactable = false;
+                createButton.interactable = true;
+                _client.LeaveRoom();
             }
         }
 
@@ -80,6 +86,22 @@ namespace BattleshipGame.Network
         {
             if (_client != null)
                 _client.RoomsChanged -= PopulateRoomList;
+        }
+
+        public void SetRoomId(string roomId)
+        {
+            if (_isJoiningLocked) return;
+            _cachedRoomId = roomId;
+            _cachedRoomIdIsNotValid = false;
+            joinButton.interactable = true;
+        }
+
+        private void WaitForOpponent()
+        {
+            _isJoiningLocked = true;
+            createButton.interactable = false;
+            leaveButton.interactable = true;
+            message.text = "Waiting for another player to join.";
         }
 
         private void PopulateRoomList(Dictionary<string, Room> rooms)
@@ -91,14 +113,6 @@ namespace BattleshipGame.Network
             }
 
             roomList.PopulateRoomList(rooms);
-        }
-
-        public void SetRoomId(string roomId)
-        {
-            if (_isJoinLocked) return;
-            _cachedRoomId = roomId;
-            _cachedRoomIdIsNotValid = false;
-            joinButton.interactable = true;
         }
 
         private PopUpCanvas BuildPopUp()
