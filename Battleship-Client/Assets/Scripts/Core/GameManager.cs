@@ -68,6 +68,7 @@ namespace BattleshipGame.Core
 
             void UnRegisterFromStateEvents()
             {
+                if (_state == null) return;
                 _state.OnChange -= OnStateChanged;
                 _state.player1Shots.OnChange -= OnFirstPlayerShotsChanged;
                 _state.player2Shots.OnChange -= OnSecondPlayerShotsChanged;
@@ -249,7 +250,8 @@ namespace BattleshipGame.Core
                 case "leave":
                     _leavePopUpIsOn = true;
                     BuildPopUp()
-                        .Show("Sorry..", "Your opponent has decided not to continue for another round.", "OK", GoBackToLobby);
+                        .Show("Sorry..", "Your opponent has decided not to continue for another round.", "OK",
+                            GoBackToLobby);
                     break;
             }
 
