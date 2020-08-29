@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using BattleshipGame.Common;
 using BattleshipGame.Schemas;
 using BattleshipGame.UI;
 using TMPro;
@@ -37,8 +38,8 @@ namespace BattleshipGame.Network
                 joinButton.onClick.AddListener(JoinGame);
                 leaveButton.onClick.AddListener(LeaveGame);
 
-                joinButton.interactable = false;
-                leaveButton.interactable = false;
+                joinButton.SetInteractable(false);
+                leaveButton.SetInteractable(false);
 
                 if (_client.SessionId != null)
                 {
@@ -60,7 +61,7 @@ namespace BattleshipGame.Network
                 {
                     _client.CreateRoom(gameName, password);
                     WaitForOpponent();
-                    joinButton.interactable = false;
+                    joinButton.SetInteractable(false);
                 }
             }
 
@@ -82,8 +83,8 @@ namespace BattleshipGame.Network
 
             void LeaveGame()
             {
-                leaveButton.interactable = false;
-                newGameButton.interactable = true;
+                leaveButton.SetInteractable(false);
+                newGameButton.SetInteractable(true);
                 _client.LeaveRoom();
             }
         }
@@ -100,14 +101,14 @@ namespace BattleshipGame.Network
             if (_isJoiningLocked) return;
             _cachedRoomId = roomId;
             _cachedRoomIdIsNotValid = false;
-            joinButton.interactable = true;
+            joinButton.SetInteractable(true);
         }
 
         private void WaitForOpponent()
         {
             _isJoiningLocked = true;
-            newGameButton.interactable = false;
-            leaveButton.interactable = true;
+            newGameButton.SetInteractable(false);
+            leaveButton.SetInteractable(true);
             message.text = "Waiting for another player to join.";
         }
 
@@ -116,7 +117,7 @@ namespace BattleshipGame.Network
             if (!rooms.ContainsKey(_cachedRoomId))
             {
                 _cachedRoomIdIsNotValid = true;
-                joinButton.interactable = false;
+                joinButton.SetInteractable(false);
             }
 
             roomList.PopulateRoomList(rooms);
