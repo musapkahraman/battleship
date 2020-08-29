@@ -32,6 +32,7 @@ namespace BattleshipGame.Network
                 newGameButton.GetComponentInChildren<TMP_Text>().text = "New Game";
                 joinButton.GetComponentInChildren<TMP_Text>().text = "Join";
                 leaveButton.GetComponentInChildren<TMP_Text>().text = "Leave";
+                message.text = string.Empty;
 
                 newGameButton.onClick.AddListener(NewGame);
                 joinButton.onClick.AddListener(JoinGame);
@@ -85,6 +86,7 @@ namespace BattleshipGame.Network
                 leaveButton.SetInteractable(false);
                 newGameButton.SetInteractable(true);
                 _client.LeaveRoom();
+                message.text = string.Empty;
             }
         }
 

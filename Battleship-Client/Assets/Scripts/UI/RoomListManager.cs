@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using BattleshipGame.Network;
 using BattleshipGame.Schemas;
 using UnityEngine;
@@ -26,7 +27,8 @@ namespace BattleshipGame.UI
             _elements.Clear();
             ResetRectSize();
             var positionFactor = 0;
-            foreach (var room in rooms)
+            var sortedDict = from room in rooms orderby room.Value.clients select room;
+            foreach (var room in sortedDict)
             {
                 var element = Instantiate(roomListElementPrefab, transform).GetComponent<RoomListElement>();
                 element.RoomId = room.Key;
