@@ -32,14 +32,14 @@ namespace BattleshipGame.Network
                 newGameButton.GetComponentInChildren<TMP_Text>().text = "New Game";
                 joinButton.GetComponentInChildren<TMP_Text>().text = "Join";
                 leaveButton.GetComponentInChildren<TMP_Text>().text = "Leave";
-                
+
                 newGameButton.onClick.AddListener(NewGame);
                 joinButton.onClick.AddListener(JoinGame);
                 leaveButton.onClick.AddListener(LeaveGame);
 
                 joinButton.interactable = false;
                 leaveButton.interactable = false;
-                
+
                 if (_client.SessionId != null)
                 {
                     _client.RefreshRoomsList();
@@ -96,6 +96,7 @@ namespace BattleshipGame.Network
 
         public void SetRoomId(string roomId)
         {
+            Debug.Log($"Joining is locked: <color=yellow>{_isJoiningLocked}</color>");
             if (_isJoiningLocked) return;
             _cachedRoomId = roomId;
             _cachedRoomIdIsNotValid = false;

@@ -11,6 +11,7 @@ namespace BattleshipGame.UI
         private readonly Dictionary<string, RoomListElement> _elements = new Dictionary<string, RoomListElement>();
         [SerializeField] private GameObject roomListElementPrefab;
         [SerializeField] private LobbyManager lobbyManager;
+        [SerializeField] private int contentOffset;
         private RectTransform _rectTransform;
 
         private void Awake()
@@ -43,11 +44,11 @@ namespace BattleshipGame.UI
             }
         }
 
-        private static float PutElementInPosition(Component element, ref int positionFactor)
+        private float PutElementInPosition(Component element, ref int positionFactor)
         {
             var elementRectTransform = element.GetComponent<RectTransform>();
             float elementHeight = elementRectTransform.rect.height;
-            elementRectTransform.anchoredPosition = new Vector2(0, positionFactor++ * -elementHeight);
+            elementRectTransform.anchoredPosition = new Vector2(0, positionFactor++ * -elementHeight - contentOffset);
             return elementHeight;
         }
 
@@ -68,6 +69,7 @@ namespace BattleshipGame.UI
             foreach (var element in _elements) element.Value.ChangeBackgroundColorAsDefault();
 
             if (!_elements.TryGetValue(id, out var roomListElement)) return;
+            Debug.Log($"Clicked room id: <color=yellow>{roomListElement.RoomId}</color>");
             roomListElement.ChangeBackgroundColorAsSelected();
             lobbyManager.SetRoomId(roomListElement.RoomId);
         }
