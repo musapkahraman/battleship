@@ -20,7 +20,6 @@ namespace BattleshipGame.Network
         private string _cachedRoomId = string.Empty;
         private bool _cachedRoomIdIsNotValid;
         private NetworkClient _client;
-        private bool _isJoiningLocked;
 
         private void Start()
         {
@@ -97,8 +96,7 @@ namespace BattleshipGame.Network
 
         public void SetRoomId(string roomId)
         {
-            Debug.Log($"Joining is locked: <color=yellow>{_isJoiningLocked}</color>");
-            if (_isJoiningLocked) return;
+            if (_client.SessionId != null) return;
             _cachedRoomId = roomId;
             _cachedRoomIdIsNotValid = false;
             joinButton.SetInteractable(true);
@@ -106,7 +104,6 @@ namespace BattleshipGame.Network
 
         private void WaitForOpponent()
         {
-            _isJoiningLocked = true;
             newGameButton.SetInteractable(false);
             leaveButton.SetInteractable(true);
             message.text = "Waiting for another player to join.";
