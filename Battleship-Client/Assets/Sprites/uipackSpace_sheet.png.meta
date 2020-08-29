@@ -62,6 +62,9 @@ TextureImporter:
   - first:
       213: 6093199521058172504
     second: glassPanel_cornerTL_mask
+  - first:
+      213: 3769083766744375755
+    second: squareWhite
   externalObjects: {}
   serializedVersion: 11
   mipmaps:
@@ -562,6 +565,27 @@ TextureImporter:
       bones: []
       spriteID: 85ea0466ea46f8450800000000000000
       internalID: 6093199521058172504
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: squareWhite
+      rect:
+        serializedVersion: 2
+        x: 384
+        y: 10
+        width: 19
+        height: 26
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 8, y: 12, z: 8, w: 12}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: bc16d7567b97e4430800000000000000
+      internalID: 3769083766744375755
       vertices: []
       indices: 
       edges: []
