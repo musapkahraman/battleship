@@ -22,6 +22,15 @@ namespace BattleshipGame.UI
             _canvas.enabled = false;
         }
 
+        private void Update()
+        {
+            if (!Input.GetKeyDown(KeyCode.Tab) || !passwordInput || !nameInput) return;
+            if (nameInput.isFocused)
+                passwordInput.ActivateInputField();
+            else
+                nameInput.ActivateInputField();
+        }
+
         public void Show(string headerText, string messageText, string confirmButtonText,
             UnityAction confirmCall = null)
         {
