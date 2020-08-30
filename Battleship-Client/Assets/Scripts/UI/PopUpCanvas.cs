@@ -14,6 +14,9 @@ namespace BattleshipGame.UI
         [SerializeField] private Button decline;
         [SerializeField] private TMP_InputField nameInput;
         [SerializeField] private TMP_InputField passwordInput;
+        [SerializeField] private Button passwordShowHide;
+        [SerializeField] private Sprite show;
+        [SerializeField] private Sprite hide;
         private Canvas _canvas;
 
         private void Awake()
@@ -62,9 +65,27 @@ namespace BattleshipGame.UI
             }
 
             if (passwordInput)
+            {
                 confirm.onClick.AddListener(() =>
                     confirmPasswordCallback?.Invoke(nameInput && showNameInputIfAvailable ? nameInput.text : "",
                         passwordInput.text));
+                passwordShowHide.onClick.AddListener(() =>
+                {
+                    if (passwordInput.contentType == TMP_InputField.ContentType.Password)
+                    {
+                        passwordShowHide.GetComponent<Image>().sprite = hide;
+                        passwordInput.contentType = TMP_InputField.ContentType.Standard;
+                    }
+                    else
+                    {
+                        passwordShowHide.GetComponent<Image>().sprite = show;
+                        passwordInput.contentType = TMP_InputField.ContentType.Password;
+                    }
+
+                    passwordInput.ActivateInputField();
+                });
+            }
+
             confirm.GetComponentInChildren<TMP_Text>().text = confirmButtonText;
             decline.GetComponentInChildren<TMP_Text>().text = declineButtonText;
             if (confirmCall != null) confirm.onClick.AddListener(confirmCall);
