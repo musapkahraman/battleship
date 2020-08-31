@@ -22,6 +22,8 @@ namespace BattleshipGame.Core
         [SerializeField] private MapViewer opponentMap;
         [SerializeField] private OpponentStatusMaskPlacer opponentStatusMaskPlacer;
         [SerializeField] private Rules rules;
+        [SerializeField] private SceneReference connectionScene;
+        [SerializeField] private SceneReference lobbyScene;
         private readonly List<int> _shots = new List<int>();
         private int _cellCount;
         private NetworkClient _client;
@@ -47,7 +49,7 @@ namespace BattleshipGame.Core
             }
             else
             {
-                SceneManager.LoadScene(0);
+                SceneManager.LoadScene(connectionScene.sceneName);
             }
         }
 
@@ -257,7 +259,7 @@ namespace BattleshipGame.Core
 
             void GoBackToLobby()
             {
-                SceneManager.LoadScene(1);
+                SceneManager.LoadScene(lobbyScene.sceneName);
             }
 
             void BeginShipPlacement()
@@ -297,7 +299,7 @@ namespace BattleshipGame.Core
         private void LeaveGame()
         {
             _client.LeaveRoom();
-            SceneManager.LoadScene(1);
+            SceneManager.LoadScene(lobbyScene.sceneName);
         }
 
         private void CheckTurn()

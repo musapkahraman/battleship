@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using BattleshipGame.Common;
 using BattleshipGame.Schemas;
+using BattleshipGame.ScriptableObjects;
 using BattleshipGame.UI;
 using TMPro;
 using UnityEngine;
@@ -17,6 +18,7 @@ namespace BattleshipGame.Network
         [SerializeField] private Button leaveButton;
         [SerializeField] private TMP_Text message;
         [SerializeField] private GameObject popUpPrefab;
+        [SerializeField] private SceneReference connectionScene;
         private string _cachedRoomId = string.Empty;
         private bool _cachedRoomIdIsNotValid;
         private NetworkClient _client;
@@ -49,7 +51,7 @@ namespace BattleshipGame.Network
             }
             else
             {
-                SceneManager.LoadScene(0);
+                SceneManager.LoadScene(connectionScene.sceneName);
             }
 
             void NewGame()

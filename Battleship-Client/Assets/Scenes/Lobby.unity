@@ -384,6 +384,7 @@ MonoBehaviour:
   message: {fileID: 882254167}
   popUpPrefab: {fileID: 4672312948394729569, guid: 2aee4b15d99e27d499a098e4742c4f76,
     type: 3}
+  connectionScene: {fileID: 11400000, guid: 316700c9c9c91ed4e9c9bbc08211144b, type: 2}
 --- !u!114 &257712545 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 5023613893495342776, guid: c59cf86ee3eebae4e87100a5365ea47b,
