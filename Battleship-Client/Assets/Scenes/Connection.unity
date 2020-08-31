@@ -315,8 +315,8 @@ MonoBehaviour:
     type: 3}
   messageField: {fileID: 322319179}
   serverType: 1
-  lobbyScene: {fileID: 11400000, guid: f3b5acfcd552c154d97b5811497b18f5, type: 2}
-  placementScene: {fileID: 11400000, guid: 67a1f6faabfaa0a409ab9547f08432cc, type: 2}
+  lobbySceneData: {fileID: 11400000, guid: f3b5acfcd552c154d97b5811497b18f5, type: 2}
+  placementSceneData: {fileID: 11400000, guid: 67a1f6faabfaa0a409ab9547f08432cc, type: 2}
 --- !u!4 &1560539549
 Transform:
   m_ObjectHideFlags: 0

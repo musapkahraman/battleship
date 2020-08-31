@@ -1619,8 +1619,9 @@ MonoBehaviour:
   opponentMap: {fileID: 1804129002}
   opponentStatusMaskPlacer: {fileID: 1093841618}
   rules: {fileID: 11400000, guid: 536a0464e90bd734190c1b8189b64ddd, type: 2}
-  connectionScene: {fileID: 11400000, guid: 316700c9c9c91ed4e9c9bbc08211144b, type: 2}
-  lobbyScene: {fileID: 11400000, guid: f3b5acfcd552c154d97b5811497b18f5, type: 2}
+  connectionSceneData: {fileID: 11400000, guid: 316700c9c9c91ed4e9c9bbc08211144b,
+    type: 2}
+  lobbySceneData: {fileID: 11400000, guid: f3b5acfcd552c154d97b5811497b18f5, type: 2}
 --- !u!1 &1843068897
 GameObject:
   m_ObjectHideFlags: 0

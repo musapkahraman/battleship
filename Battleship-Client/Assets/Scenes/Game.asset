@@ -12,4 +12,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fc3358b5d69946e69e7ed3dc14d7f765, type: 3}
   m_Name: Game
   m_EditorClassIdentifier: 
-  sceneName: Game
+  scene:
+    scenePath: Assets/Scenes/Game.unity
+    sceneAsset: {fileID: 102900000, guid: 2cda990e2423bbf4892e6590ba056729, type: 3}
+  shortDescription: 
+  music: {fileID: 0}
+  musicVolume: 0

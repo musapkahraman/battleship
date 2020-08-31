@@ -17,8 +17,8 @@ namespace BattleshipGame.Network
         [SerializeField] private GameObject progressBarCanvasPrefab;
         [SerializeField] private TMP_Text messageField;
         [SerializeField] private ServerType serverType = ServerType.Online;
-        [SerializeField] private SceneReference lobbyScene;
-        [SerializeField] private SceneReference placementScene;
+        [SerializeField] private SceneData lobbySceneData;
+        [SerializeField] private SceneData placementSceneData;
         public NetworkClient Client { get; private set; }
 
         protected override void Awake()
@@ -58,14 +58,14 @@ namespace BattleshipGame.Network
         private void OnConnected()
         {
             // Connection established. Go to the lobby.
-            SceneManager.LoadScene(lobbyScene.sceneName);
+            SceneManager.LoadScene(lobbySceneData.scene);
         }
 
         private void OnGamePhaseChanged(string phase)
         {
             if (phase == "place")
                 // Another player is joined in the game. Phase is changed. Go to place mode.
-                SceneManager.LoadScene(placementScene.sceneName);
+                SceneManager.LoadScene(placementSceneData.scene);
         }
     }
 }

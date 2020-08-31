@@ -12,4 +12,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fc3358b5d69946e69e7ed3dc14d7f765, type: 3}
   m_Name: Placement
   m_EditorClassIdentifier: 
-  sceneName: Placement
+  scene:
+    scenePath: Assets/Scenes/Placement.unity
+    sceneAsset: {fileID: 102900000, guid: 5e6584d44c2df6648a83df6ef230673b, type: 3}
+  shortDescription: 
+  music: {fileID: 0}
+  musicVolume: 0

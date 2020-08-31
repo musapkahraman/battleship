@@ -18,7 +18,7 @@ namespace BattleshipGame.Network
         [SerializeField] private Button leaveButton;
         [SerializeField] private TMP_Text message;
         [SerializeField] private GameObject popUpPrefab;
-        [SerializeField] private SceneReference connectionScene;
+        [SerializeField] private SceneData connectionSceneData;
         private string _cachedRoomId = string.Empty;
         private bool _cachedRoomIdIsNotValid;
         private NetworkClient _client;
@@ -51,7 +51,7 @@ namespace BattleshipGame.Network
             }
             else
             {
-                SceneManager.LoadScene(connectionScene.sceneName);
+                SceneManager.LoadScene(connectionSceneData.scene);
             }
 
             void NewGame()
