@@ -3,7 +3,7 @@ using BattleshipGame.Common;
 using BattleshipGame.ScriptableObjects;
 using UnityEngine;
 
-namespace BattleshipGame.UI
+namespace BattleshipGame.TilePaint
 {
     public class OpponentStatusMaskPlacer : MonoBehaviour
     {

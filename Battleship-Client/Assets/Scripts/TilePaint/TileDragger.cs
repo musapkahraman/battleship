@@ -3,7 +3,7 @@ using BattleshipGame.ScriptableObjects;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 
-namespace BattleshipGame.UI
+namespace BattleshipGame.TilePaint
 {
     [RequireComponent(typeof(Grid), typeof(BoxCollider2D), typeof(GridSpriteMapper))]
     public class TileDragger : MonoBehaviour

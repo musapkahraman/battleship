@@ -5,7 +5,7 @@ using BattleshipGame.ScriptableObjects;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 
-namespace BattleshipGame.UI
+namespace BattleshipGame.TilePaint
 {
     public class MapViewer :ShipTilePainter
     {
