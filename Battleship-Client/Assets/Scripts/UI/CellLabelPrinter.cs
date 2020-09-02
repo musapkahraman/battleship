@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using BattleshipGame.Core;
+using BattleshipGame.ScriptableObjects;
 using TMPro;
 using UnityEngine;
 #if UNITY_EDITOR
@@ -20,7 +21,7 @@ namespace BattleshipGame.UI
         [SerializeField] private Canvas canvas;
         [SerializeField] private GameObject cellLabelPrefab;
         [SerializeField] private Direction direction;
-        [SerializeField] private GameManager manager;
+        [SerializeField] private Rules rules;
         [SerializeField] private Place place;
         [SerializeField] private Type type;
         private Vector2Int _mapSize;
@@ -52,7 +53,7 @@ namespace BattleshipGame.UI
 #if UNITY_EDITOR
         public void Print()
         {
-            _mapSize = manager.MapAreaSize;
+            _mapSize = rules.AreaSize;
 
             if (cellLabelPrefab.GetComponent<TMP_Text>() == null)
             {

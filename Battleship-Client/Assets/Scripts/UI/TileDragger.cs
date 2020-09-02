@@ -1,5 +1,5 @@
 ﻿using BattleshipGame.Common;
-using BattleshipGame.Core;
+using BattleshipGame.ScriptableObjects;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 
@@ -10,8 +10,8 @@ namespace BattleshipGame.UI
     {
         [SerializeField] private GameObject dragShipPrefab;
         [SerializeField] private Camera sceneCamera;
-        [SerializeField] private GameManager manager;
-        [SerializeField] private MapViewer targetMapViewer;
+        [SerializeField] private Rules rules;
+        [SerializeField] private ShipTilePainter targetMap;
         [SerializeField] private Tilemap sourceTileMap;
         [SerializeField] private bool removeFromSource;
         [SerializeField] private bool removeIfDraggedOut;
@@ -29,14 +29,14 @@ namespace BattleshipGame.UI
             _grid = GetComponent<Grid>();
             _selfMapViewer = GetComponent<MapViewer>();
             _selfGridSpriteMapper = GetComponent<GridSpriteMapper>();
-            _targetGridSpriteMapper = targetMapViewer.GetComponent<GridSpriteMapper>();
+            _targetGridSpriteMapper = targetMap.GetComponent<GridSpriteMapper>();
         }
 
         private void OnMouseDown()
         {
             _isReleasedInside = false;
-            if (_selfMapViewer && _selfMapViewer.Mode == MapViewer.MapMode.Attack) return;
-            _grabbedFrom = GridConverter.ScreenToCell(Input.mousePosition, _grid, sceneCamera, manager.MapAreaSize);
+            if (_selfMapViewer && _selfMapViewer.Mode == MapMode.Attack) return;
+            _grabbedFrom = GridUtils.ScreenToCell(Input.mousePosition, _grid, sceneCamera, rules.AreaSize);
             _sprite = _selfGridSpriteMapper.GetSpriteAt(ref _grabbedFrom);
             if (!_sprite) return;
             _grabbedShip = Instantiate(dragShipPrefab, GetMousePositionOnZeroZ(), Quaternion.identity);
@@ -61,15 +61,15 @@ namespace BattleshipGame.UI
                 return;
             }
 
-            foreach (var ship in manager.Ships)
+            foreach (var ship in rules.ships)
                 if (ship.tile.sprite.Equals(_sprite))
                 {
-                    var droppedTo = GridConverter.ScreenToCell(Input.mousePosition,
-                        targetMapViewer.GetComponent<Grid>(), sceneCamera, manager.MapAreaSize);
+                    var droppedTo = GridUtils.ScreenToCell(Input.mousePosition,
+                        targetMap.GetComponent<Grid>(), sceneCamera, rules.AreaSize);
 
-                    if (manager.DoesShipFitIn(ship, droppedTo))
+                    if (GridUtils.DoesShipFitIn(ship, droppedTo, rules.AreaSize.x) &&
+                        targetMap.SetShip(ship, droppedTo))
                     {
-                        targetMapViewer.SetShip(ship, droppedTo);
                         if (_targetGridSpriteMapper)
                             _targetGridSpriteMapper.ChangeSpritePosition(_sprite, _grabbedFrom, droppedTo);
                     }

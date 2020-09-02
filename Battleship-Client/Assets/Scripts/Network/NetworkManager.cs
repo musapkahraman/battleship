@@ -1,8 +1,7 @@
 ﻿using BattleshipGame.Common;
-using BattleshipGame.ScriptableObjects;
+using BattleshipGame.Core;
 using TMPro;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 
 namespace BattleshipGame.Network
 {
@@ -17,19 +16,29 @@ namespace BattleshipGame.Network
         [SerializeField] private GameObject progressBarCanvasPrefab;
         [SerializeField] private TMP_Text messageField;
         [SerializeField] private ServerType serverType = ServerType.Online;
-        [SerializeField] private SceneData lobbySceneData;
-        [SerializeField] private SceneData placementSceneData;
         public NetworkClient Client { get; private set; }
+
+        private GameObject _progressBar;
+
+        public void SetStatusText(string text)
+        {
+            messageField.text = text;
+        }
+
+        public void ClearStatusText()
+        {
+            messageField.text = string.Empty;
+        }
 
         protected override void Awake()
         {
             base.Awake();
-            if (SceneManager.GetActiveScene().buildIndex == 0) DontDestroyOnLoad(gameObject);
-            if (progressBarCanvasPrefab) Instantiate(progressBarCanvasPrefab);
+            if (progressBarCanvasPrefab) _progressBar = Instantiate(progressBarCanvasPrefab);
             Client = new NetworkClient();
             Client.Connected += OnConnected;
+            Client.ConnectionError += OnConnectionError;
             Client.GamePhaseChanged += OnGamePhaseChanged;
-            messageField.text = $"Connecting to {serverType.ToString()} server...";
+            SetStatusText($"Connecting to {serverType.ToString()} server...");
             ConnectToServer();
         }
 
@@ -38,6 +47,7 @@ namespace BattleshipGame.Network
             if (Client != null)
             {
                 Client.Connected -= OnConnected;
+                Client.ConnectionError -= OnConnectionError;
                 Client.GamePhaseChanged -= OnGamePhaseChanged;
             }
 
@@ -58,14 +68,23 @@ namespace BattleshipGame.Network
         private void OnConnected()
         {
             // Connection established. Go to the lobby.
-            SceneManager.LoadScene(lobbySceneData.scene);
+            Destroy(_progressBar);
+            Debug.Log($"[{name}] Loading scene: <color=yellow>lobbyScene</color>");
+            SceneLoader.Instance.GoToLobby();
+        }
+
+        private void OnConnectionError(string errorMessage)
+        {
+            Destroy(_progressBar);
+            SetStatusText(errorMessage);
         }
 
         private void OnGamePhaseChanged(string phase)
         {
-            if (phase == "place")
-                // Another player is joined in the game. Phase is changed. Go to place mode.
-                SceneManager.LoadScene(placementSceneData.scene);
+            if (phase != "place") return;
+            // Another player is joined in the game. Phase is changed. Go to place mode.
+            Destroy(_progressBar);
+            SceneLoader.Instance.GoToPlacementScene();
         }
     }
 }

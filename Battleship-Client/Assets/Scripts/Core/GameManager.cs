@@ -7,56 +7,44 @@ using BattleshipGame.Schemas;
 using BattleshipGame.ScriptableObjects;
 using BattleshipGame.UI;
 using Colyseus.Schema;
-using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
-using Random = UnityEngine.Random;
 
 namespace BattleshipGame.Core
 {
     public class GameManager : MonoBehaviour
     {
-        [SerializeField] private TMP_Text messageField;
         [SerializeField] private GameObject popUpPrefab;
         [SerializeField] private MapViewer userMap;
         [SerializeField] private MapViewer opponentMap;
         [SerializeField] private OpponentStatusMaskPlacer opponentStatusMaskPlacer;
         [SerializeField] private Rules rules;
-        [SerializeField] private SceneData connectionSceneData;
-        [SerializeField] private SceneData lobbySceneData;
+        [SerializeField] private PlacementMap placementMap;
         private readonly List<int> _shots = new List<int>();
-        private int _cellCount;
         private NetworkClient _client;
-        private Ship _currentShipToBePlaced;
-        private bool _isShipPlacementComplete;
-        private GameMode _mode;
-        private int[] _placementMap;
-        private int _playerNumber;
-        private int _shipsPlaced;
-        private Queue<Ship> _shipsToBePlaced;
-        private State _state;
         private bool _leavePopUpIsOn;
-        public Vector2Int MapAreaSize => rules.AreaSize;
-        public IEnumerable<Ship> Ships => rules.ships;
+        private NetworkManager _networkManager;
+        private int _playerNumber;
+        private State _state;
+        private Vector2Int MapAreaSize => rules.AreaSize;
 
         private void Awake()
         {
-            if (NetworkManager.TryGetInstance(out var networkManager))
+            if (NetworkManager.TryGetInstance(out _networkManager))
             {
-                _client = networkManager.Client;
+                _client = _networkManager.Client;
                 _client.InitialRoomStateReceived += OnInitialRoomStateReceived;
                 _client.GamePhaseChanged += OnGamePhaseChanged;
             }
             else
             {
-                SceneManager.LoadScene(connectionSceneData.scene);
+                SceneManager.LoadScene(0);
             }
         }
 
         private void Start()
         {
-            _cellCount = MapAreaSize.x * MapAreaSize.y;
-            ResetPlacementMap();
+            foreach (var placement in placementMap.placements) userMap.SetShip(placement.ship, placement.Coordinate);
             opponentMap.SetDisabled();
             if (_client.RoomState != null) OnInitialRoomStateReceived(_client.RoomState);
         }
@@ -81,10 +69,6 @@ namespace BattleshipGame.Core
 
         public event Action FireReady;
         public event Action FireNotReady;
-        public event Action RandomAvailable;
-        public event Action RandomHidden;
-        public event Action ContinueAvailable;
-        public event Action ContinueHidden;
 
         private void OnInitialRoomStateReceived(State initialState)
         {
@@ -107,104 +91,9 @@ namespace BattleshipGame.Core
             }
         }
 
-        public void PlaceShipsRandomly()
-        {
-            ResetPlacementMap();
-            PopulateShipsToBePlaced();
-            _currentShipToBePlaced = _shipsToBePlaced.Dequeue();
-            while (!_isShipPlacementComplete)
-                PlaceShip(new Vector3Int(Random.Range(0, MapAreaSize.x), Random.Range(0, MapAreaSize.y), 0));
-        }
-
-        private void ResetPlacementMap()
-        {
-            _shipsPlaced = 0;
-            _placementMap = new int[_cellCount];
-            for (var i = 0; i < _cellCount; i++) _placementMap[i] = -1;
-            userMap.ClearAllShips();
-            _isShipPlacementComplete = false;
-        }
-
-        public void PlaceShip(Vector3Int cellCoordinate)
-        {
-            if (_mode != GameMode.Placement) return;
-            if (!DoesShipFitIn(_currentShipToBePlaced, cellCoordinate)) return;
-            (int shipWidth, int shipHeight) = _currentShipToBePlaced.GetShipSize();
-            int xMin = cellCoordinate.x - 1;
-            int xMax = cellCoordinate.x + shipWidth;
-            int yMin = cellCoordinate.y - shipHeight;
-            int yMax = cellCoordinate.y + 1;
-            for (int y = yMin; y <= yMax; y++)
-            {
-                if (y < 0 || y > MapAreaSize.y - 1) continue;
-                for (int x = xMin; x <= xMax; x++)
-                {
-                    if (x < 0 || x > MapAreaSize.x - 1) continue;
-                    if (!AddCellToPlacementMap(new Vector3Int(x, y, 0), true)) return;
-                }
-            }
-
-            foreach (var p in _currentShipToBePlaced.PartCoordinates)
-                AddCellToPlacementMap(new Vector3Int(cellCoordinate.x + p.x, cellCoordinate.y + p.y, 0));
-
-            userMap.SetShip(_currentShipToBePlaced, cellCoordinate);
-            if (_shipsToBePlaced.Count > 0)
-            {
-                _currentShipToBePlaced = _shipsToBePlaced.Dequeue();
-                _shipsPlaced++;
-                UpdateCursor();
-                return;
-            }
-
-            _isShipPlacementComplete = true;
-            userMap.SetDisabled();
-            ContinueAvailable?.Invoke();
-
-            bool AddCellToPlacementMap(Vector3Int coordinate, bool testOnly = false)
-            {
-                int cellIndex = GridConverter.ToCellIndex(coordinate, MapAreaSize.y);
-                if (cellIndex < 0 || cellIndex >= _cellCount) return false;
-                if (_placementMap[cellIndex] >= 0) return false;
-                if (testOnly) return true;
-                _placementMap[cellIndex] = _shipsPlaced;
-                return true;
-            }
-        }
-
-        private void PopulateShipsToBePlaced()
-        {
-            _shipsToBePlaced = new Queue<Ship>();
-            foreach (var ship in Ships)
-                for (var i = 0; i < ship.amount; i++)
-                    _shipsToBePlaced.Enqueue(ship);
-        }
-
-        public bool DoesShipFitIn(Ship ship, Vector3Int cellCoordinate)
-        {
-            (int shipWidth, int shipHeight) = ship.GetShipSize();
-            return cellCoordinate.x >= 0 && cellCoordinate.x + shipWidth <= MapAreaSize.x &&
-                   cellCoordinate.y - (shipHeight - 1) >= 0;
-        }
-
-        public void ContinueAfterPlacementComplete()
-        {
-            ContinueHidden?.Invoke();
-            RandomHidden?.Invoke();
-            _client.SendPlacement(_placementMap);
-            WaitForOpponentPlaceShips();
-
-            void WaitForOpponentPlaceShips()
-            {
-                _mode = GameMode.Placement;
-                userMap.SetDisabled();
-                opponentMap.SetDisabled();
-                messageField.text = "Waiting for the Opponent to place the ships!";
-            }
-        }
-
         public void MarkTarget(Vector3Int targetCoordinate)
         {
-            int targetIndex = GridConverter.ToCellIndex(targetCoordinate, MapAreaSize.y);
+            int targetIndex = GridUtils.ToCellIndex(targetCoordinate, MapAreaSize.x);
             if (_shots.Contains(targetIndex))
             {
                 _shots.Remove(targetIndex);
@@ -227,18 +116,10 @@ namespace BattleshipGame.Core
                 _client.SendTurn(_shots.ToArray());
         }
 
-        private void UpdateCursor()
-        {
-            userMap.SetCursorTile(_currentShipToBePlaced.tile);
-        }
-
         private void OnGamePhaseChanged(string phase)
         {
             switch (phase)
             {
-                case "place":
-                    BeginShipPlacement();
-                    break;
                 case "battle":
                     CheckTurn();
                     break;
@@ -259,26 +140,15 @@ namespace BattleshipGame.Core
 
             void GoBackToLobby()
             {
-                SceneManager.LoadScene(lobbySceneData.scene);
-            }
-
-            void BeginShipPlacement()
-            {
-                _mode = GameMode.Placement;
-                RandomAvailable?.Invoke();
-                messageField.text = "Place your Ships!";
-                userMap.SetPlacementMode();
-                PopulateShipsToBePlaced();
-                _currentShipToBePlaced = _shipsToBePlaced.Dequeue();
-                UpdateCursor();
+                Debug.Log($"[{name}] Loading scene: <color=yellow>lobbyScene</color>");
+                SceneLoader.Instance.GoToLobby();
             }
 
             void ShowResult()
             {
-                _mode = GameMode.Result;
                 userMap.SetDisabled();
                 opponentMap.SetDisabled();
-                messageField.text = "";
+                _networkManager.ClearStatusText();
 
                 bool isWinner = _state.winningPlayer == _playerNumber;
                 string headerText = isWinner ? "You Win!" : "You Lost!!!";
@@ -287,7 +157,7 @@ namespace BattleshipGame.Core
                 BuildPopUp().Show(headerText, messageText, "Rematch", declineButtonText, () =>
                 {
                     _client.SendRematch(true);
-                    messageField.text = "Waiting for the opponent decide.";
+                    _networkManager.SetStatusText("Waiting for the opponent decide.");
                 }, () =>
                 {
                     _client.SendRematch(false);
@@ -299,7 +169,8 @@ namespace BattleshipGame.Core
         private void LeaveGame()
         {
             _client.LeaveRoom();
-            SceneManager.LoadScene(lobbySceneData.scene);
+            Debug.Log($"[{name}] Loading scene: <color=yellow>lobbyScene</color>");
+            SceneLoader.Instance.GoToLobby();
         }
 
         private void CheckTurn()
@@ -312,18 +183,16 @@ namespace BattleshipGame.Core
             void StartTurn()
             {
                 _shots.Clear();
-                _mode = GameMode.Battle;
                 userMap.SetDisabled();
                 opponentMap.SetAttackMode();
-                messageField.text = "It's Your Turn!";
+                _networkManager.SetStatusText("It's your turn!");
             }
 
             void WaitForOpponentTurn()
             {
-                _mode = GameMode.Battle;
                 userMap.SetDisabled();
                 opponentMap.SetDisabled();
-                messageField.text = "Waiting for the Opponent to Attack!";
+                _networkManager.SetStatusText("Waiting for the opponent to attack.");
             }
         }
 
@@ -351,17 +220,21 @@ namespace BattleshipGame.Core
 
         private void SetMarker(int item, int playerNumber)
         {
-            Marker marker;
             if (_playerNumber == playerNumber)
             {
-                marker = Marker.ShotTarget;
-                opponentMap.SetMarker(item, marker);
+                opponentMap.SetMarker(item, Marker.ShotTarget);
+                return;
             }
-            else
-            {
-                marker = _placementMap[item] == -1 ? Marker.Missed : Marker.Hit;
-                userMap.SetMarker(item, marker);
-            }
+
+            userMap.SetMarker(item, !(from placement in placementMap.placements
+                from part in placement.ship.PartCoordinates
+                select placement.Coordinate + (Vector3Int) part
+                into partCoordinate
+                let shot = GridUtils.ToCoordinate(item, MapAreaSize.x)
+                where partCoordinate.Equals(shot)
+                select partCoordinate).Any()
+                ? Marker.Missed
+                : Marker.Hit);
         }
 
         private void OnFirstPlayerShipsChanged(int value, int key)
@@ -384,13 +257,6 @@ namespace BattleshipGame.Core
         private PopUpCanvas BuildPopUp()
         {
             return Instantiate(popUpPrefab).GetComponent<PopUpCanvas>();
-        }
-
-        private enum GameMode
-        {
-            Placement,
-            Battle,
-            Result
         }
     }
 }

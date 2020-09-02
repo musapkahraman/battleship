@@ -1,14 +1,14 @@
 ﻿using System.Collections.Generic;
 using BattleshipGame.Common;
+using BattleshipGame.Network;
 using BattleshipGame.Schemas;
-using BattleshipGame.ScriptableObjects;
 using BattleshipGame.UI;
 using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
-namespace BattleshipGame.Network
+namespace BattleshipGame.Core
 {
     public class LobbyManager : MonoBehaviour
     {
@@ -16,25 +16,24 @@ namespace BattleshipGame.Network
         [SerializeField] private Button newGameButton;
         [SerializeField] private Button joinButton;
         [SerializeField] private Button leaveButton;
-        [SerializeField] private TMP_Text message;
         [SerializeField] private GameObject popUpPrefab;
-        [SerializeField] private SceneData connectionSceneData;
         private string _cachedRoomId = string.Empty;
         private bool _cachedRoomIdIsNotValid;
         private NetworkClient _client;
+        private NetworkManager _networkManager;
 
         private void Start()
         {
-            if (NetworkManager.TryGetInstance(out var connectionManager))
+            if (NetworkManager.TryGetInstance(out _networkManager))
             {
-                connectionManager.ConnectToServer();
-                _client = connectionManager.Client;
+                _networkManager.ConnectToServer();
+                _client = _networkManager.Client;
                 _client.RoomsChanged += PopulateRoomList;
 
                 newGameButton.GetComponentInChildren<TMP_Text>().text = "New Game";
                 joinButton.GetComponentInChildren<TMP_Text>().text = "Join";
                 leaveButton.GetComponentInChildren<TMP_Text>().text = "Leave";
-                message.text = string.Empty;
+                _networkManager.ClearStatusText();
 
                 newGameButton.onClick.AddListener(NewGame);
                 joinButton.onClick.AddListener(JoinGame);
@@ -51,7 +50,7 @@ namespace BattleshipGame.Network
             }
             else
             {
-                SceneManager.LoadScene(connectionSceneData.scene);
+                SceneManager.LoadScene(0);
             }
 
             void NewGame()
@@ -88,7 +87,7 @@ namespace BattleshipGame.Network
                 leaveButton.SetInteractable(false);
                 newGameButton.SetInteractable(true);
                 _client.LeaveRoom();
-                message.text = string.Empty;
+                _networkManager.ClearStatusText();
             }
         }
 
@@ -110,7 +109,7 @@ namespace BattleshipGame.Network
         {
             newGameButton.SetInteractable(false);
             leaveButton.SetInteractable(true);
-            message.text = "Waiting for another player to join.";
+            _networkManager.SetStatusText("Waiting for another player to join.");
         }
 
         private void PopulateRoomList(Dictionary<string, Room> rooms)

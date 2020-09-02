@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using BattleshipGame.Schemas;
 using Colyseus;
+using UnityEngine;
 using DataChange = Colyseus.Schema.DataChange;
 
 namespace BattleshipGame.Network
@@ -22,6 +23,7 @@ namespace BattleshipGame.Network
         public State RoomState => _room?.State;
 
         public event Action Connected;
+        public event Action<string> ConnectionError;
         public event Action<string> GamePhaseChanged;
         public event Action<Dictionary<string, Room>> RoomsChanged;
         public event Action<State> InitialRoomStateReceived;
@@ -31,9 +33,16 @@ namespace BattleshipGame.Network
             if (_lobby != null && _lobby.Connection.IsOpen) return;
             string endPoint = serverType == NetworkManager.ServerType.Online ? OnlineEndpoint : LocalEndpoint;
             _client = new Client(endPoint);
-            _lobby = await _client.JoinOrCreate<LobbyState>(LobbyName);
-            Connected?.Invoke();
-            RegisterLobbyHandlers();
+            try
+            {
+                _lobby = await _client.JoinOrCreate<LobbyState>(LobbyName);
+                Connected?.Invoke();
+                RegisterLobbyHandlers();
+            }
+            catch (Exception exception)
+            {
+                ConnectionError?.Invoke(exception.Message);
+            }
         }
 
         private void RegisterLobbyHandlers()

@@ -1271,6 +1271,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   sceneCamera: {fileID: 0}
   manager: {fileID: 0}
+  rules: {fileID: 11400000, guid: 536a0464e90bd734190c1b8189b64ddd, type: 2}
   screenType: 0
   cursorLayer: {fileID: 445893295543677645}
   markerLayer: {fileID: 445893295969486184}
@@ -1324,7 +1325,7 @@ MonoBehaviour:
   cellLabelPrefab: {fileID: 4282153877496215032, guid: 111572eadcbe3ea42a19c0375b5f686e,
     type: 3}
   direction: 1
-  manager: {fileID: 0}
+  rules: {fileID: 11400000, guid: 536a0464e90bd734190c1b8189b64ddd, type: 2}
   place: 0
   type: 1
 --- !u!114 &9212905372763388948
@@ -1340,6 +1341,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gameManager: {fileID: 0}
+  rules: {fileID: 11400000, guid: 536a0464e90bd734190c1b8189b64ddd, type: 2}
   tilemap: {fileID: 0}
 --- !u!114 &2649060168375701185
 MonoBehaviour:
@@ -1356,7 +1358,7 @@ MonoBehaviour:
   dragShipPrefab: {fileID: 4988197857823769414, guid: d549e7c6e46ec1f459d4fd859bd28e60,
     type: 3}
   sceneCamera: {fileID: 0}
-  manager: {fileID: 0}
+  rules: {fileID: 11400000, guid: 536a0464e90bd734190c1b8189b64ddd, type: 2}
   targetMapViewer: {fileID: 0}
   sourceTileMap: {fileID: 445893297488716601}
   removeFromSource: 1

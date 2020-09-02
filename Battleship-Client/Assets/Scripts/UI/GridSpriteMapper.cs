@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using BattleshipGame.Core;
 using BattleshipGame.ScriptableObjects;
 using UnityEngine;
 using UnityEngine.Tilemaps;
@@ -9,7 +8,7 @@ namespace BattleshipGame.UI
 {
     public class GridSpriteMapper : MonoBehaviour
     {
-        [SerializeField] private GameManager gameManager;
+        [SerializeField] private Rules rules;
         [SerializeField] private Tilemap tilemap;
 
         private readonly Dictionary<int, List<Vector3Int>> _spritePositionsOnTileMap =
@@ -79,10 +78,7 @@ namespace BattleshipGame.UI
                 var spritePositions = keyValuePair.Value;
                 if (!_sprites.TryGetValue(spriteId, out var sprite)) continue;
                 Ship ship = null;
-                foreach (var s in gameManager.Ships)
-                    if (s.tile.sprite.Equals(sprite))
-                        ship = s;
-
+                foreach (var s in rules.ships.Where(s => s.tile.sprite.Equals(sprite))) ship = s;
                 if (ship is null) continue;
                 foreach (var spritePosition in spritePositions)
                 foreach (var cell in ship.PartCoordinates.Select(part => spritePosition + (Vector3Int) part))

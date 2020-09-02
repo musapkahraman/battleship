@@ -1,11 +1,11 @@
-﻿#if UNITY_EDITOR
+﻿using BattleshipGame.UI;
 using UnityEditor;
 using UnityEngine;
 
-namespace BattleshipGame.UI
+namespace BattleshipGame.Editor
 {
     [CustomEditor(typeof(CellLabelPrinter))]
-    public class CellLabelPrinterEditor : Editor
+    public class CellLabelPrinterEditor : UnityEditor.Editor
     {
         public override void OnInspectorGUI()
         {
@@ -16,4 +16,3 @@ namespace BattleshipGame.UI
         }
     }
 }
-#endif

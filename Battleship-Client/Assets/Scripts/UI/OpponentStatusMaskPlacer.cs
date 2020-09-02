@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 using BattleshipGame.Common;
-using BattleshipGame.Core;
+using BattleshipGame.ScriptableObjects;
 using UnityEngine;
 
 namespace BattleshipGame.UI
@@ -8,7 +8,7 @@ namespace BattleshipGame.UI
     public class OpponentStatusMaskPlacer : MonoBehaviour
     {
         [SerializeField] private GameObject maskPrefab;
-        [SerializeField] private GameManager gameManager;
+        [SerializeField] private Rules rules;
         private readonly List<ShipPart> _shipParts = new List<ShipPart>();
         private readonly Dictionary<int, Stack<Vector3Int>> _spritePositions = new Dictionary<int, Stack<Vector3Int>>();
         private GridSpriteMapper _spriteMapper;
@@ -23,7 +23,7 @@ namespace BattleshipGame.UI
 
         private void InitializeStatusList()
         {
-            foreach (var ship in gameManager.Ships)
+            foreach (var ship in rules.ships)
                 for (var i = 0; i < ship.amount; i++)
                     foreach (var coordinate in ship.PartCoordinates)
                         _shipParts.Add(new ShipPart(-1, coordinate, ship.tile.sprite.GetInstanceID()));

@@ -7,18 +7,13 @@ using UnityEngine.Tilemaps;
 
 namespace BattleshipGame.UI
 {
-    public class MapViewer : MonoBehaviour
+    public class MapViewer :ShipTilePainter
     {
-        public enum MapMode
-        {
-            Disabled,
-            Place,
-            Attack
-        }
-
         [SerializeField] private Camera sceneCamera;
         [SerializeField] private GameManager manager;
+        [SerializeField] private Rules rules;
         [SerializeField] private ScreenType screenType;
+
         // @formatter:off
         [Header("Layers")]
         [SerializeField] private Tilemap cursorLayer;
@@ -36,6 +31,7 @@ namespace BattleshipGame.UI
         [SerializeField] private Tile shotTargetMarker;
         [Space] 
         // @formatter:on
+        
         private Tile _cursorTile;
         private Grid _grid;
 
@@ -58,12 +54,9 @@ namespace BattleshipGame.UI
         private void OnMouseDown()
         {
             var cellCoordinate =
-                GridConverter.ScreenToCell(Input.mousePosition, _grid, sceneCamera, manager.MapAreaSize);
+                GridUtils.ScreenToCell(Input.mousePosition, _grid, sceneCamera, rules.AreaSize);
             switch (Mode)
             {
-                case MapMode.Place:
-                    if (screenType == ScreenType.User) manager.PlaceShip(cellCoordinate);
-                    break;
                 case MapMode.Attack:
                     if (screenType == ScreenType.Opponent) manager.MarkTarget(cellCoordinate);
                     break;
@@ -78,7 +71,7 @@ namespace BattleshipGame.UI
         {
             cursorLayer.ClearAllTiles();
             if (Mode == MapMode.Disabled) return;
-            var cell = GridConverter.ScreenToCell(Input.mousePosition, _grid, sceneCamera, manager.MapAreaSize);
+            var cell = GridUtils.ScreenToCell(Input.mousePosition, _grid, sceneCamera, rules.AreaSize);
             cursorLayer.SetTile(cell, _cursorTile);
         }
 
@@ -97,35 +90,26 @@ namespace BattleshipGame.UI
             Mode = MapMode.Disabled;
         }
 
-        public void SetPlacementMode()
-        {
-            Mode = MapMode.Place;
-        }
-
         public void SetAttackMode()
         {
             Mode = MapMode.Attack;
             _cursorTile = activeCursor;
         }
 
-        public void SetCursorTile(Tile tile)
-        {
-            _cursorTile = tile;
-        }
-
-        public void SetShip(Ship ship, Vector3Int coordinate)
+        public override bool SetShip(Ship ship, Vector3Int coordinate)
         {
             fleetLayer.SetTile(coordinate, ship.tile);
+            return true;
         }
 
-        public void ClearAllShips()
+        public override void ClearAllShips()
         {
             fleetLayer.ClearAllTiles();
         }
 
         public void ClearMarkerTile(int index)
         {
-            var coordinate = GridConverter.ToCoordinate(index, manager.MapAreaSize);
+            var coordinate = GridUtils.ToCoordinate(index, rules.AreaSize.x);
             if (markerLayer.HasTile(coordinate)) markerLayer.SetTile(coordinate, null);
         }
 
@@ -150,7 +134,7 @@ namespace BattleshipGame.UI
                     throw new ArgumentOutOfRangeException(nameof(marker), marker, null);
             }
 
-            var coordinate = GridConverter.ToCoordinate(index, manager.MapAreaSize);
+            var coordinate = GridUtils.ToCoordinate(index, rules.AreaSize.x);
             var tile = markerLayer.GetTile(coordinate);
             if (tile && !(markerTile is null) && markerTile.name.Equals(markedTargetMarker.name))
                 return false;

@@ -7,7 +7,7 @@ namespace BattleshipGame.UI
 {
     public class ContinueButtonManager : MonoBehaviour
     {
-        [SerializeField] private GameManager manager;
+        [SerializeField] private PlacementManager manager;
         private Button _button;
         private Color _textColorCache;
         private TMP_Text _tmpText;
