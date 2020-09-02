@@ -1,5 +1,4 @@
-﻿using BattleshipGame.ScriptableObjects;
-using UnityEngine;
+﻿using UnityEngine;
 
 namespace BattleshipGame.Common
 {
@@ -23,9 +22,8 @@ namespace BattleshipGame.Common
             return cell;
         }
 
-        public static bool DoesShipFitIn(Ship ship, Vector3Int cellCoordinate, float horizontalAreaSize)
+        public static bool DoesShipFitIn(int shipWidth, int shipHeight, Vector3Int cellCoordinate, float horizontalAreaSize)
         {
-            (int shipWidth, int shipHeight) = ship.GetShipSize();
             return cellCoordinate.x >= 0 && cellCoordinate.x + shipWidth <= horizontalAreaSize &&
                    cellCoordinate.y - (shipHeight - 1) >= 0;
         }

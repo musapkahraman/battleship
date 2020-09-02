@@ -1374,3 +1374,4 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   fleetLayer: {fileID: 445893296533894837}
+  manager: {fileID: 1832216562}

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using BattleshipGame.Common;
 using BattleshipGame.Network;
 using BattleshipGame.Schemas;
@@ -26,7 +27,8 @@ namespace BattleshipGame.Core
         private NetworkManager _networkManager;
         private int[] _placementMap;
         private int _shipsPlaced;
-        private Queue<Ship> _shipsToBePlaced;
+        private Queue<Ship> _shipsToBePlacedRandomly;
+        private SortedList<int, Ship> _shipsToBePlacedDragging;
         private State _state;
         private Vector2Int MapAreaSize => rules.AreaSize;
         private IEnumerable<Ship> Ships => rules.ships;
@@ -74,7 +76,7 @@ namespace BattleshipGame.Core
         {
             ResetPlacementMap();
             PopulateShipsToBePlaced();
-            _currentShipToBePlaced = _shipsToBePlaced.Dequeue();
+            _currentShipToBePlaced = _shipsToBePlacedRandomly.Dequeue();
             while (!_isShipPlacementComplete)
                 PlaceShip(new Vector3Int(Random.Range(0, MapAreaSize.x), Random.Range(0, MapAreaSize.y), 0));
         }
@@ -89,10 +91,56 @@ namespace BattleshipGame.Core
             _isShipPlacementComplete = false;
         }
 
+        public bool PlaceShipOnDrag(Ship ship, Vector3Int cellCoordinate)
+        {
+            if (!_shipsToBePlacedDragging.ContainsValue(ship)) return false;
+            (int shipWidth, int shipHeight) = ship.GetShipSize();
+            if (DoesCollideWithOtherShip(cellCoordinate, shipWidth, shipHeight)) return false;
+            int index = _shipsToBePlacedDragging.IndexOfValue(ship);
+            AddCellToPlacementMap(ship, cellCoordinate, _shipsToBePlacedDragging.Keys[index]);
+            map.SetShip(ship, cellCoordinate, false);
+            placementMap.placements.Add(new PlacementMap.Placement
+                {ship = ship, Coordinate = cellCoordinate});
+            _shipsToBePlacedDragging.RemoveAt(index);
+            if (_shipsToBePlacedDragging.Count > 0) return true;
+            _isShipPlacementComplete = true;
+            ContinueAvailable?.Invoke();
+            return true;
+        }
+
         private void PlaceShip(Vector3Int cellCoordinate)
         {
-            if (!GridUtils.DoesShipFitIn(_currentShipToBePlaced, cellCoordinate, MapAreaSize.x)) return;
             (int shipWidth, int shipHeight) = _currentShipToBePlaced.GetShipSize();
+            if (!GridUtils.DoesShipFitIn(shipWidth, shipHeight, cellCoordinate, MapAreaSize.x)) return;
+            if (DoesCollideWithOtherShip(cellCoordinate, shipWidth, shipHeight)) return;
+            AddCellToPlacementMap(_currentShipToBePlaced, cellCoordinate, _shipsPlaced);
+            map.SetShip(_currentShipToBePlaced, cellCoordinate, false);
+            placementMap.placements.Add(new PlacementMap.Placement
+                {ship = _currentShipToBePlaced, Coordinate = cellCoordinate});
+            if (_shipsToBePlacedRandomly.Count > 0)
+            {
+                _currentShipToBePlaced = _shipsToBePlacedRandomly.Dequeue();
+                _shipsPlaced++;
+                return;
+            }
+
+            _isShipPlacementComplete = true;
+            ContinueAvailable?.Invoke();
+        }
+
+        private void AddCellToPlacementMap(Ship ship, Vector3Int cellCoordinate, int placedShipIndex)
+        {
+            foreach (int cellIndex in ship.PartCoordinates
+                .Select(p => new Vector3Int(cellCoordinate.x + p.x, cellCoordinate.y + p.y, 0))
+                .Select(coordinate => GridUtils.ToCellIndex(coordinate, MapAreaSize.x)))
+            {
+                _placementMap[cellIndex] = placedShipIndex;
+                Debug.Log($"Added {placedShipIndex} to array at index: [{cellIndex}] for {ship.name}");
+            }
+        }
+
+        private bool DoesCollideWithOtherShip(Vector3Int cellCoordinate, int shipWidth, int shipHeight)
+        {
             int xMin = cellCoordinate.x - 1;
             int xMax = cellCoordinate.x + shipWidth;
             int yMin = cellCoordinate.y - shipHeight;
@@ -103,43 +151,30 @@ namespace BattleshipGame.Core
                 for (int x = xMin; x <= xMax; x++)
                 {
                     if (x < 0 || x > MapAreaSize.x - 1) continue;
-                    if (!AddCellToPlacementMap(new Vector3Int(x, y, 0), true)) return;
+                    int cellIndex = GridUtils.ToCellIndex(new Vector3Int(x, y, 0), MapAreaSize.x);
+                    if (cellIndex >= 0 && cellIndex < _cellCount && _placementMap[cellIndex] < 0) continue;
+                    return true;
                 }
             }
 
-            foreach (var p in _currentShipToBePlaced.PartCoordinates)
-                AddCellToPlacementMap(new Vector3Int(cellCoordinate.x + p.x, cellCoordinate.y + p.y, 0));
-
-            map.SetShip(_currentShipToBePlaced, cellCoordinate);
-            placementMap.placements.Add(new PlacementMap.Placement
-                {ship = _currentShipToBePlaced, Coordinate = cellCoordinate});
-            if (_shipsToBePlaced.Count > 0)
-            {
-                _currentShipToBePlaced = _shipsToBePlaced.Dequeue();
-                _shipsPlaced++;
-                return;
-            }
-
-            _isShipPlacementComplete = true;
-            ContinueAvailable?.Invoke();
-
-            bool AddCellToPlacementMap(Vector3Int coordinate, bool testOnly = false)
-            {
-                int cellIndex = GridUtils.ToCellIndex(coordinate, MapAreaSize.x);
-                if (cellIndex < 0 || cellIndex >= _cellCount) return false;
-                if (_placementMap[cellIndex] >= 0) return false;
-                if (testOnly) return true;
-                _placementMap[cellIndex] = _shipsPlaced;
-                return true;
-            }
+            return false;
         }
 
         private void PopulateShipsToBePlaced()
         {
-            _shipsToBePlaced = new Queue<Ship>();
+            _shipsToBePlacedRandomly = new Queue<Ship>();
             foreach (var ship in Ships)
                 for (var i = 0; i < ship.amount; i++)
-                    _shipsToBePlaced.Enqueue(ship);
+                    _shipsToBePlacedRandomly.Enqueue(ship);
+
+            _shipsToBePlacedDragging = new SortedList<int, Ship>();
+            var index = 0;
+            foreach (var ship in Ships)
+                for (var i = 0; i < ship.amount; i++)
+                {
+                    _shipsToBePlacedDragging.Add(index, ship);
+                    index++;
+                }
         }
 
         public void ContinueAfterPlacementComplete()
@@ -186,7 +221,7 @@ namespace BattleshipGame.Core
                 RandomAvailable?.Invoke();
                 _networkManager.SetStatusText("Place your Ships!");
                 PopulateShipsToBePlaced();
-                _currentShipToBePlaced = _shipsToBePlaced.Dequeue();
+                _currentShipToBePlaced = _shipsToBePlacedRandomly.Dequeue();
             }
         }
 

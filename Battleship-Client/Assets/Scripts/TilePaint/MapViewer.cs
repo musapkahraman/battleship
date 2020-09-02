@@ -7,7 +7,7 @@ using UnityEngine.Tilemaps;
 
 namespace BattleshipGame.TilePaint
 {
-    public class MapViewer :ShipTilePainter
+    public class MapViewer : ShipTilePainter
     {
         [SerializeField] private Camera sceneCamera;
         [SerializeField] private GameManager manager;
@@ -31,8 +31,8 @@ namespace BattleshipGame.TilePaint
         [SerializeField] private Tile shotTargetMarker;
         [Space] 
         // @formatter:on
-        
         private Tile _cursorTile;
+
         private Grid _grid;
 
         public MapMode Mode { get; private set; }
@@ -96,7 +96,7 @@ namespace BattleshipGame.TilePaint
             _cursorTile = activeCursor;
         }
 
-        public override bool SetShip(Ship ship, Vector3Int coordinate)
+        public override bool SetShip(Ship ship, Vector3Int coordinate, bool option = true)
         {
             fleetLayer.SetTile(coordinate, ship.tile);
             return true;

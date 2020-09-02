@@ -66,8 +66,8 @@ namespace BattleshipGame.TilePaint
                 {
                     var droppedTo = GridUtils.ScreenToCell(Input.mousePosition,
                         targetMap.GetComponent<Grid>(), sceneCamera, rules.AreaSize);
-
-                    if (GridUtils.DoesShipFitIn(ship, droppedTo, rules.AreaSize.x) &&
+                    (int shipWidth, int shipHeight) = ship.GetShipSize();
+                    if (GridUtils.DoesShipFitIn(shipWidth, shipHeight, droppedTo, rules.AreaSize.x) &&
                         targetMap.SetShip(ship, droppedTo))
                     {
                         if (_targetGridSpriteMapper)
