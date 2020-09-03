@@ -1,21 +1,18 @@
 ﻿using System.Collections.Generic;
-using BattleshipGame.Common;
 using BattleshipGame.Network;
 using BattleshipGame.Schemas;
 using BattleshipGame.UI;
-using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
-using UnityEngine.UI;
 
 namespace BattleshipGame.Core
 {
     public class LobbyManager : MonoBehaviour
     {
         [SerializeField] private RoomListManager roomList;
-        [SerializeField] private Button newGameButton;
-        [SerializeField] private Button joinButton;
-        [SerializeField] private Button leaveButton;
+        [SerializeField] private ButtonController newGameButton;
+        [SerializeField] private ButtonController joinButton;
+        [SerializeField] private ButtonController leaveButton;
         [SerializeField] private GameObject popUpPrefab;
         private string _cachedRoomId = string.Empty;
         private bool _cachedRoomIdIsNotValid;
@@ -30,14 +27,14 @@ namespace BattleshipGame.Core
                 _client = _networkManager.Client;
                 _client.RoomsChanged += PopulateRoomList;
 
-                newGameButton.GetComponentInChildren<TMP_Text>().text = "New Game";
-                joinButton.GetComponentInChildren<TMP_Text>().text = "Join";
-                leaveButton.GetComponentInChildren<TMP_Text>().text = "Leave";
+                newGameButton.SetText("New Game");
+                joinButton.SetText("Join");
+                leaveButton.SetText("Leave");
                 _networkManager.ClearStatusText();
 
-                newGameButton.onClick.AddListener(NewGame);
-                joinButton.onClick.AddListener(JoinGame);
-                leaveButton.onClick.AddListener(LeaveGame);
+                newGameButton.AddListener(NewGame);
+                joinButton.AddListener(JoinGame);
+                leaveButton.AddListener(LeaveGame);
 
                 joinButton.SetInteractable(false);
                 leaveButton.SetInteractable(false);

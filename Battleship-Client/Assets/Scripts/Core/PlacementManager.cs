@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using BattleshipGame.Common;
 using BattleshipGame.Network;
@@ -9,13 +8,15 @@ using BattleshipGame.TilePaint;
 using BattleshipGame.UI;
 using UnityEngine;
 using UnityEngine.SceneManagement;
-using Random = UnityEngine.Random;
 
 namespace BattleshipGame.Core
 {
     public class PlacementManager : MonoBehaviour
     {
         [SerializeField] private GameObject popUpPrefab;
+        [SerializeField] private ButtonController clearButton;
+        [SerializeField] private ButtonController randomButton;
+        [SerializeField] private ButtonController continueButton;
         [SerializeField] private ShipTilePainter map;
         [SerializeField] private Rules rules;
         [SerializeField] private PlacementMap placementMap;
@@ -27,8 +28,8 @@ namespace BattleshipGame.Core
         private NetworkManager _networkManager;
         private int[] _placementMap;
         private int _shipsPlaced;
-        private Queue<Ship> _shipsToBePlacedRandomly;
-        private SortedList<int, Ship> _shipsToBePlacedDragging;
+        private Queue<Ship> _shipsPoolRandom;
+        private SortedList<int, Ship> _shipPoolDrag;
         private State _state;
         private Vector2Int MapAreaSize => rules.AreaSize;
         private IEnumerable<Ship> Ships => rules.ships;
@@ -50,8 +51,15 @@ namespace BattleshipGame.Core
         private void Start()
         {
             _cellCount = MapAreaSize.x * MapAreaSize.y;
-            ResetPlacementMap();
             if (_client.RoomState != null) OnInitialRoomStateReceived(_client.RoomState);
+            clearButton.SetText("Clear");
+            randomButton.SetText("Random");
+            continueButton.SetText("Continue");
+            clearButton.AddListener(ResetPlacementMap);
+            randomButton.AddListener(PlaceShipsRandomly);
+            continueButton.AddListener(CompletePlacement);
+            clearButton.SetInteractable(false);
+            continueButton.SetInteractable(false);
         }
 
         private void OnDestroy()
@@ -61,50 +69,80 @@ namespace BattleshipGame.Core
             _client.GamePhaseChanged -= OnGamePhaseChanged;
         }
 
-        public event Action RandomAvailable;
-        public event Action RandomHidden;
-        public event Action ContinueAvailable;
-        public event Action ContinueHidden;
-
         private void OnInitialRoomStateReceived(State initialState)
         {
             _state = initialState;
             OnGamePhaseChanged(_state.phase);
         }
 
-        public void PlaceShipsRandomly()
+        private void CompletePlacement()
         {
+            continueButton.SetInteractable(false);
+            randomButton.SetInteractable(false);
+            _client.SendPlacement(_placementMap);
+            _networkManager.SetStatusText("Waiting for the opponent to place the ships.");
+        }
+
+        private void PlaceShipsRandomly()
+        {
+            Debug.Log("Resetting placement map onClick:Random");
             ResetPlacementMap();
-            PopulateShipsToBePlaced();
-            _currentShipToBePlaced = _shipsToBePlacedRandomly.Dequeue();
+            _currentShipToBePlaced = _shipsPoolRandom.Dequeue();
             while (!_isShipPlacementComplete)
                 PlaceShip(new Vector3Int(Random.Range(0, MapAreaSize.x), Random.Range(0, MapAreaSize.y), 0));
         }
 
         private void ResetPlacementMap()
         {
-            placementMap.placements.Clear();
+            Debug.Log("Beginning ship placement map in ResetPlacementMap");
+            BeginShipPlacement();
             _shipsPlaced = 0;
+            _isShipPlacementComplete = false;
+            map.ClearAllShips();
+        }
+
+        private void BeginShipPlacement()
+        {
+            randomButton.SetInteractable(true);
+            _networkManager.SetStatusText("Place your Ships!");
+            placementMap.placements.Clear();
             _placementMap = new int[_cellCount];
             for (var i = 0; i < _cellCount; i++) _placementMap[i] = -1;
-            map.ClearAllShips();
-            _isShipPlacementComplete = false;
+            PopulateShipPool();
+        }
+
+        private void PopulateShipPool()
+        {
+            _shipsPoolRandom = new Queue<Ship>();
+            foreach (var ship in Ships)
+                for (var i = 0; i < ship.amount; i++)
+                    _shipsPoolRandom.Enqueue(ship);
+
+            _shipPoolDrag = new SortedList<int, Ship>();
+            var index = 0;
+            foreach (var ship in Ships)
+                for (var i = 0; i < ship.amount; i++)
+                {
+                    _shipPoolDrag.Add(index, ship);
+                    index++;
+                }
         }
 
         public bool PlaceShipOnDrag(Ship ship, Vector3Int cellCoordinate)
         {
-            if (!_shipsToBePlacedDragging.ContainsValue(ship)) return false;
+            if (!_shipPoolDrag.ContainsValue(ship)) return false;
             (int shipWidth, int shipHeight) = ship.GetShipSize();
             if (DoesCollideWithOtherShip(cellCoordinate, shipWidth, shipHeight)) return false;
-            int index = _shipsToBePlacedDragging.IndexOfValue(ship);
-            AddCellToPlacementMap(ship, cellCoordinate, _shipsToBePlacedDragging.Keys[index]);
+            clearButton.SetInteractable(true);
+            int index = _shipPoolDrag.IndexOfValue(ship);
+            AddCellToPlacementMap(ship, cellCoordinate, _shipPoolDrag.Keys[index]);
             map.SetShip(ship, cellCoordinate, false);
             placementMap.placements.Add(new PlacementMap.Placement
                 {ship = ship, Coordinate = cellCoordinate});
-            _shipsToBePlacedDragging.RemoveAt(index);
-            if (_shipsToBePlacedDragging.Count > 0) return true;
+            _shipPoolDrag.RemoveAt(index);
+            if (_shipPoolDrag.Count > 0) return true;
             _isShipPlacementComplete = true;
-            ContinueAvailable?.Invoke();
+            continueButton.SetInteractable(true);
             return true;
         }
 
@@ -117,15 +155,15 @@ namespace BattleshipGame.Core
             map.SetShip(_currentShipToBePlaced, cellCoordinate, false);
             placementMap.placements.Add(new PlacementMap.Placement
                 {ship = _currentShipToBePlaced, Coordinate = cellCoordinate});
-            if (_shipsToBePlacedRandomly.Count > 0)
+            if (_shipsPoolRandom.Count > 0)
             {
-                _currentShipToBePlaced = _shipsToBePlacedRandomly.Dequeue();
+                _currentShipToBePlaced = _shipsPoolRandom.Dequeue();
                 _shipsPlaced++;
                 return;
             }
 
             _isShipPlacementComplete = true;
-            ContinueAvailable?.Invoke();
+            continueButton.SetInteractable(true);
         }
 
         private void AddCellToPlacementMap(Ship ship, Vector3Int cellCoordinate, int placedShipIndex)
@@ -160,41 +198,12 @@ namespace BattleshipGame.Core
             return false;
         }
 
-        private void PopulateShipsToBePlaced()
-        {
-            _shipsToBePlacedRandomly = new Queue<Ship>();
-            foreach (var ship in Ships)
-                for (var i = 0; i < ship.amount; i++)
-                    _shipsToBePlacedRandomly.Enqueue(ship);
-
-            _shipsToBePlacedDragging = new SortedList<int, Ship>();
-            var index = 0;
-            foreach (var ship in Ships)
-                for (var i = 0; i < ship.amount; i++)
-                {
-                    _shipsToBePlacedDragging.Add(index, ship);
-                    index++;
-                }
-        }
-
-        public void ContinueAfterPlacementComplete()
-        {
-            ContinueHidden?.Invoke();
-            RandomHidden?.Invoke();
-            _client.SendPlacement(_placementMap);
-            WaitForOpponentPlaceShips();
-
-            void WaitForOpponentPlaceShips()
-            {
-                _networkManager.SetStatusText("Waiting for the opponent to place the ships!");
-            }
-        }
-
         private void OnGamePhaseChanged(string phase)
         {
             switch (phase)
             {
                 case "place":
+                    Debug.Log("Beginning ship placement map in OnGamePhaseChanged to place");
                     BeginShipPlacement();
                     break;
                 case "battle":
@@ -214,14 +223,6 @@ namespace BattleshipGame.Core
             {
                 Debug.Log($"[{name}] Loading scene: <color=yellow>lobbyScene</color>");
                 SceneLoader.Instance.GoToLobby();
-            }
-
-            void BeginShipPlacement()
-            {
-                RandomAvailable?.Invoke();
-                _networkManager.SetStatusText("Place your Ships!");
-                PopulateShipsToBePlaced();
-                _currentShipToBePlaced = _shipsToBePlacedRandomly.Dequeue();
             }
         }
 
