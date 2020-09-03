@@ -79,8 +79,6 @@ namespace BattleshipGame.Core
 
         private void PlaceShipsRandomly()
         {
-            Debug.Log("Resetting placement map onClick:Random");
-            ResetPlacementMap();
             foreach (int key in _pool.Keys.ToList())
             {
                 var isPlaced = false;
@@ -92,7 +90,6 @@ namespace BattleshipGame.Core
 
         private void ResetPlacementMap()
         {
-            Debug.Log("Beginning ship placement map in ResetPlacementMap");
             BeginShipPlacement();
             map.ClearAllShips();
         }
@@ -153,10 +150,7 @@ namespace BattleshipGame.Core
             foreach (int cellIndex in ship.PartCoordinates
                 .Select(p => new Vector3Int(cellCoordinate.x + p.x, cellCoordinate.y + p.y, 0))
                 .Select(coordinate => GridUtils.ToCellIndex(coordinate, MapAreaSize.x)))
-            {
                 _cells[cellIndex] = shipTypeIndex;
-                Debug.Log($"Added {shipTypeIndex} to cells[{cellIndex}] for {ship.name}");
-            }
         }
 
         private bool DoesCollideWithOtherShip(Vector3Int cellCoordinate, int shipWidth, int shipHeight)
@@ -185,7 +179,6 @@ namespace BattleshipGame.Core
             switch (phase)
             {
                 case "place":
-                    Debug.Log("Beginning ship placement map in OnGamePhaseChanged to place");
                     BeginShipPlacement();
                     break;
                 case "battle":
@@ -203,7 +196,6 @@ namespace BattleshipGame.Core
 
             void GoBackToLobby()
             {
-                Debug.Log($"[{name}] Loading scene: <color=yellow>lobbyScene</color>");
                 SceneLoader.Instance.GoToLobby();
             }
         }
@@ -211,7 +203,6 @@ namespace BattleshipGame.Core
         private void LeaveGame()
         {
             _client.LeaveRoom();
-            Debug.Log($"[{name}] Loading scene: <color=yellow>lobbyScene</color>");
             SceneLoader.Instance.GoToLobby();
         }
 
