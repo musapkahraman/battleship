@@ -21,15 +21,11 @@ namespace BattleshipGame.Core
         [SerializeField] private Rules rules;
         [SerializeField] private PlacementMap placementMap;
         private int _cellCount;
+        private int[] _cells;
         private NetworkClient _client;
-        private Ship _currentShipToBePlaced;
-        private bool _isShipPlacementComplete;
         private bool _leavePopUpIsOn;
         private NetworkManager _networkManager;
-        private int[] _cells;
-        private int _shipsPlaced;
-        private Queue<Ship> _shipsPoolRandom;
-        private SortedList<int, Ship> _shipPoolDrag;
+        private SortedDictionary<int, Ship> _pool;
         private State _state;
         private Vector2Int MapAreaSize => rules.AreaSize;
         private IEnumerable<Ship> Ships => rules.ships;
@@ -58,8 +54,6 @@ namespace BattleshipGame.Core
             clearButton.AddListener(ResetPlacementMap);
             randomButton.AddListener(PlaceShipsRandomly);
             continueButton.AddListener(CompletePlacement);
-            clearButton.SetInteractable(false);
-            continueButton.SetInteractable(false);
         }
 
         private void OnDestroy()
@@ -87,23 +81,27 @@ namespace BattleshipGame.Core
         {
             Debug.Log("Resetting placement map onClick:Random");
             ResetPlacementMap();
-            _currentShipToBePlaced = _shipsPoolRandom.Dequeue();
-            while (!_isShipPlacementComplete)
-                PlaceShip(new Vector3Int(Random.Range(0, MapAreaSize.x), Random.Range(0, MapAreaSize.y), 0));
+            foreach (int key in _pool.Keys.ToList())
+            {
+                var isPlaced = false;
+                while (!isPlaced)
+                    isPlaced = PlaceShip(_pool[key],
+                        new Vector3Int(Random.Range(0, MapAreaSize.x), Random.Range(0, MapAreaSize.y), 0));
+            }
         }
 
         private void ResetPlacementMap()
         {
             Debug.Log("Beginning ship placement map in ResetPlacementMap");
             BeginShipPlacement();
-            _shipsPlaced = 0;
-            _isShipPlacementComplete = false;
             map.ClearAllShips();
         }
 
         private void BeginShipPlacement()
         {
             randomButton.SetInteractable(true);
+            clearButton.SetInteractable(false);
+            continueButton.SetInteractable(false);
             _networkManager.SetStatusText("Place your Ships!");
             placementMap.placements.Clear();
             _cells = new int[_cellCount];
@@ -113,57 +111,41 @@ namespace BattleshipGame.Core
 
         private void PopulateShipPool()
         {
-            _shipsPoolRandom = new Queue<Ship>();
-            foreach (var ship in Ships)
-                for (var i = 0; i < ship.amount; i++)
-                    _shipsPoolRandom.Enqueue(ship);
-
-            _shipPoolDrag = new SortedList<int, Ship>();
+            _pool = new SortedDictionary<int, Ship>();
             var index = 0;
             foreach (var ship in Ships)
                 for (var i = 0; i < ship.amount; i++)
                 {
-                    _shipPoolDrag.Add(index, ship);
+                    _pool.Add(index, ship);
                     index++;
                 }
         }
 
-        public bool PlaceShipOnDrag(Ship ship, Vector3Int cellCoordinate)
+        private int GetKeyAndRemoveFromPool(Object ship)
         {
-            if (!_shipPoolDrag.ContainsValue(ship)) return false;
-            (int shipWidth, int shipHeight) = ship.GetShipSize();
-            if (DoesCollideWithOtherShip(cellCoordinate, shipWidth, shipHeight)) return false;
-            clearButton.SetInteractable(true);
-            int index = _shipPoolDrag.IndexOfValue(ship);
-            AddCellToPlacementMap(ship, cellCoordinate, _shipPoolDrag.Keys[index]);
-            map.SetShip(ship, cellCoordinate, false);
-            placementMap.placements.Add(new PlacementMap.Placement
-                {ship = ship, Coordinate = cellCoordinate});
-            _shipPoolDrag.RemoveAt(index);
-            if (_shipPoolDrag.Count > 0) return true;
-            _isShipPlacementComplete = true;
-            continueButton.SetInteractable(true);
-            return true;
-        }
-
-        private void PlaceShip(Vector3Int cellCoordinate)
-        {
-            (int shipWidth, int shipHeight) = _currentShipToBePlaced.GetShipSize();
-            if (!GridUtils.DoesShipFitIn(shipWidth, shipHeight, cellCoordinate, MapAreaSize.x)) return;
-            if (DoesCollideWithOtherShip(cellCoordinate, shipWidth, shipHeight)) return;
-            AddCellToPlacementMap(_currentShipToBePlaced, cellCoordinate, _shipsPlaced);
-            map.SetShip(_currentShipToBePlaced, cellCoordinate, false);
-            placementMap.placements.Add(new PlacementMap.Placement
-                {ship = _currentShipToBePlaced, Coordinate = cellCoordinate});
-            if (_shipsPoolRandom.Count > 0)
+            int key = -1;
+            foreach (var kvp in _pool.Where(kvp => kvp.Value == ship))
             {
-                _currentShipToBePlaced = _shipsPoolRandom.Dequeue();
-                _shipsPlaced++;
-                return;
+                key = kvp.Key;
+                break;
             }
 
-            _isShipPlacementComplete = true;
-            continueButton.SetInteractable(true);
+            _pool.Remove(key);
+            return key;
+        }
+
+        public bool PlaceShip(Ship ship, Vector3Int cellCoordinate)
+        {
+            if (!_pool.ContainsValue(ship)) return false;
+            (int shipWidth, int shipHeight) = ship.GetShipSize();
+            if (!GridUtils.DoesShipFitIn(shipWidth, shipHeight, cellCoordinate, MapAreaSize.x)) return false;
+            if (DoesCollideWithOtherShip(cellCoordinate, shipWidth, shipHeight)) return false;
+            clearButton.SetInteractable(true);
+            AddCellToPlacementMap(ship, cellCoordinate, GetKeyAndRemoveFromPool(ship));
+            map.SetShip(ship, cellCoordinate, false);
+            placementMap.placements.Add(new PlacementMap.Placement {ship = ship, Coordinate = cellCoordinate});
+            if (_pool.Count == 0) continueButton.SetInteractable(true);
+            return true;
         }
 
         private void AddCellToPlacementMap(Ship ship, Vector3Int cellCoordinate, int shipTypeIndex)

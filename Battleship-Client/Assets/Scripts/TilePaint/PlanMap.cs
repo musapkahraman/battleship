@@ -12,7 +12,7 @@ namespace BattleshipGame.TilePaint
 
         public override bool SetShip(Ship ship, Vector3Int coordinate, bool shouldSendToManager = true)
         {
-            if (shouldSendToManager && !manager.PlaceShipOnDrag(ship, coordinate)) return false;
+            if (shouldSendToManager && !manager.PlaceShip(ship, coordinate)) return false;
             fleetLayer.SetTile(coordinate, ship.tile);
             return true;
         }
