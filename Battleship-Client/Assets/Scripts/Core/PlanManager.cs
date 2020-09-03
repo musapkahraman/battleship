@@ -11,13 +11,13 @@ using UnityEngine.SceneManagement;
 
 namespace BattleshipGame.Core
 {
-    public class PlacementManager : MonoBehaviour
+    public class PlanManager : MonoBehaviour
     {
         [SerializeField] private GameObject popUpPrefab;
         [SerializeField] private ButtonController clearButton;
         [SerializeField] private ButtonController randomButton;
         [SerializeField] private ButtonController continueButton;
-        [SerializeField] private ShipTilePainter map;
+        [SerializeField] private Map map;
         [SerializeField] private Rules rules;
         [SerializeField] private PlacementMap placementMap;
         private int _cellCount;
@@ -26,7 +26,7 @@ namespace BattleshipGame.Core
         private bool _isShipPlacementComplete;
         private bool _leavePopUpIsOn;
         private NetworkManager _networkManager;
-        private int[] _placementMap;
+        private int[] _cells;
         private int _shipsPlaced;
         private Queue<Ship> _shipsPoolRandom;
         private SortedList<int, Ship> _shipPoolDrag;
@@ -79,7 +79,7 @@ namespace BattleshipGame.Core
         {
             continueButton.SetInteractable(false);
             randomButton.SetInteractable(false);
-            _client.SendPlacement(_placementMap);
+            _client.SendPlacement(_cells);
             _networkManager.SetStatusText("Waiting for the opponent to place the ships.");
         }
 
@@ -106,8 +106,8 @@ namespace BattleshipGame.Core
             randomButton.SetInteractable(true);
             _networkManager.SetStatusText("Place your Ships!");
             placementMap.placements.Clear();
-            _placementMap = new int[_cellCount];
-            for (var i = 0; i < _cellCount; i++) _placementMap[i] = -1;
+            _cells = new int[_cellCount];
+            for (var i = 0; i < _cellCount; i++) _cells[i] = -1;
             PopulateShipPool();
         }
 
@@ -166,14 +166,14 @@ namespace BattleshipGame.Core
             continueButton.SetInteractable(true);
         }
 
-        private void AddCellToPlacementMap(Ship ship, Vector3Int cellCoordinate, int placedShipIndex)
+        private void AddCellToPlacementMap(Ship ship, Vector3Int cellCoordinate, int shipTypeIndex)
         {
             foreach (int cellIndex in ship.PartCoordinates
                 .Select(p => new Vector3Int(cellCoordinate.x + p.x, cellCoordinate.y + p.y, 0))
                 .Select(coordinate => GridUtils.ToCellIndex(coordinate, MapAreaSize.x)))
             {
-                _placementMap[cellIndex] = placedShipIndex;
-                Debug.Log($"Added {placedShipIndex} to array at index: [{cellIndex}] for {ship.name}");
+                _cells[cellIndex] = shipTypeIndex;
+                Debug.Log($"Added {shipTypeIndex} to cells[{cellIndex}] for {ship.name}");
             }
         }
 
@@ -190,7 +190,7 @@ namespace BattleshipGame.Core
                 {
                     if (x < 0 || x > MapAreaSize.x - 1) continue;
                     int cellIndex = GridUtils.ToCellIndex(new Vector3Int(x, y, 0), MapAreaSize.x);
-                    if (cellIndex >= 0 && cellIndex < _cellCount && _placementMap[cellIndex] < 0) continue;
+                    if (cellIndex >= 0 && cellIndex < _cellCount && _cells[cellIndex] < 0) continue;
                     return true;
                 }
             }
@@ -207,7 +207,7 @@ namespace BattleshipGame.Core
                     BeginShipPlacement();
                     break;
                 case "battle":
-                    SceneLoader.Instance.GoToGameScene();
+                    SceneLoader.Instance.GoToBattleScene();
                     break;
                 case "result":
                     break;
@@ -233,9 +233,9 @@ namespace BattleshipGame.Core
             SceneLoader.Instance.GoToLobby();
         }
 
-        private PopUpCanvas BuildPopUp()
+        private PopUpWindow BuildPopUp()
         {
-            return Instantiate(popUpPrefab).GetComponent<PopUpCanvas>();
+            return Instantiate(popUpPrefab).GetComponent<PopUpWindow>();
         }
     }
 }

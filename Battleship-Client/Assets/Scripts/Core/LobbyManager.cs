@@ -120,9 +120,9 @@ namespace BattleshipGame.Core
             roomList.PopulateRoomList(rooms);
         }
 
-        private PopUpCanvas BuildPopUp()
+        private PopUpWindow BuildPopUp()
         {
-            return Instantiate(popUpPrefab).GetComponent<PopUpCanvas>();
+            return Instantiate(popUpPrefab).GetComponent<PopUpWindow>();
         }
     }
 }

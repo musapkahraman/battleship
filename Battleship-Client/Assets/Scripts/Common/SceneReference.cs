@@ -73,7 +73,7 @@ namespace BattleshipGame.Common
         public void OnAfterDeserialize()
         {
 #if UNITY_EDITOR
-            // We sadly cannot touch assetdatabase during serialization, so defer by a bit.
+            // We sadly cannot touch asset database during serialization, so defer by a bit.
             EditorApplication.update += HandleAfterDeserialize;
 #endif
         }
@@ -118,7 +118,7 @@ namespace BattleshipGame.Common
 
                 EditorSceneManager.MarkAllScenesDirty();
             }
-            // Asset takes precendence and overwrites Path
+            // Asset takes precedence and overwrites Path
             else
             {
                 scenePath = GetScenePathFromAsset();
@@ -127,6 +127,7 @@ namespace BattleshipGame.Common
 
         private void HandleAfterDeserialize()
         {
+            // ReSharper disable once DelegateSubtraction
             EditorApplication.update -= HandleAfterDeserialize;
             // Asset is valid, don't do anything - Path will always be set based on it when it matters
             if (IsValidSceneAsset) return;
@@ -153,20 +154,20 @@ namespace BattleshipGame.Common
     public class SceneReferencePropertyDrawer : PropertyDrawer
     {
         // The exact name of the asset Object variable in the SceneReference object
-        private const string sceneAssetPropertyString = "sceneAsset";
+        private const string SceneAssetPropertyString = "sceneAsset";
 
         // The exact name of the scene Path variable in the SceneReference object
-        private const string scenePathPropertyString = "scenePath";
+        private const string ScenePathPropertyString = "scenePath";
 
 
         // Made these two const btw
-        private const float PAD_SIZE = 2f;
-        private const float FOOTER_HEIGHT = 10f;
+        private const float PadSize = 2f;
+        private const float FooterHeight = 10f;
 
-        private static readonly RectOffset boxPadding = EditorStyles.helpBox.padding;
+        private static readonly RectOffset BoxPadding = EditorStyles.helpBox.padding;
 
-        private static readonly float lineHeight = EditorGUIUtility.singleLineHeight;
-        private static readonly float paddedLine = lineHeight + PAD_SIZE;
+        private static readonly float LineHeight = EditorGUIUtility.singleLineHeight;
+        private static readonly float PaddedLine = LineHeight + PadSize;
 
         /// <summary>
         ///     Drawing the 'SceneReference' property
@@ -178,7 +179,7 @@ namespace BattleshipGame.Common
             {
                 // Here we add the foldout using a single line height, the label and change
                 // the value of property.isExpanded
-                property.isExpanded = EditorGUI.Foldout(new Rect(position.x, position.y, position.width, lineHeight),
+                property.isExpanded = EditorGUI.Foldout(new Rect(position.x, position.y, position.width, LineHeight),
                     property.isExpanded, label);
 
                 // Now you want to draw the content only if you unfold this property
@@ -189,16 +190,16 @@ namespace BattleshipGame.Common
                     //{
 
                     // reduce the height by one line and move the content one line below
-                    position.height -= lineHeight;
-                    position.y += lineHeight;
+                    position.height -= LineHeight;
+                    position.y += LineHeight;
 
                     var sceneAssetProperty = GetSceneAssetProperty(property);
 
                     // Draw the Box Background
-                    position.height -= FOOTER_HEIGHT;
+                    position.height -= FooterHeight;
                     GUI.Box(EditorGUI.IndentedRect(position), GUIContent.none, EditorStyles.helpBox);
-                    position = boxPadding.Remove(position);
-                    position.height = lineHeight;
+                    position = BoxPadding.Remove(position);
+                    position.height = LineHeight;
 
                     // Draw the main Object field
                     label.tooltip =
@@ -215,16 +216,16 @@ namespace BattleshipGame.Common
                     var buildScene = BuildUtils.GetBuildScene(sceneAssetProperty.objectReferenceValue);
                     if (EditorGUI.EndChangeCheck())
                         // If no valid scene asset was selected, reset the stored path accordingly
-                        if (buildScene.scene == null)
+                        if (buildScene.Scene == null)
                             GetScenePathProperty(property).stringValue = string.Empty;
 
-                    position.y += paddedLine;
+                    position.y += PaddedLine;
 
-                    if (!buildScene.assetGUID.Empty())
+                    if (!buildScene.AssetGuid.Empty())
                         // Draw the Build Settings Info of the selected Scene
                         DrawSceneInfoGUI(position, buildScene, sceneControlID + 1);
 
-                    // Optional: If enabled before reset the indentlevel
+                    // Optional: If enabled before reset the indent level
                     //}
                     //EditorGUI.indentLevel--;
                 }
@@ -245,34 +246,34 @@ namespace BattleshipGame.Common
             //if(sceneAssetProperty.objectReferenceValue == null) line = 2;
             //if(!property.isExpanded) line = 1;
 
-            return boxPadding.vertical + lineHeight * lines + PAD_SIZE * (lines - 1) + FOOTER_HEIGHT;
+            return BoxPadding.vertical + LineHeight * lines + PadSize * (lines - 1) + FooterHeight;
         }
 
         /// <summary>
         ///     Draws info box of the provided scene
         /// </summary>
-        private void DrawSceneInfoGUI(Rect position, BuildUtils.BuildScene buildScene, int sceneControlID)
+        private static void DrawSceneInfoGUI(Rect position, BuildUtils.BuildScene buildScene, int sceneControlID)
         {
             bool readOnly = BuildUtils.IsReadOnly();
             string readOnlyWarning =
                 readOnly ? "\n\nWARNING: Build Settings is not checked out and so cannot be modified." : "";
 
             // Label Prefix
-            var iconContent = new GUIContent();
+            GUIContent iconContent;
             var labelContent = new GUIContent();
 
             // Missing from build scenes
-            if (buildScene.buildIndex == -1)
+            if (buildScene.BuildIndex == -1)
             {
                 iconContent = EditorGUIUtility.IconContent("d_winbtn_mac_close");
                 labelContent.text = "NOT In Build";
                 labelContent.tooltip = "This scene is NOT in build settings.\nIt will be NOT included in builds.";
             }
             // In build scenes and enabled
-            else if (buildScene.scene.enabled)
+            else if (buildScene.Scene.enabled)
             {
                 iconContent = EditorGUIUtility.IconContent("d_winbtn_mac_max");
-                labelContent.text = "BuildIndex: " + buildScene.buildIndex;
+                labelContent.text = "BuildIndex: " + buildScene.BuildIndex;
                 labelContent.tooltip = "This scene is in build settings and ENABLED.\nIt will be included in builds." +
                                        readOnlyWarning;
             }
@@ -280,7 +281,7 @@ namespace BattleshipGame.Common
             else
             {
                 iconContent = EditorGUIUtility.IconContent("d_winbtn_mac_min");
-                labelContent.text = "BuildIndex: " + buildScene.buildIndex;
+                labelContent.text = "BuildIndex: " + buildScene.BuildIndex;
                 labelContent.tooltip =
                     "This scene is in build settings and DISABLED.\nIt will be NOT included in builds.";
             }
@@ -290,7 +291,7 @@ namespace BattleshipGame.Common
             {
                 var labelRect = DrawUtils.GetLabelRect(position);
                 var iconRect = labelRect;
-                iconRect.width = iconContent.image.width + PAD_SIZE;
+                iconRect.width = iconContent.image.width + PadSize;
                 labelRect.width -= iconRect.width;
                 labelRect.x += iconRect.width;
                 EditorGUI.PrefixLabel(iconRect, sceneControlID, iconContent);
@@ -299,13 +300,13 @@ namespace BattleshipGame.Common
 
             // Right context buttons
             var buttonRect = DrawUtils.GetFieldRect(position);
-            buttonRect.width = buttonRect.width / 3;
+            buttonRect.width /= 3;
 
             var tooltipMsg = "";
             using (new EditorGUI.DisabledScope(readOnly))
             {
                 // NOT in build settings
-                if (buildScene.buildIndex == -1)
+                if (buildScene.BuildIndex == -1)
                 {
                     buttonRect.width *= 2;
                     int addIndex = EditorBuildSettings.scenes.Length;
@@ -321,7 +322,7 @@ namespace BattleshipGame.Common
                 // In build settings
                 else
                 {
-                    bool isEnabled = buildScene.scene.enabled;
+                    bool isEnabled = buildScene.Scene.enabled;
                     string stateString = isEnabled ? "Disable" : "Enable";
                     tooltipMsg = stateString + " this scene in build settings.\n" +
                                  (isEnabled
@@ -353,12 +354,12 @@ namespace BattleshipGame.Common
 
         private static SerializedProperty GetSceneAssetProperty(SerializedProperty property)
         {
-            return property.FindPropertyRelative(sceneAssetPropertyString);
+            return property.FindPropertyRelative(SceneAssetPropertyString);
         }
 
         private static SerializedProperty GetScenePathProperty(SerializedProperty property)
         {
-            return property.FindPropertyRelative(scenePathPropertyString);
+            return property.FindPropertyRelative(ScenePathPropertyString);
         }
 
         private static class DrawUtils
@@ -392,7 +393,7 @@ namespace BattleshipGame.Common
             /// </summary>
             public static Rect GetLabelRect(Rect position)
             {
-                position.width = EditorGUIUtility.labelWidth - PAD_SIZE;
+                position.width = EditorGUIUtility.labelWidth - PadSize;
                 return position;
             }
         }
@@ -403,10 +404,10 @@ namespace BattleshipGame.Common
         private static class BuildUtils
         {
             // time in seconds that we have to wait before we query again when IsReadOnly() is called.
-            public static readonly float minCheckWait = 3;
+            private const float MinCheckWait = 3;
 
-            private static float lastTimeChecked;
-            private static bool cachedReadonlyVal = true;
+            private static float _lastTimeChecked;
+            private static bool _cachedReadonlyVal = true;
 
             /// <summary>
             ///     Check if the build settings asset is readonly.
@@ -415,19 +416,19 @@ namespace BattleshipGame.Common
             public static bool IsReadOnly()
             {
                 float curTime = Time.realtimeSinceStartup;
-                float timeSinceLastCheck = curTime - lastTimeChecked;
+                float timeSinceLastCheck = curTime - _lastTimeChecked;
 
-                if (!(timeSinceLastCheck > minCheckWait)) return cachedReadonlyVal;
+                if (!(timeSinceLastCheck > MinCheckWait)) return _cachedReadonlyVal;
 
-                lastTimeChecked = curTime;
-                cachedReadonlyVal = QueryBuildSettingsStatus();
+                _lastTimeChecked = curTime;
+                _cachedReadonlyVal = QueryBuildSettingsStatus();
 
-                return cachedReadonlyVal;
+                return _cachedReadonlyVal;
             }
 
             /// <summary>
             ///     A blocking call to the Version Control system to see if the build settings asset is readonly.
-            ///     Use BuildSettingsIsReadOnly for version that caches the value for better responsivenes.
+            ///     Use BuildSettingsIsReadOnly for version that caches the value for better responsiveness.
             /// </summary>
             private static bool QueryBuildSettingsStatus()
             {
@@ -459,22 +460,22 @@ namespace BattleshipGame.Common
             {
                 var entry = new BuildScene
                 {
-                    buildIndex = -1,
-                    assetGUID = new GUID(string.Empty)
+                    BuildIndex = -1,
+                    AssetGuid = new GUID(string.Empty)
                 };
 
                 if (sceneObject as SceneAsset == null) return entry;
 
-                entry.assetPath = AssetDatabase.GetAssetPath(sceneObject);
-                entry.assetGUID = new GUID(AssetDatabase.AssetPathToGUID(entry.assetPath));
+                entry.AssetPath = AssetDatabase.GetAssetPath(sceneObject);
+                entry.AssetGuid = new GUID(AssetDatabase.AssetPathToGUID(entry.AssetPath));
 
                 var scenes = EditorBuildSettings.scenes;
                 for (var index = 0; index < scenes.Length; ++index)
                 {
-                    if (!entry.assetGUID.Equals(scenes[index].guid)) continue;
+                    if (!entry.AssetGuid.Equals(scenes[index].guid)) continue;
 
-                    entry.scene = scenes[index];
-                    entry.buildIndex = index;
+                    entry.Scene = scenes[index];
+                    entry.BuildIndex = index;
                     return entry;
                 }
 
@@ -488,7 +489,7 @@ namespace BattleshipGame.Common
             {
                 var modified = false;
                 var scenesToModify = EditorBuildSettings.scenes;
-                foreach (var curScene in scenesToModify.Where(curScene => curScene.guid.Equals(buildScene.assetGUID)))
+                foreach (var curScene in scenesToModify.Where(curScene => curScene.guid.Equals(buildScene.AssetGuid)))
                 {
                     curScene.enabled = enabled;
                     modified = true;
@@ -507,7 +508,7 @@ namespace BattleshipGame.Common
                 {
                     int selection = EditorUtility.DisplayDialogComplex(
                         "Add Scene To Build",
-                        "You are about to add scene at " + buildScene.assetPath + " To the Build Settings.",
+                        "You are about to add scene at " + buildScene.AssetPath + " To the Build Settings.",
                         "Add as Enabled", // option 0
                         "Add as Disabled", // option 1
                         "Cancel (do nothing)"); // option 2
@@ -526,7 +527,7 @@ namespace BattleshipGame.Common
                     }
                 }
 
-                var newScene = new EditorBuildSettingsScene(buildScene.assetGUID, enabled);
+                var newScene = new EditorBuildSettingsScene(buildScene.AssetGuid, enabled);
                 var tempScenes = EditorBuildSettings.scenes.ToList();
                 tempScenes.Add(newScene);
                 EditorBuildSettings.scenes = tempScenes.ToArray();
@@ -540,16 +541,18 @@ namespace BattleshipGame.Common
                 var onlyDisable = false;
                 if (force == false)
                 {
-                    int selection = -1;
+                    int selection;
 
-                    var title = "Remove Scene From Build";
-                    var details =
-                        $"You are about to remove the following scene from build settings:\n    {buildScene.assetPath}\n    buildIndex: {buildScene.buildIndex}\n\nThis will modify build settings, but the scene asset will remain untouched.";
-                    var confirm = "Remove From Build";
-                    var alt = "Just Disable";
-                    var cancel = "Cancel (do nothing)";
+                    const string title = "Remove Scene From Build";
+                    string details =
+                        "You are about to remove the following scene from build settings:\n" +
+                        $"    {buildScene.AssetPath}\n    buildIndex: {buildScene.BuildIndex}\n\n" +
+                        "This will modify build settings, but the scene asset will remain untouched.";
+                    const string confirm = "Remove From Build";
+                    const string alt = "Just Disable";
+                    const string cancel = "Cancel (do nothing)";
 
-                    if (buildScene.scene.enabled)
+                    if (buildScene.Scene.enabled)
                     {
                         details += "\n\nIf you want, you can also just disable it instead.";
                         selection = EditorUtility.DisplayDialogComplex(title, details, confirm, alt, cancel);
@@ -581,7 +584,7 @@ namespace BattleshipGame.Common
                 else
                 {
                     var tempScenes = EditorBuildSettings.scenes.ToList();
-                    tempScenes.RemoveAll(scene => scene.guid.Equals(buildScene.assetGUID));
+                    tempScenes.RemoveAll(scene => scene.guid.Equals(buildScene.AssetGuid));
                     EditorBuildSettings.scenes = tempScenes.ToArray();
                 }
             }
@@ -599,10 +602,10 @@ namespace BattleshipGame.Common
             /// </summary>
             public struct BuildScene
             {
-                public int buildIndex;
-                public GUID assetGUID;
-                public string assetPath;
-                public EditorBuildSettingsScene scene;
+                public int BuildIndex;
+                public GUID AssetGuid;
+                public string AssetPath;
+                public EditorBuildSettingsScene Scene;
             }
         }
     }

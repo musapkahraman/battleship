@@ -6,7 +6,7 @@ using UnityEngine.UI;
 
 namespace BattleshipGame.UI
 {
-    public class PopUpCanvas : MonoBehaviour
+    public class PopUpWindow : MonoBehaviour
     {
         [SerializeField] private TMP_Text header;
         [SerializeField] private TMP_Text message;

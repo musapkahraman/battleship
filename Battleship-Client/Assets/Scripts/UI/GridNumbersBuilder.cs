@@ -12,7 +12,7 @@ using UnityEditor;
 namespace BattleshipGame.UI
 {
     [RequireComponent(typeof(Grid))]
-    public class CellLabelPrinter : MonoBehaviour
+    public class GridNumbersBuilder : MonoBehaviour
     {
         private const string Alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
         private const int CellSize = 50;

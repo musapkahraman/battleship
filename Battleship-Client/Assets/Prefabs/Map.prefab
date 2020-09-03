@@ -129,7 +129,7 @@ GameObject:
   - component: {fileID: 445893295876079718}
   - component: {fileID: 445893295876079719}
   m_Layer: 5
-  m_Name: LabelsCanvas
+  m_Name: GridNumbers
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1340,7 +1340,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d28512955ed194b48b2ad189bafe2f8c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  gameManager: {fileID: 0}
   rules: {fileID: 11400000, guid: 536a0464e90bd734190c1b8189b64ddd, type: 2}
   tilemap: {fileID: 0}
 --- !u!114 &2649060168375701185
@@ -1359,7 +1358,7 @@ MonoBehaviour:
     type: 3}
   sceneCamera: {fileID: 0}
   rules: {fileID: 11400000, guid: 536a0464e90bd734190c1b8189b64ddd, type: 2}
-  targetMapViewer: {fileID: 0}
+  targetMap: {fileID: 0}
   sourceTileMap: {fileID: 445893297488716601}
   removeFromSource: 1
   removeIfDraggedOut: 1
@@ -1493,7 +1492,7 @@ GameObject:
   - component: {fileID: 5663544875162780148}
   - component: {fileID: 4166285728989463569}
   m_Layer: 5
-  m_Name: ButtonsCanvas
+  m_Name: Buttons
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1588,7 +1587,7 @@ PrefabInstance:
     - target: {fileID: 4282153877496215032, guid: 111572eadcbe3ea42a19c0375b5f686e,
         type: 3}
       propertyPath: m_Name
-      value: VerticalCellLabel_6
+      value: Northing_7
       objectReference: {fileID: 0}
     - target: {fileID: 4282153877496215038, guid: 111572eadcbe3ea42a19c0375b5f686e,
         type: 3}
@@ -1738,7 +1737,7 @@ PrefabInstance:
     - target: {fileID: 4282153877496215032, guid: 111572eadcbe3ea42a19c0375b5f686e,
         type: 3}
       propertyPath: m_Name
-      value: VerticalCellLabel_1
+      value: Northing_2
       objectReference: {fileID: 0}
     - target: {fileID: 4282153877496215038, guid: 111572eadcbe3ea42a19c0375b5f686e,
         type: 3}
@@ -1888,7 +1887,7 @@ PrefabInstance:
     - target: {fileID: 4282153877496215032, guid: 111572eadcbe3ea42a19c0375b5f686e,
         type: 3}
       propertyPath: m_Name
-      value: VerticalCellLabel_3
+      value: Northing_4
       objectReference: {fileID: 0}
     - target: {fileID: 4282153877496215038, guid: 111572eadcbe3ea42a19c0375b5f686e,
         type: 3}
@@ -2038,7 +2037,7 @@ PrefabInstance:
     - target: {fileID: 4282153877496215032, guid: 111572eadcbe3ea42a19c0375b5f686e,
         type: 3}
       propertyPath: m_Name
-      value: HorizontalCellLabel_0
+      value: Easting_1
       objectReference: {fileID: 0}
     - target: {fileID: 4282153877496215038, guid: 111572eadcbe3ea42a19c0375b5f686e,
         type: 3}
@@ -2188,7 +2187,7 @@ PrefabInstance:
     - target: {fileID: 4282153877496215032, guid: 111572eadcbe3ea42a19c0375b5f686e,
         type: 3}
       propertyPath: m_Name
-      value: VerticalCellLabel_5
+      value: Northing_6
       objectReference: {fileID: 0}
     - target: {fileID: 4282153877496215038, guid: 111572eadcbe3ea42a19c0375b5f686e,
         type: 3}
@@ -2338,7 +2337,7 @@ PrefabInstance:
     - target: {fileID: 4282153877496215032, guid: 111572eadcbe3ea42a19c0375b5f686e,
         type: 3}
       propertyPath: m_Name
-      value: HorizontalCellLabel_4
+      value: Easting_5
       objectReference: {fileID: 0}
     - target: {fileID: 4282153877496215038, guid: 111572eadcbe3ea42a19c0375b5f686e,
         type: 3}
@@ -2488,7 +2487,7 @@ PrefabInstance:
     - target: {fileID: 4282153877496215032, guid: 111572eadcbe3ea42a19c0375b5f686e,
         type: 3}
       propertyPath: m_Name
-      value: VerticalCellLabel_2
+      value: Northing_3
       objectReference: {fileID: 0}
     - target: {fileID: 4282153877496215038, guid: 111572eadcbe3ea42a19c0375b5f686e,
         type: 3}
@@ -2638,7 +2637,7 @@ PrefabInstance:
     - target: {fileID: 4282153877496215032, guid: 111572eadcbe3ea42a19c0375b5f686e,
         type: 3}
       propertyPath: m_Name
-      value: VerticalCellLabel_7
+      value: Northing_8
       objectReference: {fileID: 0}
     - target: {fileID: 4282153877496215038, guid: 111572eadcbe3ea42a19c0375b5f686e,
         type: 3}
@@ -2788,7 +2787,7 @@ PrefabInstance:
     - target: {fileID: 4282153877496215032, guid: 111572eadcbe3ea42a19c0375b5f686e,
         type: 3}
       propertyPath: m_Name
-      value: HorizontalCellLabel_6
+      value: Easting_7
       objectReference: {fileID: 0}
     - target: {fileID: 4282153877496215038, guid: 111572eadcbe3ea42a19c0375b5f686e,
         type: 3}
@@ -2938,7 +2937,7 @@ PrefabInstance:
     - target: {fileID: 4282153877496215032, guid: 111572eadcbe3ea42a19c0375b5f686e,
         type: 3}
       propertyPath: m_Name
-      value: HorizontalCellLabel_2
+      value: Easting_3
       objectReference: {fileID: 0}
     - target: {fileID: 4282153877496215038, guid: 111572eadcbe3ea42a19c0375b5f686e,
         type: 3}
@@ -3088,7 +3087,7 @@ PrefabInstance:
     - target: {fileID: 4282153877496215032, guid: 111572eadcbe3ea42a19c0375b5f686e,
         type: 3}
       propertyPath: m_Name
-      value: VerticalCellLabel_4
+      value: Northing_5
       objectReference: {fileID: 0}
     - target: {fileID: 4282153877496215038, guid: 111572eadcbe3ea42a19c0375b5f686e,
         type: 3}
@@ -3238,7 +3237,7 @@ PrefabInstance:
     - target: {fileID: 4282153877496215032, guid: 111572eadcbe3ea42a19c0375b5f686e,
         type: 3}
       propertyPath: m_Name
-      value: VerticalCellLabel_0
+      value: Northing_1
       objectReference: {fileID: 0}
     - target: {fileID: 4282153877496215038, guid: 111572eadcbe3ea42a19c0375b5f686e,
         type: 3}
@@ -3388,7 +3387,7 @@ PrefabInstance:
     - target: {fileID: 4282153877496215032, guid: 111572eadcbe3ea42a19c0375b5f686e,
         type: 3}
       propertyPath: m_Name
-      value: HorizontalCellLabel_1
+      value: Easting_2
       objectReference: {fileID: 0}
     - target: {fileID: 4282153877496215038, guid: 111572eadcbe3ea42a19c0375b5f686e,
         type: 3}
@@ -3538,7 +3537,7 @@ PrefabInstance:
     - target: {fileID: 4282153877496215032, guid: 111572eadcbe3ea42a19c0375b5f686e,
         type: 3}
       propertyPath: m_Name
-      value: VerticalCellLabel_8
+      value: Northing_9
       objectReference: {fileID: 0}
     - target: {fileID: 4282153877496215038, guid: 111572eadcbe3ea42a19c0375b5f686e,
         type: 3}
@@ -3688,7 +3687,7 @@ PrefabInstance:
     - target: {fileID: 4282153877496215032, guid: 111572eadcbe3ea42a19c0375b5f686e,
         type: 3}
       propertyPath: m_Name
-      value: HorizontalCellLabel_3
+      value: Easting_4
       objectReference: {fileID: 0}
     - target: {fileID: 4282153877496215038, guid: 111572eadcbe3ea42a19c0375b5f686e,
         type: 3}
@@ -3838,7 +3837,7 @@ PrefabInstance:
     - target: {fileID: 4282153877496215032, guid: 111572eadcbe3ea42a19c0375b5f686e,
         type: 3}
       propertyPath: m_Name
-      value: HorizontalCellLabel_8
+      value: Easting_9
       objectReference: {fileID: 0}
     - target: {fileID: 4282153877496215038, guid: 111572eadcbe3ea42a19c0375b5f686e,
         type: 3}
@@ -3988,7 +3987,7 @@ PrefabInstance:
     - target: {fileID: 4282153877496215032, guid: 111572eadcbe3ea42a19c0375b5f686e,
         type: 3}
       propertyPath: m_Name
-      value: HorizontalCellLabel_7
+      value: Easting_8
       objectReference: {fileID: 0}
     - target: {fileID: 4282153877496215038, guid: 111572eadcbe3ea42a19c0375b5f686e,
         type: 3}
@@ -4138,7 +4137,7 @@ PrefabInstance:
     - target: {fileID: 4282153877496215032, guid: 111572eadcbe3ea42a19c0375b5f686e,
         type: 3}
       propertyPath: m_Name
-      value: HorizontalCellLabel_5
+      value: Easting_6
       objectReference: {fileID: 0}
     - target: {fileID: 4282153877496215038, guid: 111572eadcbe3ea42a19c0375b5f686e,
         type: 3}

@@ -922,7 +922,7 @@ PrefabInstance:
     - target: {fileID: 445893295876079712, guid: 88ddd787738efa54ca51cccc955a634a,
         type: 3}
       propertyPath: m_Name
-      value: Labels
+      value: GridNumbers
       objectReference: {fileID: 0}
     - target: {fileID: 445893295876079718, guid: 88ddd787738efa54ca51cccc955a634a,
         type: 3}
@@ -1121,7 +1121,7 @@ GameObject:
   - component: {fileID: 1832216560}
   - component: {fileID: 1832216561}
   m_Layer: 0
-  m_Name: GameManager
+  m_Name: BattleManager
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1423,7 +1423,7 @@ PrefabInstance:
     - target: {fileID: 445893295876079712, guid: 88ddd787738efa54ca51cccc955a634a,
         type: 3}
       propertyPath: m_Name
-      value: Labels
+      value: GridNumbers
       objectReference: {fileID: 0}
     - target: {fileID: 445893295876079718, guid: 88ddd787738efa54ca51cccc955a634a,
         type: 3}

@@ -395,7 +395,7 @@ Canvas:
   m_OverrideSorting: 0
   m_OverridePixelPerfect: 0
   m_SortingBucketNormalizedSize: 0
-  m_AdditionalShaderChannelsFlag: 25
+  m_AdditionalShaderChannelsFlag: 1
   m_SortingLayerID: 0
   m_SortingOrder: 0
   m_TargetDisplay: 0
@@ -468,11 +468,11 @@ MonoBehaviour:
   lobbyScene:
     scenePath: Assets/Scenes/Lobby.unity
     sceneAsset: {fileID: 102900000, guid: 7ea50c5307046e44e92c6b0bbdf709be, type: 3}
-  placementScene:
-    scenePath: Assets/Scenes/Placement.unity
+  planScene:
+    scenePath: Assets/Scenes/Plan.unity
     sceneAsset: {fileID: 102900000, guid: 5e6584d44c2df6648a83df6ef230673b, type: 3}
-  gameScene:
-    scenePath: Assets/Scenes/Game.unity
+  battleScene:
+    scenePath: Assets/Scenes/Battle.unity
     sceneAsset: {fileID: 102900000, guid: 2cda990e2423bbf4892e6590ba056729, type: 3}
 --- !u!1 &1560539547
 GameObject:
@@ -507,8 +507,6 @@ MonoBehaviour:
     type: 3}
   messageField: {fileID: 322319179}
   serverType: 1
-  lobbySceneData: {fileID: 11400000, guid: f3b5acfcd552c154d97b5811497b18f5, type: 2}
-  placementSceneData: {fileID: 11400000, guid: 67a1f6faabfaa0a409ab9547f08432cc, type: 2}
 --- !u!4 &1560539549
 Transform:
   m_ObjectHideFlags: 0

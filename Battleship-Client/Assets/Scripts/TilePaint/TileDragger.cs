@@ -11,7 +11,7 @@ namespace BattleshipGame.TilePaint
         [SerializeField] private GameObject dragShipPrefab;
         [SerializeField] private Camera sceneCamera;
         [SerializeField] private Rules rules;
-        [SerializeField] private ShipTilePainter targetMap;
+        [SerializeField] private Map targetMap;
         [SerializeField] private Tilemap sourceTileMap;
         [SerializeField] private bool removeFromSource;
         [SerializeField] private bool removeIfDraggedOut;
@@ -20,14 +20,14 @@ namespace BattleshipGame.TilePaint
         private Grid _grid;
         private bool _isReleasedInside;
         private GridSpriteMapper _selfGridSpriteMapper;
-        private MapViewer _selfMapViewer;
+        private BattleMap _selfBattleMap;
         private Sprite _sprite;
         private GridSpriteMapper _targetGridSpriteMapper;
 
         private void Start()
         {
             _grid = GetComponent<Grid>();
-            _selfMapViewer = GetComponent<MapViewer>();
+            _selfBattleMap = GetComponent<BattleMap>();
             _selfGridSpriteMapper = GetComponent<GridSpriteMapper>();
             _targetGridSpriteMapper = targetMap.GetComponent<GridSpriteMapper>();
         }
@@ -35,7 +35,7 @@ namespace BattleshipGame.TilePaint
         private void OnMouseDown()
         {
             _isReleasedInside = false;
-            if (_selfMapViewer && _selfMapViewer.Mode == MapMode.Attack) return;
+            if (_selfBattleMap && _selfBattleMap.Mode == MapMode.Attack) return;
             _grabbedFrom = GridUtils.ScreenToCell(Input.mousePosition, _grid, sceneCamera, rules.AreaSize);
             _sprite = _selfGridSpriteMapper.GetSpriteAt(ref _grabbedFrom);
             if (!_sprite) return;

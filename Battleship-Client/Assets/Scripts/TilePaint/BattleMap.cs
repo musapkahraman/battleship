@@ -7,10 +7,10 @@ using UnityEngine.Tilemaps;
 
 namespace BattleshipGame.TilePaint
 {
-    public class MapViewer : ShipTilePainter
+    public class BattleMap : Map
     {
         [SerializeField] private Camera sceneCamera;
-        [SerializeField] private GameManager manager;
+        [SerializeField] private BattleManager manager;
         [SerializeField] private Rules rules;
         [SerializeField] private ScreenType screenType;
 

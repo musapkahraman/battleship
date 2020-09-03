@@ -1071,7 +1071,7 @@ GameObject:
   - component: {fileID: 1093841619}
   - component: {fileID: 1093841620}
   m_Layer: 0
-  m_Name: ShipsPool
+  m_Name: ShipPool
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1401,7 +1401,7 @@ GameObject:
   - component: {fileID: 1832216560}
   - component: {fileID: 1832216562}
   m_Layer: 0
-  m_Name: PlacementManager
+  m_Name: PlanManager
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1456,7 +1456,7 @@ PrefabInstance:
     - target: {fileID: 445893295876079712, guid: 88ddd787738efa54ca51cccc955a634a,
         type: 3}
       propertyPath: m_Name
-      value: Labels
+      value: GridNumbers
       objectReference: {fileID: 0}
     - target: {fileID: 445893295876079718, guid: 88ddd787738efa54ca51cccc955a634a,
         type: 3}
@@ -1541,7 +1541,7 @@ PrefabInstance:
     - target: {fileID: 445893296377875391, guid: 88ddd787738efa54ca51cccc955a634a,
         type: 3}
       propertyPath: m_Name
-      value: UserMap
+      value: Map
       objectReference: {fileID: 0}
     - target: {fileID: 2649060168375701185, guid: 88ddd787738efa54ca51cccc955a634a,
         type: 3}

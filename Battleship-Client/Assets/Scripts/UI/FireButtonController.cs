@@ -5,9 +5,9 @@ using UnityEngine.UI;
 
 namespace BattleshipGame.UI
 {
-    public class FireButtonManager : MonoBehaviour
+    public class FireButtonController : MonoBehaviour
     {
-        [SerializeField] private GameManager manager;
+        [SerializeField] private BattleManager manager;
         private Button _button;
         private Color _textColorCache;
         private TMP_Text _tmpText;

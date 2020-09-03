@@ -1174,7 +1174,7 @@ PrefabInstance:
     - target: {fileID: 7357745371994881858, guid: ba583779d4e278147998a361ee83dd31,
         type: 3}
       propertyPath: m_AdditionalShaderChannelsFlag
-      value: 25
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 7357745371994881859, guid: ba583779d4e278147998a361ee83dd31,
         type: 3}
@@ -1284,7 +1284,7 @@ PrefabInstance:
     - target: {fileID: 7357745371994881862, guid: ba583779d4e278147998a361ee83dd31,
         type: 3}
       propertyPath: m_Name
-      value: PopUpCanvas_InputField
+      value: PopUpWithInputField
       objectReference: {fileID: 0}
     - target: {fileID: 7357745371994881863, guid: ba583779d4e278147998a361ee83dd31,
         type: 3}

@@ -84,7 +84,7 @@ namespace BattleshipGame.Network
             if (phase != "place") return;
             // Another player is joined in the game. Phase is changed. Go to place mode.
             Destroy(_progressBar);
-            SceneLoader.Instance.GoToPlacementScene();
+            SceneLoader.Instance.GoToPlanScene();
         }
     }
 }

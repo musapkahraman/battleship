@@ -13,11 +13,11 @@ using UnityEngine.SceneManagement;
 
 namespace BattleshipGame.Core
 {
-    public class GameManager : MonoBehaviour
+    public class BattleManager : MonoBehaviour
     {
         [SerializeField] private GameObject popUpPrefab;
-        [SerializeField] private MapViewer userMap;
-        [SerializeField] private MapViewer opponentMap;
+        [SerializeField] private BattleMap userMap;
+        [SerializeField] private BattleMap opponentMap;
         [SerializeField] private OpponentStatusMaskPlacer opponentStatusMaskPlacer;
         [SerializeField] private Rules rules;
         [SerializeField] private PlacementMap placementMap;
@@ -255,9 +255,9 @@ namespace BattleshipGame.Core
             if (_playerNumber != playerNumber) opponentStatusMaskPlacer.PlaceMask(item, index);
         }
 
-        private PopUpCanvas BuildPopUp()
+        private PopUpWindow BuildPopUp()
         {
-            return Instantiate(popUpPrefab).GetComponent<PopUpCanvas>();
+            return Instantiate(popUpPrefab).GetComponent<PopUpWindow>();
         }
     }
 }

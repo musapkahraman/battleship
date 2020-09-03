@@ -8,8 +8,8 @@ namespace BattleshipGame.Core
     {
         [SerializeField] private SceneReference masterScene;
         [SerializeField] private SceneReference lobbyScene;
-        [SerializeField] private SceneReference placementScene;
-        [SerializeField] private SceneReference gameScene;
+        [SerializeField] private SceneReference planScene;
+        [SerializeField] private SceneReference battleScene;
 
         protected override void Awake()
         {
@@ -31,14 +31,14 @@ namespace BattleshipGame.Core
             LoadSingleSceneAdditive(lobbyScene);
         }
 
-        public void GoToPlacementScene()
+        public void GoToPlanScene()
         {
-            LoadSingleSceneAdditive(placementScene);
+            LoadSingleSceneAdditive(planScene);
         }
 
-        public void GoToGameScene()
+        public void GoToBattleScene()
         {
-            LoadSingleSceneAdditive(gameScene);
+            LoadSingleSceneAdditive(battleScene);
         }
 
         private void LoadSingleSceneAdditive(SceneReference sceneReference)

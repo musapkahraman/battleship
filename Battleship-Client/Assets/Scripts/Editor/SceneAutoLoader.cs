@@ -13,8 +13,6 @@ namespace BattleshipGame.Editor
     ///     a "master scene" enable it to be auto-loaded when the user presses play
     ///     in the editor. When enabled, the selected scene will be loaded on play,
     ///     then the original scene will be reloaded on stop.
-    ///     Based on an idea on this thread:
-    ///     http://forum.unity3d.com/threads/157502-Executing-first-scene-in-build-settings-when-pressing-play-button-in-editor
     /// </description>
     [InitializeOnLoad]
     internal static class SceneAutoLoader
