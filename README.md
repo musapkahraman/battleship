@@ -26,7 +26,6 @@ npm start
 
 ### Client
 
-- Clone this repository.
 - Add the folder "Battleship-Client" to your projects in Unity Hub.
 - Open the project in Unity 2019.4.9f1
 - Enable loading the "master" scene on Play button press in the editor using the menu bar: 
