@@ -13,7 +13,7 @@ The game uses a variant of rules for the classic battleship game.
 ### Server
 
 - Install node.js and npm
-- Open server folder in your favorite terminal. bash/powershell.. etc.
+- Open server folder (Battleship/Battleship-Server) in your favorite terminal (bash, powershell, etc.)
 - Install dependencies:
 ```
 npm install
@@ -26,7 +26,7 @@ npm start
 
 ### Client
 
-- Add the folder "Battleship-Client" to your projects in Unity Hub.
+- Add the client folder (Battleship/Battleship-Client) to your projects in Unity Hub.
 - Open the project in Unity 2019.4.9f1
 - Enable loading the "master" scene on Play button press in the editor using the menu bar: 
 ```
