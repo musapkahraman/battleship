@@ -79,13 +79,26 @@ namespace BattleshipGame.Core
 
         private void PlaceShipsRandomly()
         {
+            var from = new List<int>();
+            for (var i = 0; i < _cellCount; i++) from.Add(i);
             foreach (int key in _pool.Keys.ToList())
             {
                 var isPlaced = false;
                 while (!isPlaced)
-                    isPlaced = PlaceShip(_pool[key],
-                        new Vector3Int(Random.Range(0, MapAreaSize.x), Random.Range(0, MapAreaSize.y), 0));
+                {
+                    if (from.Count == 0) break;
+
+                    int cell = from[Random.Range(0, from.Count)];
+                    from.Remove(cell);
+                    isPlaced = PlaceShip(_pool[key], GridUtils.ToCoordinate(cell, MapAreaSize.x));
+                }
+
+                if (isPlaced) continue;
+                _networkManager.SetStatusText("Sorry, cannot place the ships that way!");
+                break;
             }
+
+            randomButton.SetInteractable(false);
         }
 
         private void ResetPlacementMap()
@@ -141,7 +154,9 @@ namespace BattleshipGame.Core
             AddCellToPlacementMap(ship, cellCoordinate, GetKeyAndRemoveFromPool(ship));
             map.SetShip(ship, cellCoordinate, false);
             placementMap.placements.Add(new PlacementMap.Placement {ship = ship, Coordinate = cellCoordinate});
-            if (_pool.Count == 0) continueButton.SetInteractable(true);
+            if (_pool.Count != 0) return true;
+            continueButton.SetInteractable(true);
+            _networkManager.SetStatusText("Looks like you are ready.");
             return true;
         }
 
