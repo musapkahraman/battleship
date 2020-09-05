@@ -15,7 +15,25 @@ MonoBehaviour:
   title: Battleship
   sections:
   - heading: About
-    text: 'This is a 2D multiplayer game that uses a variant of rules for the battleship
-      game. '
+    text: Battleship is a 2D multiplayer game that uses Colyseus to communicate with
+      the server.
     linkText: GitHub Repository
     url: https://github.com/musapkahraman/Battleship
+  - heading: 
+    text: 
+    linkText: Colyseus
+    url: https://github.com/colyseus
+  - heading: 
+    text: 'Enable loading the "master" scene on Play button press in the editor using
+      the menu bar: Scenes -> Scene Autoload -> Load Master On Play'
+    linkText: 
+    url: 
+  - heading: 
+    text: The application starts from the "master" scene (Assets/Scenes/Master.unity)
+    linkText: 
+    url: 
+  - heading: 
+    text: Choose the server type in the Network Manager script component attached
+      on the NetworkManager gameObject in the master scene.
+    linkText: 
+    url: 
