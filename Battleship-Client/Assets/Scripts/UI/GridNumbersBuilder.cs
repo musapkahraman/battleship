@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using BattleshipGame.Core;
 using BattleshipGame.ScriptableObjects;
 using TMPro;
 using UnityEngine;

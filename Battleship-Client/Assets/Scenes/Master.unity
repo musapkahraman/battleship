@@ -216,7 +216,7 @@ GameObject:
   - component: {fileID: 322319180}
   - component: {fileID: 322319179}
   m_Layer: 5
-  m_Name: StatusText
+  m_Name: StatusTextfield
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -260,7 +260,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Status Text Field
+  m_text: Status textfield
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 02da81d8be4e74541aef52715039535b, type: 2}
   m_sharedMaterial: {fileID: 393446398567770681, guid: 02da81d8be4e74541aef52715039535b,
@@ -350,7 +350,7 @@ GameObject:
   - component: {fileID: 1068387795}
   - component: {fileID: 1068387794}
   m_Layer: 5
-  m_Name: StatusText
+  m_Name: Status
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -395,7 +395,7 @@ Canvas:
   m_OverrideSorting: 0
   m_OverridePixelPerfect: 0
   m_SortingBucketNormalizedSize: 0
-  m_AdditionalShaderChannelsFlag: 1
+  m_AdditionalShaderChannelsFlag: 25
   m_SortingLayerID: 0
   m_SortingOrder: 0
   m_TargetDisplay: 0
@@ -430,7 +430,7 @@ GameObject:
   - component: {fileID: 1397326395}
   - component: {fileID: 1397326396}
   m_Layer: 0
-  m_Name: SceneLoader
+  m_Name: Project Scenes Manager
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -485,7 +485,7 @@ GameObject:
   - component: {fileID: 1560539549}
   - component: {fileID: 1560539548}
   m_Layer: 0
-  m_Name: NetworkManager
+  m_Name: Network Manager
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -507,6 +507,7 @@ MonoBehaviour:
     type: 3}
   messageField: {fileID: 322319179}
   serverType: 1
+  onlineEndpoint: ws://bronzehero.herokuapp.com
 --- !u!4 &1560539549
 Transform:
   m_ObjectHideFlags: 0

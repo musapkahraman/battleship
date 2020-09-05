@@ -41,7 +41,7 @@ namespace BattleshipGame.Core
 
                 if (_client.SessionId != null)
                 {
-                    _client.RefreshRoomsList();
+                    _client.RefreshRooms();
                     WaitForOpponent();
                 }
             }

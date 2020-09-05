@@ -17,7 +17,7 @@ namespace BattleshipGame.Editor
             string assetPath = Path.Combine(Directory, AssetName + ".asset");
             var asset = ScriptableObject.CreateInstance<SceneSetupState>();
             CheckFolder(Directory);
-            
+
             if (CheckDirectoryForAssetName(AssetName, Directory))
                 asset = AssetDatabase.LoadAssetAtPath<SceneSetupState>(assetPath);
             else

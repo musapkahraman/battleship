@@ -25,7 +25,7 @@ namespace BattleshipGame.Common
         {
             if (Instance != null)
             {
-                Debug.LogWarningFormat("Trying to create a second instance of {0}", typeof(T));
+                Debug.LogWarning($"Trying to create a second instance of {typeof(T)}");
                 Destroy(gameObject);
             }
             else

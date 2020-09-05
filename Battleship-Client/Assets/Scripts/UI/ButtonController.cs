@@ -8,8 +8,8 @@ namespace BattleshipGame.UI
     [RequireComponent(typeof(Button))]
     public class ButtonController : MonoBehaviour
     {
-        private Button _button;
         [SerializeField] private TMP_Text buttonText;
+        private Button _button;
 
         private void Awake()
         {

@@ -19,8 +19,8 @@ namespace BattleshipGame.TilePaint
         private GameObject _grabbedShip;
         private Grid _grid;
         private bool _isReleasedInside;
-        private GridSpriteMapper _selfGridSpriteMapper;
         private BattleMap _selfBattleMap;
+        private GridSpriteMapper _selfGridSpriteMapper;
         private Sprite _sprite;
         private GridSpriteMapper _targetGridSpriteMapper;
 

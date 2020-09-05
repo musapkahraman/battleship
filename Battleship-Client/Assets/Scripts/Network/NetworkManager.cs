@@ -7,28 +7,13 @@ namespace BattleshipGame.Network
 {
     public class NetworkManager : Singleton<NetworkManager>
     {
-        public enum ServerType
-        {
-            Local,
-            Online
-        }
-
-        [SerializeField] private GameObject progressBarCanvasPrefab;
-        [SerializeField] private TMP_Text messageField;
+        private const string LocalEndpoint = "ws://localhost:2567";
+        [SerializeField] private string onlineEndpoint = "ws://";
         [SerializeField] private ServerType serverType = ServerType.Online;
-        public NetworkClient Client { get; private set; }
-
+        [SerializeField] private TMP_Text messageField;
+        [SerializeField] private GameObject progressBarCanvasPrefab;
         private GameObject _progressBar;
-
-        public void SetStatusText(string text)
-        {
-            messageField.text = text;
-        }
-
-        public void ClearStatusText()
-        {
-            messageField.text = string.Empty;
-        }
+        public NetworkClient Client { get; private set; }
 
         protected override void Awake()
         {
@@ -60,17 +45,25 @@ namespace BattleshipGame.Network
             Client?.LeaveLobby();
         }
 
+        public void SetStatusText(string text)
+        {
+            messageField.text = text;
+        }
+
         public void ConnectToServer()
         {
-            Client.Connect(serverType);
+            Client.Connect(serverType == ServerType.Online ? onlineEndpoint : LocalEndpoint);
+        }
+
+        public void ClearStatusText()
+        {
+            messageField.text = string.Empty;
         }
 
         private void OnConnected()
         {
-            // Connection established. Go to the lobby.
             Destroy(_progressBar);
-            Debug.Log($"[{name}] Loading scene: <color=yellow>lobbyScene</color>");
-            SceneLoader.Instance.GoToLobby();
+            ProjectScenesManager.Instance.GoToLobby();
         }
 
         private void OnConnectionError(string errorMessage)
@@ -82,9 +75,14 @@ namespace BattleshipGame.Network
         private void OnGamePhaseChanged(string phase)
         {
             if (phase != "place") return;
-            // Another player is joined in the game. Phase is changed. Go to place mode.
             Destroy(_progressBar);
-            SceneLoader.Instance.GoToPlanScene();
+            ProjectScenesManager.Instance.GoToPlanScene();
+        }
+
+        private enum ServerType
+        {
+            Local,
+            Online
         }
     }
 }

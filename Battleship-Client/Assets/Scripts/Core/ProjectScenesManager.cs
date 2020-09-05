@@ -4,7 +4,7 @@ using UnityEngine.SceneManagement;
 
 namespace BattleshipGame.Core
 {
-    public class SceneLoader : Singleton<SceneLoader>
+    public class ProjectScenesManager : Singleton<ProjectScenesManager>
     {
         [SerializeField] private SceneReference masterScene;
         [SerializeField] private SceneReference lobbyScene;
@@ -43,7 +43,6 @@ namespace BattleshipGame.Core
 
         private void LoadSingleSceneAdditive(SceneReference sceneReference)
         {
-            PrintLoadedSceneNames();
             UnloadAllScenesExcept(masterScene);
             Debug.Log($"<color=yellow>Loading {sceneReference.ScenePath}</color>");
             SceneManager.LoadScene(sceneReference, LoadSceneMode.Additive);
@@ -69,16 +68,6 @@ namespace BattleshipGame.Core
         private static void OnSceneUnloaded(Scene scene)
         {
             Debug.Log($"<color=red>{scene.name}</color> is unloaded.");
-        }
-
-        private static void PrintLoadedSceneNames()
-        {
-            Debug.Log("<color=cyan>Scenes already loaded:</color>");
-            for (var i = 0; i < SceneManager.sceneCount; i++)
-            {
-                var scene = SceneManager.GetSceneAt(i);
-                Debug.Log($"<color=cyan>{scene.name}</color>");
-            }
         }
     }
 }

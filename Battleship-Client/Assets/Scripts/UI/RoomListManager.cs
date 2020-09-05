@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using BattleshipGame.Core;
-using BattleshipGame.Network;
 using BattleshipGame.Schemas;
 using UnityEngine;
 
@@ -10,10 +9,10 @@ namespace BattleshipGame.UI
     [RequireComponent(typeof(RectTransform))]
     public class RoomListManager : MonoBehaviour
     {
-        private readonly Dictionary<string, RoomListElement> _elements = new Dictionary<string, RoomListElement>();
         [SerializeField] private GameObject roomListElementPrefab;
         [SerializeField] private LobbyManager lobbyManager;
         [SerializeField] private int contentOffset;
+        private readonly Dictionary<string, RoomListElement> _elements = new Dictionary<string, RoomListElement>();
         private RectTransform _rectTransform;
 
         private void Awake()

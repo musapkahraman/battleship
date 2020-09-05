@@ -34,7 +34,7 @@ namespace BattleshipGame.Core
             if (NetworkManager.TryGetInstance(out _networkManager))
             {
                 _client = _networkManager.Client;
-                _client.InitialRoomStateReceived += OnInitialRoomStateReceived;
+                _client.FirstRoomStateReceived += OnFirstRoomStateReceived;
                 _client.GamePhaseChanged += OnGamePhaseChanged;
             }
             else
@@ -47,13 +47,13 @@ namespace BattleshipGame.Core
         {
             foreach (var placement in placementMap.placements) userMap.SetShip(placement.ship, placement.Coordinate);
             opponentMap.SetDisabled();
-            if (_client.RoomState != null) OnInitialRoomStateReceived(_client.RoomState);
+            if (_client.RoomState != null) OnFirstRoomStateReceived(_client.RoomState);
         }
 
         private void OnDestroy()
         {
             if (_client == null) return;
-            _client.InitialRoomStateReceived -= OnInitialRoomStateReceived;
+            _client.FirstRoomStateReceived -= OnFirstRoomStateReceived;
             _client.GamePhaseChanged -= OnGamePhaseChanged;
             UnRegisterFromStateEvents();
 
@@ -71,7 +71,7 @@ namespace BattleshipGame.Core
         public event Action FireReady;
         public event Action FireNotReady;
 
-        private void OnInitialRoomStateReceived(State initialState)
+        private void OnFirstRoomStateReceived(State initialState)
         {
             _state = initialState;
             var player = _state.players[_client.SessionId];
@@ -142,7 +142,7 @@ namespace BattleshipGame.Core
             void GoBackToLobby()
             {
                 Debug.Log($"[{name}] Loading scene: <color=yellow>lobbyScene</color>");
-                SceneLoader.Instance.GoToLobby();
+                ProjectScenesManager.Instance.GoToLobby();
             }
 
             void ShowResult()
@@ -171,7 +171,7 @@ namespace BattleshipGame.Core
         {
             _client.LeaveRoom();
             Debug.Log($"[{name}] Loading scene: <color=yellow>lobbyScene</color>");
-            SceneLoader.Instance.GoToLobby();
+            ProjectScenesManager.Instance.GoToLobby();
         }
 
         private void CheckTurn()

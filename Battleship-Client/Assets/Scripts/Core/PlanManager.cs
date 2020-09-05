@@ -35,7 +35,7 @@ namespace BattleshipGame.Core
             if (NetworkManager.TryGetInstance(out _networkManager))
             {
                 _client = _networkManager.Client;
-                _client.InitialRoomStateReceived += OnInitialRoomStateReceived;
+                _client.FirstRoomStateReceived += OnFirstRoomStateReceived;
                 _client.GamePhaseChanged += OnGamePhaseChanged;
             }
             else
@@ -47,7 +47,7 @@ namespace BattleshipGame.Core
         private void Start()
         {
             _cellCount = MapAreaSize.x * MapAreaSize.y;
-            if (_client.RoomState != null) OnInitialRoomStateReceived(_client.RoomState);
+            if (_client.RoomState != null) OnFirstRoomStateReceived(_client.RoomState);
             clearButton.SetText("Clear");
             randomButton.SetText("Random");
             continueButton.SetText("Continue");
@@ -59,11 +59,11 @@ namespace BattleshipGame.Core
         private void OnDestroy()
         {
             if (_client == null) return;
-            _client.InitialRoomStateReceived -= OnInitialRoomStateReceived;
+            _client.FirstRoomStateReceived -= OnFirstRoomStateReceived;
             _client.GamePhaseChanged -= OnGamePhaseChanged;
         }
 
-        private void OnInitialRoomStateReceived(State initialState)
+        private void OnFirstRoomStateReceived(State initialState)
         {
             _state = initialState;
             OnGamePhaseChanged(_state.phase);
@@ -182,7 +182,7 @@ namespace BattleshipGame.Core
                     BeginShipPlacement();
                     break;
                 case "battle":
-                    SceneLoader.Instance.GoToBattleScene();
+                    ProjectScenesManager.Instance.GoToBattleScene();
                     break;
                 case "result":
                     break;
@@ -196,14 +196,14 @@ namespace BattleshipGame.Core
 
             void GoBackToLobby()
             {
-                SceneLoader.Instance.GoToLobby();
+                ProjectScenesManager.Instance.GoToLobby();
             }
         }
 
         private void LeaveGame()
         {
             _client.LeaveRoom();
-            SceneLoader.Instance.GoToLobby();
+            ProjectScenesManager.Instance.GoToLobby();
         }
 
         private PopUpWindow BuildPopUp()

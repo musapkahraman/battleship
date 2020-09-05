@@ -3,20 +3,17 @@ using System.Collections.Generic;
 using System.Linq;
 using BattleshipGame.Schemas;
 using Colyseus;
-using UnityEngine;
 using DataChange = Colyseus.Schema.DataChange;
 
 namespace BattleshipGame.Network
 {
     public class NetworkClient
     {
-        private const string LocalEndpoint = "ws://localhost:2567";
-        private const string OnlineEndpoint = "ws://bronzehero.herokuapp.com";
         private const string RoomName = "game";
         private const string LobbyName = "lobby";
         private readonly Dictionary<string, Room> _rooms = new Dictionary<string, Room>();
         private Client _client;
-        private bool _initialRoomStateReceived;
+        private bool _isFirstRoomStateReceived;
         private Room<LobbyState> _lobby;
         private Room<State> _room;
         public string SessionId => _room?.SessionId;
@@ -26,12 +23,11 @@ namespace BattleshipGame.Network
         public event Action<string> ConnectionError;
         public event Action<string> GamePhaseChanged;
         public event Action<Dictionary<string, Room>> RoomsChanged;
-        public event Action<State> InitialRoomStateReceived;
+        public event Action<State> FirstRoomStateReceived;
 
-        public async void Connect(NetworkManager.ServerType serverType)
+        public async void Connect(string endPoint)
         {
             if (_lobby != null && _lobby.Connection.IsOpen) return;
-            string endPoint = serverType == NetworkManager.ServerType.Online ? OnlineEndpoint : LocalEndpoint;
             _client = new Client(endPoint);
             try
             {
@@ -77,15 +73,29 @@ namespace BattleshipGame.Network
 
         public async void CreateRoom(string name, string password)
         {
-            _room = await _client.Create<State>(RoomName,
-                new Dictionary<string, object> {{"name", name}, {"password", password}});
-            RegisterRoomHandlers();
+            try
+            {
+                _room = await _client.Create<State>(RoomName,
+                    new Dictionary<string, object> {{"name", name}, {"password", password}});
+                RegisterRoomHandlers();
+            }
+            catch (Exception exception)
+            {
+                ConnectionError?.Invoke(exception.Message);
+            }
         }
 
         public async void JoinRoom(string roomId, string password)
         {
-            _room = await _client.JoinById<State>(roomId, new Dictionary<string, object> {{"password", password}});
-            RegisterRoomHandlers();
+            try
+            {
+                _room = await _client.JoinById<State>(roomId, new Dictionary<string, object> {{"password", password}});
+                RegisterRoomHandlers();
+            }
+            catch (Exception exception)
+            {
+                ConnectionError?.Invoke(exception.Message);
+            }
         }
 
         private void RegisterRoomHandlers()
@@ -96,13 +106,13 @@ namespace BattleshipGame.Network
             void OnStateChange(State state, bool isFirstState)
             {
                 if (!isFirstState) return;
-                _initialRoomStateReceived = true;
-                InitialRoomStateReceived?.Invoke(state);
+                _isFirstRoomStateReceived = true;
+                FirstRoomStateReceived?.Invoke(state);
             }
 
             void OnRoomStateChange(List<DataChange> changes)
             {
-                if (!_initialRoomStateReceived) return;
+                if (!_isFirstRoomStateReceived) return;
                 foreach (var change in changes.Where(change => change.Field == "phase"))
                     GamePhaseChanged?.Invoke((string) change.Value);
             }
@@ -135,12 +145,12 @@ namespace BattleshipGame.Network
             _room.Send("rematch", isRematching);
         }
 
-        public bool IsRoomPasswordProtected(string id)
+        public bool IsRoomPasswordProtected(string roomId)
         {
-            return _rooms.TryGetValue(id, out var room) && room.metadata.requiresPassword;
+            return _rooms.TryGetValue(roomId, out var room) && room.metadata.requiresPassword;
         }
 
-        public void RefreshRoomsList()
+        public void RefreshRooms()
         {
             RoomsChanged?.Invoke(_rooms);
         }
