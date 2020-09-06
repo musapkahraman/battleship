@@ -54,7 +54,7 @@ namespace BattleshipGame.Core
             clearButton.SetText("Clear");
             randomButton.SetText("Random");
             continueButton.SetText("Continue");
-            clearButton.AddListener(ResetPlacementMap);
+            clearButton.AddListener(OnClearButtonPressed);
             randomButton.AddListener(PlaceShipsRandomly);
             continueButton.AddListener(CompletePlacement);
         }
@@ -118,10 +118,18 @@ namespace BattleshipGame.Core
             _networkManager.SetStatusText("Looks like you are ready.");
         }
 
+        private void OnClearButtonPressed()
+        {
+            _shipsNotDragged.Clear();
+            ResetPlacementMap();
+        }
+
         private void ResetPlacementMap()
         {
             BeginShipPlacement();
             map.ClearAllShips();
+            gridSpriteMapper.ClearSpritePositions();
+            gridSpriteMapper.CacheSpritePositions();
         }
 
         private void BeginShipPlacement()
@@ -193,7 +201,7 @@ namespace BattleshipGame.Core
 
             foreach (int cellIndex in ship.PartCoordinates
                 .Select(part => new Vector3Int(pivot.x + part.x, pivot.y + part.y, 0))
-                .Select(coordinate => GridUtils.ToCellIndex(coordinate, MapAreaSize.x)))
+                .Select(coordinate => GridUtils.ToCellIndex(coordinate, MapAreaSize)))
                 _cells[cellIndex] = shipId;
         }
 
@@ -210,7 +218,7 @@ namespace BattleshipGame.Core
                 for (int x = xMin; x <= xMax; x++)
                 {
                     if (x < 0 || x > MapAreaSize.x - 1) continue;
-                    int cellIndex = GridUtils.ToCellIndex(new Vector3Int(x, y, 0), MapAreaSize.x);
+                    int cellIndex = GridUtils.ToCellIndex(new Vector3Int(x, y, 0), MapAreaSize);
                     if (cellIndex >= 0 && cellIndex < _cellCount && _cells[cellIndex] < 0) continue;
                     return true;
                 }

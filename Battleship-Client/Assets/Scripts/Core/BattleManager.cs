@@ -95,7 +95,7 @@ namespace BattleshipGame.Core
 
         public void MarkTarget(Vector3Int targetCoordinate)
         {
-            int targetIndex = GridUtils.ToCellIndex(targetCoordinate, MapAreaSize.x);
+            int targetIndex = GridUtils.ToCellIndex(targetCoordinate, MapAreaSize);
             if (_shots.Contains(targetIndex))
             {
                 _shots.Remove(targetIndex);

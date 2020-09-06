@@ -40,6 +40,12 @@ namespace BattleshipGame.TilePaint
             }
         }
 
+        public void ClearSpritePositions()
+        {
+            _sprites.Clear();
+            _spritePositionsOnTileMap.Clear();
+        }
+
         public void ChangeSpritePosition(Sprite sprite, Vector3Int oldPosition, Vector3Int newPosition)
         {
             int spriteId = sprite.GetInstanceID();

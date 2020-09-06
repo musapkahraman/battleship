@@ -9,9 +9,13 @@ namespace BattleshipGame.Common
             return new Vector3Int(cellIndex % width, cellIndex / width, 0);
         }
 
-        public static int ToCellIndex(Vector3Int coordinate, int width)
+        public static int ToCellIndex(Vector3Int coordinate, Vector2Int areaSize)
         {
-            return coordinate.y * width + coordinate.x;
+            int cellIndex = coordinate.y * areaSize.x + coordinate.x;
+            if (cellIndex < 0 || cellIndex > areaSize.x * areaSize.y)
+                Debug.LogError($"input: {coordinate} | output: {cellIndex}");
+
+            return cellIndex;
         }
 
         public static Vector3Int ScreenToCell(Vector3 screenPoint, Grid grid, Camera sceneCamera, Vector2Int areaSize)
