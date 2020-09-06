@@ -1044,6 +1044,7 @@ MonoBehaviour:
   randomButton: {fileID: 89234408}
   continueButton: {fileID: 673905442}
   map: {fileID: 445893296533894839}
+  gridSpriteMapper: {fileID: 445893296533894840}
   rules: {fileID: 11400000, guid: 536a0464e90bd734190c1b8189b64ddd, type: 2}
   placementMap: {fileID: 11400000, guid: 432e41401bba21546a52dbadb3099a78, type: 2}
 --- !u!1001 &445893296533894835
@@ -1223,3 +1224,15 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   fleetLayer: {fileID: 445893296533894837}
   manager: {fileID: 1832216562}
+--- !u!114 &445893296533894840 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 9212905372763388948, guid: 88ddd787738efa54ca51cccc955a634a,
+    type: 3}
+  m_PrefabInstance: {fileID: 445893296533894835}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 445893296533894838}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d28512955ed194b48b2ad189bafe2f8c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 

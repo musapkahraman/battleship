@@ -10,9 +10,9 @@ namespace BattleshipGame.TilePaint
         [SerializeField] private Tilemap fleetLayer;
         [SerializeField] private PlanManager manager;
 
-        public override bool SetShip(Ship ship, Vector3Int coordinate, bool shouldSendToManager = true)
+        public override bool SetShip(Ship ship, Vector3Int coordinate, bool isDragged = false)
         {
-            if (shouldSendToManager && !manager.PlaceShip(ship, coordinate)) return false;
+            if (isDragged && !manager.PlaceShip(ship, coordinate)) return false;
             fleetLayer.SetTile(coordinate, ship.tile);
             return true;
         }

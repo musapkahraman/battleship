@@ -68,7 +68,7 @@ namespace BattleshipGame.TilePaint
                         targetMap.GetComponent<Grid>(), sceneCamera, rules.AreaSize);
                     (int shipWidth, int shipHeight) = ship.GetShipSize();
                     if (GridUtils.DoesShipFitIn(shipWidth, shipHeight, droppedTo, rules.AreaSize.x) &&
-                        targetMap.SetShip(ship, droppedTo))
+                        targetMap.SetShip(ship, droppedTo, true))
                     {
                         if (_targetGridSpriteMapper)
                             _targetGridSpriteMapper.ChangeSpritePosition(_sprite, _grabbedFrom, droppedTo);

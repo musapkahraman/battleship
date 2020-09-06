@@ -12,9 +12,26 @@ namespace BattleshipGame.ScriptableObjects
 
         public void PlaceShip(int shipIndex, Ship ship, Vector3Int coordinate)
         {
-            placements.Add(new Placement(shipIndex, ship, coordinate));
-        }
+            int index = -1;
+            for (var i = 0; i < placements.Count; i++)
+            {
+                if (!placements[i].shipIndex.Equals(shipIndex)) continue;
+                index = shipIndex;
+                break;
+            }
 
+            if (index > -1)
+            {
+                var placement = placements[index];
+                placement.Coordinate = coordinate;
+                placements[index] = placement;
+            }
+            else
+            {
+                placements.Add(new Placement(shipIndex, ship, coordinate));
+            }
+        }
+        
         public List<Placement> GetPlacements()
         {
             return placements.ToList();

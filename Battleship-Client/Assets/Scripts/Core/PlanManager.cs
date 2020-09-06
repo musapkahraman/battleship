@@ -18,6 +18,7 @@ namespace BattleshipGame.Core
         [SerializeField] private ButtonController randomButton;
         [SerializeField] private ButtonController continueButton;
         [SerializeField] private Map map;
+        [SerializeField] private GridSpriteMapper gridSpriteMapper;
         [SerializeField] private Rules rules;
         [SerializeField] private PlacementMap placementMap;
         private int _cellCount;
@@ -87,7 +88,7 @@ namespace BattleshipGame.Core
 
             foreach (var placement in _placements.Where(placement => !_shipsNotDragged.Contains(placement.shipIndex)))
             {
-                map.SetShip(placement.ship, placement.Coordinate, false);
+                map.SetShip(placement.ship, placement.Coordinate);
                 AddCellToPlacementMap(placement.shipIndex, placement.ship, placement.Coordinate);
                 placementMap.PlaceShip(placement.shipIndex, placement.ship, placement.Coordinate);
             }
@@ -112,6 +113,7 @@ namespace BattleshipGame.Core
                 break;
             }
 
+            gridSpriteMapper.CacheSpritePositions();
             continueButton.SetInteractable(true);
             _networkManager.SetStatusText("Looks like you are ready.");
         }
@@ -159,7 +161,7 @@ namespace BattleshipGame.Core
             if (!GridUtils.DoesShipFitIn(shipWidth, shipHeight, cellCoordinate, MapAreaSize.x)) return false;
             if (DoesCollideWithOtherShip(cellCoordinate, shipWidth, shipHeight)) return false;
             clearButton.SetInteractable(true);
-            map.SetShip(ship, cellCoordinate, false);
+            map.SetShip(ship, cellCoordinate);
             var shouldRemoveFromPool = false;
             if (shipTypeIndex == -1)
             {
@@ -173,10 +175,7 @@ namespace BattleshipGame.Core
             {
                 _pool.Remove(shipTypeIndex);
                 _shipsNotDragged = _pool.Keys.ToList();
-                foreach (int key in _shipsNotDragged) Debug.Log($"_remainingShipsAfterUserPick: {key}");
-
                 _placements = placementMap.GetPlacements();
-                foreach (var placement in _placements) Debug.Log($"placement.shipIndex: {placement.shipIndex}");
             }
 
             if (_pool.Count != 0) return true;
@@ -186,16 +185,21 @@ namespace BattleshipGame.Core
             return true;
         }
 
-        private void AddCellToPlacementMap(int shipTypeIndex, Ship ship, Vector3Int cellCoordinate)
+        private void AddCellToPlacementMap(int shipId, Ship ship, Vector3Int pivot)
         {
+            for (var i = 0; i < _cellCount; i++)
+                if (_cells[i] == shipId)
+                    _cells[i] = -1;
+
             foreach (int cellIndex in ship.PartCoordinates
-                .Select(p => new Vector3Int(cellCoordinate.x + p.x, cellCoordinate.y + p.y, 0))
+                .Select(part => new Vector3Int(pivot.x + part.x, pivot.y + part.y, 0))
                 .Select(coordinate => GridUtils.ToCellIndex(coordinate, MapAreaSize.x)))
-                _cells[cellIndex] = shipTypeIndex;
+                _cells[cellIndex] = shipId;
         }
 
         private bool DoesCollideWithOtherShip(Vector3Int cellCoordinate, int shipWidth, int shipHeight)
         {
+            // TODO: cannot drag one unit, collides itself!
             int xMin = cellCoordinate.x - 1;
             int xMax = cellCoordinate.x + shipWidth;
             int yMin = cellCoordinate.y - shipHeight;

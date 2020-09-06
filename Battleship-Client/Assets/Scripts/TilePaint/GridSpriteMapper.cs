@@ -21,22 +21,22 @@ namespace BattleshipGame.TilePaint
             CacheSpritePositions();
         }
 
-        private void CacheSpritePositions()
+        public void CacheSpritePositions()
         {
-            foreach (var vector3Int in tilemap.cellBounds.allPositionsWithin)
+            foreach (var position in tilemap.cellBounds.allPositionsWithin)
             {
-                var sprite = tilemap.GetSprite(vector3Int);
+                var sprite = tilemap.GetSprite(position);
                 if (!sprite) continue;
-                int id = sprite.GetInstanceID();
-                if (!_sprites.ContainsKey(id))
-                    _sprites.Add(id, sprite);
+                int spriteId = sprite.GetInstanceID();
+                if (!_sprites.ContainsKey(spriteId))
+                    _sprites.Add(spriteId, sprite);
                 else
-                    _sprites[id] = sprite;
+                    _sprites[spriteId] = sprite;
 
-                if (!_spritePositionsOnTileMap.ContainsKey(id))
-                    _spritePositionsOnTileMap.Add(sprite.GetInstanceID(), new List<Vector3Int> {vector3Int});
+                if (!_spritePositionsOnTileMap.ContainsKey(spriteId))
+                    _spritePositionsOnTileMap.Add(spriteId, new List<Vector3Int> {position});
                 else
-                    _spritePositionsOnTileMap[sprite.GetInstanceID()].Add(vector3Int);
+                    _spritePositionsOnTileMap[spriteId].Add(position);
             }
         }
 
