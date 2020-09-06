@@ -45,7 +45,8 @@ namespace BattleshipGame.Core
 
         private void Start()
         {
-            foreach (var placement in placementMap.placements) userMap.SetShip(placement.ship, placement.Coordinate);
+            foreach (var placement in placementMap.GetPlacements())
+                userMap.SetShip(placement.ship, placement.Coordinate);
             opponentMap.SetDisabled();
             if (_client.RoomState != null) OnFirstRoomStateReceived(_client.RoomState);
         }
@@ -227,7 +228,7 @@ namespace BattleshipGame.Core
                 return;
             }
 
-            userMap.SetMarker(item, !(from placement in placementMap.placements
+            userMap.SetMarker(item, !(from placement in placementMap.GetPlacements()
                 from part in placement.ship.PartCoordinates
                 select placement.Coordinate + (Vector3Int) part
                 into partCoordinate

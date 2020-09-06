@@ -25,7 +25,9 @@ namespace BattleshipGame.Core
         private NetworkClient _client;
         private bool _leavePopUpIsOn;
         private NetworkManager _networkManager;
+        private List<PlacementMap.Placement> _placements = new List<PlacementMap.Placement>();
         private SortedDictionary<int, Ship> _pool;
+        private List<int> _shipsNotDragged = new List<int>();
         private State _state;
         private Vector2Int MapAreaSize => rules.AreaSize;
         private IEnumerable<Ship> Ships => rules.ships;
@@ -79,9 +81,21 @@ namespace BattleshipGame.Core
 
         private void PlaceShipsRandomly()
         {
+            ResetPlacementMap();
+
+            if (_shipsNotDragged.Count == 0) _shipsNotDragged = _pool.Keys.ToList();
+
+            foreach (var placement in _placements.Where(placement => !_shipsNotDragged.Contains(placement.shipIndex)))
+            {
+                map.SetShip(placement.ship, placement.Coordinate, false);
+                AddCellToPlacementMap(placement.shipIndex, placement.ship, placement.Coordinate);
+                placementMap.PlaceShip(placement.shipIndex, placement.ship, placement.Coordinate);
+            }
+
             var from = new List<int>();
             for (var i = 0; i < _cellCount; i++) from.Add(i);
-            foreach (int key in _pool.Keys.ToList())
+
+            foreach (int key in _shipsNotDragged)
             {
                 var isPlaced = false;
                 while (!isPlaced)
@@ -90,7 +104,7 @@ namespace BattleshipGame.Core
 
                     int cell = from[Random.Range(0, from.Count)];
                     from.Remove(cell);
-                    isPlaced = PlaceShip(_pool[key], GridUtils.ToCoordinate(cell, MapAreaSize.x));
+                    isPlaced = PlaceShip(_pool[key], GridUtils.ToCoordinate(cell, MapAreaSize.x), key);
                 }
 
                 if (isPlaced) continue;
@@ -98,7 +112,8 @@ namespace BattleshipGame.Core
                 break;
             }
 
-            randomButton.SetInteractable(false);
+            continueButton.SetInteractable(true);
+            _networkManager.SetStatusText("Looks like you are ready.");
         }
 
         private void ResetPlacementMap()
@@ -113,54 +128,65 @@ namespace BattleshipGame.Core
             clearButton.SetInteractable(false);
             continueButton.SetInteractable(false);
             _networkManager.SetStatusText("Place your Ships!");
-            placementMap.placements.Clear();
+            placementMap.Clear();
             _cells = new int[_cellCount];
             for (var i = 0; i < _cellCount; i++) _cells[i] = -1;
             PopulateShipPool();
-        }
 
-        private void PopulateShipPool()
-        {
-            _pool = new SortedDictionary<int, Ship>();
-            var index = 0;
-            foreach (var ship in Ships)
-                for (var i = 0; i < ship.amount; i++)
-                {
-                    _pool.Add(index, ship);
-                    index++;
-                }
-        }
-
-        private int GetKeyAndRemoveFromPool(Object ship)
-        {
-            int key = -1;
-            foreach (var kvp in _pool.Where(kvp => kvp.Value == ship))
+            void PopulateShipPool()
             {
-                key = kvp.Key;
-                break;
+                _pool = new SortedDictionary<int, Ship>();
+                var index = 0;
+                foreach (var ship in Ships)
+                    for (var i = 0; i < ship.amount; i++)
+                    {
+                        _pool.Add(index, ship);
+                        index++;
+                    }
             }
-
-            _pool.Remove(key);
-            return key;
         }
 
-        public bool PlaceShip(Ship ship, Vector3Int cellCoordinate)
+        private int GetShipTypeIndex(Object ship)
+        {
+            foreach (var kvp in _pool.Where(kvp => kvp.Value == ship)) return kvp.Key;
+            return -1;
+        }
+
+        public bool PlaceShip(Ship ship, Vector3Int cellCoordinate, int shipTypeIndex = -1)
         {
             if (!_pool.ContainsValue(ship)) return false;
             (int shipWidth, int shipHeight) = ship.GetShipSize();
             if (!GridUtils.DoesShipFitIn(shipWidth, shipHeight, cellCoordinate, MapAreaSize.x)) return false;
             if (DoesCollideWithOtherShip(cellCoordinate, shipWidth, shipHeight)) return false;
             clearButton.SetInteractable(true);
-            AddCellToPlacementMap(ship, cellCoordinate, GetKeyAndRemoveFromPool(ship));
             map.SetShip(ship, cellCoordinate, false);
-            placementMap.placements.Add(new PlacementMap.Placement {ship = ship, Coordinate = cellCoordinate});
+            var shouldRemoveFromPool = false;
+            if (shipTypeIndex == -1)
+            {
+                shipTypeIndex = GetShipTypeIndex(ship);
+                shouldRemoveFromPool = true;
+            }
+
+            AddCellToPlacementMap(shipTypeIndex, ship, cellCoordinate);
+            placementMap.PlaceShip(shipTypeIndex, ship, cellCoordinate);
+            if (shouldRemoveFromPool)
+            {
+                _pool.Remove(shipTypeIndex);
+                _shipsNotDragged = _pool.Keys.ToList();
+                foreach (int key in _shipsNotDragged) Debug.Log($"_remainingShipsAfterUserPick: {key}");
+
+                _placements = placementMap.GetPlacements();
+                foreach (var placement in _placements) Debug.Log($"placement.shipIndex: {placement.shipIndex}");
+            }
+
             if (_pool.Count != 0) return true;
+            randomButton.SetInteractable(false);
             continueButton.SetInteractable(true);
             _networkManager.SetStatusText("Looks like you are ready.");
             return true;
         }
 
-        private void AddCellToPlacementMap(Ship ship, Vector3Int cellCoordinate, int shipTypeIndex)
+        private void AddCellToPlacementMap(int shipTypeIndex, Ship ship, Vector3Int cellCoordinate)
         {
             foreach (int cellIndex in ship.PartCoordinates
                 .Select(p => new Vector3Int(cellCoordinate.x + p.x, cellCoordinate.y + p.y, 0))
