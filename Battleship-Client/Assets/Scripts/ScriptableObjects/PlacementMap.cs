@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 namespace BattleshipGame.ScriptableObjects
 {
@@ -15,7 +16,7 @@ namespace BattleshipGame.ScriptableObjects
             int index = -1;
             for (var i = 0; i < placements.Count; i++)
             {
-                if (!placements[i].shipIndex.Equals(shipIndex)) continue;
+                if (!placements[i].shipId.Equals(shipIndex)) continue;
                 index = shipIndex;
                 break;
             }
@@ -45,13 +46,13 @@ namespace BattleshipGame.ScriptableObjects
         [Serializable]
         public struct Placement
         {
-            public int shipIndex;
+            public int shipId;
             public Ship ship;
             public Vector3Int Coordinate;
 
-            public Placement(int shipIndex, Ship ship, Vector3Int coordinate)
+            public Placement(int shipId, Ship ship, Vector3Int coordinate)
             {
-                this.shipIndex = shipIndex;
+                this.shipId = shipId;
                 this.ship = ship;
                 Coordinate = coordinate;
             }
