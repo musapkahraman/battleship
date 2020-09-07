@@ -106,7 +106,7 @@ namespace BattleshipGame.Core
 
                     int cell = from[Random.Range(0, from.Count)];
                     from.Remove(cell);
-                    isPlaced = PlaceShip(_pool[key], ToCoordinate(cell, MapAreaSize.x), default, key);
+                    isPlaced = PlaceShip(_pool[key], CellIndexToCoordinate(cell, MapAreaSize.x), default, key);
                 }
 
                 if (isPlaced) continue;
@@ -159,7 +159,7 @@ namespace BattleshipGame.Core
 
         private int GetShipId(Object ship, Vector3Int grabbedFrom)
         {
-            int cellIndex = ToCellIndex(grabbedFrom, MapAreaSize);
+            int cellIndex = CoordinateToCellIndex(grabbedFrom, MapAreaSize);
             if (cellIndex != OutOfMap && _cells[cellIndex] != EmptyCell)
                 return _cells[cellIndex];
 
@@ -208,7 +208,7 @@ namespace BattleshipGame.Core
             // Find each cell the ship covers and register the ship on them
             foreach (int cellIndex in ship.PartCoordinates
                 .Select(part => new Vector3Int(pivot.x + part.x, pivot.y + part.y, 0))
-                .Select(coordinate => ToCellIndex(coordinate, MapAreaSize)))
+                .Select(coordinate => CoordinateToCellIndex(coordinate, MapAreaSize)))
                 if (cellIndex != OutOfMap)
                     _cells[cellIndex] = shipId;
         }
@@ -226,7 +226,7 @@ namespace BattleshipGame.Core
                 for (int x = xMin; x <= xMax; x++)
                 {
                     if (x < 0 || x > MapAreaSize.x - 1) continue; // Avoid this column if it is out of the map
-                    int cellIndex = ToCellIndex(new Vector3Int(x, y, 0), MapAreaSize);
+                    int cellIndex = CoordinateToCellIndex(new Vector3Int(x, y, 0), MapAreaSize);
                     if (cellIndex != OutOfMap &&
                         (_cells[cellIndex] == EmptyCell || _cells[cellIndex] == selfShipId)) continue;
 

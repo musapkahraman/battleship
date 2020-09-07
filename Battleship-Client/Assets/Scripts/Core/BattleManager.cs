@@ -10,6 +10,8 @@ using BattleshipGame.UI;
 using Colyseus.Schema;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using static BattleshipGame.Common.GridUtils;
+using static BattleshipGame.Common.MapInteractionMode;
 
 namespace BattleshipGame.Core
 {
@@ -47,7 +49,7 @@ namespace BattleshipGame.Core
         {
             foreach (var placement in placementMap.GetPlacements())
                 userMap.SetShip(placement.ship, placement.Coordinate, default);
-            opponentMap.SetDisabled();
+            opponentMap.InteractionMode = Disabled;
             if (_client.RoomState != null) OnFirstRoomStateReceived(_client.RoomState);
         }
 
@@ -96,11 +98,11 @@ namespace BattleshipGame.Core
 
         public void MarkTarget(Vector3Int targetCoordinate)
         {
-            int targetIndex = GridUtils.ToCellIndex(targetCoordinate, MapAreaSize);
+            int targetIndex = CoordinateToCellIndex(targetCoordinate, MapAreaSize);
             if (_shots.Contains(targetIndex))
             {
                 _shots.Remove(targetIndex);
-                opponentMap.ClearMarkerTile(targetIndex);
+                opponentMap.ClearMarkerTile(targetCoordinate);
             }
             else if (_shots.Count < rules.shotsPerTurn && opponentMap.SetMarker(targetIndex, Marker.MarkedTarget))
             {
@@ -149,8 +151,8 @@ namespace BattleshipGame.Core
 
             void ShowResult()
             {
-                userMap.SetDisabled();
-                opponentMap.SetDisabled();
+                userMap.InteractionMode = Disabled;
+                opponentMap.InteractionMode = Disabled;
                 _networkManager.ClearStatusText();
 
                 bool isWinner = _state.winningPlayer == _playerNumber;
@@ -186,15 +188,15 @@ namespace BattleshipGame.Core
             void StartTurn()
             {
                 _shots.Clear();
-                userMap.SetDisabled();
-                opponentMap.SetAttackMode();
+                userMap.InteractionMode = Disabled;
+                opponentMap.InteractionMode = MarkTargets;
                 _networkManager.SetStatusText("It's your turn!");
             }
 
             void WaitForOpponentTurn()
             {
-                userMap.SetDisabled();
-                opponentMap.SetDisabled();
+                userMap.InteractionMode = Disabled;
+                opponentMap.InteractionMode = Disabled;
                 _networkManager.SetStatusText("Waiting for the opponent to attack.");
             }
         }
@@ -233,7 +235,7 @@ namespace BattleshipGame.Core
                 from part in placement.ship.PartCoordinates
                 select placement.Coordinate + (Vector3Int) part
                 into partCoordinate
-                let shot = GridUtils.ToCoordinate(item, MapAreaSize.x)
+                let shot = CellIndexToCoordinate(item, MapAreaSize.x)
                 where partCoordinate.Equals(shot)
                 select partCoordinate).Any()
                 ? Marker.Missed

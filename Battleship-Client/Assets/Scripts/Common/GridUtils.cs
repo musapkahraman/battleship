@@ -5,13 +5,8 @@ namespace BattleshipGame.Common
     public static class GridUtils
     {
         public const int OutOfMap = -1;
-        
-        public static Vector3Int ToCoordinate(int cellIndex, int width)
-        {
-            return new Vector3Int(cellIndex % width, cellIndex / width, 0);
-        }
 
-        public static int ToCellIndex(Vector3Int coordinate, Vector2Int areaSize)
+        public static int CoordinateToCellIndex(Vector3Int coordinate, Vector2Int areaSize)
         {
             int cellIndex = coordinate.y * areaSize.x + coordinate.x;
             if (cellIndex >= 0 && cellIndex < areaSize.x * areaSize.y) return cellIndex;
@@ -19,7 +14,13 @@ namespace BattleshipGame.Common
             return OutOfMap;
         }
 
-        public static Vector3Int ScreenToCell(Vector3 screenPoint, Grid grid, Camera sceneCamera, Vector2Int areaSize)
+        public static Vector3Int CellIndexToCoordinate(int cellIndex, int width)
+        {
+            return new Vector3Int(cellIndex % width, cellIndex / width, 0);
+        }
+
+        public static Vector3Int ScreenToCoordinate(Vector3 screenPoint, Grid grid, Camera sceneCamera,
+            Vector2Int areaSize)
         {
             var worldPoint = sceneCamera.ScreenToWorldPoint(screenPoint);
             var cell = grid.WorldToCell(worldPoint);

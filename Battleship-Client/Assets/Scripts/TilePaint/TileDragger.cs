@@ -35,8 +35,8 @@ namespace BattleshipGame.TilePaint
         private void OnMouseDown()
         {
             _isReleasedInside = false;
-            if (_selfBattleMap && _selfBattleMap.Mode == MapMode.Attack) return;
-            _grabbedFrom = GridUtils.ScreenToCell(Input.mousePosition, _grid, sceneCamera, rules.AreaSize);
+            if (_selfBattleMap && _selfBattleMap.InteractionMode != MapInteractionMode.GrabShips) return;
+            _grabbedFrom = GridUtils.ScreenToCoordinate(Input.mousePosition, _grid, sceneCamera, rules.AreaSize);
             _sprite = _selfGridSpriteMapper.GetSpriteAt(ref _grabbedFrom);
             if (!_sprite) return;
             _grabbedShip = Instantiate(dragShipPrefab, GetMousePositionOnZeroZ(), Quaternion.identity);
@@ -64,7 +64,7 @@ namespace BattleshipGame.TilePaint
             foreach (var ship in rules.ships)
                 if (ship.tile.sprite.Equals(_sprite))
                 {
-                    var droppedTo = GridUtils.ScreenToCell(Input.mousePosition,
+                    var droppedTo = GridUtils.ScreenToCoordinate(Input.mousePosition,
                         targetMap.GetComponent<Grid>(), sceneCamera, rules.AreaSize);
                     (int shipWidth, int shipHeight) = ship.GetShipSize();
                     if (GridUtils.DoesShipFitIn(shipWidth, shipHeight, droppedTo, rules.AreaSize.x) &&

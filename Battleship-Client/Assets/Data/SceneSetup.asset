@@ -15,17 +15,17 @@ MonoBehaviour:
   sceneSetup:
   - m_Path: Assets/Scenes/Master.unity
     m_IsLoaded: 1
-    m_IsActive: 0
-    m_IsSubScene: 0
-  - m_Path: Assets/Scenes/Lobby.unity
-    m_IsLoaded: 1
     m_IsActive: 1
     m_IsSubScene: 0
-  - m_Path: Assets/Scenes/Placement.unity
+  - m_Path: Assets/Scenes/Lobby.unity
     m_IsLoaded: 0
     m_IsActive: 0
     m_IsSubScene: 0
-  - m_Path: Assets/Scenes/Game.unity
+  - m_Path: Assets/Scenes/Plan.unity
     m_IsLoaded: 0
+    m_IsActive: 0
+    m_IsSubScene: 0
+  - m_Path: Assets/Scenes/Battle.unity
+    m_IsLoaded: 1
     m_IsActive: 0
     m_IsSubScene: 0

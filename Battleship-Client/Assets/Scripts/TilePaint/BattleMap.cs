@@ -4,6 +4,8 @@ using BattleshipGame.Core;
 using BattleshipGame.ScriptableObjects;
 using UnityEngine;
 using UnityEngine.Tilemaps;
+using static BattleshipGame.Common.GridUtils;
+using static BattleshipGame.Common.MapInteractionMode;
 
 namespace BattleshipGame.TilePaint
 {
@@ -31,11 +33,34 @@ namespace BattleshipGame.TilePaint
         [SerializeField] private Tile shotTargetMarker;
         [Space] 
         // @formatter:on
-        private Tile _cursorTile;
-
         private Grid _grid;
 
-        public MapMode Mode { get; private set; }
+        private bool _isMarkingTargets;
+        private MapInteractionMode _interactionMode;
+
+        public MapInteractionMode InteractionMode
+        {
+            get => _interactionMode;
+            set
+            {
+                switch (value)
+                {
+                    case Disabled:
+                        break;
+                    case MarkTargets:
+                        _isMarkingTargets = true;
+                        break;
+                    case HighlightTurn:
+                        break;
+                    case GrabShips:
+                        break;
+                    default:
+                        throw new ArgumentOutOfRangeException(nameof(value), value, null);
+                }
+
+                _interactionMode = value;
+            }
+        }
 
         private void Start()
         {
@@ -53,47 +78,41 @@ namespace BattleshipGame.TilePaint
 
         private void OnMouseDown()
         {
-            var cellCoordinate =
-                GridUtils.ScreenToCell(Input.mousePosition, _grid, sceneCamera, rules.AreaSize);
-            switch (Mode)
-            {
-                case MapMode.Attack:
-                    if (screenType == ScreenType.Opponent) manager.MarkTarget(cellCoordinate);
-                    break;
-                case MapMode.Disabled:
-                    break;
-                default:
-                    throw new ArgumentOutOfRangeException();
-            }
+            if (InteractionMode != MarkTargets || screenType != ScreenType.Opponent) return;
+            manager.MarkTarget(ScreenToCoordinate(Input.mousePosition, _grid, sceneCamera, rules.AreaSize));
+        }
+
+        private void OnMouseExit()
+        {
+            if (InteractionMode != MarkTargets || screenType != ScreenType.Opponent) return;
+            cursorLayer.ClearAllTiles();
         }
 
         private void OnMouseOver()
         {
+            if (InteractionMode != MarkTargets || screenType != ScreenType.Opponent) return;
             cursorLayer.ClearAllTiles();
-            if (Mode == MapMode.Disabled) return;
-            var cell = GridUtils.ScreenToCell(Input.mousePosition, _grid, sceneCamera, rules.AreaSize);
-            cursorLayer.SetTile(cell, _cursorTile);
+            var coordinate = ScreenToCoordinate(Input.mousePosition, _grid, sceneCamera, rules.AreaSize);
+            if (markerLayer.HasTile(coordinate))
+            {
+                var tile = markerLayer.GetTile(coordinate);
+                if (tile && tile.name.Equals(markedTargetMarker.name))
+                    cursorLayer.SetTile(coordinate, inactiveCursor);
+            }
+            else if (_isMarkingTargets)
+            {
+                cursorLayer.SetTile(coordinate, activeCursor);
+            }
         }
 
         private void DisableTargetCursor()
         {
-            _cursorTile = inactiveCursor;
+            _isMarkingTargets = false;
         }
 
         private void EnableTargetCursor()
         {
-            _cursorTile = activeCursor;
-        }
-
-        public void SetDisabled()
-        {
-            Mode = MapMode.Disabled;
-        }
-
-        public void SetAttackMode()
-        {
-            Mode = MapMode.Attack;
-            _cursorTile = activeCursor;
+            _isMarkingTargets = true;
         }
 
         public override bool SetShip(Ship ship, Vector3Int coordinate, Vector3Int grabbedFrom, bool isDragged = false)
@@ -107,9 +126,8 @@ namespace BattleshipGame.TilePaint
             fleetLayer.ClearAllTiles();
         }
 
-        public void ClearMarkerTile(int index)
+        public void ClearMarkerTile(Vector3Int coordinate)
         {
-            var coordinate = GridUtils.ToCoordinate(index, rules.AreaSize.x);
             if (markerLayer.HasTile(coordinate)) markerLayer.SetTile(coordinate, null);
         }
 
@@ -134,7 +152,7 @@ namespace BattleshipGame.TilePaint
                     throw new ArgumentOutOfRangeException(nameof(marker), marker, null);
             }
 
-            var coordinate = GridUtils.ToCoordinate(index, rules.AreaSize.x);
+            var coordinate = CellIndexToCoordinate(index, rules.AreaSize.x);
             var tile = markerLayer.GetTile(coordinate);
             if (tile && !(markerTile is null) && markerTile.name.Equals(markedTargetMarker.name))
                 return false;
