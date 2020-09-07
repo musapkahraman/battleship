@@ -96,7 +96,7 @@ namespace BattleshipGame.TilePaint
             _cursorTile = activeCursor;
         }
 
-        public override bool SetShip(Ship ship, Vector3Int coordinate, bool isDragged = false)
+        public override bool SetShip(Ship ship, Vector3Int coordinate, Vector3Int grabbedFrom, bool isDragged = false)
         {
             fleetLayer.SetTile(coordinate, ship.tile);
             return true;

@@ -17,7 +17,7 @@ namespace BattleshipGame.ScriptableObjects
             for (var i = 0; i < placements.Count; i++)
             {
                 if (!placements[i].shipId.Equals(shipIndex)) continue;
-                index = shipIndex;
+                index = i;
                 break;
             }
 

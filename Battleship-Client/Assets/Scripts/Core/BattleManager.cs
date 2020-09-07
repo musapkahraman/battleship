@@ -46,7 +46,7 @@ namespace BattleshipGame.Core
         private void Start()
         {
             foreach (var placement in placementMap.GetPlacements())
-                userMap.SetShip(placement.ship, placement.Coordinate);
+                userMap.SetShip(placement.ship, placement.Coordinate, default);
             opponentMap.SetDisabled();
             if (_client.RoomState != null) OnFirstRoomStateReceived(_client.RoomState);
         }
