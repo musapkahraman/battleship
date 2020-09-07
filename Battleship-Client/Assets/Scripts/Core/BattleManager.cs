@@ -53,6 +53,7 @@ namespace BattleshipGame.Core
 
         private void OnDestroy()
         {
+            placementMap.Clear();
             if (_client == null) return;
             _client.FirstRoomStateReceived -= OnFirstRoomStateReceived;
             _client.GamePhaseChanged -= OnGamePhaseChanged;

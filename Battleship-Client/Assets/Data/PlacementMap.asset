@@ -12,24 +12,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4739ce4f8bdb4a2c9a1101bccdfadd66, type: 3}
   m_Name: PlacementMap
   m_EditorClassIdentifier: 
-  placements:
-  - ship: {fileID: 0}
-    Coordinate: {x: 0, y: 0}
-  - ship: {fileID: 0}
-    Coordinate: {x: 0, y: 0}
-  - ship: {fileID: 0}
-    Coordinate: {x: 0, y: 0}
-  - ship: {fileID: 0}
-    Coordinate: {x: 0, y: 0}
-  - ship: {fileID: 0}
-    Coordinate: {x: 0, y: 0}
-  - ship: {fileID: 0}
-    Coordinate: {x: 0, y: 0}
-  - ship: {fileID: 0}
-    Coordinate: {x: 0, y: 0}
-  - ship: {fileID: 0}
-    Coordinate: {x: 0, y: 0}
-  - ship: {fileID: 0}
-    Coordinate: {x: 0, y: 0}
-  - ship: {fileID: 0}
-    Coordinate: {x: 0, y: 0}
+  placements: []
