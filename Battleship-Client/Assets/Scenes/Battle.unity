@@ -1593,7 +1593,7 @@ MonoBehaviour:
   highlightButton: {fileID: 82705935}
   userMap: {fileID: 167099665}
   opponentMap: {fileID: 1804129002}
-  opponentStatusMaskPlacer: {fileID: 1093841618}
+  opponentStatus: {fileID: 1093841618}
   rules: {fileID: 11400000, guid: 536a0464e90bd734190c1b8189b64ddd, type: 2}
   placementMap: {fileID: 11400000, guid: 432e41401bba21546a52dbadb3099a78, type: 2}
 --- !u!1001 &1890760322

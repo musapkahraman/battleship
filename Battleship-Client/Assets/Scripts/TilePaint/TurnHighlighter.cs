@@ -13,20 +13,20 @@ namespace BattleshipGame.TilePaint
         [SerializeField] private BattleMap battleMap;
 
         private Grid _grid;
-        private OpponentStatusMaskPlacer _statusMaskPlacer;
+        private OpponentStatus _status;
 
         private void Start()
         {
             _grid = GetComponent<Grid>();
-            _statusMaskPlacer = GetComponent<OpponentStatusMaskPlacer>();
+            _status = GetComponent<OpponentStatus>();
         }
 
         private void OnMouseDown()
         {
             if (battleMap.InteractionMode != MapInteractionMode.TurnHighlighting) return;
             var coordinate = GridUtils.ScreenToCoordinate(Input.mousePosition, _grid, sceneCamera, rules.AreaSize);
-            Debug.Log($"Highlight {coordinate}");
-            manager.HighlightTurn(_statusMaskPlacer.GetShotTurn(coordinate));
+            int shotTurn = _status.GetShotTurn(coordinate);
+            manager.HighlightTurn(shotTurn);
         }
     }
 }

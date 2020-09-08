@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using BattleshipGame.Common;
 using BattleshipGame.Core;
 using BattleshipGame.ScriptableObjects;
@@ -123,6 +124,13 @@ namespace BattleshipGame.TilePaint
         public override void ClearAllShips()
         {
             fleetLayer.ClearAllTiles();
+        }
+
+        public void HighlightTurns(IEnumerable<int> cells)
+        {
+            cursorLayer.ClearAllTiles();
+            foreach (int cell in cells)
+                cursorLayer.SetTile(CellIndexToCoordinate(cell, rules.AreaSize.x), inactiveCursor);
         }
 
         public void ClearMarker(Vector3Int coordinate)

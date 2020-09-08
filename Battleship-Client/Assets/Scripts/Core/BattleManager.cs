@@ -24,7 +24,7 @@ namespace BattleshipGame.Core
         [SerializeField] private ButtonController highlightButton;
         [SerializeField] private BattleMap userMap;
         [SerializeField] private BattleMap opponentMap;
-        [SerializeField] private OpponentStatusMaskPlacer opponentStatusMaskPlacer;
+        [SerializeField] private OpponentStatus opponentStatus;
         [SerializeField] private Rules rules;
         [SerializeField] private PlacementMap placementMap;
         private readonly Dictionary<int, List<int>> _shots = new Dictionary<int, List<int>>();
@@ -121,21 +121,20 @@ namespace BattleshipGame.Core
         public void HighlightTurn(Vector3Int coordinate)
         {
             int cellIndex = CoordinateToCellIndex(coordinate, MapAreaSize);
-            foreach (var kvp in _shots)
-            foreach (int cell in kvp.Value)
+            foreach (var keyValuePair in from keyValuePair in _shots
+                from cell in keyValuePair.Value
+                where cell == cellIndex
+                select keyValuePair)
             {
-                if (cell != cellIndex) continue;
-                HighlightTurn(kvp.Key);
+                HighlightTurn(keyValuePair.Key);
                 return;
             }
         }
 
         public void HighlightTurn(int turn)
         {
-            foreach (int cell in _shots[turn])
-            {
-                Debug.Log($"Highlighted cell: {cell}");
-            }
+            if (!_shots.ContainsKey(turn)) return;
+            opponentMap.HighlightTurns(_shots[turn]);
         }
 
         public void MarkTarget(Vector3Int targetCoordinate)
@@ -323,18 +322,18 @@ namespace BattleshipGame.Core
         private void OnFirstPlayerShipsChanged(int turn, int part)
         {
             const int playerNumber = 1;
-            SetHitPoints(part, turn, playerNumber);
+            RegisterShotParts(part, turn, playerNumber);
         }
 
         private void OnSecondPlayerShipsChanged(int turn, int part)
         {
             const int playerNumber = 2;
-            SetHitPoints(part, turn, playerNumber);
+            RegisterShotParts(part, turn, playerNumber);
         }
 
-        private void SetHitPoints(int part, int shotTurn, int playerNumber)
+        private void RegisterShotParts(int part, int shotTurn, int playerNumber)
         {
-            if (_playerNumber != playerNumber) opponentStatusMaskPlacer.PlaceMask(part, shotTurn);
+            if (_playerNumber != playerNumber) opponentStatus.RegisterAndDisplay(part, shotTurn);
         }
     }
 }
