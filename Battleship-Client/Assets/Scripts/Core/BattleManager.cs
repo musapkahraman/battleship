@@ -320,21 +320,21 @@ namespace BattleshipGame.Core
                 : Marker.Hit);
         }
 
-        private void OnFirstPlayerShipsChanged(int value, int key)
+        private void OnFirstPlayerShipsChanged(int turn, int part)
         {
             const int playerNumber = 1;
-            SetHitPoints(key, value, playerNumber);
+            SetHitPoints(part, turn, playerNumber);
         }
 
-        private void OnSecondPlayerShipsChanged(int value, int key)
+        private void OnSecondPlayerShipsChanged(int turn, int part)
         {
             const int playerNumber = 2;
-            SetHitPoints(key, value, playerNumber);
+            SetHitPoints(part, turn, playerNumber);
         }
 
-        private void SetHitPoints(int item, int index, int playerNumber)
+        private void SetHitPoints(int part, int shotTurn, int playerNumber)
         {
-            if (_playerNumber != playerNumber) opponentStatusMaskPlacer.PlaceMask(item, index);
+            if (_playerNumber != playerNumber) opponentStatusMaskPlacer.PlaceMask(part, shotTurn);
         }
     }
 }

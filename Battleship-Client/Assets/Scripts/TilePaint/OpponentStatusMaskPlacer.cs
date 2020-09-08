@@ -29,10 +29,10 @@ namespace BattleshipGame.TilePaint
                         _shipParts.Add(new ShipPart(-1, coordinate, ship.tile.sprite.GetInstanceID()));
         }
 
-        private Vector3 GetPosition(int changedShipPart, int status)
+        private Vector3 GetPosition(int changedShipPart, int shotTurn)
         {
             var part = _shipParts[changedShipPart];
-            part.Status = status;
+            part.ShotTurn = shotTurn;
             _shipParts[changedShipPart] = part;
 
             var spritePositionStack = _spritePositions[part.SpriteId];
@@ -40,9 +40,9 @@ namespace BattleshipGame.TilePaint
             return transform.position + position + (Vector3) part.Coordinate + new Vector3(0.5f, 0.5f);
         }
 
-        public void PlaceMask(int changedShipPart, int status)
+        public void PlaceMask(int changedShipPart, int shotTurn)
         {
-            Instantiate(maskPrefab, GetPosition(changedShipPart, status), Quaternion.identity);
+            Instantiate(maskPrefab, GetPosition(changedShipPart, shotTurn), Quaternion.identity);
         }
 
         public int GetShotTurn(Vector3Int coordinate)
@@ -52,13 +52,13 @@ namespace BattleshipGame.TilePaint
 
         private struct ShipPart
         {
-            public int Status;
+            public int ShotTurn;
             public readonly Vector2 Coordinate;
             public readonly int SpriteId;
 
-            public ShipPart(int status, Vector2 coordinate, int spriteId)
+            public ShipPart(int shotTurn, Vector2 coordinate, int spriteId)
             {
-                Status = status;
+                ShotTurn = shotTurn;
                 Coordinate = coordinate;
                 SpriteId = spriteId;
             }
