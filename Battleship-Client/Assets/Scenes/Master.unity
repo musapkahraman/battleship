@@ -237,10 +237,10 @@ RectTransform:
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 1, y: 0}
-  m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 0, y: 60}
-  m_Pivot: {x: 0.5, y: 0}
+  m_AnchorMax: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 0, y: 25}
+  m_SizeDelta: {x: 640, y: 50}
+  m_Pivot: {x: 0, y: 0}
 --- !u!114 &322319179
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -503,11 +503,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ba7d6b9b43e94c542b59217bc84a7be6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  onlineEndpoint: ws://bronzehero.herokuapp.com
+  serverType: 1
+  messageField: {fileID: 322319179}
   progressBarCanvasPrefab: {fileID: 868588383397605981, guid: b5624325612bcf0438993606f5726bef,
     type: 3}
-  messageField: {fileID: 322319179}
-  serverType: 1
-  onlineEndpoint: ws://bronzehero.herokuapp.com
 --- !u!4 &1560539549
 Transform:
   m_ObjectHideFlags: 0

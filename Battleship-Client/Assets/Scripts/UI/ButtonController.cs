@@ -22,9 +22,9 @@ namespace BattleshipGame.UI
             if (buttonText)
             {
                 if (state)
-                    buttonText.color /= 0.25f;
+                    buttonText.color /= 0.5f;
                 else
-                    buttonText.color *= 0.25f;
+                    buttonText.color *= 0.5f;
             }
 
             _button.interactable = state;

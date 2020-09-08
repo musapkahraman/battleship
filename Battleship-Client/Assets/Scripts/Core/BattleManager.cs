@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using BattleshipGame.Common;
 using BattleshipGame.Network;
@@ -18,6 +17,11 @@ namespace BattleshipGame.Core
     public class BattleManager : MonoBehaviour
     {
         [SerializeField] private GameObject popUpPrefab;
+        [SerializeField] private ButtonController leaveButton;
+        [SerializeField] private ButtonController fireButton;
+        [SerializeField] private ButtonController markButton;
+        [SerializeField] private ButtonController grabButton;
+        [SerializeField] private ButtonController highlightButton;
         [SerializeField] private BattleMap userMap;
         [SerializeField] private BattleMap opponentMap;
         [SerializeField] private OpponentStatusMaskPlacer opponentStatusMaskPlacer;
@@ -49,7 +53,24 @@ namespace BattleshipGame.Core
         {
             foreach (var placement in placementMap.GetPlacements())
                 userMap.SetShip(placement.ship, placement.Coordinate, default);
+
             opponentMap.InteractionMode = Disabled;
+            _networkManager.ClearStatusText();
+
+            leaveButton.SetText("Leave");
+            fireButton.SetText("Fire!");
+            markButton.SetText("Mark");
+            grabButton.SetText("Grab");
+            highlightButton.SetText("Highlight");
+
+            leaveButton.AddListener(LeaveGame);
+            fireButton.AddListener(FireShots);
+
+            fireButton.SetInteractable(false);
+            markButton.SetInteractable(false);
+            grabButton.SetInteractable(false);
+            highlightButton.SetInteractable(false);
+
             if (_client.RoomState != null) OnFirstRoomStateReceived(_client.RoomState);
         }
 
@@ -71,9 +92,6 @@ namespace BattleshipGame.Core
                 _state.player2Ships.OnChange -= OnSecondPlayerShipsChanged;
             }
         }
-
-        public event Action FireReady;
-        public event Action FireNotReady;
 
         private void OnFirstRoomStateReceived(State initialState)
         {
@@ -102,21 +120,20 @@ namespace BattleshipGame.Core
             if (_shots.Contains(targetIndex))
             {
                 _shots.Remove(targetIndex);
-                opponentMap.ClearMarkerTile(targetCoordinate);
+                opponentMap.ClearMarker(targetCoordinate);
             }
             else if (_shots.Count < rules.shotsPerTurn && opponentMap.SetMarker(targetIndex, Marker.MarkedTarget))
             {
                 _shots.Add(targetIndex);
             }
 
-            if (_shots.Count == rules.shotsPerTurn)
-                FireReady?.Invoke();
-            else
-                FireNotReady?.Invoke();
+            fireButton.SetInteractable(_shots.Count == rules.shotsPerTurn);
+            opponentMap.IsMarkingTargets = _shots.Count != rules.shotsPerTurn;
         }
 
-        public void FireShots()
+        private void FireShots()
         {
+            fireButton.SetInteractable(false);
             if (_shots.Count == rules.shotsPerTurn)
                 _client.SendTurn(_shots.ToArray());
         }

@@ -35,7 +35,6 @@ namespace BattleshipGame.TilePaint
         // @formatter:on
         private Grid _grid;
 
-        private bool _isMarkingTargets;
         private MapInteractionMode _interactionMode;
 
         public MapInteractionMode InteractionMode
@@ -48,7 +47,7 @@ namespace BattleshipGame.TilePaint
                     case Disabled:
                         break;
                     case MarkTargets:
-                        _isMarkingTargets = true;
+                        IsMarkingTargets = true;
                         break;
                     case HighlightTurn:
                         break;
@@ -62,18 +61,12 @@ namespace BattleshipGame.TilePaint
             }
         }
 
+        public bool IsMarkingTargets { get; set; }
+
         private void Start()
         {
             if (sceneCamera == null) sceneCamera = Camera.main;
             _grid = GetComponent<Grid>();
-            manager.FireReady += DisableTargetCursor;
-            manager.FireNotReady += EnableTargetCursor;
-        }
-
-        private void OnDestroy()
-        {
-            manager.FireReady -= DisableTargetCursor;
-            manager.FireNotReady -= EnableTargetCursor;
         }
 
         private void OnMouseDown()
@@ -99,20 +92,10 @@ namespace BattleshipGame.TilePaint
                 if (tile && tile.name.Equals(markedTargetMarker.name))
                     cursorLayer.SetTile(coordinate, inactiveCursor);
             }
-            else if (_isMarkingTargets)
+            else if (IsMarkingTargets)
             {
                 cursorLayer.SetTile(coordinate, activeCursor);
             }
-        }
-
-        private void DisableTargetCursor()
-        {
-            _isMarkingTargets = false;
-        }
-
-        private void EnableTargetCursor()
-        {
-            _isMarkingTargets = true;
         }
 
         public override bool SetShip(Ship ship, Vector3Int coordinate, Vector3Int grabbedFrom, bool isDragged = false)
@@ -126,7 +109,7 @@ namespace BattleshipGame.TilePaint
             fleetLayer.ClearAllTiles();
         }
 
-        public void ClearMarkerTile(Vector3Int coordinate)
+        public void ClearMarker(Vector3Int coordinate)
         {
             if (markerLayer.HasTile(coordinate)) markerLayer.SetTile(coordinate, null);
         }

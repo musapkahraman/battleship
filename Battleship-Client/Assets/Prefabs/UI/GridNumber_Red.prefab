@@ -10,27 +10,27 @@ PrefabInstance:
     - target: {fileID: 4282153877496215032, guid: 111572eadcbe3ea42a19c0375b5f686e,
         type: 3}
       propertyPath: m_Name
-      value: CellLabel Variant
+      value: GridNumber_Red
       objectReference: {fileID: 0}
     - target: {fileID: 4282153877496215038, guid: 111572eadcbe3ea42a19c0375b5f686e,
         type: 3}
       propertyPath: m_fontColor.r
-      value: 1
+      value: 0.7830189
       objectReference: {fileID: 0}
     - target: {fileID: 4282153877496215038, guid: 111572eadcbe3ea42a19c0375b5f686e,
         type: 3}
       propertyPath: m_fontColor.g
-      value: 0.05660379
+      value: 0.15686275
       objectReference: {fileID: 0}
     - target: {fileID: 4282153877496215038, guid: 111572eadcbe3ea42a19c0375b5f686e,
         type: 3}
       propertyPath: m_fontColor.b
-      value: 0.05660379
+      value: 0.15686275
       objectReference: {fileID: 0}
     - target: {fileID: 4282153877496215038, guid: 111572eadcbe3ea42a19c0375b5f686e,
         type: 3}
       propertyPath: m_fontColor32.rgba
-      value: 4279111423
+      value: 2519214280
       objectReference: {fileID: 0}
     - target: {fileID: 4282153877496215038, guid: 111572eadcbe3ea42a19c0375b5f686e,
         type: 3}
