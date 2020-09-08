@@ -44,14 +44,14 @@ namespace BattleshipGame.TilePaint
             {
                 switch (value)
                 {
-                    case Disabled:
+                    case NoInteraction:
                         break;
-                    case MarkTargets:
+                    case TargetMarking:
                         IsMarkingTargets = true;
                         break;
-                    case HighlightTurn:
+                    case TurnHighlighting:
                         break;
-                    case GrabShips:
+                    case ShipDragging:
                         break;
                     default:
                         throw new ArgumentOutOfRangeException(nameof(value), value, null);
@@ -74,18 +74,17 @@ namespace BattleshipGame.TilePaint
             if (screenType != ScreenType.Opponent) return;
             switch (InteractionMode)
             {
-                case MarkTargets:
+                case TargetMarking:
                     manager.MarkTarget(ScreenToCoordinate(Input.mousePosition, _grid, sceneCamera, rules.AreaSize));
                     break;
-                case HighlightTurn:
+                case TurnHighlighting:
                 {
-                    var coordinate = ScreenToCoordinate(Input.mousePosition, _grid, sceneCamera, rules.AreaSize);
-                    Debug.Log($"Highlight {coordinate}");
+                    manager.HighlightTurn(ScreenToCoordinate(Input.mousePosition, _grid, sceneCamera, rules.AreaSize));
                     break;
                 }
-                case Disabled:
+                case NoInteraction:
                     break;
-                case GrabShips:
+                case ShipDragging:
                     break;
                 default:
                     throw new ArgumentOutOfRangeException();
@@ -94,13 +93,13 @@ namespace BattleshipGame.TilePaint
 
         private void OnMouseExit()
         {
-            if (screenType != ScreenType.Opponent || InteractionMode != MarkTargets) return;
+            if (screenType != ScreenType.Opponent || InteractionMode != TargetMarking) return;
             cursorLayer.ClearAllTiles();
         }
 
         private void OnMouseOver()
         {
-            if (screenType != ScreenType.Opponent || InteractionMode != MarkTargets) return;
+            if (screenType != ScreenType.Opponent || InteractionMode != TargetMarking) return;
             cursorLayer.ClearAllTiles();
             var coordinate = ScreenToCoordinate(Input.mousePosition, _grid, sceneCamera, rules.AreaSize);
             if (markerLayer.HasTile(coordinate))

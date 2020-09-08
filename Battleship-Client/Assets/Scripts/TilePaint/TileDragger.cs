@@ -3,6 +3,7 @@ using BattleshipGame.Common;
 using BattleshipGame.ScriptableObjects;
 using UnityEngine;
 using UnityEngine.Tilemaps;
+using static BattleshipGame.Common.MapInteractionMode;
 
 namespace BattleshipGame.TilePaint
 {
@@ -38,23 +39,8 @@ namespace BattleshipGame.TilePaint
         private void OnMouseDown()
         {
             _isReleasedInside = false;
-            if (!_battleMap) Grab();
-            else
-                switch (_battleMap.InteractionMode)
-                {
-                    case MapInteractionMode.GrabShips:
-                        Grab();
-                        break;
-                    case MapInteractionMode.HighlightTurn:
-                        Highlight();
-                        break;
-                    case MapInteractionMode.Disabled:
-                        break;
-                    case MapInteractionMode.MarkTargets:
-                        break;
-                    default:
-                        throw new ArgumentOutOfRangeException();
-                }
+            if (_battleMap && _battleMap.InteractionMode != ShipDragging) return;
+            Grab();
         }
 
         private void OnMouseDrag() => Drag();
@@ -116,12 +102,6 @@ namespace BattleshipGame.TilePaint
                 }
 
             Destroy(_grabbedShip);
-        }
-
-        private void Highlight()
-        {
-            var coordinate = GridUtils.ScreenToCoordinate(Input.mousePosition, _grid, sceneCamera, rules.AreaSize);
-            Debug.Log($"Highlight {coordinate}");
         }
     }
 }

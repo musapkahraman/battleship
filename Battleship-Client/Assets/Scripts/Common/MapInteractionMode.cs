@@ -2,9 +2,9 @@
 {
     public enum MapInteractionMode
     {
-        Disabled,
-        MarkTargets,
-        HighlightTurn,
-        GrabShips
+        NoInteraction,
+        TargetMarking,
+        TurnHighlighting,
+        ShipDragging
     }
 }

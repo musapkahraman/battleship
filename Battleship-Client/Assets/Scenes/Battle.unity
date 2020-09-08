@@ -681,6 +681,7 @@ GameObject:
   - component: {fileID: 1093841618}
   - component: {fileID: 1093841619}
   - component: {fileID: 1093841620}
+  - component: {fileID: 1093841622}
   m_Layer: 0
   m_Name: OpponentStatusMap
   m_TagString: Untagged
@@ -791,6 +792,22 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   rules: {fileID: 11400000, guid: 536a0464e90bd734190c1b8189b64ddd, type: 2}
   tilemap: {fileID: 1081005661}
+--- !u!114 &1093841622
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1093841615}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5f715d0ab8a34779bdee2f6a73628bc9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  sceneCamera: {fileID: 342374684}
+  rules: {fileID: 11400000, guid: 536a0464e90bd734190c1b8189b64ddd, type: 2}
+  manager: {fileID: 1832216561}
+  battleMap: {fileID: 1804129002}
 --- !u!114 &1110261510 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 2185632468728182876, guid: c59cf86ee3eebae4e87100a5365ea47b,
@@ -1039,7 +1056,7 @@ PrefabInstance:
     - target: {fileID: 5023613893453269152, guid: c59cf86ee3eebae4e87100a5365ea47b,
         type: 3}
       propertyPath: m_text
-      value: Grab
+      value: Drag
       objectReference: {fileID: 0}
     - target: {fileID: 5023613893453269152, guid: c59cf86ee3eebae4e87100a5365ea47b,
         type: 3}
@@ -1054,7 +1071,7 @@ PrefabInstance:
     - target: {fileID: 5023613893495342772, guid: c59cf86ee3eebae4e87100a5365ea47b,
         type: 3}
       propertyPath: m_Name
-      value: Grab
+      value: Drag
       objectReference: {fileID: 0}
     - target: {fileID: 5023613893495342779, guid: c59cf86ee3eebae4e87100a5365ea47b,
         type: 3}
@@ -1572,7 +1589,7 @@ MonoBehaviour:
   leaveButton: {fileID: 1184911184}
   fireButton: {fileID: 1547971480}
   markButton: {fileID: 1110261510}
-  grabButton: {fileID: 1404080533}
+  dragButton: {fileID: 1404080533}
   highlightButton: {fileID: 82705935}
   userMap: {fileID: 167099665}
   opponentMap: {fileID: 1804129002}

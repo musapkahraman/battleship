@@ -20,14 +20,15 @@ namespace BattleshipGame.Core
         [SerializeField] private ButtonController leaveButton;
         [SerializeField] private ButtonController fireButton;
         [SerializeField] private ButtonController markButton;
-        [SerializeField] private ButtonController grabButton;
+        [SerializeField] private ButtonController dragButton;
         [SerializeField] private ButtonController highlightButton;
         [SerializeField] private BattleMap userMap;
         [SerializeField] private BattleMap opponentMap;
         [SerializeField] private OpponentStatusMaskPlacer opponentStatusMaskPlacer;
         [SerializeField] private Rules rules;
         [SerializeField] private PlacementMap placementMap;
-        private readonly List<int> _shots = new List<int>();
+        private readonly Dictionary<int, List<int>> _shots = new Dictionary<int, List<int>>();
+        private readonly List<int> _shotsInCurrentTurn = new List<int>();
         private NetworkClient _client;
         private bool _leavePopUpIsOn;
         private NetworkManager _networkManager;
@@ -54,24 +55,24 @@ namespace BattleshipGame.Core
             foreach (var placement in placementMap.GetPlacements())
                 userMap.SetShip(placement.ship, placement.Coordinate, default);
 
-            opponentMap.InteractionMode = Disabled;
+            opponentMap.InteractionMode = NoInteraction;
             _networkManager.ClearStatusText();
 
             leaveButton.SetText("Leave");
             fireButton.SetText("Fire!");
             markButton.SetText("Mark");
-            grabButton.SetText("Grab");
+            dragButton.SetText("Drag");
             highlightButton.SetText("Highlight");
 
             leaveButton.AddListener(LeaveGame);
             fireButton.AddListener(FireShots);
             markButton.AddListener(SwitchToMarkTargetsMode);
-            grabButton.AddListener(SwitchToGrabShipsMode);
+            dragButton.AddListener(SwitchToDragShipsMode);
             highlightButton.AddListener(SwitchToHighlightTurnMode);
 
             fireButton.SetInteractable(false);
             markButton.SetInteractable(false);
-            grabButton.SetInteractable(false);
+            dragButton.SetInteractable(false);
             highlightButton.SetInteractable(false);
 
             if (_client.RoomState != null) OnFirstRoomStateReceived(_client.RoomState);
@@ -117,28 +118,49 @@ namespace BattleshipGame.Core
             }
         }
 
+        public void HighlightTurn(Vector3Int coordinate)
+        {
+            int cellIndex = CoordinateToCellIndex(coordinate, MapAreaSize);
+            foreach (var kvp in _shots)
+            foreach (int cell in kvp.Value)
+            {
+                if (cell != cellIndex) continue;
+                HighlightTurn(kvp.Key);
+                return;
+            }
+        }
+
+        public void HighlightTurn(int turn)
+        {
+            foreach (int cell in _shots[turn])
+            {
+                Debug.Log($"Highlighted cell: {cell}");
+            }
+        }
+
         public void MarkTarget(Vector3Int targetCoordinate)
         {
             int targetIndex = CoordinateToCellIndex(targetCoordinate, MapAreaSize);
-            if (_shots.Contains(targetIndex))
+            if (_shotsInCurrentTurn.Contains(targetIndex))
             {
-                _shots.Remove(targetIndex);
+                _shotsInCurrentTurn.Remove(targetIndex);
                 opponentMap.ClearMarker(targetCoordinate);
             }
-            else if (_shots.Count < rules.shotsPerTurn && opponentMap.SetMarker(targetIndex, Marker.MarkedTarget))
+            else if (_shotsInCurrentTurn.Count < rules.shotsPerTurn &&
+                     opponentMap.SetMarker(targetIndex, Marker.MarkedTarget))
             {
-                _shots.Add(targetIndex);
+                _shotsInCurrentTurn.Add(targetIndex);
             }
 
-            fireButton.SetInteractable(_shots.Count == rules.shotsPerTurn);
-            opponentMap.IsMarkingTargets = _shots.Count != rules.shotsPerTurn;
+            fireButton.SetInteractable(_shotsInCurrentTurn.Count == rules.shotsPerTurn);
+            opponentMap.IsMarkingTargets = _shotsInCurrentTurn.Count != rules.shotsPerTurn;
         }
 
         private void FireShots()
         {
             fireButton.SetInteractable(false);
-            if (_shots.Count == rules.shotsPerTurn)
-                _client.SendTurn(_shots.ToArray());
+            if (_shotsInCurrentTurn.Count == rules.shotsPerTurn)
+                _client.SendTurn(_shotsInCurrentTurn.ToArray());
         }
 
         private void OnGamePhaseChanged(string phase)
@@ -171,8 +193,8 @@ namespace BattleshipGame.Core
 
             void ShowResult()
             {
-                userMap.InteractionMode = Disabled;
-                opponentMap.InteractionMode = Disabled;
+                userMap.InteractionMode = NoInteraction;
+                opponentMap.InteractionMode = NoInteraction;
                 _networkManager.ClearStatusText();
 
                 bool isWinner = _state.winningPlayer == _playerNumber;
@@ -207,43 +229,43 @@ namespace BattleshipGame.Core
 
             void StartTurn()
             {
-                _shots.Clear();
-                userMap.InteractionMode = Disabled;
+                _shotsInCurrentTurn.Clear();
+                userMap.InteractionMode = NoInteraction;
                 SwitchToMarkTargetsMode();
                 _networkManager.SetStatusText("It's your turn!");
             }
 
             void WaitForOpponentTurn()
             {
-                userMap.InteractionMode = Disabled;
-                SwitchToGrabShipsMode();
+                userMap.InteractionMode = NoInteraction;
+                SwitchToDragShipsMode();
                 _networkManager.SetStatusText("Waiting for the opponent to attack.");
             }
         }
 
         private void SwitchToMarkTargetsMode()
         {
-            opponentMap.InteractionMode = MarkTargets;
+            opponentMap.InteractionMode = TargetMarking;
             markButton.SetInteractable(false);
-            grabButton.SetInteractable(true);
+            dragButton.SetInteractable(true);
             highlightButton.SetInteractable(true);
         }
 
-        private void SwitchToGrabShipsMode()
+        private void SwitchToDragShipsMode()
         {
-            opponentMap.InteractionMode = GrabShips;
+            opponentMap.InteractionMode = ShipDragging;
             if (_state.playerTurn == _playerNumber)
                 markButton.SetInteractable(true);
-            grabButton.SetInteractable(false);
+            dragButton.SetInteractable(false);
             highlightButton.SetInteractable(true);
         }
 
         private void SwitchToHighlightTurnMode()
         {
-            opponentMap.InteractionMode = HighlightTurn;
+            opponentMap.InteractionMode = TurnHighlighting;
             if (_state.playerTurn == _playerNumber)
                 markButton.SetInteractable(true);
-            grabButton.SetInteractable(true);
+            dragButton.SetInteractable(true);
             highlightButton.SetInteractable(false);
         }
 
@@ -262,31 +284,36 @@ namespace BattleshipGame.Core
                 CheckTurn();
         }
 
-        private void OnFirstPlayerShotsChanged(int value, int key)
+        private void OnFirstPlayerShotsChanged(int turn, int cellIndex)
         {
             const int playerNumber = 1;
-            SetMarker(key, playerNumber);
+            SetMarker(cellIndex, turn, playerNumber);
         }
 
-        private void OnSecondPlayerShotsChanged(int value, int key)
+        private void OnSecondPlayerShotsChanged(int turn, int cellIndex)
         {
             const int playerNumber = 2;
-            SetMarker(key, playerNumber);
+            SetMarker(cellIndex, turn, playerNumber);
         }
 
-        private void SetMarker(int item, int playerNumber)
+        private void SetMarker(int cellIndex, int turn, int playerNumber)
         {
             if (_playerNumber == playerNumber)
             {
-                opponentMap.SetMarker(item, Marker.ShotTarget);
+                opponentMap.SetMarker(cellIndex, Marker.ShotTarget);
+                if (_shots.ContainsKey(turn))
+                    _shots[turn].Add(cellIndex);
+                else
+                    _shots.Add(turn, new List<int> {cellIndex});
+
                 return;
             }
 
-            userMap.SetMarker(item, !(from placement in placementMap.GetPlacements()
+            userMap.SetMarker(cellIndex, !(from placement in placementMap.GetPlacements()
                 from part in placement.ship.PartCoordinates
                 select placement.Coordinate + (Vector3Int) part
                 into partCoordinate
-                let shot = CellIndexToCoordinate(item, MapAreaSize.x)
+                let shot = CellIndexToCoordinate(cellIndex, MapAreaSize.x)
                 where partCoordinate.Equals(shot)
                 select partCoordinate).Any()
                 ? Marker.Missed

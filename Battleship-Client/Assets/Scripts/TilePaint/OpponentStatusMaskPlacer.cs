@@ -45,6 +45,11 @@ namespace BattleshipGame.TilePaint
             Instantiate(maskPrefab, GetPosition(changedShipPart, status), Quaternion.identity);
         }
 
+        public int GetShotTurn(Vector3Int coordinate)
+        {
+            return 1;
+        }
+
         private struct ShipPart
         {
             public int Status;
