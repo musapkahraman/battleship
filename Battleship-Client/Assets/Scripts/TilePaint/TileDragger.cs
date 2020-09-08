@@ -1,4 +1,5 @@
-﻿using BattleshipGame.Common;
+﻿using System;
+using BattleshipGame.Common;
 using BattleshipGame.ScriptableObjects;
 using UnityEngine;
 using UnityEngine.Tilemaps;
@@ -15,11 +16,11 @@ namespace BattleshipGame.TilePaint
         [SerializeField] private Tilemap sourceTileMap;
         [SerializeField] private bool removeFromSource;
         [SerializeField] private bool removeIfDraggedOut;
+        private BattleMap _battleMap;
         private Vector3Int _grabbedFrom;
         private GameObject _grabbedShip;
         private Grid _grid;
         private bool _isReleasedInside;
-        private BattleMap _battleMap;
         private GridSpriteMapper _selfGridSpriteMapper;
         private Sprite _sprite;
         private GridSpriteMapper _targetGridSpriteMapper;
@@ -31,16 +32,39 @@ namespace BattleshipGame.TilePaint
             _targetGridSpriteMapper = targetMap.GetComponent<GridSpriteMapper>();
             _battleMap = GetComponent<BattleMap>();
             if (_battleMap) return;
-            if (targetMap is BattleMap battleMap)
-            {
-                _battleMap = battleMap;
-            }
+            if (targetMap is BattleMap battleMap) _battleMap = battleMap;
         }
 
         private void OnMouseDown()
         {
             _isReleasedInside = false;
-            if (_battleMap && _battleMap.InteractionMode != MapInteractionMode.GrabShips) return;
+            if (!_battleMap) Grab();
+            else
+                switch (_battleMap.InteractionMode)
+                {
+                    case MapInteractionMode.GrabShips:
+                        Grab();
+                        break;
+                    case MapInteractionMode.HighlightTurn:
+                        Highlight();
+                        break;
+                    case MapInteractionMode.Disabled:
+                        break;
+                    case MapInteractionMode.MarkTargets:
+                        break;
+                    default:
+                        throw new ArgumentOutOfRangeException();
+                }
+        }
+
+        private void OnMouseDrag() => Drag();
+
+        private void OnMouseUp() => Drop();
+
+        private void OnMouseUpAsButton() => _isReleasedInside = true;
+
+        private void Grab()
+        {
             _grabbedFrom = GridUtils.ScreenToCoordinate(Input.mousePosition, _grid, sceneCamera, rules.AreaSize);
             _sprite = _selfGridSpriteMapper.GetSpriteAt(ref _grabbedFrom);
             if (!_sprite) return;
@@ -49,12 +73,18 @@ namespace BattleshipGame.TilePaint
             if (removeFromSource) sourceTileMap.SetTile(_grabbedFrom, null);
         }
 
-        private void OnMouseDrag()
+        private void Drag()
         {
             if (_grabbedShip) _grabbedShip.transform.position = GetMousePositionOnZeroZ();
         }
 
-        private void OnMouseUp()
+        private Vector3 GetMousePositionOnZeroZ()
+        {
+            var position = sceneCamera.ScreenToWorldPoint(Input.mousePosition);
+            return new Vector3(position.x, position.y, 0);
+        }
+
+        private void Drop()
         {
             if (!_grabbedShip) return;
 
@@ -88,15 +118,10 @@ namespace BattleshipGame.TilePaint
             Destroy(_grabbedShip);
         }
 
-        private void OnMouseUpAsButton()
+        private void Highlight()
         {
-            _isReleasedInside = true;
-        }
-
-        private Vector3 GetMousePositionOnZeroZ()
-        {
-            var position = sceneCamera.ScreenToWorldPoint(Input.mousePosition);
-            return new Vector3(position.x, position.y, 0);
+            var coordinate = GridUtils.ScreenToCoordinate(Input.mousePosition, _grid, sceneCamera, rules.AreaSize);
+            Debug.Log($"Highlight {coordinate}");
         }
     }
 }

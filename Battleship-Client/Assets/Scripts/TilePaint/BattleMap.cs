@@ -71,19 +71,36 @@ namespace BattleshipGame.TilePaint
 
         private void OnMouseDown()
         {
-            if (InteractionMode != MarkTargets || screenType != ScreenType.Opponent) return;
-            manager.MarkTarget(ScreenToCoordinate(Input.mousePosition, _grid, sceneCamera, rules.AreaSize));
+            if (screenType != ScreenType.Opponent) return;
+            switch (InteractionMode)
+            {
+                case MarkTargets:
+                    manager.MarkTarget(ScreenToCoordinate(Input.mousePosition, _grid, sceneCamera, rules.AreaSize));
+                    break;
+                case HighlightTurn:
+                {
+                    var coordinate = ScreenToCoordinate(Input.mousePosition, _grid, sceneCamera, rules.AreaSize);
+                    Debug.Log($"Highlight {coordinate}");
+                    break;
+                }
+                case Disabled:
+                    break;
+                case GrabShips:
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException();
+            }
         }
 
         private void OnMouseExit()
         {
-            if (InteractionMode != MarkTargets || screenType != ScreenType.Opponent) return;
+            if (screenType != ScreenType.Opponent || InteractionMode != MarkTargets) return;
             cursorLayer.ClearAllTiles();
         }
 
         private void OnMouseOver()
         {
-            if (InteractionMode != MarkTargets || screenType != ScreenType.Opponent) return;
+            if (screenType != ScreenType.Opponent || InteractionMode != MarkTargets) return;
             cursorLayer.ClearAllTiles();
             var coordinate = ScreenToCoordinate(Input.mousePosition, _grid, sceneCamera, rules.AreaSize);
             if (markerLayer.HasTile(coordinate))
