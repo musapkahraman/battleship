@@ -19,7 +19,7 @@ namespace BattleshipGame.TilePaint
         private GameObject _grabbedShip;
         private Grid _grid;
         private bool _isReleasedInside;
-        private BattleMap _selfBattleMap;
+        private BattleMap _battleMap;
         private GridSpriteMapper _selfGridSpriteMapper;
         private Sprite _sprite;
         private GridSpriteMapper _targetGridSpriteMapper;
@@ -27,15 +27,20 @@ namespace BattleshipGame.TilePaint
         private void Start()
         {
             _grid = GetComponent<Grid>();
-            _selfBattleMap = GetComponent<BattleMap>();
             _selfGridSpriteMapper = GetComponent<GridSpriteMapper>();
             _targetGridSpriteMapper = targetMap.GetComponent<GridSpriteMapper>();
+            _battleMap = GetComponent<BattleMap>();
+            if (_battleMap) return;
+            if (targetMap is BattleMap battleMap)
+            {
+                _battleMap = battleMap;
+            }
         }
 
         private void OnMouseDown()
         {
             _isReleasedInside = false;
-            if (_selfBattleMap && _selfBattleMap.InteractionMode != MapInteractionMode.GrabShips) return;
+            if (_battleMap && _battleMap.InteractionMode != MapInteractionMode.GrabShips) return;
             _grabbedFrom = GridUtils.ScreenToCoordinate(Input.mousePosition, _grid, sceneCamera, rules.AreaSize);
             _sprite = _selfGridSpriteMapper.GetSpriteAt(ref _grabbedFrom);
             if (!_sprite) return;

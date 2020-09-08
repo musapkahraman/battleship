@@ -65,6 +65,9 @@ namespace BattleshipGame.Core
 
             leaveButton.AddListener(LeaveGame);
             fireButton.AddListener(FireShots);
+            markButton.AddListener(SwitchToMarkTargetsMode);
+            grabButton.AddListener(SwitchToGrabShipsMode);
+            highlightButton.AddListener(SwitchToHighlightTurnMode);
 
             fireButton.SetInteractable(false);
             markButton.SetInteractable(false);
@@ -206,16 +209,47 @@ namespace BattleshipGame.Core
             {
                 _shots.Clear();
                 userMap.InteractionMode = Disabled;
-                opponentMap.InteractionMode = MarkTargets;
+                SwitchToMarkTargetsMode();
                 _networkManager.SetStatusText("It's your turn!");
             }
 
             void WaitForOpponentTurn()
             {
                 userMap.InteractionMode = Disabled;
-                opponentMap.InteractionMode = Disabled;
+                SwitchToGrabShipsMode();
                 _networkManager.SetStatusText("Waiting for the opponent to attack.");
             }
+        }
+
+        private void SwitchToMarkTargetsMode()
+        {
+            opponentMap.InteractionMode = MarkTargets;
+            markButton.SetInteractable(false);
+            grabButton.SetInteractable(true);
+            highlightButton.SetInteractable(true);
+        }
+
+        private void SwitchToGrabShipsMode()
+        {
+            opponentMap.InteractionMode = GrabShips;
+            if (_state.playerTurn == _playerNumber)
+                markButton.SetInteractable(true);
+            grabButton.SetInteractable(false);
+            highlightButton.SetInteractable(true);
+        }
+
+        private void SwitchToHighlightTurnMode()
+        {
+            opponentMap.InteractionMode = HighlightTurn;
+            if (_state.playerTurn == _playerNumber)
+                markButton.SetInteractable(true);
+            grabButton.SetInteractable(true);
+            highlightButton.SetInteractable(false);
+        }
+
+        private PopUpWindow BuildPopUp()
+        {
+            return Instantiate(popUpPrefab).GetComponent<PopUpWindow>();
         }
 
         private void OnStateChanged(List<DataChange> changes)
@@ -274,11 +308,6 @@ namespace BattleshipGame.Core
         private void SetHitPoints(int item, int index, int playerNumber)
         {
             if (_playerNumber != playerNumber) opponentStatusMaskPlacer.PlaceMask(item, index);
-        }
-
-        private PopUpWindow BuildPopUp()
-        {
-            return Instantiate(popUpPrefab).GetComponent<PopUpWindow>();
         }
     }
 }
