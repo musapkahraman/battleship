@@ -186,7 +186,6 @@ namespace BattleshipGame.Core
 
             void GoBackToLobby()
             {
-                Debug.Log($"[{name}] Loading scene: <color=yellow>lobbyScene</color>");
                 ProjectScenesManager.Instance.GoToLobby();
             }
 
@@ -215,7 +214,6 @@ namespace BattleshipGame.Core
         private void LeaveGame()
         {
             _client.LeaveRoom();
-            Debug.Log($"[{name}] Loading scene: <color=yellow>lobbyScene</color>");
             ProjectScenesManager.Instance.GoToLobby();
         }
 
@@ -275,10 +273,6 @@ namespace BattleshipGame.Core
 
         private void OnStateChanged(List<DataChange> changes)
         {
-            foreach (var dataChange in changes)
-                Debug.Log($"<color=#63B5B5>{dataChange.Field}:</color> " +
-                          $"{dataChange.PreviousValue} <color=green>-></color> {dataChange.Value}");
-
             foreach (var _ in changes.Where(change => change.Field == "playerTurn"))
                 CheckTurn();
         }

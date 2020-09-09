@@ -214,7 +214,6 @@ namespace Colyseus
 		protected async void ParseMessage (byte[] bytes)
 		{
 			byte code = bytes[0];
-			Debug.Log("BYTE =>" + code);
 
 			if (code == Protocol.JOIN_ROOM)
 			{
@@ -276,12 +275,10 @@ namespace Colyseus
 			}
 			else if (code == Protocol.ROOM_STATE)
 			{
-				Debug.Log("ROOM_STATE");
 				SetState(bytes, 1);
 			}
 			else if (code == Protocol.ROOM_STATE_PATCH)
 			{
-				Debug.Log("ROOM_STATE_PATCH");
 				Patch(bytes, 1);
 			}
 			else if (code == Protocol.ROOM_DATA)

@@ -71,7 +71,6 @@ namespace BattleshipGame.UI
             foreach (var element in _elements) element.Value.ChangeBackgroundColorAsDefault();
 
             if (!_elements.TryGetValue(id, out var roomListElement)) return;
-            Debug.Log($"Clicked room id: <color=yellow>{roomListElement.RoomId}</color>");
             roomListElement.ChangeBackgroundColorAsSelected();
             lobbyManager.SetRoomId(roomListElement.RoomId);
         }
