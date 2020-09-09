@@ -6,7 +6,17 @@ Client code is written in C# to make use of the Unity game engine.
 
 Server code is written in TypeScript.
 
-The game uses a variant of rules for the classic battleship game.
+### About the game
+
+Battleship game with another variant of rules. 
+
+You need to create a new game in the lobby and wait for another player to join. You can give a name to your game so that your friend can find your game in the list. You can also set a password for your game to block others.
+
+The rules are a bit different from the classic battleship game. Each player has three shots per turn. This makes it harder to guess the coordinates where your opponent's ships are.
+
+You can drag and drop ships into the maps from the pool beside them.  You can also highlight a set of three shots that you fired in previous turns by clicking on a shot. These options help you while guessing where your opponent's ships are.
+
+You can [play](https://muk.itch.io/battleship) this game.
 
 ## Usage
 
