@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using System.Linq.Expressions;
 using BattleshipGame.Common;
 using BattleshipGame.Network;
 using BattleshipGame.Schemas;
@@ -33,8 +32,8 @@ namespace BattleshipGame.Core
         private NetworkClient _client;
         private bool _leavePopUpIsOn;
         private NetworkManager _networkManager;
-        private State _state;
         private string _player, _enemy;
+        private State _state;
         private Vector2Int MapAreaSize => rules.AreaSize;
 
         private void Awake()
@@ -91,8 +90,9 @@ namespace BattleshipGame.Core
             {
                 if (_state == null) return;
                 _state.OnChange -= OnStateChanged;
-                _state.players[_player].ships.OnChange -= OnPlayerShipsChanged;
+                if (_state.players[_player] == null) return;
                 _state.players[_player].shots.OnChange -= OnPlayerShotsChanged;
+                if (_state.players[_enemy] == null) return;
                 _state.players[_enemy].ships.OnChange -= OnEnemyShipsChanged;
                 _state.players[_enemy].shots.OnChange -= OnEnemyShotsChanged;
             }
@@ -102,23 +102,20 @@ namespace BattleshipGame.Core
         {
             _state = initialState;
             _player = _state.players[_client.SessionId].sessionId;
-            
+
             foreach (string key in _state.players.Keys)
-            {
                 if (key != _client.SessionId)
                 {
                     _enemy = _state.players[key].sessionId;
                     break;
                 }
-            }
-            
+
             RegisterToStateEvents();
             OnGamePhaseChanged(_state.phase);
 
             void RegisterToStateEvents()
             {
                 _state.OnChange += OnStateChanged;
-                _state.players[_player].ships.OnChange += OnPlayerShipsChanged;
                 _state.players[_player].shots.OnChange += OnPlayerShotsChanged;
                 _state.players[_enemy].ships.OnChange += OnEnemyShipsChanged;
                 _state.players[_enemy].shots.OnChange += OnEnemyShotsChanged;
@@ -318,19 +315,14 @@ namespace BattleshipGame.Core
                 : Marker.Hit);
         }
 
-        private void OnPlayerShipsChanged(int turn, int part)
-        {
-            RegisterShotParts(part, turn, true);
-        }
-
         private void OnEnemyShipsChanged(int turn, int part)
         {
-            RegisterShotParts(part, turn, false);
+            RegisterShotParts(part, turn);
         }
 
-        private void RegisterShotParts(int part, int shotTurn, bool player)
+        private void RegisterShotParts(int part, int shotTurn)
         {
-            if (!player) opponentStatus.RegisterAndDisplay(part, shotTurn);
+            opponentStatus.RegisterAndDisplay(part, shotTurn);
         }
     }
 }
