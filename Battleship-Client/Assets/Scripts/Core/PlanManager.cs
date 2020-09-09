@@ -82,6 +82,7 @@ namespace BattleshipGame.Core
         {
             continueButton.SetInteractable(false);
             randomButton.SetInteractable(false);
+            clearButton.SetInteractable(false);
             _client.SendPlacement(_cells);
             _networkManager.SetStatusText("Waiting for the opponent to place the ships.");
         }
