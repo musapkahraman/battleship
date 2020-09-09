@@ -15,6 +15,7 @@ namespace BattleshipGame.Core
     {
         private const int EmptyCell = -1;
         [SerializeField] private GameObject popUpPrefab;
+        [SerializeField] private ButtonController leaveButton;
         [SerializeField] private ButtonController clearButton;
         [SerializeField] private ButtonController randomButton;
         [SerializeField] private ButtonController continueButton;
@@ -52,9 +53,13 @@ namespace BattleshipGame.Core
         {
             _cellCount = MapAreaSize.x * MapAreaSize.y;
             if (_client.RoomState != null) OnFirstRoomStateReceived(_client.RoomState);
+
+            leaveButton.SetText("Leave");
             clearButton.SetText("Clear");
             randomButton.SetText("Random");
             continueButton.SetText("Continue");
+
+            leaveButton.AddListener(LeaveGame);
             clearButton.AddListener(OnClearButtonPressed);
             randomButton.AddListener(PlaceShipsRandomly);
             continueButton.AddListener(CompletePlacement);
@@ -266,6 +271,7 @@ namespace BattleshipGame.Core
         private void LeaveGame()
         {
             _client.LeaveRoom();
+            Debug.Log($"[{name}] Loading scene: <color=yellow>lobbyScene</color>");
             ProjectScenesManager.Instance.GoToLobby();
         }
 
