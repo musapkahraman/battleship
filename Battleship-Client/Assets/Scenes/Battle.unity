@@ -796,7 +796,6 @@ MonoBehaviour:
   rules: {fileID: 11400000, guid: 536a0464e90bd734190c1b8189b64ddd, type: 2}
   manager: {fileID: 1832216561}
   battleMap: {fileID: 1804129002}
-  statusMap: {fileID: 1093841618}
   layer: {fileID: 0}
   tile: {fileID: 0}
 --- !u!114 &1110261510 stripped
@@ -1677,7 +1676,6 @@ MonoBehaviour:
   rules: {fileID: 11400000, guid: 536a0464e90bd734190c1b8189b64ddd, type: 2}
   manager: {fileID: 1832216561}
   battleMap: {fileID: 1804129002}
-  statusMap: {fileID: 1093841618}
   layer: {fileID: 1663508193}
   tile: {fileID: 11400000, guid: 36c1cefd605bc344ba58affa172f8a51, type: 2}
 --- !u!1 &1832216559

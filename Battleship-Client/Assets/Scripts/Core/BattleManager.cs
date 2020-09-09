@@ -240,7 +240,7 @@ namespace BattleshipGame.Core
             void WaitForOpponentTurn()
             {
                 userMap.InteractionMode = NoInteraction;
-                SwitchToDragShipsMode();
+                SwitchToHighlightTurnMode();
                 _networkManager.SetStatusText("Waiting for the opponent to attack.");
             }
         }
