@@ -28,6 +28,8 @@ namespace BattleshipGame.Core
         private NetworkClient _client;
         private bool _leavePopUpIsOn;
         private NetworkManager _networkManager;
+
+        private bool _opponentExists;
         private List<PlacementMap.Placement> _placements = new List<PlacementMap.Placement>();
         private SortedDictionary<int, Ship> _pool;
         private List<int> _shipsNotDragged = new List<int>();
@@ -248,6 +250,7 @@ namespace BattleshipGame.Core
             switch (phase)
             {
                 case "place":
+                    _opponentExists = true;
                     BeginShipPlacement();
                     break;
                 case "battle":
@@ -256,6 +259,7 @@ namespace BattleshipGame.Core
                 case "result":
                     break;
                 case "waiting":
+                    _opponentExists = false;
                     if (_leavePopUpIsOn) break;
                     BuildPopUp().Show("Sorry..", "Your opponent has quit the game.", "OK", GoBackToLobby);
                     break;
@@ -265,7 +269,10 @@ namespace BattleshipGame.Core
 
             void GoBackToLobby()
             {
-                ProjectScenesManager.Instance.GoToLobby();
+                if (_opponentExists)
+                    OnClearButtonPressed();
+                else
+                    ProjectScenesManager.Instance.GoToLobby();
             }
         }
 
