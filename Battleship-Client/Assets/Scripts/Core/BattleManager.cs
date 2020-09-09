@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using BattleshipGame.Common;
 using BattleshipGame.Network;
 using BattleshipGame.Schemas;
@@ -32,8 +33,8 @@ namespace BattleshipGame.Core
         private NetworkClient _client;
         private bool _leavePopUpIsOn;
         private NetworkManager _networkManager;
-        private int _playerNumber;
         private State _state;
+        private string _player, _enemy;
         private Vector2Int MapAreaSize => rules.AreaSize;
 
         private void Awake()
@@ -90,31 +91,37 @@ namespace BattleshipGame.Core
             {
                 if (_state == null) return;
                 _state.OnChange -= OnStateChanged;
-                _state.player1Shots.OnChange -= OnFirstPlayerShotsChanged;
-                _state.player2Shots.OnChange -= OnSecondPlayerShotsChanged;
-                _state.player1Ships.OnChange -= OnFirstPlayerShipsChanged;
-                _state.player2Ships.OnChange -= OnSecondPlayerShipsChanged;
+                _state.players[_player].ships.OnChange -= OnPlayerShipsChanged;
+                _state.players[_player].shots.OnChange -= OnPlayerShotsChanged;
+                _state.players[_enemy].ships.OnChange -= OnEnemyShipsChanged;
+                _state.players[_enemy].shots.OnChange -= OnEnemyShotsChanged;
             }
         }
 
         private void OnFirstRoomStateReceived(State initialState)
         {
             _state = initialState;
-            var player = _state.players[_client.SessionId];
-            if (player != null)
-                _playerNumber = player.seat;
-            else
-                _playerNumber = -1;
+            _player = _state.players[_client.SessionId].sessionId;
+            
+            foreach (string key in _state.players.Keys)
+            {
+                if (key != _client.SessionId)
+                {
+                    _enemy = _state.players[key].sessionId;
+                    break;
+                }
+            }
+            
             RegisterToStateEvents();
             OnGamePhaseChanged(_state.phase);
 
             void RegisterToStateEvents()
             {
                 _state.OnChange += OnStateChanged;
-                _state.player1Shots.OnChange += OnFirstPlayerShotsChanged;
-                _state.player2Shots.OnChange += OnSecondPlayerShotsChanged;
-                _state.player1Ships.OnChange += OnFirstPlayerShipsChanged;
-                _state.player2Ships.OnChange += OnSecondPlayerShipsChanged;
+                _state.players[_player].ships.OnChange += OnPlayerShipsChanged;
+                _state.players[_player].shots.OnChange += OnPlayerShotsChanged;
+                _state.players[_enemy].ships.OnChange += OnEnemyShipsChanged;
+                _state.players[_enemy].shots.OnChange += OnEnemyShotsChanged;
             }
         }
 
@@ -195,7 +202,7 @@ namespace BattleshipGame.Core
                 opponentMap.InteractionMode = NoInteraction;
                 _networkManager.ClearStatusText();
 
-                bool isWinner = _state.winningPlayer == _playerNumber;
+                bool isWinner = _state.winningPlayer == _client.SessionId;
                 string headerText = isWinner ? "You Win!" : "You Lost!!!";
                 string messageText = isWinner ? "Winners never quit!" : "Quitters never win!";
                 string declineButtonText = isWinner ? "Quit" : "Give Up";
@@ -219,7 +226,7 @@ namespace BattleshipGame.Core
 
         private void CheckTurn()
         {
-            if (_state.playerTurn == _playerNumber)
+            if (_state.playerTurn == _client.SessionId)
                 StartTurn();
             else
                 WaitForOpponentTurn();
@@ -251,7 +258,7 @@ namespace BattleshipGame.Core
         private void SwitchToDragShipsMode()
         {
             opponentMap.InteractionMode = ShipDragging;
-            if (_state.playerTurn == _playerNumber)
+            if (_state.playerTurn == _client.SessionId)
                 markButton.SetInteractable(true);
             dragButton.SetInteractable(false);
             highlightButton.SetInteractable(true);
@@ -260,7 +267,7 @@ namespace BattleshipGame.Core
         private void SwitchToHighlightTurnMode()
         {
             opponentMap.InteractionMode = TurnHighlighting;
-            if (_state.playerTurn == _playerNumber)
+            if (_state.playerTurn == _client.SessionId)
                 markButton.SetInteractable(true);
             dragButton.SetInteractable(true);
             highlightButton.SetInteractable(false);
@@ -277,21 +284,19 @@ namespace BattleshipGame.Core
                 CheckTurn();
         }
 
-        private void OnFirstPlayerShotsChanged(int turn, int cellIndex)
+        private void OnPlayerShotsChanged(int turn, int cellIndex)
         {
-            const int playerNumber = 1;
-            SetMarker(cellIndex, turn, playerNumber);
+            SetMarker(cellIndex, turn, true);
         }
 
-        private void OnSecondPlayerShotsChanged(int turn, int cellIndex)
+        private void OnEnemyShotsChanged(int turn, int cellIndex)
         {
-            const int playerNumber = 2;
-            SetMarker(cellIndex, turn, playerNumber);
+            SetMarker(cellIndex, turn, false);
         }
 
-        private void SetMarker(int cellIndex, int turn, int playerNumber)
+        private void SetMarker(int cellIndex, int turn, bool player)
         {
-            if (_playerNumber == playerNumber)
+            if (player)
             {
                 opponentMap.SetMarker(cellIndex, Marker.ShotTarget);
                 if (_shots.ContainsKey(turn))
@@ -313,21 +318,19 @@ namespace BattleshipGame.Core
                 : Marker.Hit);
         }
 
-        private void OnFirstPlayerShipsChanged(int turn, int part)
+        private void OnPlayerShipsChanged(int turn, int part)
         {
-            const int playerNumber = 1;
-            RegisterShotParts(part, turn, playerNumber);
+            RegisterShotParts(part, turn, true);
         }
 
-        private void OnSecondPlayerShipsChanged(int turn, int part)
+        private void OnEnemyShipsChanged(int turn, int part)
         {
-            const int playerNumber = 2;
-            RegisterShotParts(part, turn, playerNumber);
+            RegisterShotParts(part, turn, false);
         }
 
-        private void RegisterShotParts(int part, int shotTurn, int playerNumber)
+        private void RegisterShotParts(int part, int shotTurn, bool player)
         {
-            if (_playerNumber != playerNumber) opponentStatus.RegisterAndDisplay(part, shotTurn);
+            if (!player) opponentStatus.RegisterAndDisplay(part, shotTurn);
         }
     }
 }

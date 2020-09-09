@@ -20,7 +20,7 @@ gameServer.define("lobby", CustomLobbyRoom);
 gameServer.define("game", GameRoom).filterBy(['password']).enableRealtimeListing();
 
 // (optional) attach web monitoring panel
-app.use('/colyseus', monitor());
+app.use('/cmon', monitor());
 
 gameServer.onShutdown(function(){
   console.log(`game server is going down.`);

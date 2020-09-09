@@ -9,8 +9,8 @@ export class GameRoom extends Room<State> {
     name: string;
     gridSize: number = 9;
     startingFleetHealth: number = 19;
-    placements: Array<Array<number>>;
-    playerHealth: Array<number>;
+    placements: any;
+    playerHealth: any;
     playersPlaced: number = 0;
     playerCount: number = 0;
 
@@ -26,16 +26,10 @@ export class GameRoom extends Room<State> {
         this.onMessage("place", (client, message) => this.playerPlace(client, message));
         this.onMessage("turn", (client, message) => this.playerTurn(client, message));
         this.onMessage("rematch", (client, message) => this.rematch(client, message));
-        console.log('room created!');
     }
 
     onJoin(client: Client) {
-        console.log('client joined!', client.sessionId);
-
-        let player: Player =  new Player();
-        player.sessionId = client.sessionId;
-        player.seat = this.playerCount + 1;
-
+        let player: Player =  new Player(client.sessionId, this.gridSize * this.gridSize, this.startingFleetHealth);
         this.state.players[client.sessionId] = player;
         this.playerCount++;
 
@@ -61,43 +55,58 @@ export class GameRoom extends Room<State> {
     }
 
     onLeave(client: Client) {
-        console.log('client left!', client.sessionId);
-        
         delete this.state.players[client.sessionId];
+        delete this.playerHealth[client.sessionId];
         this.playerCount--;
+        this.playersPlaced = 0;
         this.state.phase = 'waiting';
+        this.placements = {};
         this.unlock();
     }
 
     playerPlace(client: Client, message: any){
         let player: Player = this.state.players[client.sessionId];
-        this.placements[player.seat - 1] = message;
+        this.placements[player.sessionId] = message;
         this.playersPlaced++;
 
         if (this.playersPlaced == 2) {
+            Object.keys(this.state.players).forEach(key => {
+                this.playerHealth[this.state.players[key].sessionId] = this.startingFleetHealth;  
+            });
+            this.state.playerTurn = this.getRandomUser();
             this.state.phase = 'battle';
         }
     }
 
-    playerTurn(client: Client, message: any){
-        let player: Player = this.state.players[client.sessionId];
+    getRandomUser(){
+        const keys = Object.keys(this.state.players);
+        return this.state.players[keys[ keys.length * Math.random() << 0]].sessionId;
+    }
 
-        if (this.state.playerTurn != player.seat) return;
+    getNextUser(){
+        return this.state.players[Object.keys(this.state.players).filter(key=>key != this.state.playerTurn)[0]];
+    }
+
+    playerTurn(client: Client, message: any){
+        const player: Player = this.state.players[client.sessionId];
+
+        if (this.state.playerTurn != player.sessionId) return;
 
         let targetIndexes: number[] = message;
 
         if(targetIndexes.length != 3) return;
 
-        let shots = player.seat == 1 ? this.state.player1Shots : this.state.player2Shots;
-        let targetShips = player.seat == 1 ? this.state.player2Ships : this.state.player1Ships;
-        let targetPlayerIndex = player.seat == 1 ? 1 : 0;
-        let targetedPlacement = this.placements[targetPlayerIndex];
+        const enemy = this.getNextUser();
+
+        let shots = player.shots;
+        let targetShips = enemy.ships;;
+        let targetedPlacement = this.placements[enemy.sessionId];
 
         for (const targetIndex of targetIndexes) {
             if(shots[targetIndex] == -1){
                 shots[targetIndex] = this.state.currentTurn;
                 if(targetedPlacement[targetIndex] >= 0){
-                    this.playerHealth[targetPlayerIndex]--;
+                    this.playerHealth[enemy.sessionId]--;
                     switch(targetedPlacement[targetIndex]){
                         case 0: // Admiral
                             this.updateShips(targetShips, 0, 5, this.state.currentTurn);
@@ -125,28 +134,26 @@ export class GameRoom extends Room<State> {
             }
         }
 
-        if(this.playerHealth[targetPlayerIndex] <= 0){
-            this.state.winningPlayer = player.seat;
+        if(this.playerHealth[enemy.sessionId] <= 0){
+            this.state.winningPlayer = player.sessionId;
             this.state.phase = 'result';
         } else {
-            if( this.state.playerTurn === 1){
-                this.state.playerTurn = 2;
-            } else {
-                this.state.playerTurn = 1;
-                this.state.currentTurn++;
-            }
+            this.state.playerTurn = enemy.sessionId;
+            this.state.currentTurn++;
         }
     }
 
-    onDispose(){
-        console.log('room disposed!');
-    }
+    onDispose(){}
 
     rematch(client: Client, message: Boolean){
         if(!message){
             return this.state.phase ="leave";
         }
+
+        this.state.players[client.sessionId].reset(this.gridSize * this.gridSize, this.startingFleetHealth); 
+
         this.rematchCount[client.sessionId] = message;
+        
         if(Object.keys(this.rematchCount).length == 2){
             this.reset(true);
         }
@@ -154,40 +161,22 @@ export class GameRoom extends Room<State> {
 
     reset(rematch) {
         this.rematchCount = {};
-        this.playerHealth = new Array<number>();
-        this.playerHealth[0] = this.startingFleetHealth;
-        this.playerHealth[1] = this.startingFleetHealth;
+        this.playerHealth = {};
+        this.placements = {};
 
-        this.placements = new Array<Array<number>>();
-        this.placements[0] = new Array<number>();
-        this.placements[1] = new Array<number>();
-
-        let cellCount = this.gridSize * this.gridSize;
         let state = new State();
 
         state.phase = rematch ? 'place': 'waiting';
-        state.playerTurn = 1;
-        state.winningPlayer = -1;
+        state.playerTurn = "";
+        state.winningPlayer = "";
+        state.currentTurn = 1;
+
         if(rematch){
             state.players = this.state.players;
         }
 
-        for (let i = 0; i < cellCount; i++) {
-            this.placements[0][i] = -1;        
-            this.placements[1][i] = -1;
-            
-            state.player1Shots[i] = -1
-            state.player2Shots[i] = -1
-        }
-
-        for (let i = 0; i < this.startingFleetHealth; i++){
-            state.player1Ships[i] = -1;
-            state.player2Ships[i] = -1;
-        }
-
         this.setState(state);
         this.playersPlaced = 0;
-        this.state.currentTurn = 1;
     }
 
     updateShips(arr: number[], s:number, e: number, t: number){

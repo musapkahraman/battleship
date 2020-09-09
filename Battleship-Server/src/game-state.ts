@@ -1,11 +1,25 @@
-import {Schema, type, MapSchema, ArraySchema} from "@colyseus/schema";
+import {Schema, type, MapSchema, ArraySchema, } from "@colyseus/schema";
 
 export class Player extends Schema {
-    @type('int16')
-    seat: number;
-
     @type('string')
     sessionId: string;
+
+    @type(['int8'])
+    shots: ArraySchema<number>;
+
+    @type(['int8'])
+    ships: ArraySchema<number>;
+
+    constructor(sessionId: string, shotsSize, shipsSize) {
+        super()
+        this.sessionId = sessionId;
+        this.reset(shotsSize, shipsSize)
+    }
+
+    reset(shotsSize, shipsSize){
+        this.shots =  new ArraySchema<number>(...new Array(shotsSize).fill(-1));
+        this.ships =  new ArraySchema<number>(...new Array(shipsSize).fill(-1));
+    }
 }
 
 export class State extends Schema {
@@ -15,24 +29,12 @@ export class State extends Schema {
     @type('string')
     phase: string = 'waiting';
 
-    @type('int8')
-    playerTurn: number = 1;
+    @type('string')
+    playerTurn: string;
 
-    @type('int8')
-    winningPlayer: number = -1;
+    @type('string')
+    winningPlayer: string;
 
     @type('int8')
     currentTurn: number = 1;
-
-    @type(['int8'])
-    player1Shots: ArraySchema<number> = new ArraySchema<number>();
-    
-    @type(['int8'])
-    player2Shots: ArraySchema<number> = new ArraySchema<number>();
-    
-    @type(['int8'])
-    player1Ships: ArraySchema<number> = new ArraySchema<number>();
-    
-    @type(['int8'])
-    player2Ships: ArraySchema<number> = new ArraySchema<number>();
 }

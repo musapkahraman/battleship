@@ -11,8 +11,10 @@ namespace BattleshipGame.Schemas
 {
     public class Player : Schema
     {
-        [Type(0, "int16")] public short seat = 0;
+        [Type(0, "string")] public string sessionId = "";
 
-        [Type(1, "string")] public string sessionId = "";
+        [Type(1, "array", "int8")] public ArraySchema<int> shots = new ArraySchema<int>();
+
+        [Type(2, "array", "int8")] public ArraySchema<int> ships = new ArraySchema<int>();
     }
 }
