@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using BattleshipGame.Common;
 using BattleshipGame.Core;
 using BattleshipGame.ScriptableObjects;
@@ -72,24 +71,8 @@ namespace BattleshipGame.TilePaint
 
         private void OnMouseDown()
         {
-            if (screenType != ScreenType.Opponent) return;
-            switch (InteractionMode)
-            {
-                case TargetMarking:
-                    manager.MarkTarget(ScreenToCoordinate(Input.mousePosition, _grid, sceneCamera, rules.AreaSize));
-                    break;
-                case TurnHighlighting:
-                {
-                    manager.HighlightTurn(ScreenToCoordinate(Input.mousePosition, _grid, sceneCamera, rules.AreaSize));
-                    break;
-                }
-                case NoInteraction:
-                    break;
-                case ShipDragging:
-                    break;
-                default:
-                    throw new ArgumentOutOfRangeException();
-            }
+            if (screenType == ScreenType.Opponent && InteractionMode == TargetMarking)
+                manager.MarkTarget(ScreenToCoordinate(Input.mousePosition, _grid, sceneCamera, rules.AreaSize));
         }
 
         private void OnMouseExit()
@@ -124,13 +107,6 @@ namespace BattleshipGame.TilePaint
         public override void ClearAllShips()
         {
             fleetLayer.ClearAllTiles();
-        }
-
-        public void HighlightTurns(IEnumerable<int> cells)
-        {
-            cursorLayer.ClearAllTiles();
-            foreach (int cell in cells)
-                cursorLayer.SetTile(CellIndexToCoordinate(cell, rules.AreaSize.x), inactiveCursor);
         }
 
         public void ClearMarker(Vector3Int coordinate)

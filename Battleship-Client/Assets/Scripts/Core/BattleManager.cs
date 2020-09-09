@@ -24,6 +24,7 @@ namespace BattleshipGame.Core
         [SerializeField] private ButtonController highlightButton;
         [SerializeField] private BattleMap userMap;
         [SerializeField] private BattleMap opponentMap;
+        [SerializeField] private TurnHighlighter turnHighlighter;
         [SerializeField] private OpponentStatus opponentStatus;
         [SerializeField] private Rules rules;
         [SerializeField] private PlacementMap placementMap;
@@ -122,7 +123,7 @@ namespace BattleshipGame.Core
             }
         }
 
-        public void HighlightTurn(Vector3Int coordinate)
+        public void HighlightShotsInTheSameTurn(Vector3Int coordinate)
         {
             int cellIndex = CoordinateToCellIndex(coordinate, MapAreaSize);
             foreach (var keyValuePair in from keyValuePair in _shots
@@ -138,7 +139,7 @@ namespace BattleshipGame.Core
         public void HighlightTurn(int turn)
         {
             if (!_shots.ContainsKey(turn)) return;
-            opponentMap.HighlightTurns(_shots[turn]);
+            turnHighlighter.HighlightTurns(_shots[turn]);
         }
 
         public void MarkTarget(Vector3Int targetCoordinate)
