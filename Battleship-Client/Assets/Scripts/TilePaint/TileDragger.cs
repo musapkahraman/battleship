@@ -1,5 +1,4 @@
-﻿using System;
-using BattleshipGame.Common;
+﻿using BattleshipGame.Common;
 using BattleshipGame.ScriptableObjects;
 using UnityEngine;
 using UnityEngine.Tilemaps;
@@ -51,7 +50,7 @@ namespace BattleshipGame.TilePaint
 
         private void Grab()
         {
-            _grabbedFrom = GridUtils.ScreenToCoordinate(Input.mousePosition, _grid, sceneCamera, rules.AreaSize);
+            _grabbedFrom = GridUtils.ScreenToCoordinate(_grid, sceneCamera, rules.AreaSize);
             _sprite = _selfGridSpriteMapper.GetSpriteAt(ref _grabbedFrom);
             if (!_sprite) return;
             _grabbedShip = Instantiate(dragShipPrefab, GetMousePositionOnZeroZ(), Quaternion.identity);
@@ -85,8 +84,8 @@ namespace BattleshipGame.TilePaint
             foreach (var ship in rules.ships)
                 if (ship.tile.sprite.Equals(_sprite))
                 {
-                    var droppedTo = GridUtils.ScreenToCoordinate(Input.mousePosition,
-                        targetMap.GetComponent<Grid>(), sceneCamera, rules.AreaSize);
+                    var droppedTo =
+                        GridUtils.ScreenToCoordinate(targetMap.GetComponent<Grid>(), sceneCamera, rules.AreaSize);
                     (int shipWidth, int shipHeight) = ship.GetShipSize();
                     if (GridUtils.DoesShipFitIn(shipWidth, shipHeight, droppedTo, rules.AreaSize.x) &&
                         targetMap.SetShip(ship, droppedTo, _grabbedFrom, true))

@@ -72,7 +72,7 @@ namespace BattleshipGame.TilePaint
         private void OnMouseDown()
         {
             if (screenType == ScreenType.Opponent && InteractionMode == TargetMarking)
-                manager.MarkTarget(ScreenToCoordinate(Input.mousePosition, _grid, sceneCamera, rules.AreaSize));
+                manager.MarkTarget(ScreenToCoordinate(_grid, sceneCamera, rules.AreaSize));
         }
 
         private void OnMouseExit()
@@ -85,7 +85,7 @@ namespace BattleshipGame.TilePaint
         {
             if (screenType != ScreenType.Opponent || InteractionMode != TargetMarking) return;
             cursorLayer.ClearAllTiles();
-            var coordinate = ScreenToCoordinate(Input.mousePosition, _grid, sceneCamera, rules.AreaSize);
+            var coordinate = ScreenToCoordinate(_grid, sceneCamera, rules.AreaSize);
             if (markerLayer.HasTile(coordinate))
             {
                 var tile = markerLayer.GetTile(coordinate);

@@ -29,7 +29,7 @@ namespace BattleshipGame.TilePaint
         private void OnMouseDown()
         {
             if (battleMap.InteractionMode != TurnHighlighting && battleMap.InteractionMode != TargetMarking) return;
-            var coordinate = GridUtils.ScreenToCoordinate(Input.mousePosition, _grid, sceneCamera, rules.AreaSize);
+            var coordinate = GridUtils.ScreenToCoordinate( _grid, sceneCamera, rules.AreaSize);
             if (_status)
             {
                 int shotTurn = _status.GetShotTurn(coordinate);
