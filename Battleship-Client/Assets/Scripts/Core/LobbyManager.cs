@@ -10,6 +10,7 @@ namespace BattleshipGame.Core
     public class LobbyManager : MonoBehaviour
     {
         [SerializeField] private RoomListManager roomList;
+        [SerializeField] private ButtonController quitButton;
         [SerializeField] private ButtonController newGameButton;
         [SerializeField] private ButtonController joinButton;
         [SerializeField] private ButtonController leaveButton;
@@ -27,11 +28,13 @@ namespace BattleshipGame.Core
                 _client = _networkManager.Client;
                 _client.RoomsChanged += PopulateRoomList;
 
+                quitButton.SetText("Quit");
                 newGameButton.SetText("New Game");
                 joinButton.SetText("Join");
                 leaveButton.SetText("Leave");
                 _networkManager.ClearStatusText();
 
+                quitButton.AddListener(Quit);
                 newGameButton.AddListener(NewGame);
                 joinButton.AddListener(JoinGame);
                 leaveButton.AddListener(LeaveGame);
@@ -48,6 +51,11 @@ namespace BattleshipGame.Core
             else
             {
                 SceneManager.LoadScene(0);
+            }
+
+            void Quit()
+            {
+                Application.Quit();
             }
 
             void NewGame()
