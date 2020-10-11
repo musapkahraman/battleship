@@ -247,6 +247,7 @@ namespace BattleshipGame.Core
 
         private void SwitchToMarkTargetsMode()
         {
+            Handheld.Vibrate();
             opponentMap.InteractionMode = TargetMarking;
             markButton.SetInteractable(false);
             dragButton.SetInteractable(true);

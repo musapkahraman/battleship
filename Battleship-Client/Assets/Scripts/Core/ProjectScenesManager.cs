@@ -14,6 +14,7 @@ namespace BattleshipGame.Core
         protected override void Awake()
         {
             base.Awake();
+            Screen.sleepTimeout = SleepTimeout.NeverSleep;
             SceneManager.sceneLoaded += OnSceneLoaded;
             if (SceneManager.sceneCount > 1) UnloadAllScenesExcept(masterScene);
         }
