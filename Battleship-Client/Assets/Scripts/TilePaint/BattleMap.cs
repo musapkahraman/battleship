@@ -3,13 +3,14 @@ using BattleshipGame.Common;
 using BattleshipGame.Core;
 using BattleshipGame.ScriptableObjects;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.Tilemaps;
 using static BattleshipGame.Common.GridUtils;
 using static BattleshipGame.Common.MapInteractionMode;
 
 namespace BattleshipGame.TilePaint
 {
-    public class BattleMap : Map
+    public class BattleMap : Map, IPointerClickHandler
     {
         [SerializeField] private Camera sceneCamera;
         [SerializeField] private BattleManager manager;
@@ -69,23 +70,18 @@ namespace BattleshipGame.TilePaint
             _grid = GetComponent<Grid>();
         }
 
-        private void OnMouseDown()
+        public void OnPointerClick(PointerEventData eventData)
         {
             if (screenType == ScreenType.Opponent && InteractionMode == TargetMarking)
-                manager.MarkTarget(ScreenToCoordinate(_grid, sceneCamera, rules.AreaSize));
+                manager.MarkTarget(ScreenToCoordinate(eventData.position, sceneCamera, _grid, rules.AreaSize));
         }
 
-        private void OnMouseExit()
-        {
-            if (screenType != ScreenType.Opponent || InteractionMode != TargetMarking) return;
-            cursorLayer.ClearAllTiles();
-        }
-
+#if UNITY_WEBGL || UNITY_STANDALONE || UNITY_EDITOR
         private void OnMouseOver()
         {
             if (screenType != ScreenType.Opponent || InteractionMode != TargetMarking) return;
             cursorLayer.ClearAllTiles();
-            var coordinate = ScreenToCoordinate(_grid, sceneCamera, rules.AreaSize);
+            var coordinate = ScreenToCoordinate(Input.mousePosition, sceneCamera, _grid, rules.AreaSize);
             if (markerLayer.HasTile(coordinate))
             {
                 var tile = markerLayer.GetTile(coordinate);
@@ -97,6 +93,13 @@ namespace BattleshipGame.TilePaint
                 cursorLayer.SetTile(coordinate, activeCursor);
             }
         }
+
+        private void OnMouseExit()
+        {
+            if (screenType != ScreenType.Opponent || InteractionMode != TargetMarking) return;
+            cursorLayer.ClearAllTiles();
+        }
+#endif
 
         public override bool SetShip(Ship ship, Vector3Int coordinate, Vector3Int grabbedFrom, bool isDragged = false)
         {

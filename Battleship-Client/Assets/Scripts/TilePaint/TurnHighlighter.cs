@@ -3,12 +3,13 @@ using BattleshipGame.Common;
 using BattleshipGame.Core;
 using BattleshipGame.ScriptableObjects;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.Tilemaps;
 using static BattleshipGame.Common.MapInteractionMode;
 
 namespace BattleshipGame.TilePaint
 {
-    public class TurnHighlighter : MonoBehaviour
+    public class TurnHighlighter : MonoBehaviour, IPointerClickHandler
     {
         [SerializeField] private Camera sceneCamera;
         [SerializeField] private Rules rules;
@@ -26,10 +27,10 @@ namespace BattleshipGame.TilePaint
             _status = GetComponent<OpponentStatus>();
         }
 
-        private void OnMouseDown()
+        public void OnPointerClick(PointerEventData eventData)
         {
             if (battleMap.InteractionMode != TurnHighlighting && battleMap.InteractionMode != TargetMarking) return;
-            var coordinate = GridUtils.ScreenToCoordinate( _grid, sceneCamera, rules.AreaSize);
+            var coordinate = GridUtils.ScreenToCoordinate(eventData.position, sceneCamera, _grid, rules.AreaSize);
             if (_status)
             {
                 int shotTurn = _status.GetShotTurn(coordinate);

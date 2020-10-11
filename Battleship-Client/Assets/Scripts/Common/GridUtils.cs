@@ -19,9 +19,9 @@ namespace BattleshipGame.Common
             return new Vector3Int(cellIndex % width, cellIndex / width, 0);
         }
 
-        public static Vector3Int ScreenToCoordinate(Grid grid, Camera sceneCamera, Vector2Int areaSize)
+        public static Vector3Int ScreenToCoordinate(Vector3 input, Camera sceneCamera, Grid grid, Vector2Int areaSize)
         {
-            var worldPoint = sceneCamera.ScreenToWorldPoint(GetInputPosition());
+            var worldPoint = sceneCamera.ScreenToWorldPoint(input);
             var cell = grid.WorldToCell(worldPoint);
             cell.Clamp(new Vector3Int(0, 0, 0), new Vector3Int(areaSize.x - 1, areaSize.y - 1, 0));
             return cell;
@@ -32,12 +32,6 @@ namespace BattleshipGame.Common
         {
             return cellCoordinate.x >= 0 && cellCoordinate.x + shipWidth <= horizontalAreaSize &&
                    cellCoordinate.y - (shipHeight - 1) >= 0;
-        }
-        
-        private static Vector3 GetInputPosition()
-        {
-            if (Input.touchSupported) return Input.GetTouch(0).position;
-            return Input.mousePosition;
         }
     }
 }

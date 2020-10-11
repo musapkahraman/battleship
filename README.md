@@ -1,12 +1,14 @@
 # Battleship
 
-Battleship is a 2D multiplayer game that uses [Colyseus](https://github.com/colyseus) to communicate with the server.
+Battleship is a turn-based multiplayer game that uses [Colyseus](https://github.com/colyseus) plugin to employ a client-server architecture.
 
 Client code is written in C# to make use of the Unity game engine.
 
 Server code is written in TypeScript.
 
-### About the game
+You can [play](https://muk.itch.io/battleship) this game.
+
+### Gameplay
 
 Battleship game with another variant of rules. 
 
@@ -15,8 +17,6 @@ You need to create a new game in the lobby and wait for another player to join. 
 The rules are a bit different from the classic battleship game. Each player has three shots per turn. This makes it harder to guess the coordinates where your opponent's ships are.
 
 You can drag and drop ships into the maps from the pool beside them.  You can also highlight a set of three shots that you fired in previous turns by clicking on a shot. These options help you while guessing where your opponent's ships are.
-
-[Play](https://muk.itch.io/battleship) this game.
 
 ## Usage
 
