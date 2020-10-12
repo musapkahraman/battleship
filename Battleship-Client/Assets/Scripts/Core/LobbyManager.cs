@@ -2,6 +2,7 @@
 using BattleshipGame.Network;
 using BattleshipGame.Schemas;
 using BattleshipGame.UI;
+using UnityEditor;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -9,6 +10,9 @@ namespace BattleshipGame.Core
 {
     public class LobbyManager : MonoBehaviour
     {
+        #pragma warning disable CS0414
+        [SerializeField] private string webQuitPage = "about:blank";
+        #pragma warning restore CS0414
         [SerializeField] private RoomListManager roomList;
         [SerializeField] private ButtonController quitButton;
         [SerializeField] private ButtonController newGameButton;
@@ -55,7 +59,13 @@ namespace BattleshipGame.Core
 
             void Quit()
             {
+#if (UNITY_EDITOR)
+                EditorApplication.isPlaying = false;
+#elif (UNITY_WEBGL)
+                Application.OpenURL(webQuitPage);
+#else
                 Application.Quit();
+#endif
             }
 
             void NewGame()

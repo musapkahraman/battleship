@@ -389,6 +389,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 529c7d6671b88594793430f97f397a5f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  webQuitPage: https://muk.itch.io/
   roomList: {fileID: 131496669}
   quitButton: {fileID: 537388043}
   newGameButton: {fileID: 1553283945}
