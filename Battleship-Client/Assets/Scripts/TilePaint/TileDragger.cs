@@ -20,6 +20,7 @@ namespace BattleshipGame.TilePaint
         [SerializeField] private bool removeIfDraggedOut;
         private BattleMap _battleMap;
         private Vector3Int _grabbedFrom;
+        private bool _isGrabbedFromTarget;
         private GameObject _grabbedShip;
         private Grid _grid;
         private GridSpriteMapper _selfGridSpriteMapper;
@@ -39,6 +40,7 @@ namespace BattleshipGame.TilePaint
         public void OnBeginDrag(PointerEventData eventData)
         {
             if (_battleMap && _battleMap.InteractionMode != ShipDragging) return;
+            _isGrabbedFromTarget = eventData.hovered.Contains(targetMap.gameObject);
             _grabbedFrom = GridUtils.ScreenToCoordinate(eventData.position, sceneCamera, _grid, rules.AreaSize);
             _sprite = _selfGridSpriteMapper.GetSpriteAt(ref _grabbedFrom);
             if (!_sprite) return;
@@ -73,7 +75,7 @@ namespace BattleshipGame.TilePaint
                 (int shipWidth, int shipHeight) = ship.GetShipSize();
                 if (isOverTheTarget && _targetGridSpriteMapper &&
                     GridUtils.DoesShipFitIn(shipWidth, shipHeight, droppedTo, rules.AreaSize.x) &&
-                    targetMap.SetShip(ship, droppedTo, _grabbedFrom, true))
+                    targetMap.MoveShip(ship, _grabbedFrom, droppedTo, !_isGrabbedFromTarget))
                 {
                     _targetGridSpriteMapper.ChangeSpritePosition(_sprite, _grabbedFrom, droppedTo);
                 }

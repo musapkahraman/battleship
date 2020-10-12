@@ -97,7 +97,7 @@ namespace BattleshipGame.Core
 
             foreach (var placement in _placements.Where(placement => !_shipsNotDragged.Contains(placement.shipId)))
             {
-                map.SetShip(placement.ship, placement.Coordinate, default);
+                map.SetShip(placement.ship, placement.Coordinate);
                 RegisterShipToCells(placement.shipId, placement.ship, placement.Coordinate);
                 placementMap.PlaceShip(placement.shipId, placement.ship, placement.Coordinate);
             }
@@ -114,7 +114,7 @@ namespace BattleshipGame.Core
 
                     int cell = from[Random.Range(0, from.Count)];
                     from.Remove(cell);
-                    isPlaced = PlaceShip(_pool[key], CellIndexToCoordinate(cell, MapAreaSize.x), default, key);
+                    isPlaced = PlaceShip(_pool[key], default, CellIndexToCoordinate(cell, MapAreaSize.x), false, key);
                 }
 
                 if (isPlaced) continue;
@@ -165,36 +165,38 @@ namespace BattleshipGame.Core
             }
         }
 
-        private int GetShipId(Object ship, Vector3Int grabbedFrom)
+        private int GetShipId(Ship ship, Vector3Int grabbedFrom, bool isMovedIn)
         {
-            int cellIndex = CoordinateToCellIndex(grabbedFrom, MapAreaSize);
-            if (cellIndex != OutOfMap && _cells[cellIndex] != EmptyCell)
-                return _cells[cellIndex];
+            if (!isMovedIn)
+            {
+                int cellIndex = CoordinateToCellIndex(grabbedFrom, MapAreaSize);
+                if (_cells[cellIndex] != EmptyCell) return _cells[cellIndex];
+            }
 
-            foreach (var kvp in _pool.Where(kvp => kvp.Value == ship)) return kvp.Key;
+            foreach (var kvp in _pool.Where(kvp => kvp.Value.rankOrder == ship.rankOrder)) return kvp.Key;
 
             return EmptyCell;
         }
 
-        public bool PlaceShip(Ship ship, Vector3Int cellCoordinate, Vector3Int grabbedFrom, int shipId = EmptyCell)
+        public bool PlaceShip(Ship ship, Vector3Int from, Vector3Int to, bool isMovedIn, int shipId = EmptyCell)
         {
             var shouldRemoveFromPool = false;
             if (shipId == EmptyCell)
             {
-                shipId = GetShipId(ship, grabbedFrom);
+                shipId = GetShipId(ship, from, isMovedIn);
                 shouldRemoveFromPool = true;
             }
 
             (int shipWidth, int shipHeight) = ship.GetShipSize();
-            if (!DoesShipFitIn(shipWidth, shipHeight, cellCoordinate, MapAreaSize.x)) return false;
-            if (DoesCollideWithOtherShip(shipId, cellCoordinate, shipWidth, shipHeight)) return false;
+            if (!DoesShipFitIn(shipWidth, shipHeight, to, MapAreaSize.x)) return false;
+            if (DoesCollideWithOtherShip(shipId, to, shipWidth, shipHeight)) return false;
             clearButton.SetInteractable(true);
-            map.SetShip(ship, cellCoordinate, default);
-            RegisterShipToCells(shipId, ship, cellCoordinate);
-            placementMap.PlaceShip(shipId, ship, cellCoordinate);
+            map.SetShip(ship, to);
+            RegisterShipToCells(shipId, ship, to);
+            placementMap.PlaceShip(shipId, ship, to);
             if (shouldRemoveFromPool)
             {
-                if (_pool.ContainsValue(ship)) _pool.Remove(shipId);
+                _pool.Remove(shipId);
                 _shipsNotDragged = _pool.Keys.ToList();
                 _placements = placementMap.GetPlacements();
             }
@@ -279,7 +281,6 @@ namespace BattleshipGame.Core
         private void LeaveGame()
         {
             _client.LeaveRoom();
-            Debug.Log($"[{name}] Loading scene: <color=yellow>lobbyScene</color>");
             ProjectScenesManager.Instance.GoToLobby();
         }
 

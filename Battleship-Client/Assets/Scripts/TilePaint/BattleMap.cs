@@ -101,10 +101,14 @@ namespace BattleshipGame.TilePaint
         }
 #endif
 
-        public override bool SetShip(Ship ship, Vector3Int coordinate, Vector3Int grabbedFrom, bool isDragged = false)
+        public override void SetShip(Ship ship, Vector3Int coordinate)
         {
             fleetLayer.SetTile(coordinate, ship.tile);
-            return true;
+        }
+
+        public override bool MoveShip(Ship ship, Vector3Int from, Vector3Int to, bool isMovedIn)
+        {
+            return false;
         }
 
         public override void ClearAllShips()

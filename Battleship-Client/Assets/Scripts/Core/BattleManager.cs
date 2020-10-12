@@ -54,7 +54,7 @@ namespace BattleshipGame.Core
         private void Start()
         {
             foreach (var placement in placementMap.GetPlacements())
-                userMap.SetShip(placement.ship, placement.Coordinate, default);
+                userMap.SetShip(placement.ship, placement.Coordinate);
 
             opponentMap.InteractionMode = NoInteraction;
             _networkManager.ClearStatusText();
@@ -247,7 +247,9 @@ namespace BattleshipGame.Core
 
         private void SwitchToMarkTargetsMode()
         {
+#if UNITY_ANDROID
             Handheld.Vibrate();
+#endif
             opponentMap.InteractionMode = TargetMarking;
             markButton.SetInteractable(false);
             dragButton.SetInteractable(true);
