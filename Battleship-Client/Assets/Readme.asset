@@ -15,8 +15,8 @@ MonoBehaviour:
   title: Battleship
   sections:
   - heading: About
-    text: Battleship is a 2D multiplayer game that uses Colyseus to communicate with
-      the server.
+    text: Battleship is a turn-based multiplayer game that uses Colyseus plugin to
+      employ a client-server architecture.
     linkText: GitHub Repository
     url: https://github.com/musapkahraman/Battleship
   - heading: 
