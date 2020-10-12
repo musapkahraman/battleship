@@ -21,8 +21,8 @@ MonoBehaviour:
     url: https://github.com/musapkahraman/Battleship
   - heading: 
     text: 
-    linkText: Colyseus
-    url: https://github.com/colyseus
+    linkText: Colyseus 0.13
+    url: https://docs.colyseus.io/
   - heading: 
     text: 'Enable loading the "master" scene on Play button press in the editor using
       the menu bar: Scenes -> Scene Autoload -> Load Master On Play'

@@ -1,14 +1,14 @@
 # Battleship
 
-Battleship is a turn-based multiplayer game that uses [Colyseus](https://github.com/colyseus) plugin to employ a client-server architecture.
+Battleship is a turn-based multiplayer game that uses [Colyseus (0.13)](https://docs.colyseus.io/) plugin to employ a client-server architecture.
 
-Client code is written in C# to make use of the Unity game engine.
+Client code is written in C# to make use of the [Unity](https://unity.com/) game engine.
 
 Server code is written in TypeScript.
 
-You can [play](https://muk.itch.io/battleship) this game.
+You can [play this game](https://muk.itch.io/battleship) on my itch.io page.
 
-### Gameplay
+## Game
 
 Battleship game with another variant of rules. 
 
@@ -37,16 +37,13 @@ npm start
 ### Client
 
 - Add the client folder (Battleship/Battleship-Client) to your projects in Unity Hub.
-- Open the project in Unity 2019.4.9f1
+- Open the project in Unity 2019.4
 - Enable loading the "master" scene on Play button press in the editor using the menu bar: 
 ```
 Scenes -> Scene Autoload -> Load Master On Play
 ```
 The application starts from the "master" scene (Assets/Scenes/Master.unity)
 - Choose the server type in the Network Manager script component attached on the NetworkManager gameObject in the master scene.
-
-## Contributing
-Pull requests are welcome. For major changes, please open an issue first to discuss what you would like to change.
 
 ## License
 [MIT](https://choosealicense.com/licenses/mit/)
