@@ -1,4 +1,5 @@
-﻿using BattleshipGame.Common;
+﻿using System.Linq;
+using BattleshipGame.Common;
 using BattleshipGame.ScriptableObjects;
 using UnityEngine;
 using UnityEngine.EventSystems;
@@ -55,7 +56,9 @@ namespace BattleshipGame.TilePaint
         {
             if (!_grabbedShip) return;
 
-            if (removeIfDraggedOut && !eventData.hovered.Contains(gameObject))
+            bool isOverTheTarget = eventData.hovered.Contains(targetMap.gameObject);
+
+            if (removeIfDraggedOut && !isOverTheTarget)
             {
                 if (_targetGridSpriteMapper)
                     _targetGridSpriteMapper.RemoveSpritePosition(_sprite.GetInstanceID(), _grabbedFrom);
@@ -63,26 +66,37 @@ namespace BattleshipGame.TilePaint
                 return;
             }
 
-            foreach (var ship in rules.ships)
-                if (ship.tile.sprite.Equals(_sprite))
+            if (SpriteRepresentsShip(out var ship))
+            {
+                var grid = targetMap.GetComponent<Grid>();
+                var droppedTo = GridUtils.ScreenToCoordinate(eventData.position, sceneCamera, grid, rules.AreaSize);
+                (int shipWidth, int shipHeight) = ship.GetShipSize();
+                if (isOverTheTarget && _targetGridSpriteMapper &&
+                    GridUtils.DoesShipFitIn(shipWidth, shipHeight, droppedTo, rules.AreaSize.x) &&
+                    targetMap.SetShip(ship, droppedTo, _grabbedFrom, true))
                 {
-                    var grid = targetMap.GetComponent<Grid>();
-                    var droppedTo = GridUtils.ScreenToCoordinate(eventData.position, sceneCamera, grid, rules.AreaSize);
-                    (int shipWidth, int shipHeight) = ship.GetShipSize();
-                    if (GridUtils.DoesShipFitIn(shipWidth, shipHeight, droppedTo, rules.AreaSize.x) &&
-                        targetMap.SetShip(ship, droppedTo, _grabbedFrom, true))
-                    {
-                        if (_targetGridSpriteMapper)
-                            _targetGridSpriteMapper.ChangeSpritePosition(_sprite, _grabbedFrom, droppedTo);
-                    }
-                    else if (removeFromSource)
-                    {
-                        // The tile is already removed inside the OnBeginDrag callback. Place the tile back.
-                        sourceTileMap.SetTile(_grabbedFrom, ship.tile);
-                    }
+                    _targetGridSpriteMapper.ChangeSpritePosition(_sprite, _grabbedFrom, droppedTo);
                 }
+                else if (removeFromSource)
+                {
+                    // The tile is already removed inside the OnBeginDrag callback. Place the tile back.
+                    sourceTileMap.SetTile(_grabbedFrom, ship.tile);
+                }
+            }
 
             Destroy(_grabbedShip);
+        }
+
+        private bool SpriteRepresentsShip(out Ship spriteShip)
+        {
+            foreach (var ship in rules.ships.Where(ship => ship.tile.sprite.Equals(_sprite)))
+            {
+                spriteShip = ship;
+                return true;
+            }
+
+            spriteShip = null;
+            return false;
         }
 
         private Vector3 GetZeroDepth(Vector2 position)
