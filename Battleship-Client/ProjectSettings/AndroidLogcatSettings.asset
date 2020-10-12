@@ -2,8 +2,8 @@
     "m_SelectedDeviceId": "BH902L1C8Y",
     "m_SelectedPackage": {
         "deviceId": "BH902L1C8Y",
-        "name": "com.koltukstudio.battleship",
-        "processId": 10995,
+        "name": "com.muk.battleship",
+        "processId": 22741,
         "exited": true
     },
     "m_SelectedPriority": 0,
@@ -60,6 +60,18 @@
             "deviceId": "BH902L1C8Y",
             "name": "com.koltukstudio.battleship",
             "processId": 10995,
+            "exited": true
+        },
+        {
+            "deviceId": "BH902L1C8Y",
+            "name": "com.muk.battleship",
+            "processId": 21850,
+            "exited": true
+        },
+        {
+            "deviceId": "BH902L1C8Y",
+            "name": "com.muk.battleship",
+            "processId": 22741,
             "exited": true
         }
     ],
