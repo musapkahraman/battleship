@@ -63,7 +63,7 @@ namespace BattleshipGame.Network
         private void OnConnected()
         {
             Destroy(_progressBar);
-            ProjectScenesManager.Instance.GoToLobby();
+            GameSceneManager.Instance.GoToLobby();
         }
 
         private void OnConnectionError(string errorMessage)
@@ -76,7 +76,7 @@ namespace BattleshipGame.Network
         {
             if (phase != "place") return;
             Destroy(_progressBar);
-            ProjectScenesManager.Instance.GoToPlanScene();
+            GameSceneManager.Instance.GoToPlanScene();
         }
 
         private enum ServerType

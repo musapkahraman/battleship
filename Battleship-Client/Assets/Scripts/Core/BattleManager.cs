@@ -191,7 +191,7 @@ namespace BattleshipGame.Core
 
             void GoBackToLobby()
             {
-                ProjectScenesManager.Instance.GoToLobby();
+                GameSceneManager.Instance.GoToLobby();
             }
 
             void ShowResult()
@@ -219,7 +219,7 @@ namespace BattleshipGame.Core
         private void LeaveGame()
         {
             _client.LeaveRoom();
-            ProjectScenesManager.Instance.GoToLobby();
+            GameSceneManager.Instance.GoToLobby();
         }
 
         private void CheckTurn()

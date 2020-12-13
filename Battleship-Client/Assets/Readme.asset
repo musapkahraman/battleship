@@ -18,7 +18,7 @@ MonoBehaviour:
     text: Battleship is a turn-based multiplayer game that uses Colyseus plugin to
       employ a client-server architecture.
     linkText: GitHub Repository
-    url: https://github.com/musapkahraman/Battleship
+    url: https://github.com/musapkahraman/battleship
   - heading: 
     text: 
     linkText: Colyseus 0.13
@@ -29,7 +29,7 @@ MonoBehaviour:
     linkText: 
     url: 
   - heading: 
-    text: 'Scenes → Scene Autoload → Load Master On Play.'
+    text: "Scenes \u2192 Scene Autoload \u2192 Load Master On Play."
     linkText: 
     url: 
   - heading: 
@@ -38,6 +38,6 @@ MonoBehaviour:
     url: 
   - heading: 
     text: Choose the server type in the Network Manager script component attached
-      on the NetworkManager gameObject in the master scene.
+      on the NetworkManager game object in the master scene.
     linkText: 
     url: 

@@ -4,7 +4,7 @@ using UnityEngine.SceneManagement;
 
 namespace BattleshipGame.Core
 {
-    public class ProjectScenesManager : Singleton<ProjectScenesManager>
+    public class GameSceneManager : Singleton<GameSceneManager>
     {
         [SerializeField] private SceneReference masterScene;
         [SerializeField] private SceneReference lobbyScene;
@@ -15,13 +15,13 @@ namespace BattleshipGame.Core
         {
             base.Awake();
             Screen.sleepTimeout = SleepTimeout.NeverSleep;
-            SceneManager.sceneLoaded += OnSceneLoaded;
+            SceneManager.sceneLoaded += SetSelfActive;
             if (SceneManager.sceneCount > 1) UnloadAllScenesExcept(masterScene);
         }
 
         protected override void OnDestroy()
         {
-            SceneManager.sceneLoaded -= OnSceneLoaded;
+            SceneManager.sceneLoaded -= SetSelfActive;
             base.OnDestroy();
         }
 
@@ -70,7 +70,7 @@ namespace BattleshipGame.Core
             }
         }
 
-        private static void OnSceneLoaded(Scene scene, LoadSceneMode mode)
+        private static void SetSelfActive(Scene scene, LoadSceneMode mode)
         {
             SceneManager.SetActiveScene(scene);
         }

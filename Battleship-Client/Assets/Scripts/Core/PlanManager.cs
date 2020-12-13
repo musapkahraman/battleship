@@ -256,7 +256,7 @@ namespace BattleshipGame.Core
                     BeginShipPlacement();
                     break;
                 case "battle":
-                    ProjectScenesManager.Instance.GoToBattleScene();
+                    GameSceneManager.Instance.GoToBattleScene();
                     break;
                 case "result":
                     break;
@@ -274,14 +274,14 @@ namespace BattleshipGame.Core
                 if (_opponentExists)
                     OnClearButtonPressed();
                 else
-                    ProjectScenesManager.Instance.GoToLobby();
+                    GameSceneManager.Instance.GoToLobby();
             }
         }
 
         private void LeaveGame()
         {
             _client.LeaveRoom();
-            ProjectScenesManager.Instance.GoToLobby();
+            GameSceneManager.Instance.GoToLobby();
         }
 
         private PopUpWindow BuildPopUp()
