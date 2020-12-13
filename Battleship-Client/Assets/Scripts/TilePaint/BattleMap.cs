@@ -108,7 +108,8 @@ namespace BattleshipGame.TilePaint
 
         public override bool MoveShip(Ship ship, Vector3Int from, Vector3Int to, bool isMovedIn)
         {
-            return false;
+            SetShip(ship, to);
+            return true;
         }
 
         public override void ClearAllShips()
