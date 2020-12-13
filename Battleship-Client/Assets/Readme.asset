@@ -22,10 +22,14 @@ MonoBehaviour:
   - heading: 
     text: 
     linkText: Colyseus 0.13
-    url: https://docs.colyseus.io/
+    url: https://0-13-x.docs.colyseus.io/getting-started/unity3d-client/
   - heading: 
     text: 'Enable loading the "master" scene on Play button press in the editor using
-      the menu bar: Scenes -> Scene Autoload -> Load Master On Play'
+      the menu bar:'
+    linkText: 
+    url: 
+  - heading: 
+    text: 'Scenes → Scene Autoload → Load Master On Play.'
     linkText: 
     url: 
   - heading: 
