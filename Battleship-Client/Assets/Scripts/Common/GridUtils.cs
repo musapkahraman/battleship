@@ -19,9 +19,14 @@ namespace BattleshipGame.Common
             return new Vector3Int(cellIndex % width, cellIndex / width, 0);
         }
 
-        public static Vector3Int ScreenToCoordinate(Vector3 input, Camera sceneCamera, Grid grid, Vector2Int areaSize)
+        public static Vector3Int ScreenToCell(Vector3 input, Camera sceneCamera, Grid grid, Vector2Int areaSize)
         {
             var worldPoint = sceneCamera.ScreenToWorldPoint(input);
+            return WorldToCell(worldPoint, sceneCamera, grid, areaSize);
+        }
+
+        public static Vector3Int WorldToCell(Vector3 worldPoint, Camera sceneCamera, Grid grid, Vector2Int areaSize)
+        {
             var cell = grid.WorldToCell(worldPoint);
             cell.Clamp(new Vector3Int(0, 0, 0), new Vector3Int(areaSize.x - 1, areaSize.y - 1, 0));
             return cell;

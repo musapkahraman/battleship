@@ -19,7 +19,8 @@ namespace BattleshipGame.TilePaint
         [SerializeField] private bool removeFromSource;
         [SerializeField] private bool removeIfDraggedOut;
         private BattleMap _battleMap;
-        private Vector3Int _grabbedFrom;
+        private Vector3Int _grabCell;
+        private Vector3 _grabOffset;
         private bool _isGrabbedFromTarget;
         private GameObject _grabbedShip;
         private Grid _grid;
@@ -41,17 +42,19 @@ namespace BattleshipGame.TilePaint
         {
             if (_battleMap && _battleMap.InteractionMode != ShipDragging) return;
             _isGrabbedFromTarget = eventData.hovered.Contains(targetMap.gameObject);
-            _grabbedFrom = GridUtils.ScreenToCoordinate(eventData.position, sceneCamera, _grid, rules.AreaSize);
-            _sprite = _selfGridSpriteMapper.GetSpriteAt(ref _grabbedFrom);
+            _grabCell = GridUtils.ScreenToCell(eventData.position, sceneCamera, _grid, rules.AreaSize);
+            _sprite = _selfGridSpriteMapper.GetSpriteAt(ref _grabCell);
+            var grabPoint = transform.position + _grabCell + new Vector3(0.5f, 0.5f, 0);
+            _grabOffset = grabPoint - GetWorldPoint(eventData.position);
             if (!_sprite) return;
-            _grabbedShip = Instantiate(dragShipPrefab, GetZeroDepth(eventData.position), Quaternion.identity);
+            _grabbedShip = Instantiate(dragShipPrefab, _grabCell, Quaternion.identity);
             _grabbedShip.GetComponent<SpriteRenderer>().sprite = _sprite;
-            if (removeFromSource) sourceTileMap.SetTile(_grabbedFrom, null);
+            if (removeFromSource) sourceTileMap.SetTile(_grabCell, null);
         }
 
         public void OnDrag(PointerEventData eventData)
         {
-            if (_grabbedShip) _grabbedShip.transform.position = GetZeroDepth(eventData.position);
+            if (_grabbedShip) _grabbedShip.transform.position = GetWorldPoint(eventData.position) + _grabOffset;
         }
 
         public void OnEndDrag(PointerEventData eventData)
@@ -63,7 +66,7 @@ namespace BattleshipGame.TilePaint
             if (removeIfDraggedOut && !isOverTheTarget)
             {
                 if (_targetGridSpriteMapper)
-                    _targetGridSpriteMapper.RemoveSpritePosition(_sprite.GetInstanceID(), _grabbedFrom);
+                    _targetGridSpriteMapper.RemoveSpritePosition(_sprite.GetInstanceID(), _grabCell);
                 Destroy(_grabbedShip);
                 return;
             }
@@ -71,18 +74,19 @@ namespace BattleshipGame.TilePaint
             if (SpriteRepresentsShip(out var ship))
             {
                 var grid = targetMap.GetComponent<Grid>();
-                var droppedTo = GridUtils.ScreenToCoordinate(eventData.position, sceneCamera, grid, rules.AreaSize);
+                var dropWorldPoint = GetWorldPoint(eventData.position) + _grabOffset;
+                var dropCell = GridUtils.WorldToCell(dropWorldPoint, sceneCamera, grid, rules.AreaSize);
                 (int shipWidth, int shipHeight) = ship.GetShipSize();
                 if (isOverTheTarget && _targetGridSpriteMapper &&
-                    GridUtils.DoesShipFitIn(shipWidth, shipHeight, droppedTo, rules.AreaSize.x) &&
-                    targetMap.MoveShip(ship, _grabbedFrom, droppedTo, !_isGrabbedFromTarget))
+                    GridUtils.DoesShipFitIn(shipWidth, shipHeight, dropCell, rules.AreaSize.x) &&
+                    targetMap.MoveShip(ship, _grabCell, dropCell, !_isGrabbedFromTarget))
                 {
-                    _targetGridSpriteMapper.ChangeSpritePosition(_sprite, _grabbedFrom, droppedTo);
+                    _targetGridSpriteMapper.ChangeSpritePosition(_sprite, _grabCell, dropCell);
                 }
                 else if (removeFromSource)
                 {
                     // The tile is already removed inside the OnBeginDrag callback. Place the tile back.
-                    sourceTileMap.SetTile(_grabbedFrom, ship.tile);
+                    sourceTileMap.SetTile(_grabCell, ship.tile);
                 }
             }
 
@@ -101,7 +105,7 @@ namespace BattleshipGame.TilePaint
             return false;
         }
 
-        private Vector3 GetZeroDepth(Vector2 position)
+        private Vector3 GetWorldPoint(Vector2 position)
         {
             var worldPoint = sceneCamera.ScreenToWorldPoint(position);
             return new Vector3(worldPoint.x, worldPoint.y, 0);

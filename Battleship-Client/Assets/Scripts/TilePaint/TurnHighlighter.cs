@@ -30,7 +30,7 @@ namespace BattleshipGame.TilePaint
         public void OnPointerClick(PointerEventData eventData)
         {
             if (battleMap.InteractionMode != TurnHighlighting && battleMap.InteractionMode != TargetMarking) return;
-            var coordinate = GridUtils.ScreenToCoordinate(eventData.position, sceneCamera, _grid, rules.AreaSize);
+            var coordinate = GridUtils.ScreenToCell(eventData.position, sceneCamera, _grid, rules.AreaSize);
             if (_status)
             {
                 int shotTurn = _status.GetShotTurn(coordinate);
