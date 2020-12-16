@@ -172,7 +172,7 @@ namespace BattleshipGame.Core
             switch (phase)
             {
                 case "battle":
-                    CheckTurn();
+                    SwitchTurns();
                     break;
                 case "result":
                     ShowResult();
@@ -183,9 +183,8 @@ namespace BattleshipGame.Core
                     break;
                 case "leave":
                     _leavePopUpIsOn = true;
-                    BuildPopUp()
-                        .Show("Sorry..", "Your opponent has decided not to continue for another round.", "OK",
-                            GoBackToLobby);
+                    BuildPopUp().Show("Sorry..", "Your opponent has decided not to continue for another round.", "OK",
+                        GoBackToLobby);
                     break;
             }
 
@@ -222,22 +221,25 @@ namespace BattleshipGame.Core
             GameSceneManager.Instance.GoToLobby();
         }
 
-        private void CheckTurn()
+        private void SwitchTurns()
         {
             if (_state.playerTurn == _client.SessionId)
-                StartTurn();
+                TurnToPlayer();
             else
-                WaitForOpponentTurn();
+                TurnToEnemy();
 
-            void StartTurn()
+            void TurnToPlayer()
             {
                 _shotsInCurrentTurn.Clear();
                 userMap.InteractionMode = NoInteraction;
                 SwitchToMarkTargetsMode();
                 _networkManager.SetStatusText("It's your turn!");
+#if UNITY_ANDROID
+            Handheld.Vibrate();
+#endif
             }
 
-            void WaitForOpponentTurn()
+            void TurnToEnemy()
             {
                 userMap.InteractionMode = NoInteraction;
                 SwitchToHighlightTurnMode();
@@ -247,9 +249,6 @@ namespace BattleshipGame.Core
 
         private void SwitchToMarkTargetsMode()
         {
-#if UNITY_ANDROID
-            Handheld.Vibrate();
-#endif
             opponentMap.InteractionMode = TargetMarking;
             markButton.SetInteractable(false);
             dragButton.SetInteractable(true);
@@ -282,7 +281,7 @@ namespace BattleshipGame.Core
         private void OnStateChanged(List<DataChange> changes)
         {
             foreach (var _ in changes.Where(change => change.Field == "playerTurn"))
-                CheckTurn();
+                SwitchTurns();
         }
 
         private void OnPlayerShotsChanged(int turn, int cellIndex)
@@ -323,12 +322,7 @@ namespace BattleshipGame.Core
 
         private void OnEnemyShipsChanged(int turn, int part)
         {
-            RegisterShotParts(part, turn);
-        }
-
-        private void RegisterShotParts(int part, int shotTurn)
-        {
-            opponentStatus.RegisterAndDisplay(part, shotTurn);
+            opponentStatus.DisplayShotEnemyShipParts(part, turn);
         }
     }
 }

@@ -31,7 +31,7 @@ namespace BattleshipGame.TilePaint
             return NotShot;
         }
 
-        public void RegisterAndDisplay(int changedShipPart, int shotTurn)
+        public void DisplayShotEnemyShipParts(int changedShipPart, int shotTurn)
         {
             var part = _shipParts[changedShipPart];
             part.ShotTurn = shotTurn;
