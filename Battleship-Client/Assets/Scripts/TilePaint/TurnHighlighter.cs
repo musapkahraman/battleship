@@ -5,7 +5,6 @@ using BattleshipGame.ScriptableObjects;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.Tilemaps;
-using static BattleshipGame.Common.MapInteractionMode;
 
 namespace BattleshipGame.TilePaint
 {
@@ -29,7 +28,6 @@ namespace BattleshipGame.TilePaint
 
         public void OnPointerClick(PointerEventData eventData)
         {
-            if (battleMap.InteractionMode != TurnHighlighting && battleMap.InteractionMode != TargetMarking) return;
             var coordinate = GridUtils.ScreenToCell(eventData.position, sceneCamera, _grid, rules.AreaSize);
             if (_status)
             {

@@ -4,7 +4,6 @@ using BattleshipGame.ScriptableObjects;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.Tilemaps;
-using static BattleshipGame.Common.MapInteractionMode;
 
 namespace BattleshipGame.TilePaint
 {
@@ -18,7 +17,6 @@ namespace BattleshipGame.TilePaint
         [SerializeField] private Tilemap sourceTileMap;
         [SerializeField] private bool removeFromSource;
         [SerializeField] private bool removeIfDraggedOut;
-        private BattleMap _battleMap;
         private Vector3Int _grabCell;
         private Vector3 _grabOffset;
         private bool _isGrabbedFromTarget;
@@ -33,14 +31,10 @@ namespace BattleshipGame.TilePaint
             _grid = GetComponent<Grid>();
             _selfGridSpriteMapper = GetComponent<GridSpriteMapper>();
             _targetGridSpriteMapper = targetMap.GetComponent<GridSpriteMapper>();
-            _battleMap = GetComponent<BattleMap>();
-            if (_battleMap) return;
-            if (targetMap is BattleMap battleMap) _battleMap = battleMap;
         }
 
         public void OnBeginDrag(PointerEventData eventData)
         {
-            if (_battleMap && _battleMap.InteractionMode != ShipDragging) return;
             _isGrabbedFromTarget = eventData.hovered.Contains(targetMap.gameObject);
             _grabCell = GridUtils.ScreenToCell(eventData.position, sceneCamera, _grid, rules.AreaSize);
             _sprite = _selfGridSpriteMapper.GetSpriteAt(ref _grabCell);

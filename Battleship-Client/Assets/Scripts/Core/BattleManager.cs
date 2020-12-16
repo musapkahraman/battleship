@@ -10,7 +10,6 @@ using Colyseus.Schema;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using static BattleshipGame.Common.GridUtils;
-using static BattleshipGame.Common.MapInteractionMode;
 
 namespace BattleshipGame.Core
 {
@@ -19,9 +18,6 @@ namespace BattleshipGame.Core
         [SerializeField] private GameObject popUpPrefab;
         [SerializeField] private ButtonController leaveButton;
         [SerializeField] private ButtonController fireButton;
-        [SerializeField] private ButtonController markButton;
-        [SerializeField] private ButtonController dragButton;
-        [SerializeField] private ButtonController highlightButton;
         [SerializeField] private BattleMap userMap;
         [SerializeField] private BattleMap opponentMap;
         [SerializeField] private TurnHighlighter turnHighlighter;
@@ -56,25 +52,15 @@ namespace BattleshipGame.Core
             foreach (var placement in placementMap.GetPlacements())
                 userMap.SetShip(placement.ship, placement.Coordinate);
 
-            opponentMap.InteractionMode = NoInteraction;
             _networkManager.ClearStatusText();
 
             leaveButton.SetText("Leave");
             fireButton.SetText("Fire!");
-            markButton.SetText("Mark");
-            dragButton.SetText("Drag");
-            highlightButton.SetText("Highlight");
 
             leaveButton.AddListener(LeaveGame);
             fireButton.AddListener(FireShots);
-            markButton.AddListener(SwitchToMarkTargetsMode);
-            dragButton.AddListener(SwitchToDragShipsMode);
-            highlightButton.AddListener(SwitchToHighlightTurnMode);
 
             fireButton.SetInteractable(false);
-            markButton.SetInteractable(false);
-            dragButton.SetInteractable(false);
-            highlightButton.SetInteractable(false);
 
             if (_client.RoomState != null) OnFirstRoomStateReceived(_client.RoomState);
         }
@@ -144,6 +130,7 @@ namespace BattleshipGame.Core
 
         public void MarkTarget(Vector3Int targetCoordinate)
         {
+            if (_state.playerTurn != _client.SessionId) return;
             int targetIndex = CoordinateToCellIndex(targetCoordinate, MapAreaSize);
             if (_shotsInCurrentTurn.Contains(targetIndex))
             {
@@ -162,10 +149,10 @@ namespace BattleshipGame.Core
 
         private void FireShots()
         {
-            markButton.SetInteractable(false);
             fireButton.SetInteractable(false);
             if (_shotsInCurrentTurn.Count == rules.shotsPerTurn)
                 _client.SendTurn(_shotsInCurrentTurn.ToArray());
+            _shotsInCurrentTurn.Clear();
         }
 
         private void OnGamePhaseChanged(string phase)
@@ -196,10 +183,7 @@ namespace BattleshipGame.Core
 
             void ShowResult()
             {
-                userMap.InteractionMode = NoInteraction;
-                opponentMap.InteractionMode = NoInteraction;
                 _networkManager.ClearStatusText();
-
                 bool isWinner = _state.winningPlayer == _client.SessionId;
                 string headerText = isWinner ? "You Win!" : "You Lost!!!";
                 string messageText = isWinner ? "Winners never quit!" : "Quitters never win!";
@@ -231,12 +215,7 @@ namespace BattleshipGame.Core
 
             void TurnToPlayer()
             {
-                _shotsInCurrentTurn.Clear();
-                userMap.InteractionMode = NoInteraction;
-                if (opponentMap.InteractionMode == NoInteraction)
-                    SwitchToMarkTargetsMode();
-                else
-                    markButton.SetInteractable(true);
+                opponentMap.IsMarkingTargets = true;
                 _networkManager.SetStatusText("It's your turn!");
 #if UNITY_ANDROID
             Handheld.Vibrate();
@@ -245,37 +224,8 @@ namespace BattleshipGame.Core
 
             void TurnToEnemy()
             {
-                userMap.InteractionMode = NoInteraction;
-                if (opponentMap.InteractionMode == TargetMarking)
-                    SwitchToHighlightTurnMode();
                 _networkManager.SetStatusText("Waiting for the opponent to attack.");
             }
-        }
-
-        private void SwitchToMarkTargetsMode()
-        {
-            opponentMap.InteractionMode = TargetMarking;
-            markButton.SetInteractable(false);
-            dragButton.SetInteractable(true);
-            highlightButton.SetInteractable(true);
-        }
-
-        private void SwitchToDragShipsMode()
-        {
-            opponentMap.InteractionMode = ShipDragging;
-            if (_state.playerTurn == _client.SessionId)
-                markButton.SetInteractable(true);
-            dragButton.SetInteractable(false);
-            highlightButton.SetInteractable(true);
-        }
-
-        private void SwitchToHighlightTurnMode()
-        {
-            opponentMap.InteractionMode = TurnHighlighting;
-            if (_state.playerTurn == _client.SessionId)
-                markButton.SetInteractable(true);
-            dragButton.SetInteractable(true);
-            highlightButton.SetInteractable(false);
         }
 
         private PopUpWindow BuildPopUp()

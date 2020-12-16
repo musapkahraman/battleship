@@ -6,7 +6,6 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.Tilemaps;
 using static BattleshipGame.Common.GridUtils;
-using static BattleshipGame.Common.MapInteractionMode;
 
 namespace BattleshipGame.TilePaint
 {
@@ -36,32 +35,6 @@ namespace BattleshipGame.TilePaint
         // @formatter:on
         private Grid _grid;
 
-        private MapInteractionMode _interactionMode;
-
-        public MapInteractionMode InteractionMode
-        {
-            get => _interactionMode;
-            set
-            {
-                switch (value)
-                {
-                    case NoInteraction:
-                        break;
-                    case TargetMarking:
-                        IsMarkingTargets = true;
-                        break;
-                    case TurnHighlighting:
-                        break;
-                    case ShipDragging:
-                        break;
-                    default:
-                        throw new ArgumentOutOfRangeException(nameof(value), value, null);
-                }
-
-                _interactionMode = value;
-            }
-        }
-
         public bool IsMarkingTargets { get; set; }
 
         private void Start()
@@ -72,14 +45,14 @@ namespace BattleshipGame.TilePaint
 
         public void OnPointerClick(PointerEventData eventData)
         {
-            if (screenType == ScreenType.Opponent && InteractionMode == TargetMarking)
+            if (screenType == ScreenType.Opponent)
                 manager.MarkTarget(ScreenToCell(eventData.position, sceneCamera, _grid, rules.AreaSize));
         }
 
 #if UNITY_WEBGL || UNITY_STANDALONE || UNITY_EDITOR
         private void OnMouseOver()
         {
-            if (screenType != ScreenType.Opponent || InteractionMode != TargetMarking) return;
+            if (screenType != ScreenType.Opponent) return;
             cursorLayer.ClearAllTiles();
             var coordinate = ScreenToCell(Input.mousePosition, sceneCamera, _grid, rules.AreaSize);
             if (markerLayer.HasTile(coordinate))
@@ -96,7 +69,7 @@ namespace BattleshipGame.TilePaint
 
         private void OnMouseExit()
         {
-            if (screenType != ScreenType.Opponent || InteractionMode != TargetMarking) return;
+            if (screenType != ScreenType.Opponent) return;
             cursorLayer.ClearAllTiles();
         }
 #endif
