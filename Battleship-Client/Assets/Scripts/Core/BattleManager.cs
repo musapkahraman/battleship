@@ -162,6 +162,7 @@ namespace BattleshipGame.Core
 
         private void FireShots()
         {
+            markButton.SetInteractable(false);
             fireButton.SetInteractable(false);
             if (_shotsInCurrentTurn.Count == rules.shotsPerTurn)
                 _client.SendTurn(_shotsInCurrentTurn.ToArray());
@@ -232,7 +233,10 @@ namespace BattleshipGame.Core
             {
                 _shotsInCurrentTurn.Clear();
                 userMap.InteractionMode = NoInteraction;
-                SwitchToMarkTargetsMode();
+                if (opponentMap.InteractionMode == NoInteraction)
+                    SwitchToMarkTargetsMode();
+                else
+                    markButton.SetInteractable(true);
                 _networkManager.SetStatusText("It's your turn!");
 #if UNITY_ANDROID
             Handheld.Vibrate();
@@ -242,7 +246,8 @@ namespace BattleshipGame.Core
             void TurnToEnemy()
             {
                 userMap.InteractionMode = NoInteraction;
-                SwitchToHighlightTurnMode();
+                if (opponentMap.InteractionMode == TargetMarking)
+                    SwitchToHighlightTurnMode();
                 _networkManager.SetStatusText("Waiting for the opponent to attack.");
             }
         }
