@@ -287,11 +287,13 @@ namespace BattleshipGame.Core
 
         private void OnPlayerShotsChanged(int turn, int cellIndex)
         {
+            if (turn <= 0) return;
             SetMarker(cellIndex, turn, true);
         }
 
         private void OnEnemyShotsChanged(int turn, int cellIndex)
         {
+            if (turn <= 0) return;
             SetMarker(cellIndex, turn, false);
         }
 
