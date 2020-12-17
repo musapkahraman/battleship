@@ -40,13 +40,13 @@ npm start
 
 - Add the client folder (Battleship/Battleship-Client) to your projects in Unity Hub.
 - Open the project in Unity 2019.4
-- Enable loading the "master" scene on Play button press in the editor using the menu bar:
+- Enable loading the "main" scene on Play button press in the editor using the menu bar:
 
-Scenes → Scene Autoload → Load Master On Play.
+Scenes → Scene Autoload → Load Main On Play.
 
-The application starts from the "master" scene (Assets/Scenes/Master.unity)
+The application starts from the "main" scene (Assets/Scenes/main.unity)
 
-- Choose the server type in the Network Manager script component attached on the NetworkManager gameObject in the master scene.
+- Choose the server type in the Network Manager script component attached on the NetworkManager gameObject in the main scene.
 
 ## License
 

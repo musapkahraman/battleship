@@ -24,20 +24,20 @@ MonoBehaviour:
     linkText: Colyseus 0.13
     url: https://0-13-x.docs.colyseus.io/getting-started/unity3d-client/
   - heading: 
-    text: 'Enable loading the "master" scene on Play button press in the editor using
+    text: 'Enable loading the "main" scene on Play button press in the editor using
       the menu bar:'
     linkText: 
     url: 
   - heading: 
-    text: "Scenes \u2192 Scene Autoload \u2192 Load Master On Play."
+    text: "Scenes \u2192 Scene Autoload \u2192 Load Main On Play."
     linkText: 
     url: 
   - heading: 
-    text: The application starts from the "master" scene (Assets/Scenes/Master.unity)
+    text: The application starts from the "main" scene (Assets/Scenes/Main.unity)
     linkText: 
     url: 
   - heading: 
     text: Choose the server type in the Network Manager script component attached
-      on the NetworkManager game object in the master scene.
+      on the NetworkManager game object in the main scene.
     linkText: 
     url: 
