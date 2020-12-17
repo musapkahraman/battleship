@@ -1,4 +1,5 @@
-﻿using BattleshipGame.Common;
+﻿using System;
+using BattleshipGame.Common;
 using BattleshipGame.Core;
 using TMPro;
 using UnityEngine;
@@ -18,13 +19,11 @@ namespace BattleshipGame.Network
         protected override void Awake()
         {
             base.Awake();
-            if (progressBarCanvasPrefab) _progressBar = Instantiate(progressBarCanvasPrefab);
+            SetStatusText("Select a mode to play.");
             Client = new NetworkClient();
             Client.Connected += OnConnected;
             Client.ConnectionError += OnConnectionError;
             Client.GamePhaseChanged += OnGamePhaseChanged;
-            SetStatusText($"Connecting to {serverType.ToString()} server...");
-            ConnectToServer();
         }
 
         protected override void OnDestroy()
@@ -50,8 +49,10 @@ namespace BattleshipGame.Network
             messageField.text = text;
         }
 
-        public void ConnectToServer()
+        public void ConnectToServer(Action onError = null)
         {
+            SetStatusText($"Connecting to {serverType.ToString()} server...");
+            if (progressBarCanvasPrefab) _progressBar = Instantiate(progressBarCanvasPrefab);
             Client.Connect(serverType == ServerType.Online ? onlineEndpoint : LocalEndpoint);
         }
 

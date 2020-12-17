@@ -14,7 +14,7 @@ namespace BattleshipGame.Core
         [SerializeField] private string webQuitPage = "about:blank";
 #pragma warning restore CS0414
         [SerializeField] private RoomListManager roomList;
-        [SerializeField] private ButtonController quitButton;
+        [SerializeField] private ButtonController mainMenuButton;
         [SerializeField] private ButtonController newGameButton;
         [SerializeField] private ButtonController joinButton;
         [SerializeField] private ButtonController leaveButton;
@@ -28,17 +28,16 @@ namespace BattleshipGame.Core
         {
             if (NetworkManager.TryGetInstance(out _networkManager))
             {
-                _networkManager.ConnectToServer();
                 _client = _networkManager.Client;
                 _client.RoomsChanged += PopulateRoomList;
 
-                quitButton.SetText("Quit");
+                mainMenuButton.SetText("Main Menu");
                 newGameButton.SetText("New Game");
                 joinButton.SetText("Join");
                 leaveButton.SetText("Leave");
                 _networkManager.ClearStatusText();
 
-                quitButton.AddListener(Quit);
+                mainMenuButton.AddListener(GoToMainMenu);
                 newGameButton.AddListener(NewGame);
                 joinButton.AddListener(JoinGame);
                 leaveButton.AddListener(LeaveGame);
@@ -57,15 +56,11 @@ namespace BattleshipGame.Core
                 SceneManager.LoadScene(0);
             }
 
-            void Quit()
+            void GoToMainMenu()
             {
-#if UNITY_EDITOR
-                EditorApplication.isPlaying = false;
-#elif UNITY_WEBGL
-                Application.OpenURL(webQuitPage);
-#else
-                Application.Quit();
-#endif
+                _client.LeaveLobby();
+                _networkManager.ClearStatusText();
+                GameSceneManager.Instance.GoToMenu();
             }
 
             void NewGame()

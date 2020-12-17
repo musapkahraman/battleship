@@ -10,7 +10,7 @@ namespace BattleshipGame.Editor
     /// </summary>
     /// <description>
     ///     This class adds a File > Scene Autoload menu containing options to select
-    ///     a "master scene" enable it to be auto-loaded when the user presses play
+    ///     a "main scene" enable it to be auto-loaded when the user presses play
     ///     in the editor. When enabled, the selected scene will be loaded on play,
     ///     then the original scene will be reloaded on stop.
     /// </description>
@@ -18,8 +18,8 @@ namespace BattleshipGame.Editor
     internal static class SceneAutoLoader
     {
         // Properties are remembered as editor preferences.
-        private const string EditorPrefLoadMasterOnPlay = "SceneAutoLoader.LoadMasterOnPlay";
-        private const string EditorPrefMasterScene = "SceneAutoLoader.MasterScene";
+        private const string EditorPrefLoadMainOnPlay = "SceneAutoLoader.LoadMainOnPlay";
+        private const string EditorPrefMainScene = "SceneAutoLoader.MainScene";
         private const string EditorPrefPreviousScene = "SceneAutoLoader.PreviousScene";
 
         // Static constructor binds a playmode-changed callback.
@@ -29,16 +29,16 @@ namespace BattleshipGame.Editor
             EditorApplication.playModeStateChanged += OnPlayModeChanged;
         }
 
-        private static bool LoadMasterOnPlay
+        private static bool LoadMainOnPlay
         {
-            get => EditorPrefs.GetBool(EditorPrefLoadMasterOnPlay, false);
-            set => EditorPrefs.SetBool(EditorPrefLoadMasterOnPlay, value);
+            get => EditorPrefs.GetBool(EditorPrefLoadMainOnPlay, false);
+            set => EditorPrefs.SetBool(EditorPrefLoadMainOnPlay, value);
         }
 
-        private static string MasterScene
+        private static string MainScene
         {
-            get => EditorPrefs.GetString(EditorPrefMasterScene, "Master.unity");
-            set => EditorPrefs.SetString(EditorPrefMasterScene, value);
+            get => EditorPrefs.GetString(EditorPrefMainScene, "Main.unity");
+            set => EditorPrefs.SetString(EditorPrefMainScene, value);
         }
 
         private static string PreviousScene
@@ -47,59 +47,59 @@ namespace BattleshipGame.Editor
             set => EditorPrefs.SetString(EditorPrefPreviousScene, value);
         }
 
-        // Menu items to select the "master" scene and control whether or not to load it.
-        [MenuItem("Scenes/Scene Autoload/Select Master Scene...")]
-        private static void SelectMasterScene()
+        // Menu items to select the main scene and control whether or not to load it.
+        [MenuItem("Scenes/Scene Autoload/Select Main Scene...")]
+        private static void SelectMainScene()
         {
-            string masterScene = EditorUtility.OpenFilePanel("Select Master Scene", Application.dataPath, "unity");
-            masterScene =
-                masterScene.Replace(Application.dataPath, "Assets"); //project relative instead of absolute path
-            if (string.IsNullOrEmpty(masterScene)) return;
-            MasterScene = masterScene;
-            LoadMasterOnPlay = true;
+            string mainScene = EditorUtility.OpenFilePanel("Select Main Scene", Application.dataPath, "unity");
+            mainScene =
+                mainScene.Replace(Application.dataPath, "Assets"); //project relative instead of absolute path
+            if (string.IsNullOrEmpty(mainScene)) return;
+            MainScene = mainScene;
+            LoadMainOnPlay = true;
         }
 
-        [MenuItem("Scenes/Scene Autoload/Load Master On Play", true)]
-        private static bool ShowLoadMasterOnPlay()
+        [MenuItem("Scenes/Scene Autoload/Load Main On Play", true)]
+        private static bool ShowLoadMainOnPlay()
         {
-            return !LoadMasterOnPlay;
+            return !LoadMainOnPlay;
         }
 
-        [MenuItem("Scenes/Scene Autoload/Load Master On Play")]
-        private static void EnableLoadMasterOnPlay()
+        [MenuItem("Scenes/Scene Autoload/Load Main On Play")]
+        private static void EnableLoadMainOnPlay()
         {
-            LoadMasterOnPlay = true;
+            LoadMainOnPlay = true;
         }
 
-        [MenuItem("Scenes/Scene Autoload/Do not Load Master On Play", true)]
-        private static bool ShowDoNotLoadMasterOnPlay()
+        [MenuItem("Scenes/Scene Autoload/Do not Load Main On Play", true)]
+        private static bool ShowDoNotLoadMainOnPlay()
         {
-            return LoadMasterOnPlay;
+            return LoadMainOnPlay;
         }
 
-        [MenuItem("Scenes/Scene Autoload/Do not Load Master On Play")]
-        private static void DisableLoadMasterOnPlay()
+        [MenuItem("Scenes/Scene Autoload/Do not Load Main On Play")]
+        private static void DisableLoadMainOnPlay()
         {
-            LoadMasterOnPlay = false;
+            LoadMainOnPlay = false;
         }
 
         // Play mode change callback handles the scene load/reload.
         private static void OnPlayModeChanged(PlayModeStateChange state)
         {
-            if (!LoadMasterOnPlay) return;
+            if (!LoadMainOnPlay) return;
 
             if (!EditorApplication.isPlaying && EditorApplication.isPlayingOrWillChangePlaymode)
             {
-                // User pressed play -- autoload master scene.
+                // User pressed play -- autoload main scene.
                 PreviousScene = SceneManager.GetActiveScene().path;
                 if (EditorSceneManager.SaveCurrentModifiedScenesIfUserWantsTo())
                     try
                     {
-                        EditorSceneManager.OpenScene(MasterScene);
+                        EditorSceneManager.OpenScene(MainScene);
                     }
                     catch
                     {
-                        Debug.LogError($"error: scene not found: {MasterScene}");
+                        Debug.LogError($"error: scene not found: {MainScene}");
                         EditorApplication.isPlaying = false;
                     }
                 else

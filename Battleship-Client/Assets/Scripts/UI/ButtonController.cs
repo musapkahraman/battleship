@@ -21,10 +21,17 @@ namespace BattleshipGame.UI
             if (_button.interactable == state) return;
             if (buttonText)
             {
+                var buttonTextColor = buttonText.color;
                 if (state)
-                    buttonText.color /= 0.5f;
+                {
+                    buttonTextColor.a /= 0.5f;
+                }
                 else
-                    buttonText.color *= 0.5f;
+                {
+                    buttonTextColor.a *= 0.5f;
+                }
+
+                buttonText.color = buttonTextColor;
             }
 
             _button.interactable = state;

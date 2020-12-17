@@ -395,7 +395,7 @@ Canvas:
   m_OverrideSorting: 0
   m_OverridePixelPerfect: 0
   m_SortingBucketNormalizedSize: 0
-  m_AdditionalShaderChannelsFlag: 1
+  m_AdditionalShaderChannelsFlag: 25
   m_SortingLayerID: 0
   m_SortingOrder: 0
   m_TargetDisplay: 0
@@ -462,16 +462,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7496cd49913643ab94c6180762a6fa13, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  masterScene:
-    scenePath: Assets/Scenes/Master.unity
+  main:
+    scenePath: Assets/Scenes/Main.unity
     sceneAsset: {fileID: 102900000, guid: bee8080cace20194cbab12410eec0471, type: 3}
-  lobbyScene:
+  menu:
+    scenePath: Assets/Scenes/Menu.unity
+    sceneAsset: {fileID: 102900000, guid: 28057e93df0103c46b3418d50bc5c5aa, type: 3}
+  lobby:
     scenePath: Assets/Scenes/Lobby.unity
     sceneAsset: {fileID: 102900000, guid: 7ea50c5307046e44e92c6b0bbdf709be, type: 3}
-  planScene:
+  plan:
     scenePath: Assets/Scenes/Plan.unity
     sceneAsset: {fileID: 102900000, guid: 5e6584d44c2df6648a83df6ef230673b, type: 3}
-  battleScene:
+  battle:
     scenePath: Assets/Scenes/Battle.unity
     sceneAsset: {fileID: 102900000, guid: 2cda990e2423bbf4892e6590ba056729, type: 3}
 --- !u!1 &1560539547

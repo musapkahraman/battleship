@@ -160,7 +160,7 @@ GameObject:
   - component: {fileID: 868588383397605977}
   - component: {fileID: 868588383397605978}
   m_Layer: 5
-  m_Name: ProgressBarCanvas
+  m_Name: ProgressBar
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -262,11 +262,11 @@ RectTransform:
   m_Father: {fileID: 868588383397605976}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.5, y: 0.5}
-  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchorMin: {x: 0.5, y: 0}
+  m_AnchorMax: {x: 0.5, y: 0}
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 100, y: 100}
-  m_Pivot: {x: 0.5, y: 0.5}
+  m_Pivot: {x: 0.5, y: 0}
 --- !u!95 &868588383712907703
 Animator:
   serializedVersion: 3
