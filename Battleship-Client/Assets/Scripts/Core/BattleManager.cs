@@ -31,7 +31,7 @@ namespace BattleshipGame.Core
         private NetworkManager _networkManager;
         private string _player, _enemy;
         private State _state;
-        private Vector2Int MapAreaSize => rules.areaSize;
+        private Vector2Int MapAreaSize => rules.AreaSize;
 
         private void Awake()
         {
@@ -50,7 +50,7 @@ namespace BattleshipGame.Core
         private void Start()
         {
             foreach (var placement in placementMap.GetPlacements())
-                userMap.SetShip(placement.ship, placement.coordinate);
+                userMap.SetShip(placement.ship, placement.Coordinate);
 
             _networkManager.ClearStatusText();
 
@@ -265,8 +265,8 @@ namespace BattleshipGame.Core
             }
 
             userMap.SetMarker(cellIndex, !(from placement in placementMap.GetPlacements()
-                from part in placement.ship.partCoordinates
-                select placement.coordinate + (Vector3Int) part
+                from part in placement.ship.PartCoordinates
+                select placement.Coordinate + (Vector3Int) part
                 into partCoordinate
                 let shot = CellIndexToCoordinate(cellIndex, MapAreaSize.x)
                 where partCoordinate.Equals(shot)

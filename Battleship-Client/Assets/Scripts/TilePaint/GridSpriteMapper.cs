@@ -87,7 +87,7 @@ namespace BattleshipGame.TilePaint
                 foreach (var s in rules.ships.Where(s => s.tile.sprite.Equals(sprite))) ship = s;
                 if (ship is null) continue;
                 foreach (var spritePosition in spritePositions)
-                foreach (var cell in ship.partCoordinates.Select(part => spritePosition + (Vector3Int) part))
+                foreach (var cell in ship.PartCoordinates.Select(part => spritePosition + (Vector3Int) part))
                 {
                     if (!cell.Equals(position)) continue;
                     _sprites.TryGetValue(spriteId, out var result);

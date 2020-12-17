@@ -52,7 +52,7 @@ namespace BattleshipGame.UI
 #if UNITY_EDITOR
         public void Print()
         {
-            _mapSize = rules.areaSize;
+            _mapSize = rules.AreaSize;
 
             if (cellLabelPrefab.GetComponent<TMP_Text>() == null)
             {
@@ -62,8 +62,8 @@ namespace BattleshipGame.UI
 
             var grid = GetComponent<Grid>();
 
-            var horizontalInterval = Vector2.right * (CellSize * (grid.cellGap.x + grid.cellSize.x));
-            var verticalInterval = Vector2.up * (CellSize * (grid.cellGap.y + grid.cellSize.y));
+            var horizontalInterval = Vector2.right * CellSize * (grid.cellGap.x + grid.cellSize.x);
+            var verticalInterval = Vector2.up * CellSize * (grid.cellGap.y + grid.cellSize.y);
 
             var interval = axis == Axis.Horizontal ? horizontalInterval : verticalInterval;
             int director = direction == Direction.Forward ? 1 : -1;

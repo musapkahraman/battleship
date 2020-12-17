@@ -36,7 +36,7 @@ namespace BattleshipGame.TilePaint
         public void OnBeginDrag(PointerEventData eventData)
         {
             _isGrabbedFromTarget = eventData.hovered.Contains(targetMap.gameObject);
-            _grabCell = GridUtils.ScreenToCell(eventData.position, sceneCamera, _grid, rules.areaSize);
+            _grabCell = GridUtils.ScreenToCell(eventData.position, sceneCamera, _grid, rules.AreaSize);
             _sprite = _selfGridSpriteMapper.GetSpriteAt(ref _grabCell);
             var grabPoint = transform.position + _grabCell + new Vector3(0.5f, 0.5f, 0);
             _grabOffset = grabPoint - GetWorldPoint(eventData.position);
@@ -69,10 +69,10 @@ namespace BattleshipGame.TilePaint
             {
                 var grid = targetMap.GetComponent<Grid>();
                 var dropWorldPoint = GetWorldPoint(eventData.position) + _grabOffset;
-                var dropCell = GridUtils.WorldToCell(dropWorldPoint, sceneCamera, grid, rules.areaSize);
+                var dropCell = GridUtils.WorldToCell(dropWorldPoint, sceneCamera, grid, rules.AreaSize);
                 (int shipWidth, int shipHeight) = ship.GetShipSize();
                 if (isOverTheTarget && _targetGridSpriteMapper &&
-                    GridUtils.DoesShipFitIn(shipWidth, shipHeight, dropCell, rules.areaSize.x) &&
+                    GridUtils.DoesShipFitIn(shipWidth, shipHeight, dropCell, rules.AreaSize.x) &&
                     targetMap.MoveShip(ship, _grabCell, dropCell, !_isGrabbedFromTarget))
                 {
                     _targetGridSpriteMapper.ChangeSpritePosition(_sprite, _grabCell, dropCell);

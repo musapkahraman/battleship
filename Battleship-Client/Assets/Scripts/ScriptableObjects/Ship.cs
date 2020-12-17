@@ -18,14 +18,14 @@ namespace BattleshipGame.ScriptableObjects
 
         [Tooltip("Start with the sprite's pivot. First value must be (0, 0)")]
         // ReSharper disable once FieldCanBeMadeReadOnly.Global
-        public List<Vector2Int> partCoordinates = new List<Vector2Int>();
+        public List<Vector2Int> PartCoordinates = new List<Vector2Int>();
 
         private void OnValidate()
         {
-            if (partCoordinates.Count == 0)
-                partCoordinates.Add(Vector2Int.zero);
+            if (PartCoordinates.Count == 0)
+                PartCoordinates.Add(Vector2Int.zero);
             else
-                partCoordinates[0] = Vector2Int.zero;
+                PartCoordinates[0] = Vector2Int.zero;
         }
 
         public (int width, int height) GetShipSize()
@@ -35,7 +35,7 @@ namespace BattleshipGame.ScriptableObjects
             var minY = 0;
             var maxY = 0;
 
-            foreach (var partCoordinate in partCoordinates)
+            foreach (var partCoordinate in PartCoordinates)
             {
                 minX = Math.Min(minX, partCoordinate.x);
                 maxX = Math.Max(maxX, partCoordinate.x);

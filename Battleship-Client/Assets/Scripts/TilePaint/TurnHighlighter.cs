@@ -13,6 +13,7 @@ namespace BattleshipGame.TilePaint
         [SerializeField] private Camera sceneCamera;
         [SerializeField] private Rules rules;
         [SerializeField] private BattleManager manager;
+        [SerializeField] private BattleMap battleMap;
         [SerializeField] private Tilemap layer;
         [SerializeField] private Tile tile;
 
@@ -27,7 +28,7 @@ namespace BattleshipGame.TilePaint
 
         public void OnPointerClick(PointerEventData eventData)
         {
-            var coordinate = GridUtils.ScreenToCell(eventData.position, sceneCamera, _grid, rules.areaSize);
+            var coordinate = GridUtils.ScreenToCell(eventData.position, sceneCamera, _grid, rules.AreaSize);
             if (_status)
             {
                 int shotTurn = _status.GetShotTurn(coordinate);
@@ -43,7 +44,7 @@ namespace BattleshipGame.TilePaint
         {
             layer.ClearAllTiles();
             foreach (int cell in cells)
-                layer.SetTile(GridUtils.CellIndexToCoordinate(cell, rules.areaSize.x), tile);
+                layer.SetTile(GridUtils.CellIndexToCoordinate(cell, rules.AreaSize.x), tile);
         }
     }
 }
