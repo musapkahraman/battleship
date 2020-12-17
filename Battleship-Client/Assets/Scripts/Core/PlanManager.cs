@@ -28,7 +28,6 @@ namespace BattleshipGame.Core
         private NetworkClient _client;
         private bool _leavePopUpIsOn;
         private NetworkManager _networkManager;
-
         private bool _opponentExists;
         private List<PlacementMap.Placement> _placements = new List<PlacementMap.Placement>();
         private SortedDictionary<int, Ship> _pool;
@@ -65,6 +64,60 @@ namespace BattleshipGame.Core
             clearButton.AddListener(OnClearButtonPressed);
             randomButton.AddListener(PlaceShipsRandomly);
             continueButton.AddListener(CompletePlacement);
+
+            void LeaveGame()
+            {
+                _client.LeaveRoom();
+                GameSceneManager.Instance.GoToLobby();
+            }
+
+            void CompletePlacement()
+            {
+                continueButton.SetInteractable(false);
+                randomButton.SetInteractable(false);
+                clearButton.SetInteractable(false);
+                _client.SendPlacement(_cells);
+                _networkManager.SetStatusText("Waiting for the opponent to place the ships.");
+            }
+
+            void PlaceShipsRandomly()
+            {
+                ResetPlacementMap();
+
+                if (_shipsNotDragged.Count == 0) _shipsNotDragged = _pool.Keys.ToList();
+
+                foreach (var placement in _placements.Where(placement => !_shipsNotDragged.Contains(placement.shipId)))
+                {
+                    map.SetShip(placement.ship, placement.coordinate);
+                    RegisterShipToCells(placement.shipId, placement.ship, placement.coordinate);
+                    placementMap.PlaceShip(placement.shipId, placement.ship, placement.coordinate);
+                }
+
+                var from = new List<int>();
+                for (var i = 0; i < _cellCount; i++) from.Add(i);
+
+                foreach (int key in _shipsNotDragged)
+                {
+                    var isPlaced = false;
+                    while (!isPlaced)
+                    {
+                        if (from.Count == 0) break;
+
+                        int cell = from[Random.Range(0, from.Count)];
+                        from.Remove(cell);
+                        isPlaced = PlaceShip(_pool[key], default, CellIndexToCoordinate(cell, MapAreaSize.x), false,
+                            key);
+                    }
+
+                    if (isPlaced) continue;
+                    _networkManager.SetStatusText("Sorry, cannot place the ships that way!");
+                    break;
+                }
+
+                gridSpriteMapper.CacheSpritePositions();
+                continueButton.SetInteractable(true);
+                _networkManager.SetStatusText("Looks like you are ready.");
+            }
         }
 
         private void OnDestroy()
@@ -80,51 +133,35 @@ namespace BattleshipGame.Core
             OnGamePhaseChanged(_state.phase);
         }
 
-        private void CompletePlacement()
+        private void OnGamePhaseChanged(string phase)
         {
-            continueButton.SetInteractable(false);
-            randomButton.SetInteractable(false);
-            clearButton.SetInteractable(false);
-            _client.SendPlacement(_cells);
-            _networkManager.SetStatusText("Waiting for the opponent to place the ships.");
-        }
-
-        private void PlaceShipsRandomly()
-        {
-            ResetPlacementMap();
-
-            if (_shipsNotDragged.Count == 0) _shipsNotDragged = _pool.Keys.ToList();
-
-            foreach (var placement in _placements.Where(placement => !_shipsNotDragged.Contains(placement.shipId)))
+            switch (phase)
             {
-                map.SetShip(placement.ship, placement.coordinate);
-                RegisterShipToCells(placement.shipId, placement.ship, placement.coordinate);
-                placementMap.PlaceShip(placement.shipId, placement.ship, placement.coordinate);
+                case "place":
+                    _opponentExists = true;
+                    BeginShipPlacement();
+                    break;
+                case "battle":
+                    GameSceneManager.Instance.GoToBattleScene();
+                    break;
+                case "result":
+                    break;
+                case "waiting":
+                    _opponentExists = false;
+                    if (_leavePopUpIsOn) break;
+                    BuildPopUp().Show("Sorry..", "Your opponent has quit the game.", "OK", GoBackToLobby);
+                    break;
+                case "leave":
+                    break;
             }
 
-            var from = new List<int>();
-            for (var i = 0; i < _cellCount; i++) from.Add(i);
-
-            foreach (int key in _shipsNotDragged)
+            void GoBackToLobby()
             {
-                var isPlaced = false;
-                while (!isPlaced)
-                {
-                    if (from.Count == 0) break;
-
-                    int cell = from[Random.Range(0, from.Count)];
-                    from.Remove(cell);
-                    isPlaced = PlaceShip(_pool[key], default, CellIndexToCoordinate(cell, MapAreaSize.x), false, key);
-                }
-
-                if (isPlaced) continue;
-                _networkManager.SetStatusText("Sorry, cannot place the ships that way!");
-                break;
+                if (_opponentExists)
+                    OnClearButtonPressed();
+                else
+                    GameSceneManager.Instance.GoToLobby();
             }
-
-            gridSpriteMapper.CacheSpritePositions();
-            continueButton.SetInteractable(true);
-            _networkManager.SetStatusText("Looks like you are ready.");
         }
 
         private void OnClearButtonPressed()
@@ -165,19 +202,6 @@ namespace BattleshipGame.Core
             }
         }
 
-        private int GetShipId(Ship ship, Vector3Int grabbedFrom, bool isMovedIn)
-        {
-            if (!isMovedIn)
-            {
-                int cellIndex = CoordinateToCellIndex(grabbedFrom, MapAreaSize);
-                if (_cells[cellIndex] != EmptyCell) return _cells[cellIndex];
-            }
-
-            foreach (var kvp in _pool.Where(kvp => kvp.Value.rankOrder == ship.rankOrder)) return kvp.Key;
-
-            return EmptyCell;
-        }
-
         public bool PlaceShip(Ship ship, Vector3Int from, Vector3Int to, bool isMovedIn, int shipId = EmptyCell)
         {
             var shouldRemoveFromPool = false;
@@ -206,6 +230,19 @@ namespace BattleshipGame.Core
             continueButton.SetInteractable(true);
             _networkManager.SetStatusText("Looks like you are ready.");
             return true;
+        }
+
+        private int GetShipId(Ship ship, Vector3Int grabbedFrom, bool isMovedIn)
+        {
+            if (!isMovedIn)
+            {
+                int cellIndex = CoordinateToCellIndex(grabbedFrom, MapAreaSize);
+                if (_cells[cellIndex] != EmptyCell) return _cells[cellIndex];
+            }
+
+            foreach (var kvp in _pool.Where(kvp => kvp.Value.rankOrder == ship.rankOrder)) return kvp.Key;
+
+            return EmptyCell;
         }
 
         private void RegisterShipToCells(int shipId, Ship ship, Vector3Int pivot)
@@ -245,43 +282,6 @@ namespace BattleshipGame.Core
             }
 
             return false;
-        }
-
-        private void OnGamePhaseChanged(string phase)
-        {
-            switch (phase)
-            {
-                case "place":
-                    _opponentExists = true;
-                    BeginShipPlacement();
-                    break;
-                case "battle":
-                    GameSceneManager.Instance.GoToBattleScene();
-                    break;
-                case "result":
-                    break;
-                case "waiting":
-                    _opponentExists = false;
-                    if (_leavePopUpIsOn) break;
-                    BuildPopUp().Show("Sorry..", "Your opponent has quit the game.", "OK", GoBackToLobby);
-                    break;
-                case "leave":
-                    break;
-            }
-
-            void GoBackToLobby()
-            {
-                if (_opponentExists)
-                    OnClearButtonPressed();
-                else
-                    GameSceneManager.Instance.GoToLobby();
-            }
-        }
-
-        private void LeaveGame()
-        {
-            _client.LeaveRoom();
-            GameSceneManager.Instance.GoToLobby();
         }
 
         private PopUpWindow BuildPopUp()
