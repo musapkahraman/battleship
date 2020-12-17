@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace BattleshipGame.ScriptableObjects
 {
-    [CreateAssetMenu(fileName = "New Rules", menuName = "Battleship/Rules", order = 1)]
+    [CreateAssetMenu(fileName = "New Rules", menuName = "Battleship/Rules")]
     public class Rules : ScriptableObject
     {
         public int shotsPerTurn = 3;

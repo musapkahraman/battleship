@@ -13,7 +13,6 @@ namespace BattleshipGame.TilePaint
         [SerializeField] private Camera sceneCamera;
         [SerializeField] private Rules rules;
         [SerializeField] private BattleManager manager;
-        [SerializeField] private BattleMap battleMap;
         [SerializeField] private Tilemap layer;
         [SerializeField] private Tile tile;
 

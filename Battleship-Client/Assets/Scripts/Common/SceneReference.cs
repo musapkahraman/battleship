@@ -302,7 +302,7 @@ namespace BattleshipGame.Common
             var buttonRect = DrawUtils.GetFieldRect(position);
             buttonRect.width /= 3;
 
-            var tooltipMsg = "";
+            string tooltipMsg;
             using (new EditorGUI.DisabledScope(readOnly))
             {
                 // NOT in build settings

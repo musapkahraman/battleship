@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
-using UnityEngine.Serialization;
 
 namespace BattleshipGame.ScriptableObjects
 {
@@ -24,7 +23,7 @@ namespace BattleshipGame.ScriptableObjects
             if (index > -1)
             {
                 var placement = placements[index];
-                placement.Coordinate = coordinate;
+                placement.coordinate = coordinate;
                 placements[index] = placement;
             }
             else
@@ -48,13 +47,13 @@ namespace BattleshipGame.ScriptableObjects
         {
             public int shipId;
             public Ship ship;
-            public Vector3Int Coordinate;
+            public Vector3Int coordinate;
 
             public Placement(int shipId, Ship ship, Vector3Int coordinate)
             {
                 this.shipId = shipId;
                 this.ship = ship;
-                Coordinate = coordinate;
+                this.coordinate = coordinate;
             }
         }
     }

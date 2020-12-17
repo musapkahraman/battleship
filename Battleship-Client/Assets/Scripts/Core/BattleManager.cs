@@ -50,7 +50,7 @@ namespace BattleshipGame.Core
         private void Start()
         {
             foreach (var placement in placementMap.GetPlacements())
-                userMap.SetShip(placement.ship, placement.Coordinate);
+                userMap.SetShip(placement.ship, placement.coordinate);
 
             _networkManager.ClearStatusText();
 
@@ -265,8 +265,8 @@ namespace BattleshipGame.Core
             }
 
             userMap.SetMarker(cellIndex, !(from placement in placementMap.GetPlacements()
-                from part in placement.ship.PartCoordinates
-                select placement.Coordinate + (Vector3Int) part
+                from part in placement.ship.partCoordinates
+                select placement.coordinate + (Vector3Int) part
                 into partCoordinate
                 let shot = CellIndexToCoordinate(cellIndex, MapAreaSize.x)
                 where partCoordinate.Equals(shot)
