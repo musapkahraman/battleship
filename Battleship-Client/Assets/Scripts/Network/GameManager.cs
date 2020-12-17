@@ -1,16 +1,13 @@
-﻿using System;
-using BattleshipGame.Common;
+﻿using BattleshipGame.Common;
 using BattleshipGame.Core;
 using TMPro;
 using UnityEngine;
 
 namespace BattleshipGame.Network
 {
-    public class NetworkManager : Singleton<NetworkManager>
+    public class GameManager : Singleton<GameManager>
     {
-        private const string LocalEndpoint = "ws://localhost:2567";
-        [SerializeField] private string onlineEndpoint = "ws://";
-        [SerializeField] private ServerType serverType = ServerType.Online;
+        [SerializeField] private NetworkOptions networkOptions;
         [SerializeField] private TMP_Text messageField;
         [SerializeField] private GameObject progressBarCanvasPrefab;
         private GameObject _progressBar;
@@ -49,11 +46,11 @@ namespace BattleshipGame.Network
             messageField.text = text;
         }
 
-        public void ConnectToServer(Action onError = null)
+        public void ConnectToServer()
         {
-            SetStatusText($"Connecting to {serverType.ToString()} server...");
+            SetStatusText("Connecting to server...");
             if (progressBarCanvasPrefab) _progressBar = Instantiate(progressBarCanvasPrefab);
-            Client.Connect(serverType == ServerType.Online ? onlineEndpoint : LocalEndpoint);
+            Client.Connect(networkOptions.GetEndpoint());
         }
 
         public void ClearStatusText()
@@ -78,12 +75,6 @@ namespace BattleshipGame.Network
             if (phase != "place") return;
             Destroy(_progressBar);
             GameSceneManager.Instance.GoToPlanScene();
-        }
-
-        private enum ServerType
-        {
-            Local,
-            Online
         }
     }
 }

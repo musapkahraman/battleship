@@ -28,16 +28,16 @@ namespace BattleshipGame.Core
         private readonly List<int> _shotsInCurrentTurn = new List<int>();
         private NetworkClient _client;
         private bool _leavePopUpIsOn;
-        private NetworkManager _networkManager;
+        private GameManager _gameManager;
         private string _player, _enemy;
         private State _state;
         private Vector2Int MapAreaSize => rules.AreaSize;
 
         private void Awake()
         {
-            if (NetworkManager.TryGetInstance(out _networkManager))
+            if (GameManager.TryGetInstance(out _gameManager))
             {
-                _client = _networkManager.Client;
+                _client = _gameManager.Client;
                 _client.FirstRoomStateReceived += OnFirstRoomStateReceived;
                 _client.GamePhaseChanged += OnGamePhaseChanged;
             }
@@ -52,7 +52,7 @@ namespace BattleshipGame.Core
             foreach (var placement in placementMap.GetPlacements())
                 userMap.SetShip(placement.ship, placement.Coordinate);
 
-            _networkManager.ClearStatusText();
+            _gameManager.ClearStatusText();
 
             leaveButton.SetText("Leave");
             fireButton.SetText("Fire!");
@@ -183,7 +183,7 @@ namespace BattleshipGame.Core
 
             void ShowResult()
             {
-                _networkManager.ClearStatusText();
+                _gameManager.ClearStatusText();
                 bool isWinner = _state.winningPlayer == _client.SessionId;
                 string headerText = isWinner ? "You Win!" : "You Lost!!!";
                 string messageText = isWinner ? "Winners never quit!" : "Quitters never win!";
@@ -191,7 +191,7 @@ namespace BattleshipGame.Core
                 BuildPopUp().Show(headerText, messageText, "Rematch", declineButtonText, () =>
                 {
                     _client.SendRematch(true);
-                    _networkManager.SetStatusText("Waiting for the opponent decide.");
+                    _gameManager.SetStatusText("Waiting for the opponent decide.");
                 }, () =>
                 {
                     _client.SendRematch(false);
@@ -216,7 +216,7 @@ namespace BattleshipGame.Core
             void TurnToPlayer()
             {
                 opponentMap.IsMarkingTargets = true;
-                _networkManager.SetStatusText("It's your turn!");
+                _gameManager.SetStatusText("It's your turn!");
 #if UNITY_ANDROID
             Handheld.Vibrate();
 #endif
@@ -224,7 +224,7 @@ namespace BattleshipGame.Core
 
             void TurnToEnemy()
             {
-                _networkManager.SetStatusText("Waiting for the opponent to attack.");
+                _gameManager.SetStatusText("Waiting for the opponent to attack.");
             }
         }
 

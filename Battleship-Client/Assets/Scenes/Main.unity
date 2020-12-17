@@ -488,7 +488,7 @@ GameObject:
   - component: {fileID: 1560539549}
   - component: {fileID: 1560539548}
   m_Layer: 0
-  m_Name: NetworkManager
+  m_Name: GameManager
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -506,8 +506,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ba7d6b9b43e94c542b59217bc84a7be6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  onlineEndpoint: ws://bronzehero.herokuapp.com
-  serverType: 1
+  networkOptions: {fileID: 11400000, guid: 62dc12998133fc84c983ee6b0b665ab8, type: 2}
   messageField: {fileID: 322319179}
   progressBarCanvasPrefab: {fileID: 868588383397605981, guid: b5624325612bcf0438993606f5726bef,
     type: 3}

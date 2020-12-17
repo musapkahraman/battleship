@@ -27,7 +27,7 @@ namespace BattleshipGame.Core
         private int[] _cells;
         private NetworkClient _client;
         private bool _leavePopUpIsOn;
-        private NetworkManager _networkManager;
+        private GameManager _gameManager;
 
         private bool _opponentExists;
         private List<PlacementMap.Placement> _placements = new List<PlacementMap.Placement>();
@@ -39,9 +39,9 @@ namespace BattleshipGame.Core
 
         private void Awake()
         {
-            if (NetworkManager.TryGetInstance(out _networkManager))
+            if (GameManager.TryGetInstance(out _gameManager))
             {
-                _client = _networkManager.Client;
+                _client = _gameManager.Client;
                 _client.FirstRoomStateReceived += OnFirstRoomStateReceived;
                 _client.GamePhaseChanged += OnGamePhaseChanged;
             }
@@ -86,7 +86,7 @@ namespace BattleshipGame.Core
             randomButton.SetInteractable(false);
             clearButton.SetInteractable(false);
             _client.SendPlacement(_cells);
-            _networkManager.SetStatusText("Waiting for the opponent to place the ships.");
+            _gameManager.SetStatusText("Waiting for the opponent to place the ships.");
         }
 
         private void PlaceShipsRandomly()
@@ -118,13 +118,13 @@ namespace BattleshipGame.Core
                 }
 
                 if (isPlaced) continue;
-                _networkManager.SetStatusText("Sorry, cannot place the ships that way!");
+                _gameManager.SetStatusText("Sorry, cannot place the ships that way!");
                 break;
             }
 
             gridSpriteMapper.CacheSpritePositions();
             continueButton.SetInteractable(true);
-            _networkManager.SetStatusText("Looks like you are ready.");
+            _gameManager.SetStatusText("Looks like you are ready.");
         }
 
         private void OnClearButtonPressed()
@@ -146,7 +146,7 @@ namespace BattleshipGame.Core
             randomButton.SetInteractable(true);
             clearButton.SetInteractable(false);
             continueButton.SetInteractable(false);
-            _networkManager.SetStatusText("Place your Ships!");
+            _gameManager.SetStatusText("Place your Ships!");
             placementMap.Clear();
             _cells = new int[_cellCount];
             for (var i = 0; i < _cellCount; i++) _cells[i] = EmptyCell;
@@ -204,7 +204,7 @@ namespace BattleshipGame.Core
             if (_pool.Count != 0) return true;
             randomButton.SetInteractable(false);
             continueButton.SetInteractable(true);
-            _networkManager.SetStatusText("Looks like you are ready.");
+            _gameManager.SetStatusText("Looks like you are ready.");
             return true;
         }
 

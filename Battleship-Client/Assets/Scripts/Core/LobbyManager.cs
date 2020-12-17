@@ -22,20 +22,20 @@ namespace BattleshipGame.Core
         private string _cachedRoomId = string.Empty;
         private bool _cachedRoomIdIsNotValid;
         private NetworkClient _client;
-        private NetworkManager _networkManager;
+        private GameManager _gameManager;
 
         private void Start()
         {
-            if (NetworkManager.TryGetInstance(out _networkManager))
+            if (GameManager.TryGetInstance(out _gameManager))
             {
-                _client = _networkManager.Client;
+                _client = _gameManager.Client;
                 _client.RoomsChanged += PopulateRoomList;
 
                 mainMenuButton.SetText("Main Menu");
                 newGameButton.SetText("New Game");
                 joinButton.SetText("Join");
                 leaveButton.SetText("Leave");
-                _networkManager.ClearStatusText();
+                _gameManager.ClearStatusText();
 
                 mainMenuButton.AddListener(GoToMainMenu);
                 newGameButton.AddListener(NewGame);
@@ -59,7 +59,7 @@ namespace BattleshipGame.Core
             void GoToMainMenu()
             {
                 _client.LeaveLobby();
-                _networkManager.ClearStatusText();
+                _gameManager.ClearStatusText();
                 GameSceneManager.Instance.GoToMenu();
             }
 
@@ -97,7 +97,7 @@ namespace BattleshipGame.Core
                 leaveButton.SetInteractable(false);
                 newGameButton.SetInteractable(true);
                 _client.LeaveRoom();
-                _networkManager.ClearStatusText();
+                _gameManager.ClearStatusText();
             }
         }
 
@@ -119,7 +119,7 @@ namespace BattleshipGame.Core
         {
             newGameButton.SetInteractable(false);
             leaveButton.SetInteractable(true);
-            _networkManager.SetStatusText("Waiting for another player to join.");
+            _gameManager.SetStatusText("Waiting for another player to join.");
         }
 
         private void PopulateRoomList(Dictionary<string, Room> rooms)

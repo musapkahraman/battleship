@@ -11,7 +11,7 @@ namespace BattleshipGame.Core
         [SerializeField] private ButtonController singlePlayerButton;
         [SerializeField] private ButtonController multiplayerButton;
         [SerializeField] private GameObject popUpPrefab;
-        private NetworkManager _networkManager;
+        private GameManager _gameManager;
 
         private void Start()
         {
@@ -54,28 +54,28 @@ namespace BattleshipGame.Core
 
             void PlayWithFriends()
             {
-                if (!NetworkManager.TryGetInstance(out _networkManager)) return;
-                _networkManager.ConnectToServer();
+                if (!GameManager.TryGetInstance(out _gameManager)) return;
+                _gameManager.ConnectToServer();
                 multiplayerButton.SetInteractable(false);
             }
         }
 
         private void LeaveMultiplayerGameRoom()
         {
-            if (!NetworkManager.TryGetInstance(out _networkManager)) return;
-            _networkManager.Client.LeaveRoom();
+            if (!GameManager.TryGetInstance(out _gameManager)) return;
+            _gameManager.Client.LeaveRoom();
         }
 
         private void OnEnable()
         {
-            if (!NetworkManager.TryGetInstance(out _networkManager)) return;
-            _networkManager.Client.ConnectionError += OnConnectionError;
+            if (!GameManager.TryGetInstance(out _gameManager)) return;
+            _gameManager.Client.ConnectionError += OnConnectionError;
         }
 
         private void OnDisable()
         {
-            if (!NetworkManager.TryGetInstance(out _networkManager)) return;
-            _networkManager.Client.ConnectionError -= OnConnectionError;
+            if (!GameManager.TryGetInstance(out _gameManager)) return;
+            _gameManager.Client.ConnectionError -= OnConnectionError;
         }
 
         private void OnConnectionError(string error)
