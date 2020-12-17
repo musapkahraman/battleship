@@ -42,11 +42,13 @@ namespace BattleshipGame.Core
                 void OnEasyMode()
                 {
                     Debug.Log("Easy Mode selected.");
+                    LeaveMultiplayerGameRoom();
                 }
 
                 void OnHardMode()
                 {
                     Debug.Log("Hard Mode selected.");
+                    LeaveMultiplayerGameRoom();
                 }
             }
 
@@ -56,6 +58,12 @@ namespace BattleshipGame.Core
                 _networkManager.ConnectToServer();
                 playWithFriendsButton.SetInteractable(false);
             }
+        }
+
+        private void LeaveMultiplayerGameRoom()
+        {
+            if (!NetworkManager.TryGetInstance(out _networkManager)) return;
+            _networkManager.Client.LeaveRoom();
         }
 
         private void OnEnable()

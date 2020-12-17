@@ -45,7 +45,10 @@ namespace BattleshipGame.Network
         {
             _lobby.OnMessage<Room[]>("rooms", message =>
             {
-                foreach (var room in message) _rooms.Add(room.roomId, room);
+                foreach (var room in message)
+                    if (!_rooms.ContainsKey(room.roomId))
+                        _rooms.Add(room.roomId, room);
+
                 RoomsChanged?.Invoke(_rooms);
             });
 
@@ -120,7 +123,9 @@ namespace BattleshipGame.Network
 
         public void LeaveRoom()
         {
-            _room?.Leave();
+            if (_room == null) return;
+            if (_rooms.ContainsKey(_room.Id)) _rooms.Remove(_room.Id);
+            _room.Leave();
             _room = null;
         }
 
