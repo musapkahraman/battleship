@@ -8,20 +8,20 @@ namespace BattleshipGame.Core
     public class MenuManager : MonoBehaviour
     {
         [SerializeField] private ButtonController quitButton;
-        [SerializeField] private ButtonController playAgainstAIButton;
-        [SerializeField] private ButtonController playWithFriendsButton;
+        [SerializeField] private ButtonController singlePlayerButton;
+        [SerializeField] private ButtonController multiplayerButton;
         [SerializeField] private GameObject popUpPrefab;
         private NetworkManager _networkManager;
 
         private void Start()
         {
             quitButton.SetText("Quit");
-            playAgainstAIButton.SetText("Play Against AI");
-            playWithFriendsButton.SetText("Play With Friends");
+            singlePlayerButton.SetText("Single Player");
+            multiplayerButton.SetText("Multiplayer");
 
             quitButton.AddListener(Quit);
-            playAgainstAIButton.AddListener(PlayAgainstAI);
-            playWithFriendsButton.AddListener(PlayWithFriends);
+            singlePlayerButton.AddListener(PlayAgainstAI);
+            multiplayerButton.AddListener(PlayWithFriends);
 
             void Quit()
             {
@@ -36,7 +36,7 @@ namespace BattleshipGame.Core
 
             void PlayAgainstAI()
             {
-                BuildPopUp().Show("Play against AI", "Select difficulty",
+                BuildPopUp().Show("Single player mode", "Select difficulty",
                     "Cadet", "Admiral", OnEasyMode, OnHardMode);
 
                 void OnEasyMode()
@@ -56,7 +56,7 @@ namespace BattleshipGame.Core
             {
                 if (!NetworkManager.TryGetInstance(out _networkManager)) return;
                 _networkManager.ConnectToServer();
-                playWithFriendsButton.SetInteractable(false);
+                multiplayerButton.SetInteractable(false);
             }
         }
 
@@ -80,7 +80,7 @@ namespace BattleshipGame.Core
 
         private void OnConnectionError(string error)
         {
-            playWithFriendsButton.SetInteractable(true);
+            multiplayerButton.SetInteractable(true);
         }
 
         private PopUpWindow BuildPopUp()

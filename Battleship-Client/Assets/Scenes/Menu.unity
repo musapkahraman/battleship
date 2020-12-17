@@ -131,7 +131,7 @@ PrefabInstance:
     - target: {fileID: 5023613893453269152, guid: c59cf86ee3eebae4e87100a5365ea47b,
         type: 3}
       propertyPath: m_text
-      value: Play with Friends
+      value: Multiplayer
       objectReference: {fileID: 0}
     - target: {fileID: 5023613893453269153, guid: c59cf86ee3eebae4e87100a5365ea47b,
         type: 3}
@@ -141,7 +141,7 @@ PrefabInstance:
     - target: {fileID: 5023613893495342772, guid: c59cf86ee3eebae4e87100a5365ea47b,
         type: 3}
       propertyPath: m_Name
-      value: PlayWithFriends
+      value: MultiplayerButton
       objectReference: {fileID: 0}
     - target: {fileID: 5023613893495342779, guid: c59cf86ee3eebae4e87100a5365ea47b,
         type: 3}
@@ -343,8 +343,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   quitButton: {fileID: 673905443}
-  playAgainstAIButton: {fileID: 1553283945}
-  playWithFriendsButton: {fileID: 89234409}
+  singlePlayerButton: {fileID: 1553283945}
+  multiplayerButton: {fileID: 89234409}
   popUpPrefab: {fileID: 7357745371994881862, guid: ba583779d4e278147998a361ee83dd31,
     type: 3}
 --- !u!1 &342374682
@@ -644,7 +644,7 @@ PrefabInstance:
     - target: {fileID: 5023613893453269152, guid: c59cf86ee3eebae4e87100a5365ea47b,
         type: 3}
       propertyPath: m_text
-      value: Play Against AI
+      value: Single Player
       objectReference: {fileID: 0}
     - target: {fileID: 5023613893453269153, guid: c59cf86ee3eebae4e87100a5365ea47b,
         type: 3}
@@ -654,7 +654,7 @@ PrefabInstance:
     - target: {fileID: 5023613893495342772, guid: c59cf86ee3eebae4e87100a5365ea47b,
         type: 3}
       propertyPath: m_Name
-      value: PlayAgainstAI
+      value: SinglePlayerButton
       objectReference: {fileID: 0}
     - target: {fileID: 5023613893495342779, guid: c59cf86ee3eebae4e87100a5365ea47b,
         type: 3}
