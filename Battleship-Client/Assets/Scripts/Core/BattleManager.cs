@@ -31,7 +31,7 @@ namespace BattleshipGame.Core
         private NetworkManager _networkManager;
         private string _player, _enemy;
         private State _state;
-        private Vector2Int MapAreaSize => rules.AreaSize;
+        private Vector2Int MapAreaSize => rules.areaSize;
 
         private void Awake()
         {

@@ -34,7 +34,7 @@ namespace BattleshipGame.Core
         private SortedDictionary<int, Ship> _pool;
         private List<int> _shipsNotDragged = new List<int>();
         private State _state;
-        private Vector2Int MapAreaSize => rules.AreaSize;
+        private Vector2Int MapAreaSize => rules.areaSize;
         private IEnumerable<Ship> Ships => rules.ships;
 
         private void Awake()
