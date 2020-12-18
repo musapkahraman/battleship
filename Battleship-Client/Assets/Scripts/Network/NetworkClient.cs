@@ -17,7 +17,6 @@ namespace BattleshipGame.Network
         private bool _isFirstRoomStateReceived;
         private Room<LobbyState> _lobby;
         private Room<State> _room;
-
         public event Action<State> FirstRoomStateReceived;
         public event Action<string> GamePhaseChanged;
 
@@ -49,28 +48,25 @@ namespace BattleshipGame.Network
         public void LeaveRoom()
         {
             if (_room == null) return;
-            if (_rooms.ContainsKey(_room.Id)) _rooms.Remove(_room.Id);
             _room.Leave();
             _room = null;
         }
 
-        public event Action Connected;
-        public event Action<string> ConnectionError;
         public event Action<Dictionary<string, Room>> RoomsChanged;
 
-        public async void Connect(string endPoint)
+        public async void Connect(string endPoint, Action success = null, Action<string> error = null)
         {
             if (_lobby != null && _lobby.Connection.IsOpen) return;
             _client = new Client(endPoint);
             try
             {
                 _lobby = await _client.JoinOrCreate<LobbyState>(LobbyName);
-                Connected?.Invoke();
+                success?.Invoke();
                 RegisterLobbyHandlers();
             }
             catch (Exception exception)
             {
-                ConnectionError?.Invoke(exception.Message);
+                error?.Invoke(exception.Message);
             }
         }
 
@@ -107,7 +103,7 @@ namespace BattleshipGame.Network
             });
         }
 
-        public async void CreateRoom(string name, string password)
+        public async void CreateRoom(string name, string password, Action<string> onError = null)
         {
             try
             {
@@ -117,11 +113,11 @@ namespace BattleshipGame.Network
             }
             catch (Exception exception)
             {
-                ConnectionError?.Invoke(exception.Message);
+                onError?.Invoke(exception.Message);
             }
         }
 
-        public async void JoinRoom(string roomId, string password)
+        public async void JoinRoom(string roomId, string password, Action<string> onError = null)
         {
             try
             {
@@ -130,7 +126,7 @@ namespace BattleshipGame.Network
             }
             catch (Exception exception)
             {
-                ConnectionError?.Invoke(exception.Message);
+                onError?.Invoke(exception.Message);
             }
         }
 

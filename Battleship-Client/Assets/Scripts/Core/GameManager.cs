@@ -1,4 +1,6 @@
-﻿using BattleshipGame.Common;
+﻿using System;
+using BattleshipGame.AI;
+using BattleshipGame.Common;
 using BattleshipGame.Network;
 using TMPro;
 using UnityEngine;
@@ -11,34 +13,62 @@ namespace BattleshipGame.Core
         [SerializeField] private TMP_Text messageField;
         [SerializeField] private GameObject progressBarCanvasPrefab;
         private GameObject _progressBar;
-        public NetworkClient Client { get; private set; }
+        public IClient Client { get; private set; }
 
         protected override void Awake()
         {
             base.Awake();
             SetStatusText("Select a mode to play.");
-            Client = new NetworkClient();
-            Client.Connected += OnConnected;
-            Client.ConnectionError += OnConnectionError;
-            Client.GamePhaseChanged += OnGamePhaseChanged;
-        }
-
-        protected override void OnDestroy()
-        {
-            if (Client != null)
-            {
-                Client.Connected -= OnConnected;
-                Client.ConnectionError -= OnConnectionError;
-                Client.GamePhaseChanged -= OnGamePhaseChanged;
-            }
-
-            base.OnDestroy();
         }
 
         private void OnApplicationQuit()
         {
-            Client?.LeaveRoom();
-            Client?.LeaveLobby();
+            FinishNetworkClient();
+        }
+
+        public void ConnectToServer(Action onError = null)
+        {
+            if (Client is NetworkClient)
+            {
+                GameSceneManager.Instance.GoToLobby();
+                return;
+            }
+
+            Client = new NetworkClient();
+            Client.GamePhaseChanged += phase =>
+            {
+                if (phase != "place") return;
+                Destroy(_progressBar);
+                GameSceneManager.Instance.GoToPlanScene();
+            };
+            var networkClient = (NetworkClient) Client;
+            SetStatusText("Connecting to server...");
+            if (progressBarCanvasPrefab) _progressBar = Instantiate(progressBarCanvasPrefab);
+            networkClient.Connect(networkOptions.GetEndpoint(), () =>
+            {
+                Destroy(_progressBar);
+                GameSceneManager.Instance.GoToLobby();
+            }, errorMessage =>
+            {
+                Destroy(_progressBar);
+                SetStatusText(errorMessage);
+                onError?.Invoke();
+            });
+        }
+
+        public void StartLocalClient()
+        {
+            FinishNetworkClient();
+            Client = new LocalClient();
+        }
+
+        private void FinishNetworkClient()
+        {
+            if (Client is NetworkClient networkClient)
+            {
+                networkClient.LeaveRoom();
+                networkClient.LeaveLobby();
+            }
         }
 
         public void SetStatusText(string text)
@@ -46,35 +76,9 @@ namespace BattleshipGame.Core
             messageField.text = text;
         }
 
-        public void ConnectToServer()
-        {
-            SetStatusText("Connecting to server...");
-            if (progressBarCanvasPrefab) _progressBar = Instantiate(progressBarCanvasPrefab);
-            Client.Connect(networkOptions.GetEndpoint());
-        }
-
         public void ClearStatusText()
         {
             messageField.text = string.Empty;
-        }
-
-        private void OnConnected()
-        {
-            Destroy(_progressBar);
-            GameSceneManager.Instance.GoToLobby();
-        }
-
-        private void OnConnectionError(string errorMessage)
-        {
-            Destroy(_progressBar);
-            SetStatusText(errorMessage);
-        }
-
-        private void OnGamePhaseChanged(string phase)
-        {
-            if (phase != "place") return;
-            Destroy(_progressBar);
-            GameSceneManager.Instance.GoToPlanScene();
         }
     }
 }

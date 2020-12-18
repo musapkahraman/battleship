@@ -1,5 +1,4 @@
-﻿using BattleshipGame.Network;
-using BattleshipGame.UI;
+﻿using BattleshipGame.UI;
 using UnityEditor;
 using UnityEngine;
 
@@ -42,45 +41,28 @@ namespace BattleshipGame.Core
                 void OnEasyMode()
                 {
                     Debug.Log("Easy Mode selected.");
-                    LeaveMultiplayerGameRoom();
+                    StartLocalRoom();
                 }
 
                 void OnHardMode()
                 {
                     Debug.Log("Hard Mode selected.");
-                    LeaveMultiplayerGameRoom();
+                    StartLocalRoom();
                 }
             }
 
             void PlayWithFriends()
             {
                 if (!GameManager.TryGetInstance(out _gameManager)) return;
-                _gameManager.ConnectToServer();
+                _gameManager.ConnectToServer(() => multiplayerButton.SetInteractable(true));
                 multiplayerButton.SetInteractable(false);
             }
         }
 
-        private void LeaveMultiplayerGameRoom()
+        private void StartLocalRoom()
         {
             if (!GameManager.TryGetInstance(out _gameManager)) return;
-            _gameManager.Client.LeaveRoom();
-        }
-
-        private void OnEnable()
-        {
-            if (!GameManager.TryGetInstance(out _gameManager)) return;
-            _gameManager.Client.ConnectionError += OnConnectionError;
-        }
-
-        private void OnDisable()
-        {
-            if (!GameManager.TryGetInstance(out _gameManager)) return;
-            _gameManager.Client.ConnectionError -= OnConnectionError;
-        }
-
-        private void OnConnectionError(string error)
-        {
-            multiplayerButton.SetInteractable(true);
+            _gameManager.StartLocalClient();
         }
 
         private PopUpWindow BuildPopUp()
