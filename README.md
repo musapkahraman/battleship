@@ -44,9 +44,9 @@ npm start
 
 Scenes → Scene Autoload → Load Main On Play.
 
-The application starts from the "main" scene (Assets/Scenes/main.unity)
+The application starts from the Main scene (Assets/Scenes/Main.unity)
 
-- Choose the server type in the Network Manager script component attached on the NetworkManager gameObject in the main scene.
+- Choose the server type in Assets/Data/NetworkOptions.
 
 ## License
 
