@@ -33,11 +33,10 @@ MonoBehaviour:
     linkText: 
     url: 
   - heading: 
-    text: The application starts from the "main" scene (Assets/Scenes/Main.unity)
+    text: The application starts from the Main scene (Assets/Scenes/Main.unity)
     linkText: 
     url: 
   - heading: 
-    text: Choose the server type in the Network Manager script component attached
-      on the NetworkManager game object in the main scene.
+    text: - Choose the server type in Assets/Data/NetworkOptions.
     linkText: 
     url: 
