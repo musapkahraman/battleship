@@ -45,7 +45,7 @@ namespace BattleshipGame.Core
                 joinButton.SetInteractable(false);
                 leaveButton.SetInteractable(false);
 
-                if (_client.SessionId != null)
+                if (_client.GetSessionId() != null)
                 {
                     _client.RefreshRooms();
                     WaitForOpponent();
@@ -109,7 +109,7 @@ namespace BattleshipGame.Core
 
         public void SetRoomId(string roomId)
         {
-            if (_client.SessionId != null) return;
+            if (_client.GetSessionId() != null) return;
             _cachedRoomId = roomId;
             _cachedRoomIdIsNotValid = false;
             joinButton.SetInteractable(true);

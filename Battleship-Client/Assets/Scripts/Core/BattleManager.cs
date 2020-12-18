@@ -26,7 +26,7 @@ namespace BattleshipGame.Core
         [SerializeField] private PlacementMap placementMap;
         private readonly Dictionary<int, List<int>> _shots = new Dictionary<int, List<int>>();
         private readonly List<int> _shotsInCurrentTurn = new List<int>();
-        private NetworkClient _client;
+        private IClient _client;
         private bool _leavePopUpIsOn;
         private GameManager _gameManager;
         private string _player, _enemy;
@@ -62,7 +62,7 @@ namespace BattleshipGame.Core
 
             fireButton.SetInteractable(false);
 
-            if (_client.RoomState != null) OnFirstRoomStateReceived(_client.RoomState);
+            if (_client.GetRoomState() != null) OnFirstRoomStateReceived(_client.GetRoomState());
         }
 
         private void OnDestroy()
@@ -88,10 +88,10 @@ namespace BattleshipGame.Core
         private void OnFirstRoomStateReceived(State initialState)
         {
             _state = initialState;
-            _player = _state.players[_client.SessionId].sessionId;
+            _player = _state.players[_client.GetSessionId()].sessionId;
 
             foreach (string key in _state.players.Keys)
-                if (key != _client.SessionId)
+                if (key != _client.GetSessionId())
                 {
                     _enemy = _state.players[key].sessionId;
                     break;
@@ -130,7 +130,7 @@ namespace BattleshipGame.Core
 
         public void MarkTarget(Vector3Int targetCoordinate)
         {
-            if (_state.playerTurn != _client.SessionId) return;
+            if (_state.playerTurn != _client.GetSessionId()) return;
             int targetIndex = CoordinateToCellIndex(targetCoordinate, MapAreaSize);
             if (_shotsInCurrentTurn.Contains(targetIndex))
             {
@@ -184,7 +184,7 @@ namespace BattleshipGame.Core
             void ShowResult()
             {
                 _gameManager.ClearStatusText();
-                bool isWinner = _state.winningPlayer == _client.SessionId;
+                bool isWinner = _state.winningPlayer == _client.GetSessionId();
                 string headerText = isWinner ? "You Win!" : "You Lost!!!";
                 string messageText = isWinner ? "Winners never quit!" : "Quitters never win!";
                 string declineButtonText = isWinner ? "Quit" : "Give Up";
@@ -208,7 +208,7 @@ namespace BattleshipGame.Core
 
         private void SwitchTurns()
         {
-            if (_state.playerTurn == _client.SessionId)
+            if (_state.playerTurn == _client.GetSessionId())
                 TurnToPlayer();
             else
                 TurnToEnemy();

@@ -1,13 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using BattleshipGame.Core;
 using BattleshipGame.Schemas;
 using Colyseus;
 using DataChange = Colyseus.Schema.DataChange;
 
 namespace BattleshipGame.Network
 {
-    public class NetworkClient
+    public class NetworkClient : IClient
     {
         private const string RoomName = "game";
         private const string LobbyName = "lobby";
@@ -16,14 +17,46 @@ namespace BattleshipGame.Network
         private bool _isFirstRoomStateReceived;
         private Room<LobbyState> _lobby;
         private Room<State> _room;
-        public string SessionId => _room?.SessionId;
-        public State RoomState => _room?.State;
+
+        public event Action<State> FirstRoomStateReceived;
+        public event Action<string> GamePhaseChanged;
+
+        public State GetRoomState()
+        {
+            return _room?.State;
+        }
+
+        public string GetSessionId()
+        {
+            return _room?.SessionId;
+        }
+
+        public void SendPlacement(int[] placement)
+        {
+            _room.Send("place", placement);
+        }
+
+        public void SendTurn(int[] targetIndexes)
+        {
+            _room.Send("turn", targetIndexes);
+        }
+
+        public void SendRematch(bool isRematching)
+        {
+            _room.Send("rematch", isRematching);
+        }
+
+        public void LeaveRoom()
+        {
+            if (_room == null) return;
+            if (_rooms.ContainsKey(_room.Id)) _rooms.Remove(_room.Id);
+            _room.Leave();
+            _room = null;
+        }
 
         public event Action Connected;
         public event Action<string> ConnectionError;
-        public event Action<string> GamePhaseChanged;
         public event Action<Dictionary<string, Room>> RoomsChanged;
-        public event Action<State> FirstRoomStateReceived;
 
         public async void Connect(string endPoint)
         {
@@ -121,33 +154,10 @@ namespace BattleshipGame.Network
             }
         }
 
-        public void LeaveRoom()
-        {
-            if (_room == null) return;
-            if (_rooms.ContainsKey(_room.Id)) _rooms.Remove(_room.Id);
-            _room.Leave();
-            _room = null;
-        }
-
         public void LeaveLobby()
         {
             _lobby?.Leave();
             _lobby = null;
-        }
-
-        public void SendPlacement(int[] placement)
-        {
-            _room.Send("place", placement);
-        }
-
-        public void SendTurn(int[] targetIndexes)
-        {
-            _room.Send("turn", targetIndexes);
-        }
-
-        public void SendRematch(bool isRematching)
-        {
-            _room.Send("rematch", isRematching);
         }
 
         public bool IsRoomPasswordProtected(string roomId)

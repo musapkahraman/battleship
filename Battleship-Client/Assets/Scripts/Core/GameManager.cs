@@ -1,9 +1,9 @@
 ﻿using BattleshipGame.Common;
-using BattleshipGame.Core;
+using BattleshipGame.Network;
 using TMPro;
 using UnityEngine;
 
-namespace BattleshipGame.Network
+namespace BattleshipGame.Core
 {
     public class GameManager : Singleton<GameManager>
     {

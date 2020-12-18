@@ -25,10 +25,9 @@ namespace BattleshipGame.Core
         [SerializeField] private PlacementMap placementMap;
         private int _cellCount;
         private int[] _cells;
-        private NetworkClient _client;
+        private IClient _client;
         private bool _leavePopUpIsOn;
         private GameManager _gameManager;
-
         private bool _opponentExists;
         private List<PlacementMap.Placement> _placements = new List<PlacementMap.Placement>();
         private SortedDictionary<int, Ship> _pool;
@@ -54,7 +53,7 @@ namespace BattleshipGame.Core
         private void Start()
         {
             _cellCount = MapAreaSize.x * MapAreaSize.y;
-            if (_client.RoomState != null) OnFirstRoomStateReceived(_client.RoomState);
+            if (_client.GetRoomState() != null) OnFirstRoomStateReceived(_client.GetRoomState());
 
             leaveButton.SetText("Leave");
             clearButton.SetText("Clear");
