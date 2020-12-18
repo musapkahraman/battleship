@@ -6,37 +6,45 @@ namespace BattleshipGame.AI
 {
     public class LocalClient : IClient
     {
+        private const string PlayerId = "player";
+        private const string EnemyId = "enemy";
+        private readonly LocalRoom _room;
+
+        public LocalClient()
+        {
+            _room = new LocalRoom(PlayerId, EnemyId);
+        }
+
         public event Action<State> FirstRoomStateReceived;
         public event Action<string> GamePhaseChanged;
 
         public State GetRoomState()
         {
-            throw new NotImplementedException();
+            return _room.State;
         }
 
         public string GetSessionId()
         {
-            throw new NotImplementedException();
+            return PlayerId;
         }
 
         public void SendPlacement(int[] placement)
         {
-            throw new NotImplementedException();
+            _room.Place(PlayerId, placement);
         }
 
         public void SendTurn(int[] targetIndexes)
         {
-            throw new NotImplementedException();
+            _room.Turn(PlayerId, targetIndexes);
         }
 
         public void SendRematch(bool isRematching)
         {
-            throw new NotImplementedException();
+            _room.Rematch(isRematching);
         }
 
         public void LeaveRoom()
         {
-            throw new NotImplementedException();
         }
     }
 }
