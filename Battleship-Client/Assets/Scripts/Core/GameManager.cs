@@ -60,6 +60,13 @@ namespace BattleshipGame.Core
         {
             FinishNetworkClient();
             Client = new LocalClient();
+            Client.GamePhaseChanged += phase =>
+            {
+                Debug.Log(phase);
+                if (phase != "place") return;
+                GameSceneManager.Instance.GoToPlanScene();
+            };
+            Client.Connect(string.Empty);
         }
 
         private void FinishNetworkClient()

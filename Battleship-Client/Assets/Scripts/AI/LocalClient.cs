@@ -1,6 +1,10 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using BattleshipGame.Core;
 using BattleshipGame.Schemas;
+using Colyseus.Schema;
+using UnityEngine;
 
 namespace BattleshipGame.AI
 {
@@ -9,10 +13,12 @@ namespace BattleshipGame.AI
         private const string PlayerId = "player";
         private const string EnemyId = "enemy";
         private readonly LocalRoom _room;
+        private bool _isFirstRoomStateReceived;
 
         public LocalClient()
         {
             _room = new LocalRoom(PlayerId, EnemyId);
+            RegisterRoomHandlers();
         }
 
         public event Action<State> FirstRoomStateReceived;
@@ -28,9 +34,15 @@ namespace BattleshipGame.AI
             return PlayerId;
         }
 
+        public void Connect(string endPoint, Action success = null, Action<string> error = null)
+        {
+            _room.Start();
+        }
+
         public void SendPlacement(int[] placement)
         {
             _room.Place(PlayerId, placement);
+            _room.Place(EnemyId, placement);
         }
 
         public void SendTurn(int[] targetIndexes)
@@ -45,6 +57,31 @@ namespace BattleshipGame.AI
 
         public void LeaveRoom()
         {
+        }
+
+        private void RegisterRoomHandlers()
+        {
+            _room.OnStateChange += OnStateChange;
+            _room.State.OnChange += OnRoomStateChange;
+
+            void OnStateChange(State state, bool isFirstState)
+            {
+                if (!isFirstState) return;
+                _isFirstRoomStateReceived = true;
+                FirstRoomStateReceived?.Invoke(state);
+            }
+
+            void OnRoomStateChange(List<DataChange> changes)
+            {
+                if (!_isFirstRoomStateReceived) return;
+                foreach (var change in changes)
+                {
+                    Debug.Log($"change: {change.Field} | {change.PreviousValue} -> {change.Value}");
+                }
+
+                foreach (var change in changes.Where(change => change.Field == "phase"))
+                    GamePhaseChanged?.Invoke((string) change.Value);
+            }
         }
     }
 }

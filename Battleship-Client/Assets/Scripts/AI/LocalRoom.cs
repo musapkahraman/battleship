@@ -1,7 +1,10 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using BattleshipGame.Schemas;
 using Colyseus.Schema;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 namespace BattleshipGame.AI
 {
@@ -9,10 +12,12 @@ namespace BattleshipGame.AI
     {
         private const int StartingFleetHealth = 19;
         private const int GridSize = 9;
+        private const int ShotsSize = GridSize * GridSize;
         public readonly State State;
         private Dictionary<string, int> _health;
         private int _placementCompleteCounter;
         private Dictionary<string, int[]> _placements;
+        public event Action<State, bool> OnStateChange;
 
         public LocalRoom(string playerId, string enemyId)
         {
@@ -21,8 +26,19 @@ namespace BattleshipGame.AI
             var enemy = new Player {sessionId = enemyId};
             State.players.Add(playerId, player);
             State.players.Add(enemyId, enemy);
+            _health = new Dictionary<string, int> {{playerId, StartingFleetHealth}, {enemyId, StartingFleetHealth}};
+            _placements = new Dictionary<string, int[]>
+            {
+                {playerId, new int[ShotsSize]}, {enemyId, new int[ShotsSize]}
+            };
             ResetPlayers();
+        }
+
+        public void Start()
+        {
+            OnStateChange?.Invoke(State, true);
             State.phase = "place";
+            State.TriggerAll();
         }
 
         public void Place(string clientId, int[] placement)
@@ -35,6 +51,19 @@ namespace BattleshipGame.AI
                 State.players.ForEach((s, p) => _health[s] = StartingFleetHealth);
                 State.playerTurn = GetRandomUser();
                 State.phase = "battle";
+                
+                Debug.Log(" _placements");
+                foreach (var kvp in _placements)
+                {
+                    Debug.Log(kvp.Key);
+                    foreach (int i in kvp.Value)
+                    {
+                        Debug.Log(i);
+                    }
+                }
+
+                OnStateChange?.Invoke(State, false);
+                State.TriggerAll();
             }
 
             string GetRandomUser()
@@ -131,8 +160,6 @@ namespace BattleshipGame.AI
             }
 
             ResetPlayers();
-            _health = new Dictionary<string, int>();
-            _placements = new Dictionary<string, int[]>();
             _placementCompleteCounter = 0;
             State.playerTurn = "";
             State.winningPlayer = "";
@@ -142,17 +169,19 @@ namespace BattleshipGame.AI
 
         private void ResetPlayers()
         {
-            const int shotsSize = GridSize * GridSize;
-            State.players.ForEach((clientId, player) =>
+            State.players.ForEach((id, p) =>
             {
                 var shots = new Dictionary<int, int>();
-                for (var i = 0; i < shotsSize; i++) shots.Add(i, -1);
-                player.shots = new ArraySchema<int>(shots);
+                for (var i = 0; i < ShotsSize; i++) shots.Add(i, -1);
+                p.shots = new ArraySchema<int>(shots);
 
                 var ships = new Dictionary<int, int>();
                 for (var i = 0; i < StartingFleetHealth; i++) ships.Add(i, -1);
-                player.shots = new ArraySchema<int>(ships);
+                p.shots = new ArraySchema<int>(ships);
             });
+
+            _health = _health.ToDictionary(kvp => kvp.Key, kvp => StartingFleetHealth);
+            _placements = _placements.ToDictionary(kvp => kvp.Key, kvp => new int[ShotsSize]);
         }
     }
 }
