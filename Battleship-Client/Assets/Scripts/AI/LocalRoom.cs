@@ -163,7 +163,7 @@ namespace BattleshipGame.AI
             State.playerTurn = "";
             State.winningPlayer = "";
             State.currentTurn = 1;
-            State.phase = "place";
+            Start();
         }
 
         private void ResetPlayers()

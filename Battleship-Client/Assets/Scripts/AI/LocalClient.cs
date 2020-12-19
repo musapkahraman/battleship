@@ -75,7 +75,6 @@ namespace BattleshipGame.AI
 
         public void SendRematch(bool isRematching)
         {
-            // TODO: Implement rematch
             _room.Rematch(isRematching);
         }
 
