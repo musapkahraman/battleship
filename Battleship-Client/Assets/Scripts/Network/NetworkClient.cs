@@ -47,8 +47,7 @@ namespace BattleshipGame.Network
 
         public void LeaveRoom()
         {
-            if (_room == null) return;
-            _room.Leave();
+            _room?.Leave();
             _room = null;
         }
 

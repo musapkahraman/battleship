@@ -49,7 +49,7 @@ namespace BattleshipGame.AI
             if (_placementCompleteCounter == 2)
             {
                 State.players.ForEach((s, p) => _health[s] = StartingFleetHealth);
-                State.playerTurn = GetRandomUser();
+                State.playerTurn = "player"; // GetRandomUser();
                 State.phase = "battle";
                 
                 Debug.Log(" _placements");
@@ -89,6 +89,7 @@ namespace BattleshipGame.AI
                 if (playerShots[cell] != -1) continue;
 
                 playerShots[cell] = State.currentTurn;
+                State.players[clientId].shots.InvokeOnChange(State.currentTurn,cell);
                 if (opponentPlacements[cell] >= 0)
                 {
                     _health[opponent.sessionId]--;
@@ -129,6 +130,9 @@ namespace BattleshipGame.AI
                 State.playerTurn = opponent.sessionId;
                 State.currentTurn++;
             }
+            
+            OnStateChange?.Invoke(State, false);
+            State.TriggerAll();
 
             void UpdateShips(ArraySchema<int> ships, int start, int end, int turn)
             {

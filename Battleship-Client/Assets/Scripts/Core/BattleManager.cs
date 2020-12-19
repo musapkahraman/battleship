@@ -203,7 +203,10 @@ namespace BattleshipGame.Core
         private void LeaveGame()
         {
             _client.LeaveRoom();
-            GameSceneManager.Instance.GoToLobby();
+            if (_client is NetworkClient)
+            {
+                GameSceneManager.Instance.GoToLobby();
+            }
         }
 
         private void SwitchTurns()

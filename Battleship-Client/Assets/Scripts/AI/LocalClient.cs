@@ -57,6 +57,7 @@ namespace BattleshipGame.AI
 
         public void LeaveRoom()
         {
+            GameSceneManager.Instance.GoToMenu();
         }
 
         private void RegisterRoomHandlers()
@@ -79,8 +80,24 @@ namespace BattleshipGame.AI
                     Debug.Log($"change: {change.Field} | {change.PreviousValue} -> {change.Value}");
                 }
 
-                foreach (var change in changes.Where(change => change.Field == "phase"))
-                    GamePhaseChanged?.Invoke((string) change.Value);
+                foreach (var change in changes)
+                {
+                    switch (change.Field)
+                    {
+                        case "phase":
+                            GamePhaseChanged?.Invoke((string) change.Value);
+                            break;
+                        case "playerTurn":
+                            var player = (string) change.Value;
+                            if (player.Equals(EnemyId))
+                            {
+                                Debug.Log("AI's turn.");
+                                _room.Turn(EnemyId, new []{0,1,2});
+                            }
+                            break;
+                    }
+                    
+                }
             }
         }
     }
