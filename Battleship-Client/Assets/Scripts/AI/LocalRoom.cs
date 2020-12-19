@@ -1,10 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using BattleshipGame.Schemas;
 using Colyseus.Schema;
 using UnityEngine;
-using Random = UnityEngine.Random;
 
 namespace BattleshipGame.AI
 {
@@ -17,7 +15,6 @@ namespace BattleshipGame.AI
         private Dictionary<string, int> _health;
         private int _placementCompleteCounter;
         private Dictionary<string, int[]> _placements;
-        public event Action<State, bool> OnStateChange;
 
         public LocalRoom(string playerId, string enemyId)
         {
@@ -37,7 +34,6 @@ namespace BattleshipGame.AI
         public void Start()
         {
             State.phase = "place";
-            OnStateChange?.Invoke(State, true);
             State.TriggerAll();
         }
 
@@ -49,7 +45,7 @@ namespace BattleshipGame.AI
             if (_placementCompleteCounter == 2)
             {
                 State.players.ForEach((s, p) => _health[s] = StartingFleetHealth);
-                State.playerTurn = "player"; // GetRandomUser();
+                State.playerTurn = GetRandomUser();
                 State.phase = "battle";
 
                 Debug.Log(" _placements");
@@ -62,7 +58,6 @@ namespace BattleshipGame.AI
                     }
                 }
 
-                OnStateChange?.Invoke(State, false);
                 State.TriggerAll();
             }
 
@@ -131,7 +126,6 @@ namespace BattleshipGame.AI
                 State.currentTurn++;
             }
 
-            OnStateChange?.Invoke(State, false);
             State.TriggerAll();
 
             void UpdateShips(ArraySchema<int> ships, int start, int end, int turn)

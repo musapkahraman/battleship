@@ -26,8 +26,8 @@ namespace BattleshipGame.Core
         private int _cellCount;
         private int[] _cells;
         private IClient _client;
-        private bool _leavePopUpIsOn;
         private GameManager _gameManager;
+        private bool _leavePopUpIsOn;
         private bool _opponentExists;
         private List<PlacementMap.Placement> _placements = new List<PlacementMap.Placement>();
         private SortedDictionary<int, Ship> _pool;
@@ -280,7 +280,7 @@ namespace BattleshipGame.Core
         private void LeaveGame()
         {
             _client.LeaveRoom();
-            GameSceneManager.Instance.GoToLobby();
+            if (_client is NetworkClient) GameSceneManager.Instance.GoToLobby();
         }
 
         private PopUpWindow BuildPopUp()

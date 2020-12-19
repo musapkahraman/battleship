@@ -1,26 +1,46 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using BattleshipGame.Core;
 using BattleshipGame.Schemas;
-using Colyseus.Schema;
 using UnityEngine;
 
 namespace BattleshipGame.AI
 {
-    public class LocalClient : IClient
+    public class LocalClient : MonoBehaviour, IClient
     {
         private const string PlayerId = "player";
         private const string EnemyId = "enemy";
-        private readonly LocalRoom _room;
-        private readonly Enemy _enemy;
-        private bool _isFirstRoomStateReceived;
+        private Enemy _enemy;
+        private LocalRoom _room;
 
-        public LocalClient()
+        private void Awake()
         {
+            _enemy = GetComponent<Enemy>();
+        }
+
+        private void OnEnable()
+        {
+            _enemy.enabled = true;
             _room = new LocalRoom(PlayerId, EnemyId);
-            RegisterRoomHandlers();
-            _enemy = new Enemy(81);
+            _room.State.OnChange += changes =>
+            {
+                foreach (var change in changes)
+                    switch (change.Field)
+                    {
+                        case "phase":
+                            GamePhaseChanged?.Invoke((string) change.Value);
+                            break;
+                        case "playerTurn":
+                            if (EnemyId.Equals((string) change.Value))
+                                StartCoroutine(_enemy.GetRandomCells(cells => _room.Turn(EnemyId, cells)));
+                            break;
+                    }
+            };
+        }
+
+        private void OnDisable()
+        {
+            _enemy.enabled = false;
+            _room = null;
         }
 
         public event Action<State> FirstRoomStateReceived;
@@ -44,6 +64,7 @@ namespace BattleshipGame.AI
         public void SendPlacement(int[] placement)
         {
             _room.Place(PlayerId, placement);
+            // TODO: Enemy placement must be different from player placement.
             _room.Place(EnemyId, placement);
         }
 
@@ -54,53 +75,14 @@ namespace BattleshipGame.AI
 
         public void SendRematch(bool isRematching)
         {
+            // TODO: Implement rematch
             _room.Rematch(isRematching);
         }
 
         public void LeaveRoom()
         {
             GameSceneManager.Instance.GoToMenu();
-        }
-
-        private void RegisterRoomHandlers()
-        {
-            _room.OnStateChange += OnStateChange;
-            _room.State.OnChange += OnRoomStateChange;
-
-            void OnStateChange(State state, bool isFirstState)
-            {
-                if (!isFirstState) return;
-                _isFirstRoomStateReceived = true;
-                FirstRoomStateReceived?.Invoke(state);
-            }
-
-            void OnRoomStateChange(List<DataChange> changes)
-            {
-                if (!_isFirstRoomStateReceived) return;
-                foreach (var change in changes)
-                {
-                    Debug.Log($"change: {change.Field} | {change.PreviousValue} -> {change.Value}");
-                }
-
-                foreach (var change in changes)
-                {
-                    switch (change.Field)
-                    {
-                        case "phase":
-                            GamePhaseChanged?.Invoke((string) change.Value);
-                            break;
-                        case "playerTurn":
-                            var player = (string) change.Value;
-                            if (player.Equals(EnemyId))
-                            {
-                                Debug.Log("AI's turn.");
-                                _room.Turn(EnemyId, _enemy.GetRandomCells(3));
-                            }
-                            break;
-                    }
-                    
-                }
-            }
+            enabled = false;
         }
     }
 }

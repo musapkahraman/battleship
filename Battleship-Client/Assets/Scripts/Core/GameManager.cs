@@ -28,10 +28,14 @@ namespace BattleshipGame.Core
 
         public void ConnectToServer(Action onError = null)
         {
-            if (Client is NetworkClient)
+            switch (Client)
             {
-                GameSceneManager.Instance.GoToLobby();
-                return;
+                case NetworkClient _:
+                    GameSceneManager.Instance.GoToLobby();
+                    return;
+                case LocalClient _:
+                    gameObject.GetComponent<LocalClient>().enabled = false;
+                    break;
             }
 
             Client = new NetworkClient();
@@ -59,10 +63,11 @@ namespace BattleshipGame.Core
         public void StartLocalClient()
         {
             FinishNetworkClient();
-            Client = new LocalClient();
+            var localClient = GetComponent<LocalClient>();
+            localClient.enabled = true;
+            Client = localClient;
             Client.GamePhaseChanged += phase =>
             {
-                Debug.Log(phase);
                 if (phase != "place") return;
                 GameSceneManager.Instance.GoToPlanScene();
             };

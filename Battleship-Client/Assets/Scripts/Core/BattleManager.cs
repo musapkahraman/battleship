@@ -27,9 +27,10 @@ namespace BattleshipGame.Core
         private readonly Dictionary<int, List<int>> _shots = new Dictionary<int, List<int>>();
         private readonly List<int> _shotsInCurrentTurn = new List<int>();
         private IClient _client;
-        private bool _leavePopUpIsOn;
+        private string _enemy;
         private GameManager _gameManager;
-        private string _player, _enemy;
+        private bool _leavePopUpIsOn;
+        private string _player;
         private State _state;
         private Vector2Int MapAreaSize => rules.AreaSize;
 
@@ -203,10 +204,7 @@ namespace BattleshipGame.Core
         private void LeaveGame()
         {
             _client.LeaveRoom();
-            if (_client is NetworkClient)
-            {
-                GameSceneManager.Instance.GoToLobby();
-            }
+            if (_client is NetworkClient) GameSceneManager.Instance.GoToLobby();
         }
 
         private void SwitchTurns()
