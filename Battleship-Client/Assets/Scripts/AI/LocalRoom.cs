@@ -36,8 +36,8 @@ namespace BattleshipGame.AI
 
         public void Start()
         {
-            OnStateChange?.Invoke(State, true);
             State.phase = "place";
+            OnStateChange?.Invoke(State, true);
             State.TriggerAll();
         }
 
@@ -51,7 +51,7 @@ namespace BattleshipGame.AI
                 State.players.ForEach((s, p) => _health[s] = StartingFleetHealth);
                 State.playerTurn = "player"; // GetRandomUser();
                 State.phase = "battle";
-                
+
                 Debug.Log(" _placements");
                 foreach (var kvp in _placements)
                 {
@@ -89,7 +89,7 @@ namespace BattleshipGame.AI
                 if (playerShots[cell] != -1) continue;
 
                 playerShots[cell] = State.currentTurn;
-                State.players[clientId].shots.InvokeOnChange(State.currentTurn,cell);
+                State.players[clientId].shots.InvokeOnChange(State.currentTurn, cell);
                 if (opponentPlacements[cell] >= 0)
                 {
                     _health[opponent.sessionId]--;
@@ -130,7 +130,7 @@ namespace BattleshipGame.AI
                 State.playerTurn = opponent.sessionId;
                 State.currentTurn++;
             }
-            
+
             OnStateChange?.Invoke(State, false);
             State.TriggerAll();
 
@@ -140,6 +140,7 @@ namespace BattleshipGame.AI
                     if (ships[i] == -1)
                     {
                         ships[i] = turn;
+                        State.players[opponent.sessionId].ships.InvokeOnChange(State.currentTurn, i);
                         break;
                     }
             }
@@ -181,7 +182,7 @@ namespace BattleshipGame.AI
 
                 var ships = new Dictionary<int, int>();
                 for (var i = 0; i < StartingFleetHealth; i++) ships.Add(i, -1);
-                p.shots = new ArraySchema<int>(ships);
+                p.ships = new ArraySchema<int>(ships);
             });
 
             _health = _health.ToDictionary(kvp => kvp.Key, kvp => StartingFleetHealth);

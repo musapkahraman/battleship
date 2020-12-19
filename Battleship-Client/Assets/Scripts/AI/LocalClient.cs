@@ -13,12 +13,14 @@ namespace BattleshipGame.AI
         private const string PlayerId = "player";
         private const string EnemyId = "enemy";
         private readonly LocalRoom _room;
+        private readonly Enemy _enemy;
         private bool _isFirstRoomStateReceived;
 
         public LocalClient()
         {
             _room = new LocalRoom(PlayerId, EnemyId);
             RegisterRoomHandlers();
+            _enemy = new Enemy(81);
         }
 
         public event Action<State> FirstRoomStateReceived;
@@ -92,7 +94,7 @@ namespace BattleshipGame.AI
                             if (player.Equals(EnemyId))
                             {
                                 Debug.Log("AI's turn.");
-                                _room.Turn(EnemyId, new []{0,1,2});
+                                _room.Turn(EnemyId, _enemy.GetRandomCells(3));
                             }
                             break;
                     }
