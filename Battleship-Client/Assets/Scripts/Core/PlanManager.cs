@@ -25,10 +25,9 @@ namespace BattleshipGame.Core
         [SerializeField] private PlacementMap placementMap;
         private int _cellCount;
         private int[] _cells;
-        private NetworkClient _client;
-        private bool _leavePopUpIsOn;
+        private IClient _client;
         private GameManager _gameManager;
-
+        private bool _leavePopUpIsOn;
         private bool _opponentExists;
         private List<PlacementMap.Placement> _placements = new List<PlacementMap.Placement>();
         private SortedDictionary<int, Ship> _pool;
@@ -54,7 +53,7 @@ namespace BattleshipGame.Core
         private void Start()
         {
             _cellCount = MapAreaSize.x * MapAreaSize.y;
-            if (_client.RoomState != null) OnFirstRoomStateReceived(_client.RoomState);
+            if (_client.GetRoomState() != null) OnFirstRoomStateReceived(_client.GetRoomState());
 
             leaveButton.SetText("Leave");
             clearButton.SetText("Clear");
@@ -102,11 +101,10 @@ namespace BattleshipGame.Core
                 placementMap.PlaceShip(placement.shipId, placement.ship, placement.Coordinate);
             }
 
-            var from = new List<int>();
-            for (var i = 0; i < _cellCount; i++) from.Add(i);
-
             foreach (int key in _shipsNotDragged)
             {
+                var from = new List<int>();
+                for (var i = 0; i < _cellCount; i++) from.Add(i);
                 var isPlaced = false;
                 while (!isPlaced)
                 {
@@ -281,7 +279,7 @@ namespace BattleshipGame.Core
         private void LeaveGame()
         {
             _client.LeaveRoom();
-            GameSceneManager.Instance.GoToLobby();
+            if (_client is NetworkClient) GameSceneManager.Instance.GoToLobby();
         }
 
         private PopUpWindow BuildPopUp()
