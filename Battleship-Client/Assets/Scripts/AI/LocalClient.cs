@@ -64,8 +64,7 @@ namespace BattleshipGame.AI
         public void SendPlacement(int[] placement)
         {
             _room.Place(PlayerId, placement);
-            // TODO: Enemy placement must be different from player placement.
-            _room.Place(EnemyId, placement);
+            _room.Place(EnemyId, _enemy.PlaceShipsRandomly());
         }
 
         public void SendTurn(int[] targetIndexes)

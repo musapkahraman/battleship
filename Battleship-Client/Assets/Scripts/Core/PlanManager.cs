@@ -101,11 +101,10 @@ namespace BattleshipGame.Core
                 placementMap.PlaceShip(placement.shipId, placement.ship, placement.Coordinate);
             }
 
-            var from = new List<int>();
-            for (var i = 0; i < _cellCount; i++) from.Add(i);
-
             foreach (int key in _shipsNotDragged)
             {
+                var from = new List<int>();
+                for (var i = 0; i < _cellCount; i++) from.Add(i);
                 var isPlaced = false;
                 while (!isPlaced)
                 {
