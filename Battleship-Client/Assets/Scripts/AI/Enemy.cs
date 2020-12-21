@@ -11,30 +11,67 @@ namespace BattleshipGame.AI
 {
     public class Enemy : MonoBehaviour
     {
-        [SerializeField] private Rules rules;
         private const int EmptyCell = -1;
         private const int OutOfMap = -1;
+        [SerializeField] private Rules rules;
         private readonly WaitForSeconds _thinkingSeconds = new WaitForSeconds(1f);
+        private Prediction _prediction;
         private List<int> _uncheckedCells;
 
         private void OnEnable()
         {
+            _prediction = new Prediction(rules);
             _uncheckedCells = new List<int>();
-            int cellCount = rules.AreaSize.x * rules.AreaSize.y;
+            int cellCount = rules.areaSize.x * rules.areaSize.y;
             for (var i = 0; i < cellCount; i++) _uncheckedCells.Add(i);
         }
 
         private void OnDisable()
         {
+            _prediction = null;
             _uncheckedCells = null;
         }
 
-        public IEnumerator GetRandomCells(Action<int[]> onComplete)
+        public void ResetForRematch()
+        {
+            OnEnable();
+        }
+
+        public IEnumerator GetShots(Action<int[]> onComplete)
         {
             yield return _thinkingSeconds;
+            switch (rules.aiDifficulty)
+            {
+                case Difficulty.Easy:
+                    onComplete?.Invoke(GetRandomCells());
+                    break;
+                case Difficulty.Hard:
+                    onComplete?.Invoke(GetPredictedCells());
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException();
+            }
+        }
+
+        private int[] GetPredictedCells()
+        {
+            if (_prediction == null || _uncheckedCells == null) return null;
+            if (_uncheckedCells.Count == 0) return null;
+            int size = rules.shotsPerTurn;
+            int[] cells = _prediction
+                .GetMostProbableCells(_uncheckedCells, size, new[] {0, 1, 2, 3, 4, 5, 6, 7, 8})
+                .ToArray();
+            for (var i = 0; i < size; i++) _uncheckedCells.Remove(cells[i]);
+
+            return cells;
+        }
+
+        private int[] GetRandomCells()
+        {
+            if (_prediction == null || _uncheckedCells == null) return null;
             int size = rules.shotsPerTurn;
             var cells = new int[size];
-            if (_uncheckedCells.Count == 0) yield break;
+            if (_uncheckedCells.Count == 0) return cells;
             for (var i = 0; i < size; i++)
             {
                 int index = Random.Range(0, _uncheckedCells.Count);
@@ -42,12 +79,12 @@ namespace BattleshipGame.AI
                 _uncheckedCells.Remove(cells[i]);
             }
 
-            onComplete?.Invoke(cells);
+            return cells;
         }
 
         public int[] PlaceShipsRandomly()
         {
-            int cellCount = rules.AreaSize.x * rules.AreaSize.y;
+            int cellCount = rules.areaSize.x * rules.areaSize.y;
             var cells = new int[cellCount];
             for (var i = 0; i < cellCount; i++) cells[i] = EmptyCell;
             var pool = new SortedDictionary<int, Ship>();
@@ -62,7 +99,7 @@ namespace BattleshipGame.AI
                     if (from.Count == 0) break;
                     int cell = from[Random.Range(0, from.Count)];
                     from.Remove(cell);
-                    isPlaced = PlaceShip(kvp.Key, kvp.Value, GridUtils.CellIndexToCoordinate(cell, rules.AreaSize.x));
+                    isPlaced = PlaceShip(kvp.Key, kvp.Value, GridUtils.CellIndexToCoordinate(cell, rules.areaSize.x));
                 }
             }
 
@@ -82,7 +119,7 @@ namespace BattleshipGame.AI
             bool PlaceShip(int shipId, Ship ship, Vector3Int pivot)
             {
                 (int shipWidth, int shipHeight) = ship.GetShipSize();
-                if (!GridUtils.DoesShipFitIn(shipWidth, shipHeight, pivot, rules.AreaSize.x)) return false;
+                if (!GridUtils.DoesShipFitIn(shipWidth, shipHeight, pivot, rules.areaSize.x)) return false;
                 if (DoesCollideWithOtherShip(shipId, pivot, shipWidth, shipHeight)) return false;
                 RegisterShipToCells(shipId, ship, pivot);
                 return true;
@@ -97,11 +134,11 @@ namespace BattleshipGame.AI
                 int yMax = pivot.y + 1;
                 for (int y = yMin; y <= yMax; y++)
                 {
-                    if (y < 0 || y > rules.AreaSize.y - 1) continue; // Avoid this row if it is out of the map
+                    if (y < 0 || y > rules.areaSize.y - 1) continue; // Avoid this row if it is out of the map
                     for (int x = xMin; x <= xMax; x++)
                     {
-                        if (x < 0 || x > rules.AreaSize.x - 1) continue; // Avoid this column if it is out of the map
-                        int cellIndex = GridUtils.CoordinateToCellIndex(new Vector3Int(x, y, 0), rules.AreaSize);
+                        if (x < 0 || x > rules.areaSize.x - 1) continue; // Avoid this column if it is out of the map
+                        int cellIndex = GridUtils.CoordinateToCellIndex(new Vector3Int(x, y, 0), rules.areaSize);
                         if (cellIndex != OutOfMap &&
                             (cells[cellIndex] == EmptyCell || cells[cellIndex] == shipId)) continue;
 
@@ -122,7 +159,7 @@ namespace BattleshipGame.AI
                 // Find each cell the ship covers and register the ship on them
                 foreach (int cellIndex in ship.PartCoordinates
                     .Select(part => new Vector3Int(pivot.x + part.x, pivot.y + part.y, 0))
-                    .Select(coordinate => GridUtils.CoordinateToCellIndex(coordinate, rules.AreaSize)))
+                    .Select(coordinate => GridUtils.CoordinateToCellIndex(coordinate, rules.areaSize)))
                     if (cellIndex != OutOfMap)
                         cells[cellIndex] = shipId;
             }

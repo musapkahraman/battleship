@@ -17,11 +17,11 @@ namespace BattleshipGame.TilePaint
         [SerializeField] private Tilemap sourceTileMap;
         [SerializeField] private bool removeFromSource;
         [SerializeField] private bool removeIfDraggedOut;
+        private GameObject _grabbedShip;
         private Vector3Int _grabCell;
         private Vector3 _grabOffset;
-        private bool _isGrabbedFromTarget;
-        private GameObject _grabbedShip;
         private Grid _grid;
+        private bool _isGrabbedFromTarget;
         private GridSpriteMapper _selfGridSpriteMapper;
         private Sprite _sprite;
         private GridSpriteMapper _targetGridSpriteMapper;
@@ -36,7 +36,7 @@ namespace BattleshipGame.TilePaint
         public void OnBeginDrag(PointerEventData eventData)
         {
             _isGrabbedFromTarget = eventData.hovered.Contains(targetMap.gameObject);
-            _grabCell = GridUtils.ScreenToCell(eventData.position, sceneCamera, _grid, rules.AreaSize);
+            _grabCell = GridUtils.ScreenToCell(eventData.position, sceneCamera, _grid, rules.areaSize);
             _sprite = _selfGridSpriteMapper.GetSpriteAt(ref _grabCell);
             var grabPoint = transform.position + _grabCell + new Vector3(0.5f, 0.5f, 0);
             _grabOffset = grabPoint - GetWorldPoint(eventData.position);
@@ -69,19 +69,15 @@ namespace BattleshipGame.TilePaint
             {
                 var grid = targetMap.GetComponent<Grid>();
                 var dropWorldPoint = GetWorldPoint(eventData.position) + _grabOffset;
-                var dropCell = GridUtils.WorldToCell(dropWorldPoint, sceneCamera, grid, rules.AreaSize);
+                var dropCell = GridUtils.WorldToCell(dropWorldPoint, sceneCamera, grid, rules.areaSize);
                 (int shipWidth, int shipHeight) = ship.GetShipSize();
                 if (isOverTheTarget && _targetGridSpriteMapper &&
-                    GridUtils.DoesShipFitIn(shipWidth, shipHeight, dropCell, rules.AreaSize.x) &&
+                    GridUtils.DoesShipFitIn(shipWidth, shipHeight, dropCell, rules.areaSize.x) &&
                     targetMap.MoveShip(ship, _grabCell, dropCell, !_isGrabbedFromTarget))
-                {
                     _targetGridSpriteMapper.ChangeSpritePosition(_sprite, _grabCell, dropCell);
-                }
                 else if (removeFromSource)
-                {
                     // The tile is already removed inside the OnBeginDrag callback. Place the tile back.
                     sourceTileMap.SetTile(_grabCell, ship.tile);
-                }
             }
 
             Destroy(_grabbedShip);

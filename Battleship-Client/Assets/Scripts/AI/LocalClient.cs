@@ -31,7 +31,7 @@ namespace BattleshipGame.AI
                             break;
                         case "playerTurn":
                             if (EnemyId.Equals((string) change.Value))
-                                StartCoroutine(_enemy.GetRandomCells(cells => _room.Turn(EnemyId, cells)));
+                                StartCoroutine(_enemy.GetShots(cells => _room.Turn(EnemyId, cells)));
                             break;
                     }
             };
@@ -74,6 +74,7 @@ namespace BattleshipGame.AI
 
         public void SendRematch(bool isRematching)
         {
+            _enemy.ResetForRematch();
             _room.Rematch(isRematching);
         }
 

@@ -28,7 +28,7 @@ namespace BattleshipGame.TilePaint
 
         public void OnPointerClick(PointerEventData eventData)
         {
-            var coordinate = GridUtils.ScreenToCell(eventData.position, sceneCamera, _grid, rules.AreaSize);
+            var coordinate = GridUtils.ScreenToCell(eventData.position, sceneCamera, _grid, rules.areaSize);
             if (_status)
             {
                 int shotTurn = _status.GetShotTurn(coordinate);
@@ -44,7 +44,7 @@ namespace BattleshipGame.TilePaint
         {
             layer.ClearAllTiles();
             foreach (int cell in cells)
-                layer.SetTile(GridUtils.CellIndexToCoordinate(cell, rules.AreaSize.x), tile);
+                layer.SetTile(GridUtils.CellIndexToCoordinate(cell, rules.areaSize.x), tile);
         }
     }
 }

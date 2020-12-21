@@ -52,10 +52,7 @@ namespace BattleshipGame.AI
                 foreach (var kvp in _placements)
                 {
                     Debug.Log(kvp.Key);
-                    foreach (int i in kvp.Value)
-                    {
-                        Debug.Log(i);
-                    }
+                    foreach (int i in kvp.Value) Debug.Log(i);
                 }
 
                 State.TriggerAll();
@@ -72,7 +69,7 @@ namespace BattleshipGame.AI
         public void Turn(string clientId, int[] targetIndexes)
         {
             if (!State.playerTurn.Equals(clientId)) return;
-            if (targetIndexes.Length != 3) return;
+            if (targetIndexes == null || targetIndexes.Length != 3) return;
             var player = State.players[clientId];
             var opponent = GetOpponent(player);
             var playerShots = player.shots;

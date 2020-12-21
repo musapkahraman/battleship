@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using BattleshipGame.AI;
 using UnityEngine;
 
 namespace BattleshipGame.ScriptableObjects
@@ -12,7 +13,9 @@ namespace BattleshipGame.ScriptableObjects
         [Tooltip("Add the types of ships only. Amounts and the sorting order are determined by the ship itself.")]
         public List<Ship> ships;
 
-        public Vector2Int AreaSize = new Vector2Int(9, 9);
+        public Vector2Int areaSize = new Vector2Int(9, 9);
+
+        public Difficulty aiDifficulty = Difficulty.Easy;
 
         private void OnValidate()
         {

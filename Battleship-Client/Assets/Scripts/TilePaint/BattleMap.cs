@@ -46,7 +46,7 @@ namespace BattleshipGame.TilePaint
         public void OnPointerClick(PointerEventData eventData)
         {
             if (screenType == ScreenType.Opponent)
-                manager.MarkTarget(ScreenToCell(eventData.position, sceneCamera, _grid, rules.AreaSize));
+                manager.MarkTarget(ScreenToCell(eventData.position, sceneCamera, _grid, rules.areaSize));
         }
 
 #if UNITY_WEBGL || UNITY_STANDALONE || UNITY_EDITOR
@@ -54,7 +54,7 @@ namespace BattleshipGame.TilePaint
         {
             if (screenType != ScreenType.Opponent) return;
             cursorLayer.ClearAllTiles();
-            var coordinate = ScreenToCell(Input.mousePosition, sceneCamera, _grid, rules.AreaSize);
+            var coordinate = ScreenToCell(Input.mousePosition, sceneCamera, _grid, rules.areaSize);
             if (markerLayer.HasTile(coordinate))
             {
                 var tile = markerLayer.GetTile(coordinate);
@@ -116,7 +116,7 @@ namespace BattleshipGame.TilePaint
                     throw new ArgumentOutOfRangeException(nameof(marker), marker, null);
             }
 
-            var coordinate = CellIndexToCoordinate(index, rules.AreaSize.x);
+            var coordinate = CellIndexToCoordinate(index, rules.areaSize.x);
             var tile = markerLayer.GetTile(coordinate);
             if (tile && !(markerTile is null) && markerTile.name.Equals(markedTargetMarker.name))
                 return false;
