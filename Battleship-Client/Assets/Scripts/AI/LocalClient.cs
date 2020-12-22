@@ -35,6 +35,7 @@ namespace BattleshipGame.AI
                             break;
                     }
             };
+            _room.State.players[PlayerId].ships.OnChange += (turn, part) => _enemy.UpdatePlayerShips(part, turn);
         }
 
         private void OnDisable()

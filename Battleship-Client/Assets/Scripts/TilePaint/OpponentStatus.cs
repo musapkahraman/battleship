@@ -15,11 +15,11 @@ namespace BattleshipGame.TilePaint
         private void Start()
         {
             var spritePositions = GetComponent<GridSpriteMapper>().GetSpritePositions();
-            foreach (var ship1 in rules.ships)
-                for (var i1 = 0; i1 < ship1.amount; i1++)
-                    foreach (var partCoordinate1 in ship1.PartCoordinates.Select(coordinate =>
-                        spritePositions[ship1.tile.sprite.GetInstanceID()][i1] + (Vector3Int) coordinate))
-                        _shipParts.Add((NotShot, partCoordinate1));
+            foreach (var ship in rules.ships)
+                for (var i = 0; i < ship.amount; i++)
+                    foreach (var partCoordinate in ship.PartCoordinates.Select(coordinate =>
+                        spritePositions[ship.tile.sprite.GetInstanceID()][i] + (Vector3Int) coordinate))
+                        _shipParts.Add((NotShot, partCoordinate));
         }
 
         public int GetShotTurn(Vector3Int coordinate)

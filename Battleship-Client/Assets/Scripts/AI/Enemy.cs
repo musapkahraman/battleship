@@ -13,17 +13,40 @@ namespace BattleshipGame.AI
     {
         private const int EmptyCell = -1;
         private const int OutOfMap = -1;
+        private const int NotShot = -1;
         [SerializeField] private Rules rules;
         private readonly WaitForSeconds _thinkingSeconds = new WaitForSeconds(1f);
+        private readonly List<int> _playerShipsHealth = new List<int>();
+        private int[] _playerShipsParts;
         private Prediction _prediction;
         private List<int> _uncheckedCells;
 
         private void OnEnable()
         {
             _prediction = new Prediction(rules);
-            _uncheckedCells = new List<int>();
-            int cellCount = rules.areaSize.x * rules.areaSize.y;
-            for (var i = 0; i < cellCount; i++) _uncheckedCells.Add(i);
+            InitUncheckedCells();
+            InitPlayerShipParts();
+
+            void InitUncheckedCells()
+            {
+                _uncheckedCells = new List<int>();
+                int cellCount = rules.areaSize.x * rules.areaSize.y;
+                for (var i = 0; i < cellCount; i++) _uncheckedCells.Add(i);
+            }
+
+            void InitPlayerShipParts()
+            {
+                var totalShipPartCount = 0;
+                foreach (var ship in rules.ships)
+                    for (var i = 0; i < ship.amount; i++)
+                    {
+                        totalShipPartCount += ship.PartCoordinates.Count;
+                        _playerShipsHealth.Add(ship.PartCoordinates.Count);
+                    }
+
+                _playerShipsParts = new int[totalShipPartCount];
+                for (var i = 0; i < _playerShipsParts.Length; i++) _playerShipsParts[i] = NotShot;
+            }
         }
 
         private void OnDisable()
@@ -35,6 +58,31 @@ namespace BattleshipGame.AI
         public void ResetForRematch()
         {
             OnEnable();
+        }
+
+        public void UpdatePlayerShips(int changedShipPart, int shotTurn)
+        {
+            Debug.Log($"Player ships shot. Part: {changedShipPart}, Turn: {shotTurn}");
+            _playerShipsParts[changedShipPart] = shotTurn;
+            var shipIndex = 0;
+            var partIndex = 0;
+            foreach (var ship in rules.ships)
+                for (var i = 0; i < ship.amount; i++)
+                {
+                    foreach (var _ in ship.PartCoordinates)
+                    {
+                        if (changedShipPart == partIndex)
+                            _playerShipsHealth[shipIndex]--;
+                        partIndex++;
+                    }
+
+                    shipIndex++;
+                }
+
+            for (var i = 0; i < _playerShipsHealth.Count; i++)
+            {
+                Debug.Log($"Ship: {i} Health: {_playerShipsHealth[i]}");
+            }
         }
 
         public IEnumerator GetShots(Action<int[]> onComplete)
