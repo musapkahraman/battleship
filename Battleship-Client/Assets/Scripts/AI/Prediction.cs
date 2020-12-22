@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using BattleshipGame.Common;
 using BattleshipGame.ScriptableObjects;
 using UnityEngine;
 
@@ -7,11 +8,14 @@ namespace BattleshipGame.AI
 {
     public class Prediction
     {
+        private readonly int _areaWidth;
         private readonly Dictionary<int, List<Probability>> _probabilityMap = new Dictionary<int, List<Probability>>();
         private List<int> _playerShipsHealth = new List<int>(); // To figure out diffs on each Prediction.Update call.
+        private List<int> _shots;
 
         public Prediction(Rules rules)
         {
+            _areaWidth = rules.areaSize.x;
             InitProbabilityMap(rules);
         }
 
@@ -73,6 +77,7 @@ namespace BattleshipGame.AI
                     randomPool.Remove(cells[i]);
                 }
 
+                _shots = cells.ToList();
                 return cells;
             }
 
@@ -83,30 +88,60 @@ namespace BattleshipGame.AI
                 cells.Add(probability.Cell);
             }
 
+            _shots = cells.ToList();
             return cells;
         }
 
-        public void Update(List<int> playerShipsHealth)
+        public void Update(List<int> playerShipsHealth, SortedDictionary<int, Ship> pool)
         {
+            var damagedShips = new List<Ship>();
+            var totalDamage = 0;
             for (var shipId = 0; shipId < playerShipsHealth.Count; shipId++)
             {
-                int diff = _playerShipsHealth[shipId] - playerShipsHealth[shipId];
-                if (diff > 0)
+                int damage = _playerShipsHealth[shipId] - playerShipsHealth[shipId];
+                totalDamage += damage;
+                if (damage > 0)
                 {
-                    Debug.Log($"Ship {shipId} was damaged {diff} units.");
-                    if (diff > 1)
-                    {
-                        Debug.Log($"Ship {shipId} had multiple shots.");
-                    }
+                    Debug.Log($"Ship {shipId} was damaged {damage} units.");
+                    damagedShips.Add(pool[shipId]);
+                    if (damage > 1) Debug.Log($"Ship {shipId} had multiple shots.");
 
-                    if (playerShipsHealth[shipId] <= 0)
-                    {
-                        Debug.Log($"Ship {shipId} was sunk.");
-                    }
+                    if (playerShipsHealth[shipId] <= 0) Debug.Log($"Ship {shipId} was sunk.");
                 }
             }
 
+            if (totalDamage > 0) FindPossiblePatterns();
+
             _playerShipsHealth = playerShipsHealth.ToList();
+
+            void FindPossiblePatterns()
+            {
+                if (_shots == null)
+                {
+                    Debug.Log("This is the first call.");
+                    return;
+                }
+
+                foreach (int shot in _shots)
+                {
+                    var shotCoordinate = GridUtils.CellIndexToCoordinate(shot, _areaWidth);
+                    Debug.Log($"Pattern try for shot at cell: {shot} -> {shotCoordinate}");
+                    foreach (var ship in damagedShips)
+                    {
+                        Debug.Log($"ship: {ship.rankOrder}, {ship.name}");
+                        (int shipWidth, int shipHeight) = ship.GetShipSize();
+                        foreach (var shipPartCoordinate in ship.PartCoordinates)
+                        {
+                            var cellCoordinate = shotCoordinate - (Vector3Int) shipPartCoordinate;
+                            if (GridUtils.DoesShipFitIn(shipWidth, shipHeight, cellCoordinate, _areaWidth))
+                            {
+                                Debug.Log($"{shipPartCoordinate} fits.");
+                                var pattern = new Pattern(ship, shipPartCoordinate, shot, shotCoordinate);
+                            }
+                        }
+                    }
+                }
+            }
         }
     }
 }

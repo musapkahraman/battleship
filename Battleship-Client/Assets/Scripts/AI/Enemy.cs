@@ -13,46 +13,44 @@ namespace BattleshipGame.AI
     {
         private const int EmptyCell = -1;
         private const int OutOfMap = -1;
-        private const int NotShot = -1;
         [SerializeField] private Rules rules;
         private readonly List<int> _playerShipsHealth = new List<int>();
+        private readonly SortedDictionary<int, Ship> _pool = new SortedDictionary<int, Ship>();
         private readonly WaitForSeconds _thinkingSeconds = new WaitForSeconds(1f);
-        private int[] _playerShipsParts;
+        private readonly List<int> _uncheckedCells = new List<int>();
         private Prediction _prediction;
-        private List<int> _uncheckedCells;
 
         private void OnEnable()
         {
             _prediction = new Prediction(rules);
             InitUncheckedCells();
-            InitPlayerShipParts();
+            PopulatePool();
 
             void InitUncheckedCells()
             {
-                _uncheckedCells = new List<int>();
+                _uncheckedCells.Clear();
                 int cellCount = rules.areaSize.x * rules.areaSize.y;
                 for (var i = 0; i < cellCount; i++) _uncheckedCells.Add(i);
             }
 
-            void InitPlayerShipParts()
+            void PopulatePool()
             {
-                var totalShipPartCount = 0;
+                _pool.Clear();
+                _playerShipsHealth.Clear();
+                var shipId = 0;
                 foreach (var ship in rules.ships)
                     for (var i = 0; i < ship.amount; i++)
                     {
-                        totalShipPartCount += ship.PartCoordinates.Count;
+                        _pool.Add(shipId, ship);
                         _playerShipsHealth.Add(ship.PartCoordinates.Count);
+                        shipId++;
                     }
-
-                _playerShipsParts = new int[totalShipPartCount];
-                for (var i = 0; i < _playerShipsParts.Length; i++) _playerShipsParts[i] = NotShot;
             }
         }
 
         private void OnDisable()
         {
             _prediction = null;
-            _uncheckedCells = null;
         }
 
         public void ResetForRematch()
@@ -62,21 +60,14 @@ namespace BattleshipGame.AI
 
         public void UpdatePlayerShips(int changedShipPart, int shotTurn)
         {
-            _playerShipsParts[changedShipPart] = shotTurn;
-            var shipIndex = 0;
             var partIndex = 0;
-            foreach (var ship in rules.ships)
-                for (var i = 0; i < ship.amount; i++)
-                {
-                    foreach (var _ in ship.PartCoordinates)
-                    {
-                        if (changedShipPart == partIndex)
-                            _playerShipsHealth[shipIndex]--;
-                        partIndex++;
-                    }
-
-                    shipIndex++;
-                }
+            foreach (var ship in _pool)
+            foreach (var _ in ship.Value.PartCoordinates)
+            {
+                if (changedShipPart == partIndex)
+                    _playerShipsHealth[ship.Key]--;
+                partIndex++;
+            }
         }
 
         public IEnumerator GetShots(Action<int[]> onComplete)
@@ -97,10 +88,9 @@ namespace BattleshipGame.AI
 
         private int[] GetPredictedCells()
         {
-            if (_prediction == null || _uncheckedCells == null) return null;
-            if (_uncheckedCells.Count == 0) return null;
+            if (_prediction == null || _uncheckedCells.Count == 0) return null;
 
-            _prediction.Update(_playerShipsHealth);
+            _prediction.Update(_playerShipsHealth, _pool);
 
             var shipsRemaining = new List<int>();
             for (var shipId = 0; shipId < _playerShipsHealth.Count; shipId++)
@@ -137,9 +127,7 @@ namespace BattleshipGame.AI
             int cellCount = rules.areaSize.x * rules.areaSize.y;
             var cells = new int[cellCount];
             for (var i = 0; i < cellCount; i++) cells[i] = EmptyCell;
-            var pool = new SortedDictionary<int, Ship>();
-            PopulatePool();
-            foreach (var kvp in pool)
+            foreach (var kvp in _pool)
             {
                 var from = new List<int>();
                 for (var i = 0; i < cellCount; i++) from.Add(i);
@@ -154,17 +142,6 @@ namespace BattleshipGame.AI
             }
 
             return cells;
-
-            void PopulatePool()
-            {
-                var shipId = 0;
-                foreach (var ship in rules.ships)
-                    for (var i = 0; i < ship.amount; i++)
-                    {
-                        pool.Add(shipId, ship);
-                        shipId++;
-                    }
-            }
 
             bool PlaceShip(int shipId, Ship ship, Vector3Int pivot)
             {
