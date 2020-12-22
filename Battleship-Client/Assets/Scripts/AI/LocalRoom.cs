@@ -47,14 +47,6 @@ namespace BattleshipGame.AI
                 State.players.ForEach((s, p) => _health[s] = StartingFleetHealth);
                 State.playerTurn = GetRandomUser();
                 State.phase = "battle";
-
-                Debug.Log(" _placements");
-                foreach (var kvp in _placements)
-                {
-                    Debug.Log(kvp.Key);
-                    foreach (int i in kvp.Value) Debug.Log(i);
-                }
-
                 State.TriggerAll();
             }
 

@@ -15,8 +15,8 @@ namespace BattleshipGame.AI
         private const int OutOfMap = -1;
         private const int NotShot = -1;
         [SerializeField] private Rules rules;
-        private readonly WaitForSeconds _thinkingSeconds = new WaitForSeconds(1f);
         private readonly List<int> _playerShipsHealth = new List<int>();
+        private readonly WaitForSeconds _thinkingSeconds = new WaitForSeconds(1f);
         private int[] _playerShipsParts;
         private Prediction _prediction;
         private List<int> _uncheckedCells;
@@ -62,7 +62,6 @@ namespace BattleshipGame.AI
 
         public void UpdatePlayerShips(int changedShipPart, int shotTurn)
         {
-            Debug.Log($"Player ships shot. Part: {changedShipPart}, Turn: {shotTurn}");
             _playerShipsParts[changedShipPart] = shotTurn;
             var shipIndex = 0;
             var partIndex = 0;
@@ -78,11 +77,6 @@ namespace BattleshipGame.AI
 
                     shipIndex++;
                 }
-
-            for (var i = 0; i < _playerShipsHealth.Count; i++)
-            {
-                Debug.Log($"Ship: {i} Health: {_playerShipsHealth[i]}");
-            }
         }
 
         public IEnumerator GetShots(Action<int[]> onComplete)
@@ -105,9 +99,17 @@ namespace BattleshipGame.AI
         {
             if (_prediction == null || _uncheckedCells == null) return null;
             if (_uncheckedCells.Count == 0) return null;
+
+            _prediction.Update(_playerShipsHealth);
+
+            var shipsRemaining = new List<int>();
+            for (var shipId = 0; shipId < _playerShipsHealth.Count; shipId++)
+                if (_playerShipsHealth[shipId] > 0)
+                    shipsRemaining.Add(shipId);
+
             int size = rules.shotsPerTurn;
             int[] cells = _prediction
-                .GetMostProbableCells(_uncheckedCells, size, new[] {0, 1, 2, 3, 4, 5, 6, 7, 8})
+                .GetMostProbableCells(_uncheckedCells, size, shipsRemaining)
                 .ToArray();
             for (var i = 0; i < size; i++) _uncheckedCells.Remove(cells[i]);
 

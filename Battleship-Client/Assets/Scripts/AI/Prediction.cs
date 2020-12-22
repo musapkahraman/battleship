@@ -8,6 +8,7 @@ namespace BattleshipGame.AI
     public class Prediction
     {
         private readonly Dictionary<int, List<Probability>> _probabilityMap = new Dictionary<int, List<Probability>>();
+        private List<int> _playerShipsHealth = new List<int>(); // To figure out diffs on each Prediction.Update call.
 
         public Prediction(Rules rules)
         {
@@ -28,6 +29,10 @@ namespace BattleshipGame.AI
                         shipProbabilities.Add(new Probability(cell, shipProbability));
 
                     _probabilityMap.Add(shipId, shipProbabilities);
+
+                    // Initialize the local list to hold the health values of player ships. This is to figure out diffs.
+                    _playerShipsHealth.Add(ship.PartCoordinates.Count);
+
                     shipId++;
                 }
             }
@@ -79,6 +84,29 @@ namespace BattleshipGame.AI
             }
 
             return cells;
+        }
+
+        public void Update(List<int> playerShipsHealth)
+        {
+            for (var shipId = 0; shipId < playerShipsHealth.Count; shipId++)
+            {
+                int diff = _playerShipsHealth[shipId] - playerShipsHealth[shipId];
+                if (diff > 0)
+                {
+                    Debug.Log($"Ship {shipId} was damaged {diff} units.");
+                    if (diff > 1)
+                    {
+                        Debug.Log($"Ship {shipId} had multiple shots.");
+                    }
+
+                    if (playerShipsHealth[shipId] <= 0)
+                    {
+                        Debug.Log($"Ship {shipId} was sunk.");
+                    }
+                }
+            }
+
+            _playerShipsHealth = playerShipsHealth.ToList();
         }
     }
 }
