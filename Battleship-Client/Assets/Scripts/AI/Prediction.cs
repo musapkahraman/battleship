@@ -9,6 +9,7 @@ namespace BattleshipGame.AI
     public class Prediction
     {
         private readonly int _areaWidth;
+        private readonly SortedDictionary<int, List<Pattern>> _patterns = new SortedDictionary<int, List<Pattern>>();
         private readonly Dictionary<int, List<Probability>> _probabilityMap = new Dictionary<int, List<Probability>>();
         private List<int> _playerShipsHealth = new List<int>(); // To figure out diffs on each Prediction.Update call.
         private List<int> _shots;
@@ -94,7 +95,7 @@ namespace BattleshipGame.AI
 
         public void Update(List<int> playerShipsHealth, SortedDictionary<int, Ship> pool)
         {
-            var damagedShips = new List<Ship>();
+            var damagedShips = new List<int>();
             var totalDamage = 0;
             for (var shipId = 0; shipId < playerShipsHealth.Count; shipId++)
             {
@@ -103,7 +104,7 @@ namespace BattleshipGame.AI
                 if (damage > 0)
                 {
                     Debug.Log($"Ship {shipId} was damaged {damage} units.");
-                    damagedShips.Add(pool[shipId]);
+                    damagedShips.Add(shipId);
                     if (damage > 1) Debug.Log($"Ship {shipId} had multiple shots.");
 
                     if (playerShipsHealth[shipId] <= 0) Debug.Log($"Ship {shipId} was sunk.");
@@ -126,22 +127,37 @@ namespace BattleshipGame.AI
                 {
                     var shotCoordinate = GridUtils.CellIndexToCoordinate(shot, _areaWidth);
                     Debug.Log($"Pattern try for shot at cell: {shot} -> {shotCoordinate}");
-                    foreach (var ship in damagedShips)
+                    foreach (int shipId in damagedShips)
                     {
-                        Debug.Log($"ship: {ship.rankOrder}, {ship.name}");
+                        var ship = pool[shipId];
+                        Debug.Log($"ship: {shipId}, {ship.name}");
                         (int shipWidth, int shipHeight) = ship.GetShipSize();
                         foreach (var shipPartCoordinate in ship.PartCoordinates)
                         {
                             var cellCoordinate = shotCoordinate - (Vector3Int) shipPartCoordinate;
-                            if (GridUtils.DoesShipFitIn(shipWidth, shipHeight, cellCoordinate, _areaWidth))
+                            if (CanPatternBePlaced(cellCoordinate, shipWidth, shipHeight))
                             {
                                 Debug.Log($"{shipPartCoordinate} fits.");
-                                var pattern = new Pattern(ship, shipPartCoordinate, shot, shotCoordinate);
+                                if (!_patterns.ContainsKey(shipId)) _patterns.Add(shipId, new List<Pattern>());
+                                _patterns[shipId].Add(new Pattern(ship, shipPartCoordinate, shot, shotCoordinate));
                             }
                         }
                     }
                 }
             }
+        }
+
+        private bool CanPatternBePlaced(Vector3Int cellCoordinate, int shipWidth, int shipHeight)
+        {
+            if (GridUtils.DoesShipFitIn(shipWidth, shipHeight, cellCoordinate, _areaWidth)) return false;
+
+            // If there are missed shots on the pattern, return false
+
+            // If there are certainly marked ships and its 1 unit margin on the pattern, return false
+
+            // If there are shots from the same group of shots in this turn and they shot nothing or something else, return false
+
+            return true;
         }
     }
 }
