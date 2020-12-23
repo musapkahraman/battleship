@@ -1,0 +1,141 @@
+{
+  "items": [
+    {
+      "key": "btn_single_player",
+      "value": "Tek Oyuncu"
+    },
+    {
+      "key": "btn_multiplayer",
+      "value": "İkİ Oyuncu"
+    },
+    {
+      "key": "btn_quit",
+      "value": "Çıkış"
+    },
+    {
+      "key": "btn_fire",
+      "value": "Ateş!"
+    },
+    {
+      "key": "btn_continue",
+      "value": "Devam et"
+    },
+    {
+      "key": "btn_random",
+      "value": "Rastgele"
+    },
+    {
+      "key": "btn_clear",
+      "value": "Temİzle"
+    },
+    {
+      "key": "btn_new_game",
+      "value": "Yenİ Oyun"
+    },
+    {
+      "key": "btn_join_game",
+      "value": "Oyuna Katıl"
+    },
+    {
+      "key": "btn_leave_game",
+      "value": "Oyundan Ayrıl"
+    },
+    {
+      "key": "btn_main_menu",
+      "value": "Ana Menü"
+    },
+    {
+      "key": "popup_leave_header",
+      "value": "Malesef..."
+    },
+    {
+      "key": "popup_leave_message",
+      "value": "Rakİbİn oyundan ayrıldı."
+    },
+    {
+      "key": "popup_leave_btn_confirm",
+      "value": "Tamam"
+    },
+    {
+      "key": "popup_single_header",
+      "value": "Tek Oyuncu Modu"
+    },
+    {
+      "key": "popup_single_message",
+      "value": "Zorluk seç"
+    },
+    {
+      "key": "popup_single_btn_confirm",
+      "value": "Öğrencİ"
+    },
+    {
+      "key": "popup_single_btn_decline",
+      "value": "Amİral"
+    },
+    {
+      "key": "popup_not_rematch_message",
+      "value": "Rakİbİn oynamak İstemİyor."
+    },
+    {
+      "key": "popup_result_win_header",
+      "value": "Kazandın!"
+    },
+    {
+      "key": "popup_result_lost_header",
+      "value": "Kaybettİn"
+    },
+    {
+      "key": "popup_result_win_message",
+      "value": "Kazananlar asla vazgeçmez."
+    },
+    {
+      "key": "popup_result_lost_message",
+      "value": "Vazgeçenler asla kazanamaz."
+    },
+    {
+      "key": "popup_result_rematch_btn_confirm",
+      "value": "Bİr el daha"
+    },
+    {
+      "key": "popup_result_rematch_btn_decline_win",
+      "value": "Ayrıl"
+    },
+    {
+      "key": "popup_result_rematch_btn_decline_lost",
+      "value": "Pes et"
+    },
+    {
+      "key": "popup_multiplayer_new_game_header",
+      "value": "Yenİ oyun oluştur"
+    },
+    {
+      "key": "popup_multiplayer_new_game_message",
+      "value": "İstersen oyun odasına bir isim verebilir ve parola koyabilirsin."
+    },
+    {
+      "key": "popup_multiplayer_new_game_btn_confirm",
+      "value": "Oluştur"
+    },
+    {
+      "key": "popup_multiplayer_new_game_btn_decline",
+      "value": "İptal"
+    },
+    {
+      "key": "popup_multiplayer_join_game_header",
+      "value": "Oyuna katıl"
+    },
+    {
+      "key": "popup_multiplayer_join_game_message",
+      "value": "Bu oyuna katılmak İçİn parola gereklİ"
+    },
+    {
+      "key": "popup_multiplayer_join_game_btn_confirm",
+      "value": "Devam et"
+    },
+    {
+      "key": "popup_multiplayer_join_game_btn_decline",
+      "value": "İptal"
+    }
+  ],
+  "language": 37
+}

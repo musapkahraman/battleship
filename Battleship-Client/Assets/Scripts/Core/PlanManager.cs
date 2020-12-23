@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using BattleshipGame.Localization;
 using BattleshipGame.Network;
 using BattleshipGame.Schemas;
 using BattleshipGame.ScriptableObjects;
@@ -15,6 +16,9 @@ namespace BattleshipGame.Core
     {
         private const int EmptyCell = -1;
         [SerializeField] private GameObject popUpPrefab;
+        [SerializeField] private Key leaveHeader;
+        [SerializeField] private Key leaveMessage;
+        [SerializeField] private Key leaveConfirm;
         [SerializeField] private ButtonController leaveButton;
         [SerializeField] private ButtonController clearButton;
         [SerializeField] private ButtonController randomButton;
@@ -27,7 +31,6 @@ namespace BattleshipGame.Core
         private int[] _cells;
         private IClient _client;
         private GameManager _gameManager;
-        private bool _leavePopUpIsOn;
         private bool _opponentExists;
         private List<PlacementMap.Placement> _placements = new List<PlacementMap.Placement>();
         private SortedDictionary<int, Ship> _pool;
@@ -54,11 +57,6 @@ namespace BattleshipGame.Core
         {
             _cellCount = MapAreaSize.x * MapAreaSize.y;
             if (_client.GetRoomState() != null) OnFirstRoomStateReceived(_client.GetRoomState());
-
-            leaveButton.SetText("Leave");
-            clearButton.SetText("Clear");
-            randomButton.SetText("Random");
-            continueButton.SetText("Continue");
 
             leaveButton.AddListener(LeaveGame);
             clearButton.AddListener(OnClearButtonPressed);
@@ -260,8 +258,7 @@ namespace BattleshipGame.Core
                     break;
                 case "waiting":
                     _opponentExists = false;
-                    if (_leavePopUpIsOn) break;
-                    BuildPopUp().Show("Sorry..", "Your opponent has quit the game.", "OK", GoBackToLobby);
+                    BuildPopUp().Show(leaveHeader, leaveMessage, leaveConfirm, GoBackToLobby);
                     break;
                 case "leave":
                     break;

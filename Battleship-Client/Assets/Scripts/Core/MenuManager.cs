@@ -1,4 +1,5 @@
 ﻿using BattleshipGame.AI;
+using BattleshipGame.Localization;
 using BattleshipGame.UI;
 using UnityEditor;
 using UnityEngine;
@@ -7,6 +8,10 @@ namespace BattleshipGame.Core
 {
     public class MenuManager : MonoBehaviour
     {
+        [SerializeField] private Key popupSingleHeader;
+        [SerializeField] private Key popupSingleMessage;
+        [SerializeField] private Key popupSingleConfirm;
+        [SerializeField] private Key popupSingleDecline;
         [SerializeField] private ButtonController quitButton;
         [SerializeField] private ButtonController singlePlayerButton;
         [SerializeField] private ButtonController multiplayerButton;
@@ -16,10 +21,6 @@ namespace BattleshipGame.Core
 
         private void Start()
         {
-            quitButton.SetText("Quit");
-            singlePlayerButton.SetText("Single Player");
-            multiplayerButton.SetText("Multiplayer");
-
             quitButton.AddListener(Quit);
             singlePlayerButton.AddListener(PlayAgainstAI);
             multiplayerButton.AddListener(PlayWithFriends);
@@ -37,8 +38,8 @@ namespace BattleshipGame.Core
 
             void PlayAgainstAI()
             {
-                BuildPopUp().Show("Single player mode", "Select difficulty",
-                    "Cadet", "Admiral", OnEasyMode, OnHardMode);
+                BuildPopUp().Show(popupSingleHeader, popupSingleMessage, popupSingleConfirm, popupSingleDecline,
+                    OnEasyMode, OnHardMode);
 
                 void OnEasyMode()
                 {

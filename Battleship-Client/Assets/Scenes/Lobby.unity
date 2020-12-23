@@ -128,6 +128,12 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 403501907}
     m_Modifications:
+    - target: {fileID: 4777245533030669128, guid: c59cf86ee3eebae4e87100a5365ea47b,
+        type: 3}
+      propertyPath: key
+      value: 
+      objectReference: {fileID: 11400000, guid: e12dee244a42bd94c8670e08f5e5b5c5,
+        type: 2}
     - target: {fileID: 5023613893453269152, guid: c59cf86ee3eebae4e87100a5365ea47b,
         type: 3}
       propertyPath: m_text
@@ -391,12 +397,20 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   webQuitPage: https://muk.itch.io/
   roomList: {fileID: 131496669}
+  popUpPrefab: {fileID: 4672312948394729569, guid: 2aee4b15d99e27d499a098e4742c4f76,
+    type: 3}
+  newGameHeader: {fileID: 11400000, guid: 385eac45d16cbc3459be7f5900ee601e, type: 2}
+  newGameMessage: {fileID: 11400000, guid: ba17881284af2ad41b877224b817b1c6, type: 2}
+  newGameConfirm: {fileID: 11400000, guid: 51b1ade5acbdad841acaeeb25f63451e, type: 2}
+  newGameDecline: {fileID: 11400000, guid: bf126cb7538dfeb4eb66029a800a787a, type: 2}
+  joinGameHeader: {fileID: 11400000, guid: 1cadc8f9b4ae6a843952a87fe22efdbe, type: 2}
+  joinGameMessage: {fileID: 11400000, guid: 8aee189c81eb38b488f69898d9682518, type: 2}
+  joinGameConfirm: {fileID: 11400000, guid: 0d3e28c52f9ff2a409e171ae744955c1, type: 2}
+  joinGameDecline: {fileID: 11400000, guid: 05217b01fcaccc24589f64592e249625, type: 2}
   mainMenuButton: {fileID: 537388043}
   newGameButton: {fileID: 1553283945}
   joinButton: {fileID: 89234409}
   leaveButton: {fileID: 673905443}
-  popUpPrefab: {fileID: 4672312948394729569, guid: 2aee4b15d99e27d499a098e4742c4f76,
-    type: 3}
 --- !u!1 &342374682
 GameObject:
   m_ObjectHideFlags: 0
@@ -580,6 +594,12 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 403501907}
     m_Modifications:
+    - target: {fileID: 4777245533030669128, guid: c59cf86ee3eebae4e87100a5365ea47b,
+        type: 3}
+      propertyPath: key
+      value: 
+      objectReference: {fileID: 11400000, guid: 9ff8e1de03c391d4d861c5a063219d1a,
+        type: 2}
     - target: {fileID: 5023613893453269152, guid: c59cf86ee3eebae4e87100a5365ea47b,
         type: 3}
       propertyPath: m_text
@@ -871,7 +891,7 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 547862899}
   m_HandleRect: {fileID: 547862898}
   m_Direction: 2
-  m_Value: 0
+  m_Value: 1
   m_Size: 1
   m_NumberOfSteps: 0
   m_OnValueChanged:
@@ -921,6 +941,12 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 403501907}
     m_Modifications:
+    - target: {fileID: 4777245533030669128, guid: c59cf86ee3eebae4e87100a5365ea47b,
+        type: 3}
+      propertyPath: key
+      value: 
+      objectReference: {fileID: 11400000, guid: d65e293f039444345abf6f7b4a1bb28c,
+        type: 2}
     - target: {fileID: 5023613893453269152, guid: c59cf86ee3eebae4e87100a5365ea47b,
         type: 3}
       propertyPath: m_text
@@ -1217,6 +1243,12 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 403501907}
     m_Modifications:
+    - target: {fileID: 4777245533030669128, guid: c59cf86ee3eebae4e87100a5365ea47b,
+        type: 3}
+      propertyPath: key
+      value: 
+      objectReference: {fileID: 11400000, guid: 08616d1e61ca2854380f8c1a6e23e57f,
+        type: 2}
     - target: {fileID: 5023613893453269152, guid: c59cf86ee3eebae4e87100a5365ea47b,
         type: 3}
       propertyPath: m_text

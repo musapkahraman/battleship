@@ -128,6 +128,12 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 403501907}
     m_Modifications:
+    - target: {fileID: 4777245533030669128, guid: c59cf86ee3eebae4e87100a5365ea47b,
+        type: 3}
+      propertyPath: key
+      value: 
+      objectReference: {fileID: 11400000, guid: b2f4fef974b067746bd397b246a8c8a7,
+        type: 2}
     - target: {fileID: 5023613893453269152, guid: c59cf86ee3eebae4e87100a5365ea47b,
         type: 3}
       propertyPath: m_text
@@ -342,6 +348,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d6b7719c91d77a544a29a993a1d874e9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  popupSingleHeader: {fileID: 11400000, guid: 311175e252d9d114ea67271b6e72a5ae, type: 2}
+  popupSingleMessage: {fileID: 11400000, guid: b39f0a34d1f42c64896399b800cede56, type: 2}
+  popupSingleConfirm: {fileID: 11400000, guid: 40d06b0f47dbac14494df9bfabc13877, type: 2}
+  popupSingleDecline: {fileID: 11400000, guid: a2ad99fc809be7c439932533f3407d2b, type: 2}
   quitButton: {fileID: 673905443}
   singlePlayerButton: {fileID: 1553283945}
   multiplayerButton: {fileID: 89234409}
@@ -530,6 +540,12 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 403501907}
     m_Modifications:
+    - target: {fileID: 4777245533030669128, guid: c59cf86ee3eebae4e87100a5365ea47b,
+        type: 3}
+      propertyPath: key
+      value: 
+      objectReference: {fileID: 11400000, guid: e8ef3800822174041bf0479d1845e818,
+        type: 2}
     - target: {fileID: 5023613893453269152, guid: c59cf86ee3eebae4e87100a5365ea47b,
         type: 3}
       propertyPath: m_text
@@ -642,6 +658,12 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 403501907}
     m_Modifications:
+    - target: {fileID: 4777245533030669128, guid: c59cf86ee3eebae4e87100a5365ea47b,
+        type: 3}
+      propertyPath: key
+      value: 
+      objectReference: {fileID: 11400000, guid: 4ef7ef657ba119949a80daf1071235c7,
+        type: 2}
     - target: {fileID: 5023613893453269152, guid: c59cf86ee3eebae4e87100a5365ea47b,
         type: 3}
       propertyPath: m_text

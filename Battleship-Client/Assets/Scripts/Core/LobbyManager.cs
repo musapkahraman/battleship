@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using BattleshipGame.Localization;
 using BattleshipGame.Network;
 using BattleshipGame.Schemas;
 using BattleshipGame.UI;
@@ -13,11 +14,19 @@ namespace BattleshipGame.Core
         [SerializeField] private string webQuitPage = "about:blank";
 #pragma warning restore CS0414
         [SerializeField] private RoomListManager roomList;
+        [SerializeField] private GameObject popUpPrefab;
+        [SerializeField] private Key newGameHeader;
+        [SerializeField] private Key newGameMessage;
+        [SerializeField] private Key newGameConfirm;
+        [SerializeField] private Key newGameDecline;
+        [SerializeField] private Key joinGameHeader;
+        [SerializeField] private Key joinGameMessage;
+        [SerializeField] private Key joinGameConfirm;
+        [SerializeField] private Key joinGameDecline;
         [SerializeField] private ButtonController mainMenuButton;
         [SerializeField] private ButtonController newGameButton;
         [SerializeField] private ButtonController joinButton;
         [SerializeField] private ButtonController leaveButton;
-        [SerializeField] private GameObject popUpPrefab;
         private string _cachedRoomId = string.Empty;
         private bool _cachedRoomIdIsNotValid;
         private GameManager _gameManager;
@@ -30,10 +39,6 @@ namespace BattleshipGame.Core
                 _networkClient = (NetworkClient) _gameManager.Client;
                 _networkClient.RoomsChanged += PopulateRoomList;
 
-                mainMenuButton.SetText("Main Menu");
-                newGameButton.SetText("New Game");
-                joinButton.SetText("Join");
-                leaveButton.SetText("Leave");
                 _gameManager.ClearStatusText();
 
                 mainMenuButton.AddListener(GoToMainMenu);
@@ -63,8 +68,8 @@ namespace BattleshipGame.Core
 
             void NewGame()
             {
-                BuildPopUp().Show("New Game", "Create a new game with a name and a password if you like.",
-                    "Create", "Cancel", null, null, true, OnCreate);
+                BuildPopUp().Show(newGameHeader, newGameMessage, newGameConfirm, newGameDecline, null, null, true,
+                    OnCreate);
 
                 void OnCreate(string gameName, string password)
                 {
@@ -79,8 +84,8 @@ namespace BattleshipGame.Core
                 if (_cachedRoomIdIsNotValid) return;
 
                 if (_networkClient.IsRoomPasswordProtected(_cachedRoomId))
-                    BuildPopUp().Show("Join Game", "This game needs a password to join.",
-                        "Join", "Cancel", null, null, false, OnJoin);
+                    BuildPopUp().Show(joinGameHeader, joinGameMessage, joinGameConfirm, joinGameDecline, null, null,
+                        false, OnJoin);
                 else
                     OnJoin("", "");
 

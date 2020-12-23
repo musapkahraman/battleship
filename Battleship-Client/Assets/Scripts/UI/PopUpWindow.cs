@@ -1,4 +1,5 @@
 ﻿using System;
+using BattleshipGame.Localization;
 using TMPro;
 using UnityEngine;
 using UnityEngine.Events;
@@ -8,8 +9,8 @@ namespace BattleshipGame.UI
 {
     public class PopUpWindow : MonoBehaviour
     {
-        [SerializeField] private TMP_Text header;
-        [SerializeField] private TMP_Text message;
+        [SerializeField] private LocalizedText header;
+        [SerializeField] private LocalizedText message;
         [SerializeField] private Button confirm;
         [SerializeField] private Button decline;
         [SerializeField] private TMP_InputField nameInput;
@@ -34,13 +35,12 @@ namespace BattleshipGame.UI
                 nameInput.ActivateInputField();
         }
 
-        public void Show(string headerText, string messageText, string confirmButtonText,
-            UnityAction confirmCall = null)
+        public void Show(Key headerText, Key messageText, Key confirmButtonText, UnityAction confirmCall = null)
         {
             _canvas.enabled = true;
-            header.text = headerText;
-            message.text = messageText;
-            confirm.GetComponentInChildren<TMP_Text>().text = confirmButtonText;
+            header.SetText(headerText);
+            message.SetText(messageText);
+            confirm.GetComponentInChildren<LocalizedText>().SetText(confirmButtonText);
             var rectTransform = confirm.GetComponent<RectTransform>();
             rectTransform.anchoredPosition = new Vector2(0, rectTransform.anchoredPosition.y);
             if (confirmCall != null) confirm.onClick.AddListener(confirmCall);
@@ -48,13 +48,13 @@ namespace BattleshipGame.UI
             Destroy(decline.gameObject);
         }
 
-        public void Show(string headerText, string messageText, string confirmButtonText, string declineButtonText,
+        public void Show(Key headerText, Key messageText, Key confirmButtonText, Key declineButtonText,
             UnityAction confirmCall = null, UnityAction declineCall = null, bool showNameInputIfAvailable = true,
             Action<string, string> confirmPasswordCallback = null)
         {
             _canvas.enabled = true;
-            header.text = headerText;
-            message.text = messageText;
+            header.SetText(headerText);
+            message.SetText(messageText);
             if (nameInput && !showNameInputIfAvailable)
             {
                 var nameRectPos = nameInput.GetComponent<RectTransform>().anchoredPosition;
@@ -86,8 +86,8 @@ namespace BattleshipGame.UI
                 });
             }
 
-            confirm.GetComponentInChildren<TMP_Text>().text = confirmButtonText;
-            decline.GetComponentInChildren<TMP_Text>().text = declineButtonText;
+            confirm.GetComponentInChildren<LocalizedText>().SetText(confirmButtonText);
+            decline.GetComponentInChildren<LocalizedText>().SetText(declineButtonText);
             if (confirmCall != null) confirm.onClick.AddListener(confirmCall);
             if (declineCall != null) decline.onClick.AddListener(declineCall);
             confirm.onClick.AddListener(Close);

@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using BattleshipGame.Common;
+using BattleshipGame.Localization;
 using BattleshipGame.Network;
 using BattleshipGame.Schemas;
 using BattleshipGame.ScriptableObjects;
@@ -16,6 +17,17 @@ namespace BattleshipGame.Core
     public class BattleManager : MonoBehaviour
     {
         [SerializeField] private GameObject popUpPrefab;
+        [SerializeField] private Key leaveHeader;
+        [SerializeField] private Key leaveMessage;
+        [SerializeField] private Key leaveConfirm;
+        [SerializeField] private Key rematchConfirm;
+        [SerializeField] private Key rematchDeclineWin;
+        [SerializeField] private Key rematchDeclineLost;
+        [SerializeField] private Key notRematchMessage;
+        [SerializeField] private Key resultWinHeader;
+        [SerializeField] private Key resultWinMessage;
+        [SerializeField] private Key resultLostHeader;
+        [SerializeField] private Key resultLostMessage;
         [SerializeField] private ButtonController leaveButton;
         [SerializeField] private ButtonController fireButton;
         [SerializeField] private BattleMap userMap;
@@ -54,9 +66,6 @@ namespace BattleshipGame.Core
                 userMap.SetShip(placement.ship, placement.Coordinate);
 
             _gameManager.ClearStatusText();
-
-            leaveButton.SetText("Leave");
-            fireButton.SetText("Fire!");
 
             leaveButton.AddListener(LeaveGame);
             fireButton.AddListener(FireShots);
@@ -168,12 +177,11 @@ namespace BattleshipGame.Core
                     break;
                 case "waiting":
                     if (_leavePopUpIsOn) break;
-                    BuildPopUp().Show("Sorry..", "Your opponent has quit the game.", "OK", GoBackToLobby);
+                    BuildPopUp().Show(leaveHeader, leaveMessage, leaveConfirm, GoBackToLobby);
                     break;
                 case "leave":
                     _leavePopUpIsOn = true;
-                    BuildPopUp().Show("Sorry..", "Your opponent has decided not to continue for another round.", "OK",
-                        GoBackToLobby);
+                    BuildPopUp().Show(leaveHeader, notRematchMessage, leaveConfirm, GoBackToLobby);
                     break;
             }
 
@@ -186,10 +194,10 @@ namespace BattleshipGame.Core
             {
                 _gameManager.ClearStatusText();
                 bool isWinner = _state.winningPlayer == _client.GetSessionId();
-                string headerText = isWinner ? "You Win!" : "You Lost!!!";
-                string messageText = isWinner ? "Winners never quit!" : "Quitters never win!";
-                string declineButtonText = isWinner ? "Quit" : "Give Up";
-                BuildPopUp().Show(headerText, messageText, "Rematch", declineButtonText, () =>
+                var headerText = isWinner ? resultWinHeader : resultLostHeader;
+                var messageText = isWinner ? resultWinMessage : resultLostMessage;
+                var declineButtonText = isWinner ? rematchDeclineWin : rematchDeclineLost;
+                BuildPopUp().Show(headerText, messageText, rematchConfirm, declineButtonText, () =>
                 {
                     _client.SendRematch(true);
                     _gameManager.SetStatusText("Waiting for the opponent decide.");

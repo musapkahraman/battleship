@@ -37,11 +37,6 @@ namespace BattleshipGame.UI
             _button.interactable = state;
         }
 
-        public void SetText(string text)
-        {
-            buttonText.text = text;
-        }
-
         public void AddListener(UnityAction call)
         {
             _button.onClick.AddListener(call);

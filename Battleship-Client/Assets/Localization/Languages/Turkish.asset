@@ -1,0 +1,85 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 40442e4c7f40ccc4f971f4fd8084ac01, type: 3}
+  m_Name: Turkish
+  m_EditorClassIdentifier: 
+  title: 37
+  items:
+  - key: {fileID: 11400000, guid: 4ef7ef657ba119949a80daf1071235c7, type: 2}
+    value: Tek Oyuncu
+  - key: {fileID: 11400000, guid: b2f4fef974b067746bd397b246a8c8a7, type: 2}
+    value: "\u0130k\u0130 Oyuncu"
+  - key: {fileID: 11400000, guid: e8ef3800822174041bf0479d1845e818, type: 2}
+    value: "\xC7\u0131k\u0131\u015F"
+  - key: {fileID: 11400000, guid: 5bb696b2457d62249bf2166926cf860c, type: 2}
+    value: "Ate\u015F!"
+  - key: {fileID: 11400000, guid: 4aa12b5cf80068649858022a6e504c01, type: 2}
+    value: Devam et
+  - key: {fileID: 11400000, guid: 9ef79952847b99f4c9cca7a7b0bab24c, type: 2}
+    value: Rastgele
+  - key: {fileID: 11400000, guid: 5ffe9b213302cad4597ee463c3cfbc7a, type: 2}
+    value: "Tem\u0130zle"
+  - key: {fileID: 11400000, guid: 08616d1e61ca2854380f8c1a6e23e57f, type: 2}
+    value: "Yen\u0130 Oyun"
+  - key: {fileID: 11400000, guid: e12dee244a42bd94c8670e08f5e5b5c5, type: 2}
+    value: "Oyuna Kat\u0131l"
+  - key: {fileID: 11400000, guid: d65e293f039444345abf6f7b4a1bb28c, type: 2}
+    value: "Oyundan Ayr\u0131l"
+  - key: {fileID: 11400000, guid: 9ff8e1de03c391d4d861c5a063219d1a, type: 2}
+    value: "Ana Men\xFC"
+  - key: {fileID: 11400000, guid: b9302d08149e4744f9196ae3c2f02327, type: 2}
+    value: Malesef...
+  - key: {fileID: 11400000, guid: 7e81c8458b2ceda4eb34089f5b61dfcb, type: 2}
+    value: "Rak\u0130b\u0130n oyundan ayr\u0131ld\u0131."
+  - key: {fileID: 11400000, guid: e1772d2e2ff245b4fbd4f36d0977744c, type: 2}
+    value: Tamam
+  - key: {fileID: 11400000, guid: 311175e252d9d114ea67271b6e72a5ae, type: 2}
+    value: Tek Oyuncu Modu
+  - key: {fileID: 11400000, guid: b39f0a34d1f42c64896399b800cede56, type: 2}
+    value: "Zorluk se\xE7"
+  - key: {fileID: 11400000, guid: 40d06b0f47dbac14494df9bfabc13877, type: 2}
+    value: "\xD6\u011Frenc\u0130"
+  - key: {fileID: 11400000, guid: a2ad99fc809be7c439932533f3407d2b, type: 2}
+    value: "Am\u0130ral"
+  - key: {fileID: 11400000, guid: cdf1b444b73f3364c97b41cff0cb0e7d, type: 2}
+    value: "Rak\u0130b\u0130n oynamak \u0130stem\u0130yor."
+  - key: {fileID: 11400000, guid: 9e93f755bbde41e4aa60a262f909d8d3, type: 2}
+    value: "Kazand\u0131n!"
+  - key: {fileID: 11400000, guid: c99c5863ede04794dbc95c29f9be011a, type: 2}
+    value: "Kaybett\u0130n"
+  - key: {fileID: 11400000, guid: 4fdc81841e5e945409752cbb4f2e86c1, type: 2}
+    value: "Kazananlar asla vazge\xE7mez."
+  - key: {fileID: 11400000, guid: 3563094dd7fb68642bfe4df94510fd84, type: 2}
+    value: "Vazge\xE7enler asla kazanamaz."
+  - key: {fileID: 11400000, guid: 1793b59b4b9ee4848984568b2a3b1267, type: 2}
+    value: "B\u0130r el daha"
+  - key: {fileID: 11400000, guid: 9b5e06cf4d5dc114ab4f5bce3a7eeeec, type: 2}
+    value: "Ayr\u0131l"
+  - key: {fileID: 11400000, guid: f13ac9662bae7f64e9292f7a8b826d9a, type: 2}
+    value: Pes et
+  - key: {fileID: 11400000, guid: 385eac45d16cbc3459be7f5900ee601e, type: 2}
+    value: "Yen\u0130 oyun olu\u015Ftur"
+  - key: {fileID: 11400000, guid: ba17881284af2ad41b877224b817b1c6, type: 2}
+    value: "\u0130stersen oyun odas\u0131na bir isim verebilir ve parola koyabilirsin."
+  - key: {fileID: 11400000, guid: 51b1ade5acbdad841acaeeb25f63451e, type: 2}
+    value: "Olu\u015Ftur"
+  - key: {fileID: 11400000, guid: bf126cb7538dfeb4eb66029a800a787a, type: 2}
+    value: "\u0130ptal"
+  - key: {fileID: 11400000, guid: 1cadc8f9b4ae6a843952a87fe22efdbe, type: 2}
+    value: "Oyuna kat\u0131l"
+  - key: {fileID: 11400000, guid: 8aee189c81eb38b488f69898d9682518, type: 2}
+    value: "Bu oyuna kat\u0131lmak \u0130\xE7\u0130n parola gerekl\u0130"
+  - key: {fileID: 11400000, guid: 0d3e28c52f9ff2a409e171ae744955c1, type: 2}
+    value: Devam et
+  - key: {fileID: 11400000, guid: 05217b01fcaccc24589f64592e249625, type: 2}
+    value: "\u0130ptal"
+  keyName: btn_main_menu
