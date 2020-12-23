@@ -32,11 +32,10 @@ namespace BattleshipGame.Common
             return cell;
         }
 
-        public static bool DoesShipFitIn(int shipWidth, int shipHeight, Vector3Int cellCoordinate,
-            float horizontalAreaSize)
+        public static bool DoesShipFitIn(int shipWidth, int shipHeight, Vector3Int cellCoordinate, Vector2Int areaSize)
         {
-            return cellCoordinate.x >= 0 && cellCoordinate.x + shipWidth <= horizontalAreaSize &&
-                   cellCoordinate.y - (shipHeight - 1) >= 0;
+            return cellCoordinate.x >= 0 && cellCoordinate.y < areaSize.y &&
+                   cellCoordinate.x + shipWidth <= areaSize.x && cellCoordinate.y - (shipHeight - 1) >= 0;
         }
     }
 }

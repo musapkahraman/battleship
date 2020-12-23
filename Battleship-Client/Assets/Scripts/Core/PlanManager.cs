@@ -186,7 +186,7 @@ namespace BattleshipGame.Core
             }
 
             (int shipWidth, int shipHeight) = ship.GetShipSize();
-            if (!DoesShipFitIn(shipWidth, shipHeight, to, MapAreaSize.x)) return false;
+            if (!DoesShipFitIn(shipWidth, shipHeight, to, MapAreaSize)) return false;
             if (DoesCollideWithOtherShip(shipId, to, shipWidth, shipHeight)) return false;
             clearButton.SetInteractable(true);
             map.SetShip(ship, to);

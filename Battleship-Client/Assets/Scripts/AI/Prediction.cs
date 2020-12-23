@@ -8,7 +8,7 @@ namespace BattleshipGame.AI
 {
     public class Prediction
     {
-        private readonly int _areaWidth;
+        private Vector2Int _areaSize;
         private readonly SortedDictionary<int, List<Pattern>> _patterns = new SortedDictionary<int, List<Pattern>>();
         private readonly Dictionary<int, List<Probability>> _probabilityMap = new Dictionary<int, List<Probability>>();
         private List<int> _playerShipsHealth = new List<int>(); // To figure out diffs on each Prediction.Update call.
@@ -16,7 +16,7 @@ namespace BattleshipGame.AI
 
         public Prediction(Rules rules)
         {
-            _areaWidth = rules.areaSize.x;
+            _areaSize = rules.areaSize;
             InitProbabilityMap(rules);
         }
 
@@ -125,7 +125,7 @@ namespace BattleshipGame.AI
 
                 foreach (int shot in _shots)
                 {
-                    var shotCoordinate = GridUtils.CellIndexToCoordinate(shot, _areaWidth);
+                    var shotCoordinate = GridUtils.CellIndexToCoordinate(shot, _areaSize.x);
                     Debug.Log($"Pattern try for shot at cell: {shot} -> {shotCoordinate}");
                     foreach (int shipId in damagedShips)
                     {
@@ -149,15 +149,16 @@ namespace BattleshipGame.AI
 
         private bool CanPatternBePlaced(Vector3Int cellCoordinate, int shipWidth, int shipHeight)
         {
-            if (GridUtils.DoesShipFitIn(shipWidth, shipHeight, cellCoordinate, _areaWidth)) return false;
+            bool dimensionCheck =
+                GridUtils.DoesShipFitIn(shipWidth, shipHeight, cellCoordinate, _areaSize);
 
-            // If there are missed shots on the pattern, return false
+            // No missed shots beneath the pattern
 
-            // If there are certainly marked ships and its 1 unit margin on the pattern, return false
+            // No certainly marked ships and its 1 unit margin beneath the pattern
 
-            // If there are shots from the same group of shots in this turn and they shot nothing or something else, return false
+            // No shots that did not hit this ship from the same group of shots in this turn
 
-            return true;
+            return dimensionCheck;
         }
     }
 }

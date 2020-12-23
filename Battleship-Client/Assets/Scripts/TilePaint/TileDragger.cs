@@ -72,7 +72,7 @@ namespace BattleshipGame.TilePaint
                 var dropCell = GridUtils.WorldToCell(dropWorldPoint, sceneCamera, grid, rules.areaSize);
                 (int shipWidth, int shipHeight) = ship.GetShipSize();
                 if (isOverTheTarget && _targetGridSpriteMapper &&
-                    GridUtils.DoesShipFitIn(shipWidth, shipHeight, dropCell, rules.areaSize.x) &&
+                    GridUtils.DoesShipFitIn(shipWidth, shipHeight, dropCell, rules.areaSize) &&
                     targetMap.MoveShip(ship, _grabCell, dropCell, !_isGrabbedFromTarget))
                     _targetGridSpriteMapper.ChangeSpritePosition(_sprite, _grabCell, dropCell);
                 else if (removeFromSource)

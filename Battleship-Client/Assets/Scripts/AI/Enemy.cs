@@ -146,7 +146,7 @@ namespace BattleshipGame.AI
             bool PlaceShip(int shipId, Ship ship, Vector3Int pivot)
             {
                 (int shipWidth, int shipHeight) = ship.GetShipSize();
-                if (!GridUtils.DoesShipFitIn(shipWidth, shipHeight, pivot, rules.areaSize.x)) return false;
+                if (!GridUtils.DoesShipFitIn(shipWidth, shipHeight, pivot, rules.areaSize)) return false;
                 if (DoesCollideWithOtherShip(shipId, pivot, shipWidth, shipHeight)) return false;
                 RegisterShipToCells(shipId, ship, pivot);
                 return true;
