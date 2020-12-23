@@ -347,6 +347,7 @@ MonoBehaviour:
   multiplayerButton: {fileID: 89234409}
   popUpPrefab: {fileID: 7357745371994881862, guid: ba583779d4e278147998a361ee83dd31,
     type: 3}
+  options: {fileID: 11400000, guid: 1876bb38ec668184ca7bf39de1057257, type: 2}
 --- !u!1 &342374682
 GameObject:
   m_ObjectHideFlags: 0

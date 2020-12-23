@@ -15,8 +15,6 @@ namespace BattleshipGame.ScriptableObjects
 
         public Vector2Int areaSize = new Vector2Int(9, 9);
 
-        public Difficulty aiDifficulty = Difficulty.Easy;
-
         private void OnValidate()
         {
             var hashSet = new HashSet<Ship>();

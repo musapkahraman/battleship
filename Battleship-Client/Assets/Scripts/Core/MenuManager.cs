@@ -1,4 +1,5 @@
-﻿using BattleshipGame.UI;
+﻿using BattleshipGame.AI;
+using BattleshipGame.UI;
 using UnityEditor;
 using UnityEngine;
 
@@ -10,6 +11,7 @@ namespace BattleshipGame.Core
         [SerializeField] private ButtonController singlePlayerButton;
         [SerializeField] private ButtonController multiplayerButton;
         [SerializeField] private GameObject popUpPrefab;
+        [SerializeField] private Options options;
         private GameManager _gameManager;
 
         private void Start()
@@ -40,13 +42,13 @@ namespace BattleshipGame.Core
 
                 void OnEasyMode()
                 {
-                    Debug.Log("Easy Mode selected.");
+                    options.aiDifficulty = Difficulty.Easy;
                     StartLocalRoom();
                 }
 
                 void OnHardMode()
                 {
-                    Debug.Log("Hard Mode selected.");
+                    options.aiDifficulty = Difficulty.Hard;
                     StartLocalRoom();
                 }
             }

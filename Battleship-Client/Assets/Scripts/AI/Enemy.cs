@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using BattleshipGame.Common;
+using BattleshipGame.Core;
 using BattleshipGame.ScriptableObjects;
 using UnityEngine;
 using Random = UnityEngine.Random;
@@ -14,6 +15,7 @@ namespace BattleshipGame.AI
         private const int EmptyCell = -1;
         private const int OutOfMap = -1;
         [SerializeField] private Rules rules;
+        [SerializeField] private Options options;
         private readonly List<int> _playerShipsHealth = new List<int>();
         private readonly SortedDictionary<int, Ship> _pool = new SortedDictionary<int, Ship>();
         private readonly WaitForSeconds _thinkingSeconds = new WaitForSeconds(1f);
@@ -73,7 +75,7 @@ namespace BattleshipGame.AI
         public IEnumerator GetShots(Action<int[]> onComplete)
         {
             yield return _thinkingSeconds;
-            switch (rules.aiDifficulty)
+            switch (options.aiDifficulty)
             {
                 case Difficulty.Easy:
                     onComplete?.Invoke(GetRandomCells());
