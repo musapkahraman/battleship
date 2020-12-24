@@ -21,11 +21,7 @@ namespace BattleshipGame.Localization
 
         public string GetValue(Key key)
         {
-            if (languages.Count == 0)
-            {
-                Debug.LogError("No language defined in the Localization Manager!");
-                return PlaceHolder;
-            }
+            if (languages.Count == 0) return PlaceHolder;
 
             if (GetValueFromOptedLanguage(key, out string value)) return value;
 
@@ -33,7 +29,6 @@ namespace BattleshipGame.Localization
                 .Select(items => items.FirstOrDefault()).Where(item => item != null))
                 return item.value;
 
-            Debug.LogError($"No localized text in any languages for the key: <color=yellow>{key}</color>");
             return PlaceHolder;
         }
 
@@ -41,24 +36,22 @@ namespace BattleshipGame.Localization
         {
             var optedLanguages = from language in languages where language.title == options.Language select language;
             var optedLanguage = optedLanguages.FirstOrDefault();
-            if (optedLanguage == null)
+            if (optedLanguage)
             {
-                Debug.Log($"{options.Language} is missing in the Localization Manager!");
-                value = null;
-                return false;
+                var items = GetItemsWithKey(optedLanguage, key);
+                var item = items.FirstOrDefault();
+                if (item == null)
+                {
+                    value = null;
+                    return false;
+                }
+
+                value = item.value;
+                return true;
             }
 
-            var items = GetItemsWithKey(optedLanguage, key);
-            var item = items.FirstOrDefault();
-            if (item == null)
-            {
-                Debug.Log($"{key} is missing in {options.Language}");
-                value = null;
-                return false;
-            }
-
-            value = item.value;
-            return true;
+            value = null;
+            return false;
         }
 
         private static IEnumerable<LocalizationItem> GetItemsWithKey(Language language, Key key)

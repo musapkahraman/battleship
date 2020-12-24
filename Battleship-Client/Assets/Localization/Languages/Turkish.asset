@@ -15,71 +15,98 @@ MonoBehaviour:
   title: 37
   items:
   - key: {fileID: 11400000, guid: 4ef7ef657ba119949a80daf1071235c7, type: 2}
-    value: Tek Oyuncu
+    value: TEK OYUNCU
   - key: {fileID: 11400000, guid: b2f4fef974b067746bd397b246a8c8a7, type: 2}
-    value: "\u0130k\u0130 Oyuncu"
+    value: "\u0130K\u0130 OYUNCU"
   - key: {fileID: 11400000, guid: e8ef3800822174041bf0479d1845e818, type: 2}
-    value: "\xC7\u0131k\u0131\u015F"
+    value: "\xC7IKI\u015E"
   - key: {fileID: 11400000, guid: 5bb696b2457d62249bf2166926cf860c, type: 2}
-    value: "Ate\u015F!"
+    value: "ATE\u015E!"
   - key: {fileID: 11400000, guid: 4aa12b5cf80068649858022a6e504c01, type: 2}
-    value: Devam et
+    value: DEVAM ET
   - key: {fileID: 11400000, guid: 9ef79952847b99f4c9cca7a7b0bab24c, type: 2}
-    value: Rastgele
+    value: RASTGELE
   - key: {fileID: 11400000, guid: 5ffe9b213302cad4597ee463c3cfbc7a, type: 2}
-    value: "Tem\u0130zle"
+    value: "TEM\u0130ZLE"
   - key: {fileID: 11400000, guid: 08616d1e61ca2854380f8c1a6e23e57f, type: 2}
-    value: "Yen\u0130 Oyun"
+    value: "YEN\u0130 OYUN"
   - key: {fileID: 11400000, guid: e12dee244a42bd94c8670e08f5e5b5c5, type: 2}
-    value: "Oyuna Kat\u0131l"
+    value: OYUNA KATIL
   - key: {fileID: 11400000, guid: d65e293f039444345abf6f7b4a1bb28c, type: 2}
-    value: "Oyundan Ayr\u0131l"
+    value: OYUNDAN AYRIL
   - key: {fileID: 11400000, guid: 9ff8e1de03c391d4d861c5a063219d1a, type: 2}
-    value: "Ana Men\xFC"
+    value: "ANA MEN\xDC"
   - key: {fileID: 11400000, guid: b9302d08149e4744f9196ae3c2f02327, type: 2}
-    value: Malesef...
+    value: MAALESEF...
   - key: {fileID: 11400000, guid: 7e81c8458b2ceda4eb34089f5b61dfcb, type: 2}
-    value: "Rak\u0130b\u0130n oyundan ayr\u0131ld\u0131."
+    value: "Rakibin oyundan ayr\u0131ld\u0131."
   - key: {fileID: 11400000, guid: e1772d2e2ff245b4fbd4f36d0977744c, type: 2}
-    value: Tamam
+    value: TAMAM
   - key: {fileID: 11400000, guid: 311175e252d9d114ea67271b6e72a5ae, type: 2}
-    value: Tek Oyuncu Modu
+    value: TEK OYUNCU MODU
   - key: {fileID: 11400000, guid: b39f0a34d1f42c64896399b800cede56, type: 2}
     value: "Zorluk se\xE7"
   - key: {fileID: 11400000, guid: 40d06b0f47dbac14494df9bfabc13877, type: 2}
-    value: "\xD6\u011Frenc\u0130"
+    value: "\xD6\u011ERENC\u0130"
   - key: {fileID: 11400000, guid: a2ad99fc809be7c439932533f3407d2b, type: 2}
-    value: "Am\u0130ral"
+    value: "AM\u0130RAL"
   - key: {fileID: 11400000, guid: cdf1b444b73f3364c97b41cff0cb0e7d, type: 2}
-    value: "Rak\u0130b\u0130n oynamak \u0130stem\u0130yor."
+    value: Rakibin oynamak istemiyor.
   - key: {fileID: 11400000, guid: 9e93f755bbde41e4aa60a262f909d8d3, type: 2}
-    value: "Kazand\u0131n!"
+    value: KAZANDIN! :)
   - key: {fileID: 11400000, guid: c99c5863ede04794dbc95c29f9be011a, type: 2}
-    value: "Kaybett\u0130n"
+    value: "KAYBETT\u0130N :("
   - key: {fileID: 11400000, guid: 4fdc81841e5e945409752cbb4f2e86c1, type: 2}
     value: "Kazananlar asla vazge\xE7mez."
   - key: {fileID: 11400000, guid: 3563094dd7fb68642bfe4df94510fd84, type: 2}
     value: "Vazge\xE7enler asla kazanamaz."
   - key: {fileID: 11400000, guid: 1793b59b4b9ee4848984568b2a3b1267, type: 2}
-    value: "B\u0130r el daha"
+    value: "B\u0130R EL DAHA"
   - key: {fileID: 11400000, guid: 9b5e06cf4d5dc114ab4f5bce3a7eeeec, type: 2}
-    value: "Ayr\u0131l"
+    value: AYRIL
   - key: {fileID: 11400000, guid: f13ac9662bae7f64e9292f7a8b826d9a, type: 2}
-    value: Pes et
+    value: PES ET
   - key: {fileID: 11400000, guid: 385eac45d16cbc3459be7f5900ee601e, type: 2}
-    value: "Yen\u0130 oyun olu\u015Ftur"
+    value: "YEN\u0130 OYUN OLU\u015ETUR"
   - key: {fileID: 11400000, guid: ba17881284af2ad41b877224b817b1c6, type: 2}
     value: "\u0130stersen oyun odas\u0131na bir isim verebilir ve parola koyabilirsin."
   - key: {fileID: 11400000, guid: 51b1ade5acbdad841acaeeb25f63451e, type: 2}
-    value: "Olu\u015Ftur"
+    value: "OLU\u015ETUR"
   - key: {fileID: 11400000, guid: bf126cb7538dfeb4eb66029a800a787a, type: 2}
-    value: "\u0130ptal"
+    value: "\u0130PTAL ET"
+  - key: {fileID: 11400000, guid: 96874c31f2ff5b64781d5c95d3edc300, type: 2}
+    value: "Oyun ad\u0131n\u0131 buraya yaz"
+  - key: {fileID: 11400000, guid: f1976d3930acf47419a8a28c3a992177, type: 2}
+    value: "Parolay\u0131 buraya yaz"
   - key: {fileID: 11400000, guid: 1cadc8f9b4ae6a843952a87fe22efdbe, type: 2}
-    value: "Oyuna kat\u0131l"
+    value: OYUNA KATIL
   - key: {fileID: 11400000, guid: 8aee189c81eb38b488f69898d9682518, type: 2}
-    value: "Bu oyuna kat\u0131lmak \u0130\xE7\u0130n parola gerekl\u0130"
+    value: "Bu oyuna kat\u0131lmak i\xE7in parola gerekli."
   - key: {fileID: 11400000, guid: 0d3e28c52f9ff2a409e171ae744955c1, type: 2}
-    value: Devam et
+    value: DEVAM ET
   - key: {fileID: 11400000, guid: 05217b01fcaccc24589f64592e249625, type: 2}
-    value: "\u0130ptal"
-  keyName: btn_main_menu
+    value: "\u0130PTAL"
+  - key: {fileID: 11400000, guid: 95de6b00230aecb4d87320511c0289d0, type: 2}
+    value: "RAK\u0130B\u0130N KARAR VERMES\u0130 BEKLEN\u0130YOR."
+  - key: {fileID: 11400000, guid: d9f9687533159ed498c8ed69bfa39e84, type: 2}
+    value: "RAK\u0130B\u0130N ATI\u015E YAPMASI BEKLEN\u0130YOR."
+  - key: {fileID: 11400000, guid: f343f65ffbc83c643a218f1c91c3afa6, type: 2}
+    value: "\u0130K\u0130NC\u0130 OYUNCUNUN KATILMASI BEKLEN\u0130YOR."
+  - key: {fileID: 11400000, guid: 8c732283d28c98a4fbe8c5ea89460484, type: 2}
+    value: "RAK\u0130B\u0130N GEM\u0130LER\u0130N\u0130 YERLE\u015ET\u0130RMES\u0130
+      BEKLEN\u0130YOR."
+  - key: {fileID: 11400000, guid: b9b627bf575502d4ab39ee094188f0e0, type: 2}
+    value: SIRA SENDE!
+  - key: {fileID: 11400000, guid: b218aff91e1431049bc00a1ecf7eac5b, type: 2}
+    value: "OYNAMAK \u0130\xC7\u0130N B\u0130R MOD SE\xC7"
+  - key: {fileID: 11400000, guid: 96f28e78bd9533347834f8fbe583adeb, type: 2}
+    value: "SUNUCUYA BA\u011ELANILIYOR..."
+  - key: {fileID: 11400000, guid: 458424d558a735246bfb13ae40d17fd1, type: 2}
+    value: "GEM\u0130LER\u0130 BU \u015EEK\u0130LDE YERLE\u015ET\u0130RMEK \u0130MKANSIZ!"
+  - key: {fileID: 11400000, guid: 8f35226fcc30be04fb3075d5b96ae3bc, type: 2}
+    value: "HER\u015EEY G\xDCZEL G\xD6R\xDCN\xDCYOR."
+  - key: {fileID: 11400000, guid: 514e772fe1f84a142a2705138b7936ae, type: 2}
+    value: "GEM\u0130LER\u0130N\u0130 YERLE\u015ET\u0130R"
+  - key: {fileID: 11400000, guid: 35a339a664576714c83365856c352726, type: 2}
+    value: "SUNUCUYA BA\u011ELANMAYA \xC7ALI\u015EIRKEN B\u0130R HATA OLU\u015ETU."
+  keyName: 

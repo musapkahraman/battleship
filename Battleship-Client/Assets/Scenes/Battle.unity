@@ -712,7 +712,7 @@ PrefabInstance:
     - target: {fileID: 5023613893495342779, guid: c59cf86ee3eebae4e87100a5365ea47b,
         type: 3}
       propertyPath: m_Pivot.x
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 5023613893495342779, guid: c59cf86ee3eebae4e87100a5365ea47b,
         type: 3}
@@ -727,7 +727,7 @@ PrefabInstance:
     - target: {fileID: 5023613893495342779, guid: c59cf86ee3eebae4e87100a5365ea47b,
         type: 3}
       propertyPath: m_AnchorMax.x
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 5023613893495342779, guid: c59cf86ee3eebae4e87100a5365ea47b,
         type: 3}
@@ -737,22 +737,12 @@ PrefabInstance:
     - target: {fileID: 5023613893495342779, guid: c59cf86ee3eebae4e87100a5365ea47b,
         type: 3}
       propertyPath: m_AnchorMin.x
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 5023613893495342779, guid: c59cf86ee3eebae4e87100a5365ea47b,
         type: 3}
       propertyPath: m_AnchorMin.y
       value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 5023613893495342779, guid: c59cf86ee3eebae4e87100a5365ea47b,
-        type: 3}
-      propertyPath: m_SizeDelta.x
-      value: 150
-      objectReference: {fileID: 0}
-    - target: {fileID: 5023613893495342779, guid: c59cf86ee3eebae4e87100a5365ea47b,
-        type: 3}
-      propertyPath: m_SizeDelta.y
-      value: 60
       objectReference: {fileID: 0}
     - target: {fileID: 5023613893495342779, guid: c59cf86ee3eebae4e87100a5365ea47b,
         type: 3}
@@ -772,7 +762,7 @@ PrefabInstance:
     - target: {fileID: 5023613893495342779, guid: c59cf86ee3eebae4e87100a5365ea47b,
         type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: 10
+      value: -10
       objectReference: {fileID: 0}
     - target: {fileID: 5023613893495342779, guid: c59cf86ee3eebae4e87100a5365ea47b,
         type: 3}
@@ -954,11 +944,6 @@ PrefabInstance:
     - target: {fileID: 5023613893495342779, guid: c59cf86ee3eebae4e87100a5365ea47b,
         type: 3}
       propertyPath: m_Pivot.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 5023613893495342779, guid: c59cf86ee3eebae4e87100a5365ea47b,
-        type: 3}
-      propertyPath: m_Pivot.y
       value: 0.5
       objectReference: {fileID: 0}
     - target: {fileID: 5023613893495342779, guid: c59cf86ee3eebae4e87100a5365ea47b,
@@ -985,16 +970,6 @@ PrefabInstance:
         type: 3}
       propertyPath: m_AnchorMin.y
       value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 5023613893495342779, guid: c59cf86ee3eebae4e87100a5365ea47b,
-        type: 3}
-      propertyPath: m_SizeDelta.x
-      value: 200
-      objectReference: {fileID: 0}
-    - target: {fileID: 5023613893495342779, guid: c59cf86ee3eebae4e87100a5365ea47b,
-        type: 3}
-      propertyPath: m_SizeDelta.y
-      value: 60
       objectReference: {fileID: 0}
     - target: {fileID: 5023613893495342779, guid: c59cf86ee3eebae4e87100a5365ea47b,
         type: 3}
@@ -1034,7 +1009,7 @@ PrefabInstance:
     - target: {fileID: 5023613893495342779, guid: c59cf86ee3eebae4e87100a5365ea47b,
         type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: -100
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 5023613893495342779, guid: c59cf86ee3eebae4e87100a5365ea47b,
         type: 3}
@@ -1471,6 +1446,11 @@ MonoBehaviour:
   resultWinMessage: {fileID: 11400000, guid: 4fdc81841e5e945409752cbb4f2e86c1, type: 2}
   resultLostHeader: {fileID: 11400000, guid: c99c5863ede04794dbc95c29f9be011a, type: 2}
   resultLostMessage: {fileID: 11400000, guid: 3563094dd7fb68642bfe4df94510fd84, type: 2}
+  statusWaitingDecision: {fileID: 11400000, guid: 95de6b00230aecb4d87320511c0289d0,
+    type: 2}
+  statusWaitingAttack: {fileID: 11400000, guid: d9f9687533159ed498c8ed69bfa39e84,
+    type: 2}
+  statusPlayerTurn: {fileID: 11400000, guid: b9b627bf575502d4ab39ee094188f0e0, type: 2}
   leaveButton: {fileID: 1184911184}
   fireButton: {fileID: 1547971480}
   userMap: {fileID: 167099665}

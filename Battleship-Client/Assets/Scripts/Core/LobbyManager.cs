@@ -23,6 +23,7 @@ namespace BattleshipGame.Core
         [SerializeField] private Key joinGameMessage;
         [SerializeField] private Key joinGameConfirm;
         [SerializeField] private Key joinGameDecline;
+        [SerializeField] private Key statusWaitingJoin;
         [SerializeField] private ButtonController mainMenuButton;
         [SerializeField] private ButtonController newGameButton;
         [SerializeField] private ButtonController joinButton;
@@ -122,7 +123,7 @@ namespace BattleshipGame.Core
         {
             newGameButton.SetInteractable(false);
             leaveButton.SetInteractable(true);
-            _gameManager.SetStatusText("Waiting for another player to join.");
+            _gameManager.SetStatusText(statusWaitingJoin);
         }
 
         private void PopulateRoomList(Dictionary<string, Room> rooms)

@@ -121,6 +121,14 @@
       "value": "Cancel"
     },
     {
+      "key": "popup_multiplayer_new_game_room_name",
+      "value": "Enter name here"
+    },
+    {
+      "key": "popup_multiplayer_new_game_room_password",
+      "value": "Enter password here"
+    },
+    {
       "key": "popup_multiplayer_join_game_header",
       "value": "Join Game"
     },
@@ -135,6 +143,50 @@
     {
       "key": "popup_multiplayer_join_game_btn_decline",
       "value": "Cancel"
+    },
+    {
+      "key": "status_waiting_decision",
+      "value": "Waiting for the opponent decide."
+    },
+    {
+      "key": "status_waiting_attack",
+      "value": "Waiting for the opponent to attack."
+    },
+    {
+      "key": "status_waiting_join",
+      "value": "Waiting for another player to join."
+    },
+    {
+      "key": "status_waiting_place",
+      "value": "Waiting for the opponent to place the ships."
+    },
+    {
+      "key": "status_player_turn",
+      "value": "It's your turn!"
+    },
+    {
+      "key": "status_select_mode",
+      "value": "Select a mode to play."
+    },
+    {
+      "key": "status_connecting",
+      "value": "Connecting to server..."
+    },
+    {
+      "key": "status_placement_impossible",
+      "value": "Sorry, cannot place the ships that way!"
+    },
+    {
+      "key": "status_placement_ready",
+      "value": "Looks like you are ready."
+    },
+    {
+      "key": "status_place_ships",
+      "value": "Place your ships!"
+    },
+    {
+      "key": "status_network_error",
+      "value": "An error occured while connecting to the server."
     }
   ],
   "language": 10

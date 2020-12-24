@@ -1,8 +1,8 @@
 ﻿using System;
 using BattleshipGame.AI;
 using BattleshipGame.Common;
+using BattleshipGame.Localization;
 using BattleshipGame.Network;
-using TMPro;
 using UnityEngine;
 
 namespace BattleshipGame.Core
@@ -10,15 +10,18 @@ namespace BattleshipGame.Core
     public class GameManager : Singleton<GameManager>
     {
         [SerializeField] private NetworkOptions networkOptions;
-        [SerializeField] private TMP_Text messageField;
+        [SerializeField] private LocalizedText statusText;
         [SerializeField] private GameObject progressBarCanvasPrefab;
+        [SerializeField] private Key statusSelectMode;
+        [SerializeField] private Key statusConnecting;
+        [SerializeField] private Key statusNetworkError;
         private GameObject _progressBar;
         public IClient Client { get; private set; }
 
         protected override void Awake()
         {
             base.Awake();
-            SetStatusText("Select a mode to play.");
+            SetStatusText(statusSelectMode);
         }
 
         private void OnApplicationQuit()
@@ -46,7 +49,7 @@ namespace BattleshipGame.Core
                 GameSceneManager.Instance.GoToPlanScene();
             };
             var networkClient = (NetworkClient) Client;
-            SetStatusText("Connecting to server...");
+            SetStatusText(statusConnecting);
             if (progressBarCanvasPrefab) _progressBar = Instantiate(progressBarCanvasPrefab);
             networkClient.Connect(networkOptions.GetEndpoint(), () =>
             {
@@ -55,7 +58,8 @@ namespace BattleshipGame.Core
             }, errorMessage =>
             {
                 Destroy(_progressBar);
-                SetStatusText(errorMessage);
+                SetStatusText(statusNetworkError);
+                Debug.LogError(errorMessage);
                 onError?.Invoke();
             });
         }
@@ -83,14 +87,14 @@ namespace BattleshipGame.Core
             }
         }
 
-        public void SetStatusText(string text)
+        public void SetStatusText(Key text)
         {
-            messageField.text = text;
+            statusText.SetText(text);
         }
 
         public void ClearStatusText()
         {
-            messageField.text = string.Empty;
+            statusText.ClearText();
         }
     }
 }

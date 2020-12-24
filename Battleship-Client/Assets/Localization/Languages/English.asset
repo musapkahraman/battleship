@@ -74,6 +74,10 @@ MonoBehaviour:
     value: Create
   - key: {fileID: 11400000, guid: bf126cb7538dfeb4eb66029a800a787a, type: 2}
     value: Cancel
+  - key: {fileID: 11400000, guid: 96874c31f2ff5b64781d5c95d3edc300, type: 2}
+    value: Enter name here
+  - key: {fileID: 11400000, guid: f1976d3930acf47419a8a28c3a992177, type: 2}
+    value: Enter password here
   - key: {fileID: 11400000, guid: 1cadc8f9b4ae6a843952a87fe22efdbe, type: 2}
     value: Join Game
   - key: {fileID: 11400000, guid: 8aee189c81eb38b488f69898d9682518, type: 2}
@@ -82,4 +86,26 @@ MonoBehaviour:
     value: Join
   - key: {fileID: 11400000, guid: 05217b01fcaccc24589f64592e249625, type: 2}
     value: Cancel
-  keyName: popup_multiplayer_join_game_message
+  - key: {fileID: 11400000, guid: 95de6b00230aecb4d87320511c0289d0, type: 2}
+    value: Waiting for the opponent decide.
+  - key: {fileID: 11400000, guid: d9f9687533159ed498c8ed69bfa39e84, type: 2}
+    value: Waiting for the opponent to attack.
+  - key: {fileID: 11400000, guid: f343f65ffbc83c643a218f1c91c3afa6, type: 2}
+    value: Waiting for another player to join.
+  - key: {fileID: 11400000, guid: 8c732283d28c98a4fbe8c5ea89460484, type: 2}
+    value: Waiting for the opponent to place the ships.
+  - key: {fileID: 11400000, guid: b9b627bf575502d4ab39ee094188f0e0, type: 2}
+    value: It's your turn!
+  - key: {fileID: 11400000, guid: b218aff91e1431049bc00a1ecf7eac5b, type: 2}
+    value: Select a mode to play.
+  - key: {fileID: 11400000, guid: 96f28e78bd9533347834f8fbe583adeb, type: 2}
+    value: Connecting to server...
+  - key: {fileID: 11400000, guid: 458424d558a735246bfb13ae40d17fd1, type: 2}
+    value: Sorry, cannot place the ships that way!
+  - key: {fileID: 11400000, guid: 8f35226fcc30be04fb3075d5b96ae3bc, type: 2}
+    value: Looks like you are ready.
+  - key: {fileID: 11400000, guid: 514e772fe1f84a142a2705138b7936ae, type: 2}
+    value: Place your ships!
+  - key: {fileID: 11400000, guid: 35a339a664576714c83365856c352726, type: 2}
+    value: An error occured while connecting to the server.
+  keyName: status_network_error

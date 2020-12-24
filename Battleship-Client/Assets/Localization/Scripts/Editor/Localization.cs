@@ -10,7 +10,7 @@ namespace BattleshipGame.Localization
     {
         private const string OptionsAssetName = "LocalizationOptions.asset";
         private const string OptionsDirectory = "Assets/Data";
-        private const string ManagerAssetName = "LocalizationManager.asset";
+        private const string ManagerAssetName = "Manager.asset";
         private const string LocalizationDirectory = "Assets/Localization";
         private const string SourceFolder = "Source";
         private const string KeysFolder = "Keys";

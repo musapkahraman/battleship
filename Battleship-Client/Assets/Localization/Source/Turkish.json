@@ -2,63 +2,63 @@
   "items": [
     {
       "key": "btn_single_player",
-      "value": "Tek Oyuncu"
+      "value": "TEK OYUNCU"
     },
     {
       "key": "btn_multiplayer",
-      "value": "İkİ Oyuncu"
+      "value": "İKİ OYUNCU"
     },
     {
       "key": "btn_quit",
-      "value": "Çıkış"
+      "value": "ÇIKIŞ"
     },
     {
       "key": "btn_fire",
-      "value": "Ateş!"
+      "value": "ATEŞ!"
     },
     {
       "key": "btn_continue",
-      "value": "Devam et"
+      "value": "DEVAM ET"
     },
     {
       "key": "btn_random",
-      "value": "Rastgele"
+      "value": "RASTGELE"
     },
     {
       "key": "btn_clear",
-      "value": "Temİzle"
+      "value": "TEMİZLE"
     },
     {
       "key": "btn_new_game",
-      "value": "Yenİ Oyun"
+      "value": "YENİ OYUN"
     },
     {
       "key": "btn_join_game",
-      "value": "Oyuna Katıl"
+      "value": "OYUNA KATIL"
     },
     {
       "key": "btn_leave_game",
-      "value": "Oyundan Ayrıl"
+      "value": "OYUNDAN AYRIL"
     },
     {
       "key": "btn_main_menu",
-      "value": "Ana Menü"
+      "value": "ANA MENÜ"
     },
     {
       "key": "popup_leave_header",
-      "value": "Malesef..."
+      "value": "MAALESEF..."
     },
     {
       "key": "popup_leave_message",
-      "value": "Rakİbİn oyundan ayrıldı."
+      "value": "Rakibin oyundan ayrıldı."
     },
     {
       "key": "popup_leave_btn_confirm",
-      "value": "Tamam"
+      "value": "TAMAM"
     },
     {
       "key": "popup_single_header",
-      "value": "Tek Oyuncu Modu"
+      "value": "TEK OYUNCU MODU"
     },
     {
       "key": "popup_single_message",
@@ -66,23 +66,23 @@
     },
     {
       "key": "popup_single_btn_confirm",
-      "value": "Öğrencİ"
+      "value": "ÖĞRENCİ"
     },
     {
       "key": "popup_single_btn_decline",
-      "value": "Amİral"
+      "value": "AMİRAL"
     },
     {
       "key": "popup_not_rematch_message",
-      "value": "Rakİbİn oynamak İstemİyor."
+      "value": "Rakibin oynamak istemiyor."
     },
     {
       "key": "popup_result_win_header",
-      "value": "Kazandın!"
+      "value": "KAZANDIN! :)"
     },
     {
       "key": "popup_result_lost_header",
-      "value": "Kaybettİn"
+      "value": "KAYBETTİN :("
     },
     {
       "key": "popup_result_win_message",
@@ -94,19 +94,19 @@
     },
     {
       "key": "popup_result_rematch_btn_confirm",
-      "value": "Bİr el daha"
+      "value": "BİR EL DAHA"
     },
     {
       "key": "popup_result_rematch_btn_decline_win",
-      "value": "Ayrıl"
+      "value": "AYRIL"
     },
     {
       "key": "popup_result_rematch_btn_decline_lost",
-      "value": "Pes et"
+      "value": "PES ET"
     },
     {
       "key": "popup_multiplayer_new_game_header",
-      "value": "Yenİ oyun oluştur"
+      "value": "YENİ OYUN OLUŞTUR"
     },
     {
       "key": "popup_multiplayer_new_game_message",
@@ -114,27 +114,79 @@
     },
     {
       "key": "popup_multiplayer_new_game_btn_confirm",
-      "value": "Oluştur"
+      "value": "OLUŞTUR"
     },
     {
       "key": "popup_multiplayer_new_game_btn_decline",
-      "value": "İptal"
+      "value": "İPTAL ET"
+    },
+    {
+      "key": "popup_multiplayer_new_game_room_name",
+      "value": "Oyun adını buraya yaz"
+    },
+    {
+      "key": "popup_multiplayer_new_game_room_password",
+      "value": "Parolayı buraya yaz"
     },
     {
       "key": "popup_multiplayer_join_game_header",
-      "value": "Oyuna katıl"
+      "value": "OYUNA KATIL"
     },
     {
       "key": "popup_multiplayer_join_game_message",
-      "value": "Bu oyuna katılmak İçİn parola gereklİ"
+      "value": "Bu oyuna katılmak için parola gerekli."
     },
     {
       "key": "popup_multiplayer_join_game_btn_confirm",
-      "value": "Devam et"
+      "value": "DEVAM ET"
     },
     {
       "key": "popup_multiplayer_join_game_btn_decline",
-      "value": "İptal"
+      "value": "İPTAL"
+    },
+    {
+      "key": "status_waiting_decision",
+      "value": "RAKİBİN KARAR VERMESİ BEKLENİYOR."
+    },
+    {
+      "key": "status_waiting_attack",
+      "value": "RAKİBİN ATIŞ YAPMASI BEKLENİYOR."
+    },
+    {
+      "key": "status_waiting_join",
+      "value": "İKİNCİ OYUNCUNUN KATILMASI BEKLENİYOR."
+    },
+    {
+      "key": "status_waiting_place",
+      "value": "RAKİBİN GEMİLERİNİ YERLEŞTİRMESİ BEKLENİYOR."
+    },
+    {
+      "key": "status_player_turn",
+      "value": "SIRA SENDE!"
+    },
+    {
+      "key": "status_select_mode",
+      "value": "OYNAMAK İÇİN BİR MOD SEÇ"
+    },
+    {
+      "key": "status_connecting",
+      "value": "SUNUCUYA BAĞLANILIYOR..."
+    },
+    {
+      "key": "status_placement_impossible",
+      "value": "GEMİLERİ BU ŞEKİLDE YERLEŞTİRMEK İMKANSIZ!"
+    },
+    {
+      "key": "status_placement_ready",
+      "value": "HERŞEY GÜZEL GÖRÜNÜYOR."
+    },
+    {
+      "key": "status_place_ships",
+      "value": "GEMİLERİNİ YERLEŞTİR"
+    },
+    {
+      "key": "status_network_error",
+      "value": "SUNUCUYA BAĞLANMAYA ÇALIŞIRKEN BİR HATA OLUŞTU."
     }
   ],
   "language": 37

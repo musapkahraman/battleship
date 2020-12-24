@@ -28,6 +28,9 @@ namespace BattleshipGame.Core
         [SerializeField] private Key resultWinMessage;
         [SerializeField] private Key resultLostHeader;
         [SerializeField] private Key resultLostMessage;
+        [SerializeField] private Key statusWaitingDecision;
+        [SerializeField] private Key statusWaitingAttack;
+        [SerializeField] private Key statusPlayerTurn;
         [SerializeField] private ButtonController leaveButton;
         [SerializeField] private ButtonController fireButton;
         [SerializeField] private BattleMap userMap;
@@ -200,7 +203,7 @@ namespace BattleshipGame.Core
                 BuildPopUp().Show(headerText, messageText, rematchConfirm, declineButtonText, () =>
                 {
                     _client.SendRematch(true);
-                    _gameManager.SetStatusText("Waiting for the opponent decide.");
+                    _gameManager.SetStatusText(statusWaitingDecision);
                 }, () =>
                 {
                     _client.SendRematch(false);
@@ -225,7 +228,7 @@ namespace BattleshipGame.Core
             void TurnToPlayer()
             {
                 opponentMap.IsMarkingTargets = true;
-                _gameManager.SetStatusText("It's your turn!");
+                _gameManager.SetStatusText(statusPlayerTurn);
 #if UNITY_ANDROID
             Handheld.Vibrate();
 #endif
@@ -233,7 +236,7 @@ namespace BattleshipGame.Core
 
             void TurnToEnemy()
             {
-                _gameManager.SetStatusText("Waiting for the opponent to attack.");
+                _gameManager.SetStatusText(statusWaitingAttack);
             }
         }
 

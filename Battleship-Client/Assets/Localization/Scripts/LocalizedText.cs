@@ -1,4 +1,5 @@
-﻿using TMPro;
+﻿using System;
+using TMPro;
 using UnityEngine;
 
 namespace BattleshipGame.Localization
@@ -9,11 +10,20 @@ namespace BattleshipGame.Localization
         [SerializeField] private Key key;
         [SerializeField] private LocalizationManager localizationManager;
         [SerializeField] private LocalizationOptions options;
+        private bool _isKeyNull;
         private TextMeshProUGUI _textField;
+
+        private void Awake()
+        {
+            _textField = GetComponent<TextMeshProUGUI>();
+            if (key == null)
+            {
+                _isKeyNull = true;
+            }
+        }
 
         private void Start()
         {
-            _textField = GetComponent<TextMeshProUGUI>();
             SetText();
         }
 
@@ -29,14 +39,20 @@ namespace BattleshipGame.Localization
 
         private void SetText()
         {
-            if (key == null || _textField == null) return;
+            if (_isKeyNull) return;
             _textField.text = localizationManager.GetValue(key);
         }
 
         public void SetText(Key localizedTextKey)
         {
             key = localizedTextKey;
+            _isKeyNull = false;
             SetText();
+        }
+
+        public void ClearText()
+        {
+            _textField.text = string.Empty;
         }
     }
 }
