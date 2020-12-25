@@ -9,8 +9,20 @@
       "value": "Multiplayer"
     },
     {
+      "key": "btn_options",
+      "value": "Options"
+    },
+    {
       "key": "btn_quit",
       "value": "Quit"
+    },
+    {
+      "key": "btn_language",
+      "value": "Language"
+    },
+    {
+      "key": "btn_back",
+      "value": "Back"
     },
     {
       "key": "btn_fire",

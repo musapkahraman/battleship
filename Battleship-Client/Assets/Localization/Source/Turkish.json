@@ -9,8 +9,20 @@
       "value": "İKİ OYUNCU"
     },
     {
+      "key": "btn_options",
+      "value": "SEÇENEKLER"
+    },
+    {
       "key": "btn_quit",
       "value": "ÇIKIŞ"
+    },
+    {
+      "key": "btn_language",
+      "value": "DİL"
+    },
+    {
+      "key": "btn_back",
+      "value": "GERİ"
     },
     {
       "key": "btn_fire",

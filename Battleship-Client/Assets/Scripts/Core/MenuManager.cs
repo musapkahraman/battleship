@@ -15,8 +15,17 @@ namespace BattleshipGame.Core
         [SerializeField] private ButtonController quitButton;
         [SerializeField] private ButtonController singlePlayerButton;
         [SerializeField] private ButtonController multiplayerButton;
+        [SerializeField] private ButtonController optionsButton;
+        [SerializeField] private ButtonController optionsBackButton;
+        [SerializeField] private ButtonController languageButton;
+        [SerializeField] private ButtonController languageBackButton;
+        [SerializeField] private ButtonController englishButton;
+        [SerializeField] private ButtonController turkishButton;
+        [SerializeField] private Canvas optionsCanvas;
+        [SerializeField] private Canvas languageCanvas;
         [SerializeField] private GameObject popUpPrefab;
         [SerializeField] private Options options;
+        [SerializeField] private LocalizationOptions localizationOptions;
         private GameManager _gameManager;
 
         private void Start()
@@ -24,6 +33,26 @@ namespace BattleshipGame.Core
             quitButton.AddListener(Quit);
             singlePlayerButton.AddListener(PlayAgainstAI);
             multiplayerButton.AddListener(PlayWithFriends);
+            optionsButton.AddListener(() =>
+            {
+                optionsCanvas.enabled = true;
+            });
+            optionsBackButton.AddListener(() =>
+            {
+                optionsCanvas.enabled = false;
+            });
+            languageButton.AddListener(() =>
+            {
+                optionsCanvas.enabled = false;
+                languageCanvas.enabled = true;
+            });
+            languageBackButton.AddListener(() =>
+            {
+                languageCanvas.enabled = false;
+                optionsCanvas.enabled = true;
+            });
+            englishButton.AddListener(() => { localizationOptions.Language = SystemLanguage.English; });
+            turkishButton.AddListener(() => { localizationOptions.Language = SystemLanguage.Turkish; });
 
             void Quit()
             {
@@ -52,6 +81,12 @@ namespace BattleshipGame.Core
                     options.aiDifficulty = Difficulty.Hard;
                     StartLocalRoom();
                 }
+
+                void StartLocalRoom()
+                {
+                    if (!GameManager.TryGetInstance(out _gameManager)) return;
+                    _gameManager.StartLocalClient();
+                }
             }
 
             void PlayWithFriends()
@@ -60,12 +95,6 @@ namespace BattleshipGame.Core
                 _gameManager.ConnectToServer(() => multiplayerButton.SetInteractable(true));
                 multiplayerButton.SetInteractable(false);
             }
-        }
-
-        private void StartLocalRoom()
-        {
-            if (!GameManager.TryGetInstance(out _gameManager)) return;
-            _gameManager.StartLocalClient();
         }
 
         private PopUpWindow BuildPopUp()

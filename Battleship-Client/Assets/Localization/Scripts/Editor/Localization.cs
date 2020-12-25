@@ -45,7 +45,7 @@ namespace BattleshipGame.Localization
 
         private void OnGUI()
         {
-            if (_window == null) Init();
+            if (!_window) Init();
 
             using (new EditorGUILayout.HorizontalScope())
             {
@@ -112,7 +112,7 @@ namespace BattleshipGame.Localization
                     GUILayout.Label("Drop a language asset here to load.");
                     GUILayout.Space(0.2f * LineHeight);
                     EditorGUILayout.PropertyField(serializedObject.FindProperty(nameof(languageToLoad)), true);
-                    if (languageToLoad != null)
+                    if (languageToLoad)
                         using (new EditorGUILayout.HorizontalScope())
                         {
                             GUILayout.FlexibleSpace();
@@ -143,15 +143,14 @@ namespace BattleshipGame.Localization
                 Path.Combine(LocalizationDirectory, SourceFolder),
                 localizationData.language.ToString(), "json");
             if (string.IsNullOrEmpty(filePath)) return;
-            var localizationJsonData =
-                new LocalizationJsonData(localizationData.language, new List<LocalizationJsonItem>());
-            foreach (var t in localizationData.items)
-                localizationJsonData.items.Add(new LocalizationJsonItem
+            var json = new LocalizationJsonData(localizationData.language, new List<LocalizationJsonItem>());
+            foreach (var item in localizationData.items)
+                json.items.Add(new LocalizationJsonItem
                 {
-                    key = t.key.name, value = t.value
+                    key = item.key.name, value = item.value
                 });
 
-            string dataAsJson = JsonUtility.ToJson(localizationJsonData);
+            string dataAsJson = JsonUtility.ToJson(json, true);
             File.WriteAllText(filePath, dataAsJson);
             _assetFileName = Path.GetFileName(filePath);
         }
@@ -210,14 +209,14 @@ namespace BattleshipGame.Localization
             asset.items = localizationData.items;
             EditorUtility.SetDirty(asset);
             AssetDatabase.SaveAssets();
-            if (_managerAsset == null)
+            if (!_managerAsset)
             {
                 string managerPath = Path.Combine(LocalizationDirectory, ManagerAssetName);
                 _managerAsset = CreateInstance<LocalizationManager>();
                 AssetDatabase.CreateAsset(_managerAsset, managerPath);
             }
 
-            if (_managerAsset.options == null)
+            if (!_managerAsset.options)
             {
                 var prefAsset = CreateInstance<LocalizationOptions>();
                 string prefPath = Path.Combine(OptionsDirectory, OptionsAssetName);

@@ -18,8 +18,14 @@ MonoBehaviour:
     value: Single Player
   - key: {fileID: 11400000, guid: b2f4fef974b067746bd397b246a8c8a7, type: 2}
     value: Multiplayer
+  - key: {fileID: 11400000, guid: b9ebc95b2665e9f46b9a23a92e0bcbf5, type: 2}
+    value: Options
   - key: {fileID: 11400000, guid: e8ef3800822174041bf0479d1845e818, type: 2}
     value: Quit
+  - key: {fileID: 11400000, guid: c8c2e3ad6d01cb64c8e2ee0f53349c43, type: 2}
+    value: Language
+  - key: {fileID: 11400000, guid: 4030a10ecae1be2468fcf8e3eeebef96, type: 2}
+    value: Back
   - key: {fileID: 11400000, guid: 5bb696b2457d62249bf2166926cf860c, type: 2}
     value: Fire!
   - key: {fileID: 11400000, guid: 4aa12b5cf80068649858022a6e504c01, type: 2}
@@ -108,4 +114,4 @@ MonoBehaviour:
     value: Place your ships!
   - key: {fileID: 11400000, guid: 35a339a664576714c83365856c352726, type: 2}
     value: An error occured while connecting to the server.
-  keyName: status_network_error
+  keyName: btn_back

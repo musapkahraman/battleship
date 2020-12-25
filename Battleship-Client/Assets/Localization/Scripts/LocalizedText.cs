@@ -22,6 +22,12 @@ namespace BattleshipGame.Localization
             }
         }
 
+        private void OnValidate()
+        {
+            Awake();
+            Start();
+        }
+
         private void Start()
         {
             SetText();
