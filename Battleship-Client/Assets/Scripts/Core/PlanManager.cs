@@ -97,6 +97,7 @@ namespace BattleshipGame.Core
 
             if (_shipsNotDragged.Count == 0) _shipsNotDragged = _pool.Keys.ToList();
 
+            // Avoid ships that the player dragged into the map.
             foreach (var placement in _placements.Where(placement => !_shipsNotDragged.Contains(placement.shipId)))
             {
                 map.SetShip(placement.ship, placement.Coordinate);
@@ -104,23 +105,28 @@ namespace BattleshipGame.Core
                 placementMap.PlaceShip(placement.shipId, placement.ship, placement.Coordinate);
             }
 
-            foreach (int key in _shipsNotDragged)
+            // Place the remaining ships randomly
+            foreach (int shipId in _shipsNotDragged)
             {
-                var from = new List<int>();
-                for (var i = 0; i < _cellCount; i++) from.Add(i);
+                var uncheckedCells = new List<int>();
+                for (var i = 0; i < _cellCount; i++) uncheckedCells.Add(i);
                 var isPlaced = false;
                 while (!isPlaced)
                 {
-                    if (from.Count == 0) break;
+                    if (uncheckedCells.Count == 0) break;
 
-                    int cell = from[Random.Range(0, from.Count)];
-                    from.Remove(cell);
-                    isPlaced = PlaceShip(_pool[key], default, CellIndexToCoordinate(cell, MapAreaSize.x), false, key);
+                    int cell = uncheckedCells[Random.Range(0, uncheckedCells.Count)];
+                    uncheckedCells.Remove(cell);
+                    isPlaced = PlaceShip(_pool[shipId], default, CellIndexToCoordinate(cell, MapAreaSize.x), false, shipId);
                 }
 
-                if (isPlaced) continue;
-                _gameManager.SetStatusText(statusPlacementImpossible);
-                break;
+                if (!isPlaced)
+                {
+                    _gameManager.SetStatusText(statusPlacementImpossible);
+                    clearButton.SetInteractable(true);
+                    randomButton.SetInteractable(false);
+                    return;
+                }
             }
 
             gridSpriteMapper.CacheSpritePositions();
