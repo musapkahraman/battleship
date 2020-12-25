@@ -1513,6 +1513,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: Buttons
       objectReference: {fileID: 0}
+    - target: {fileID: 2661583440753739579, guid: 88ddd787738efa54ca51cccc955a634a,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 7912316052466543258, guid: 88ddd787738efa54ca51cccc955a634a,
         type: 3}
       propertyPath: m_Camera
