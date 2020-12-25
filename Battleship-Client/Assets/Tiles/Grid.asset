@@ -10,7 +10,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 13312, guid: 0000000000000000e000000000000000, type: 0}
-  m_Name: Background_Sea
+  m_Name: Grid
   m_EditorClassIdentifier: 
   m_Sprite: {fileID: 8485601669589115460, guid: 07250fcc871756246be609926cd790c9,
     type: 3}

@@ -25,7 +25,7 @@ TextureImporter:
     second: Fleet_Admiral
   - first:
       213: 8485601669589115460
-    second: Background_Sea
+    second: Grid
   - first:
       213: 1256899974826948278
     second: Background_Radar
@@ -49,10 +49,10 @@ TextureImporter:
     second: Marker_TargetMarked
   - first:
       213: -2980439902397685020
-    second: Cursor_Inactive
+    second: Cursor
   - first:
       213: 608915791917558460
-    second: Mask_Admiral_Part_1
+    second: Fill
   - first:
       213: 3013520669368065377
     second: Mask_Admiral_Part_2
@@ -297,7 +297,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Background_Sea
+      name: Grid
       rect:
         serializedVersion: 2
         x: 128
@@ -318,32 +318,11 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Cursor_Target
-      rect:
-        serializedVersion: 2
-        x: 192
-        y: 224
-        width: 32
-        height: 32
-      alignment: 0
-      pivot: {x: 0.5, y: 0.5}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: 4d84c7a0e699f7b20800000000000000
-      internalID: 3134392563574524116
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
       name: Marker_Miss
       rect:
         serializedVersion: 2
         x: 192
-        y: 96
+        y: 224
         width: 32
         height: 32
       alignment: 0
@@ -363,8 +342,8 @@ TextureImporter:
       name: Marker_Hit
       rect:
         serializedVersion: 2
-        x: 192
-        y: 160
+        x: 224
+        y: 224
         width: 32
         height: 32
       alignment: 0
@@ -381,70 +360,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Marker_Explosion
-      rect:
-        serializedVersion: 2
-        x: 192
-        y: 32
-        width: 32
-        height: 32
-      alignment: 0
-      pivot: {x: 0.5, y: 0.5}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: c80324655cce37250800000000000000
-      internalID: 5941352665731707020
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: Marker_TargetFired
-      rect:
-        serializedVersion: 2
-        x: 192
-        y: 192
-        width: 32
-        height: 32
-      alignment: 0
-      pivot: {x: 0.5, y: 0.5}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: c802b83b99abdf460800000000000000
-      internalID: 7277177742205591692
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: Marker_TargetMarked
-      rect:
-        serializedVersion: 2
-        x: 160
-        y: 192
-        width: 32
-        height: 32
-      alignment: 0
-      pivot: {x: 0.5, y: 0.5}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: d363412a9195402c0800000000000000
-      internalID: -4466346963816401347
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: Cursor_Inactive
+      name: Cursor
       rect:
         serializedVersion: 2
         x: 160
@@ -460,6 +376,27 @@ TextureImporter:
       bones: []
       spriteID: 4e2af2723b953a6d0800000000000000
       internalID: -2980439902397685020
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Fill
+      rect:
+        serializedVersion: 2
+        x: 128
+        y: 192
+        width: 32
+        height: 32
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: cba2f53cfad437800800000000000000
+      internalID: 608915791917558460
       vertices: []
       indices: 
       edges: []

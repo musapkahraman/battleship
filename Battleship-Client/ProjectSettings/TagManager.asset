@@ -41,3 +41,12 @@ TagManager:
   - name: Default
     uniqueID: 0
     locked: 0
+  - name: Background
+    uniqueID: 3360176535
+    locked: 0
+  - name: Back Frames
+    uniqueID: 1914652755
+    locked: 0
+  - name: Maps
+    uniqueID: 434725325
+    locked: 0
