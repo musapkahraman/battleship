@@ -9,7 +9,7 @@ using static BattleshipGame.Common.GridUtils;
 
 namespace BattleshipGame.TilePaint
 {
-    public class BattleMap : Map, IPointerClickHandler
+    public class BattleMap : Map, IPointerClickHandler,  IBeginDragHandler, IEndDragHandler
     {
         [SerializeField] private Camera sceneCamera;
         [SerializeField] private BattleManager manager;
@@ -35,6 +35,8 @@ namespace BattleshipGame.TilePaint
         // @formatter:on
         private Grid _grid;
 
+        private bool _isDragging;
+
         public bool IsMarkingTargets { get; set; }
 
         private void Start()
@@ -45,8 +47,18 @@ namespace BattleshipGame.TilePaint
 
         public void OnPointerClick(PointerEventData eventData)
         {
-            if (screenType == ScreenType.Opponent)
+            if (!_isDragging && screenType == ScreenType.Opponent)
                 manager.MarkTarget(ScreenToCell(eventData.position, sceneCamera, _grid, rules.areaSize));
+        }
+
+        public void OnBeginDrag(PointerEventData eventData)
+        {
+            _isDragging = true;
+        }
+
+        public void OnEndDrag(PointerEventData eventData)
+        {
+            _isDragging = false;
         }
 
 #if UNITY_WEBGL || UNITY_STANDALONE || UNITY_EDITOR
