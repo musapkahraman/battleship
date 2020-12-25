@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   sprite: {fileID: -4435417356244048945, guid: 07250fcc871756246be609926cd790c9, type: 3}
   tile: {fileID: 11400000, guid: 31deb3423deb3154f81d4f7a7be7aaa2, type: 2}
-  PartCoordinates:
+  partCoordinates:
   - {x: 0, y: 0}
   - {x: 0, y: -1}
   rankOrder: 3

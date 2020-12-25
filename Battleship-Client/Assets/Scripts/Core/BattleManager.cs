@@ -277,7 +277,7 @@ namespace BattleshipGame.Core
             }
 
             userMap.SetMarker(cellIndex, !(from placement in placementMap.GetPlacements()
-                from part in placement.ship.PartCoordinates
+                from part in placement.ship.partCoordinates
                 select placement.Coordinate + (Vector3Int) part
                 into partCoordinate
                 let shot = CellIndexToCoordinate(cellIndex, MapAreaSize.x)

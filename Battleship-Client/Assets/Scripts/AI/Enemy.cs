@@ -44,7 +44,7 @@ namespace BattleshipGame.AI
                     for (var i = 0; i < ship.amount; i++)
                     {
                         _pool.Add(shipId, ship);
-                        _playerShipsHealth.Add(ship.PartCoordinates.Count);
+                        _playerShipsHealth.Add(ship.partCoordinates.Count);
                         shipId++;
                     }
             }
@@ -64,7 +64,7 @@ namespace BattleshipGame.AI
         {
             var partIndex = 0;
             foreach (var ship in _pool)
-            foreach (var _ in ship.Value.PartCoordinates)
+            foreach (var _ in ship.Value.partCoordinates)
             {
                 if (changedShipPart == partIndex)
                     _playerShipsHealth[ship.Key]--;
@@ -186,7 +186,7 @@ namespace BattleshipGame.AI
                         cells[i] = EmptyCell;
 
                 // Find each cell the ship covers and register the ship on them
-                foreach (int cellIndex in ship.PartCoordinates
+                foreach (int cellIndex in ship.partCoordinates
                     .Select(part => new Vector3Int(pivot.x + part.x, pivot.y + part.y, 0))
                     .Select(coordinate => GridUtils.CoordinateToCellIndex(coordinate, rules.areaSize)))
                     if (cellIndex != OutOfMap)

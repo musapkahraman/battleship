@@ -42,7 +42,6 @@ namespace BattleshipGame.Core
         private List<int> _shipsNotDragged = new List<int>();
         private State _state;
         private Vector2Int MapAreaSize => rules.areaSize;
-        private IEnumerable<Ship> Ships => rules.ships;
 
         private void Awake()
         {
@@ -166,7 +165,7 @@ namespace BattleshipGame.Core
             {
                 _pool = new SortedDictionary<int, Ship>();
                 var shipId = 0;
-                foreach (var ship in Ships)
+                foreach (var ship in rules.ships)
                     for (var i = 0; i < ship.amount; i++)
                     {
                         _pool.Add(shipId, ship);
@@ -226,7 +225,7 @@ namespace BattleshipGame.Core
                     _cells[i] = EmptyCell;
 
             // Find each cell the ship covers and register the ship on them
-            foreach (int cellIndex in ship.PartCoordinates
+            foreach (int cellIndex in ship.partCoordinates
                 .Select(part => new Vector3Int(pivot.x + part.x, pivot.y + part.y, 0))
                 .Select(coordinate => CoordinateToCellIndex(coordinate, MapAreaSize)))
                 if (cellIndex != OutOfMap)

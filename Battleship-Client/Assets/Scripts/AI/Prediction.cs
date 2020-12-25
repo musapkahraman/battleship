@@ -26,7 +26,7 @@ namespace BattleshipGame.AI
             var shipId = 0;
             foreach (var ship in rules.ships)
             {
-                float shipProbability = CalculateProbability(ship.PartCoordinates.Count, cellCount);
+                float shipProbability = CalculateProbability(ship.partCoordinates.Count, cellCount);
                 for (var i = 0; i < ship.amount; i++)
                 {
                     var shipProbabilities = new List<Probability>();
@@ -36,7 +36,7 @@ namespace BattleshipGame.AI
                     _probabilityMap.Add(shipId, shipProbabilities);
 
                     // Initialize the local list to hold the health values of player ships. This is to figure out diffs.
-                    _playerShipsHealth.Add(ship.PartCoordinates.Count);
+                    _playerShipsHealth.Add(ship.partCoordinates.Count);
 
                     shipId++;
                 }
@@ -132,7 +132,7 @@ namespace BattleshipGame.AI
                         var ship = pool[shipId];
                         Debug.Log($"ship: {shipId}, {ship.name}");
                         (int shipWidth, int shipHeight) = ship.GetShipSize();
-                        foreach (var shipPartCoordinate in ship.PartCoordinates)
+                        foreach (var shipPartCoordinate in ship.partCoordinates)
                         {
                             var cellCoordinate = shotCoordinate - (Vector3Int) shipPartCoordinate;
                             if (CanPatternBePlaced(cellCoordinate, shipWidth, shipHeight))

@@ -17,7 +17,7 @@ namespace BattleshipGame.TilePaint
             var spritePositions = GetComponent<GridSpriteMapper>().GetSpritePositions();
             foreach (var ship in rules.ships)
                 for (var i = 0; i < ship.amount; i++)
-                    foreach (var partCoordinate in ship.PartCoordinates.Select(coordinate =>
+                    foreach (var partCoordinate in ship.partCoordinates.Select(coordinate =>
                         spritePositions[ship.tile.sprite.GetInstanceID()][i] + (Vector3Int) coordinate))
                         _shipParts.Add((NotShot, partCoordinate));
         }
