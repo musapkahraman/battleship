@@ -1,5 +1,4 @@
-﻿using System;
-using TMPro;
+﻿using TMPro;
 using UnityEngine;
 
 namespace BattleshipGame.Localization
@@ -15,22 +14,7 @@ namespace BattleshipGame.Localization
 
         private void Awake()
         {
-            _textField = GetComponent<TextMeshProUGUI>();
-            if (key == null)
-            {
-                _isKeyNull = true;
-            }
-        }
-
-        private void OnValidate()
-        {
-            Awake();
-            Start();
-        }
-
-        private void Start()
-        {
-            SetText();
+            Init();
         }
 
         private void OnEnable()
@@ -43,10 +27,21 @@ namespace BattleshipGame.Localization
             options.OnLanguageChanged -= SetText;
         }
 
+        private void OnValidate()
+        {
+            Init();
+        }
+
+        private void Init()
+        {
+            if (_textField == null) _textField = GetComponent<TextMeshProUGUI>();
+            if (key == null) _isKeyNull = true;
+            SetText();
+        }
+
         private void SetText()
         {
-            if (_isKeyNull) return;
-            _textField.text = localizationManager.GetValue(key);
+            _textField.text = _isKeyNull ? string.Empty : localizationManager.GetValue(key);
         }
 
         public void SetText(Key localizedTextKey)
@@ -58,7 +53,9 @@ namespace BattleshipGame.Localization
 
         public void ClearText()
         {
-            _textField.text = string.Empty;
+            key = null;
+            _isKeyNull = true;
+            SetText();
         }
     }
 }
