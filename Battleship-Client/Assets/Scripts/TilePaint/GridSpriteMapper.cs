@@ -65,8 +65,9 @@ namespace BattleshipGame.TilePaint
             }
         }
 
-        public void RemoveSpritePosition(int spriteId, Vector3Int oldPosition)
+        public void RemoveSpritePosition(Sprite sprite, Vector3Int oldPosition)
         {
+            int spriteId = sprite.GetInstanceID();
             if (_spritePositionsOnTileMap.ContainsKey(spriteId))
                 _spritePositionsOnTileMap[spriteId].Remove(oldPosition);
         }

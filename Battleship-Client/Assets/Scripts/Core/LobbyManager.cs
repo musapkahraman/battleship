@@ -35,9 +35,9 @@ namespace BattleshipGame.Core
 
         private void Start()
         {
-            if (GameManager.TryGetInstance(out _gameManager))
+            if (GameManager.TryGetInstance(out _gameManager) && _gameManager.Client is NetworkClient client)
             {
-                _networkClient = (NetworkClient) _gameManager.Client;
+                _networkClient = client;
                 _networkClient.RoomsChanged += PopulateRoomList;
 
                 _gameManager.ClearStatusText();

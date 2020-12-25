@@ -29,6 +29,7 @@ namespace BattleshipGame.Core
         [SerializeField] private ButtonController continueButton;
         [SerializeField] private Map map;
         [SerializeField] private GridSpriteMapper gridSpriteMapper;
+        [SerializeField] private GridSpriteMapper poolGridSpriteMapper;
         [SerializeField] private Rules rules;
         [SerializeField] private PlacementMap placementMap;
         private int _cellCount;
@@ -123,6 +124,7 @@ namespace BattleshipGame.Core
             }
 
             gridSpriteMapper.CacheSpritePositions();
+            poolGridSpriteMapper.CacheSpritePositions();
             continueButton.SetInteractable(true);
             _gameManager.SetStatusText(statusPlacementReady);
         }
@@ -139,6 +141,8 @@ namespace BattleshipGame.Core
             map.ClearAllShips();
             gridSpriteMapper.ClearSpritePositions();
             gridSpriteMapper.CacheSpritePositions();
+            poolGridSpriteMapper.ClearSpritePositions();
+            poolGridSpriteMapper.CacheSpritePositions();
         }
 
         private void BeginShipPlacement()

@@ -60,7 +60,7 @@ namespace BattleshipGame.TilePaint
             if (removeIfDraggedOut && !isOverTheTarget)
             {
                 if (_targetGridSpriteMapper)
-                    _targetGridSpriteMapper.RemoveSpritePosition(_sprite.GetInstanceID(), _grabCell);
+                    _targetGridSpriteMapper.RemoveSpritePosition(_sprite, _grabCell);
                 Destroy(_grabbedShip);
                 return;
             }
@@ -74,10 +74,15 @@ namespace BattleshipGame.TilePaint
                 if (isOverTheTarget && _targetGridSpriteMapper &&
                     GridUtils.DoesShipFitIn(shipWidth, shipHeight, dropCell, rules.areaSize) &&
                     targetMap.MoveShip(ship, _grabCell, dropCell, !_isGrabbedFromTarget))
+                {
+                    if (removeFromSource) _selfGridSpriteMapper.RemoveSpritePosition(_sprite, _grabCell);
                     _targetGridSpriteMapper.ChangeSpritePosition(_sprite, _grabCell, dropCell);
+                }
                 else if (removeFromSource)
                     // The tile is already removed inside the OnBeginDrag callback. Place the tile back.
+                {
                     sourceTileMap.SetTile(_grabCell, ship.tile);
+                }
             }
 
             Destroy(_grabbedShip);
