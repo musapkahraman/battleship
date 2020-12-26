@@ -24,7 +24,6 @@ namespace BattleshipGame.Core
         [SerializeField] private PlacementMap placementMap;
         [SerializeField] private OpponentStatus opponentStatus;
         [SerializeField] private TurnHighlighter turnHighlighter;
-        [SerializeField] private Tilemap playerGrids;
         [SerializeField] private Tilemap opponentGrids;
         [SerializeField] private GameObject popUpPrefab;
         [SerializeField] private ButtonController fireButton;
@@ -49,7 +48,7 @@ namespace BattleshipGame.Core
         [SerializeField] private Key statusPlayerTurn;
         private readonly Dictionary<int, List<int>> _shots = new Dictionary<int, List<int>>();
         private readonly List<int> _shotsInCurrentTurn = new List<int>();
-        private readonly WaitForSecondsRealtime _flashGridInterval = new WaitForSecondsRealtime(0.1f);
+        private readonly WaitForSecondsRealtime _flashGridInterval = new WaitForSecondsRealtime(0.3f);
         private const int FlashGridCount = 3;
         private bool _isFlashingGrids;
         private IClient _client;
@@ -246,7 +245,7 @@ namespace BattleshipGame.Core
                 _gameManager.SetStatusText(statusPlayerTurn);
                 if (!_isFlashingGrids)
                 {
-                    StartCoroutine(FlashGrids(opponentGrids));
+                    StartCoroutine(FlashGrids());
                 }
 
 #if UNITY_ANDROID
@@ -257,25 +256,21 @@ namespace BattleshipGame.Core
             void TurnToEnemy()
             {
                 _gameManager.SetStatusText(statusWaitingAttack);
-                if (!_isFlashingGrids)
-                {
-                    StartCoroutine(FlashGrids(playerGrids));
-                }
             }
         }
 
-        private IEnumerator FlashGrids(Tilemap grids)
+        private IEnumerator FlashGrids()
         {
             _isFlashingGrids = true;
-            var colorCache = grids.color;
+            var colorCache = opponentGrids.color;
             var flashGridColor = new Color(colorCache.r, colorCache.g, colorCache.b, 0.66f);
             for (var i = 0; i < FlashGridCount; i++)
             {
                 yield return _flashGridInterval;
-                grids.color = flashGridColor;
+                opponentGrids.color = flashGridColor;
                 yield return _flashGridInterval;
                 // ReSharper disable once Unity.InefficientPropertyAccess
-                grids.color = colorCache;
+                opponentGrids.color = colorCache;
             }
 
             _isFlashingGrids = false;
