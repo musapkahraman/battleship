@@ -20,6 +20,10 @@ namespace BattleshipGame.Core
         [SerializeField] private Key leaveHeader;
         [SerializeField] private Key leaveMessage;
         [SerializeField] private Key leaveConfirm;
+        [SerializeField] private Key leaveConfirmationHeader;
+        [SerializeField] private Key leaveConfirmationMessage;
+        [SerializeField] private Key leaveConfirmationOk;
+        [SerializeField] private Key leaveConfirmationCancel;
         [SerializeField] private Key rematchConfirm;
         [SerializeField] private Key rematchDeclineWin;
         [SerializeField] private Key rematchDeclineLost;
@@ -214,8 +218,13 @@ namespace BattleshipGame.Core
 
         private void LeaveGame()
         {
-            _client.LeaveRoom();
-            if (_client is NetworkClient) GameSceneManager.Instance.GoToLobby();
+            var popup = BuildPopUp();
+            popup.Show(leaveConfirmationHeader, leaveConfirmationMessage, leaveConfirmationOk, leaveConfirmationCancel,
+                () =>
+                {
+                    _client.LeaveRoom();
+                    if (_client is NetworkClient) GameSceneManager.Instance.GoToLobby();
+                }, () => { Destroy(popup.gameObject); });
         }
 
         private void SwitchTurns()

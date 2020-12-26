@@ -1380,7 +1380,7 @@ PrefabInstance:
     - target: {fileID: 5023613893495342779, guid: c59cf86ee3eebae4e87100a5365ea47b,
         type: 3}
       propertyPath: m_Pivot.x
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 5023613893495342779, guid: c59cf86ee3eebae4e87100a5365ea47b,
         type: 3}
@@ -1395,7 +1395,7 @@ PrefabInstance:
     - target: {fileID: 5023613893495342779, guid: c59cf86ee3eebae4e87100a5365ea47b,
         type: 3}
       propertyPath: m_AnchorMax.x
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 5023613893495342779, guid: c59cf86ee3eebae4e87100a5365ea47b,
         type: 3}
@@ -1405,7 +1405,7 @@ PrefabInstance:
     - target: {fileID: 5023613893495342779, guid: c59cf86ee3eebae4e87100a5365ea47b,
         type: 3}
       propertyPath: m_AnchorMin.x
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 5023613893495342779, guid: c59cf86ee3eebae4e87100a5365ea47b,
         type: 3}
@@ -1430,12 +1430,12 @@ PrefabInstance:
     - target: {fileID: 5023613893495342779, guid: c59cf86ee3eebae4e87100a5365ea47b,
         type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: 0
+      value: 10
       objectReference: {fileID: 0}
     - target: {fileID: 5023613893495342779, guid: c59cf86ee3eebae4e87100a5365ea47b,
         type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: -15
+      value: -10
       objectReference: {fileID: 0}
     - target: {fileID: 5023613893495342779, guid: c59cf86ee3eebae4e87100a5365ea47b,
         type: 3}
@@ -2430,6 +2430,14 @@ MonoBehaviour:
   leaveHeader: {fileID: 11400000, guid: b9302d08149e4744f9196ae3c2f02327, type: 2}
   leaveMessage: {fileID: 11400000, guid: 7e81c8458b2ceda4eb34089f5b61dfcb, type: 2}
   leaveConfirm: {fileID: 11400000, guid: e1772d2e2ff245b4fbd4f36d0977744c, type: 2}
+  leaveConfirmationHeader: {fileID: 11400000, guid: fc09360fd70a3a348a582ea9d894d3d3,
+    type: 2}
+  leaveConfirmationMessage: {fileID: 11400000, guid: c629e22e052ceee419921e752d5901f6,
+    type: 2}
+  leaveConfirmationOk: {fileID: 11400000, guid: 0cace234b09edc8448c7a0bcd9fd757f,
+    type: 2}
+  leaveConfirmationCancel: {fileID: 11400000, guid: 963492208423c654d97603e4441ad50e,
+    type: 2}
   rematchConfirm: {fileID: 11400000, guid: 1793b59b4b9ee4848984568b2a3b1267, type: 2}
   rematchDeclineWin: {fileID: 11400000, guid: 9b5e06cf4d5dc114ab4f5bce3a7eeeec, type: 2}
   rematchDeclineLost: {fileID: 11400000, guid: f13ac9662bae7f64e9292f7a8b826d9a, type: 2}

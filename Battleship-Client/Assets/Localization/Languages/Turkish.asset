@@ -42,6 +42,14 @@ MonoBehaviour:
     value: OYUNDAN AYRIL
   - key: {fileID: 11400000, guid: 9ff8e1de03c391d4d861c5a063219d1a, type: 2}
     value: "ANA MEN\xDC"
+  - key: {fileID: 11400000, guid: fc09360fd70a3a348a582ea9d894d3d3, type: 2}
+    value: OYUNDAN AYRIL
+  - key: {fileID: 11400000, guid: c629e22e052ceee419921e752d5901f6, type: 2}
+    value: "Oyundan ayr\u0131lmak m\u0131 istiyorsun?"
+  - key: {fileID: 11400000, guid: 0cace234b09edc8448c7a0bcd9fd757f, type: 2}
+    value: EVET
+  - key: {fileID: 11400000, guid: 963492208423c654d97603e4441ad50e, type: 2}
+    value: HAYIR
   - key: {fileID: 11400000, guid: b9302d08149e4744f9196ae3c2f02327, type: 2}
     value: MAALESEF...
   - key: {fileID: 11400000, guid: 7e81c8458b2ceda4eb34089f5b61dfcb, type: 2}

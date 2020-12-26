@@ -7,7 +7,7 @@ namespace BattleshipGame.Localization
     [CustomEditor(typeof(Language))]
     public class LanguageEditor : UnityEditor.Editor
     {
-        private const int KeyPropertyWidth = 180;
+        private const int KeyPropertyWidth = 300;
         private const int ColumnSpace = 5;
         private SerializedProperty _keyNameProp;
         private ReorderableList _list;
