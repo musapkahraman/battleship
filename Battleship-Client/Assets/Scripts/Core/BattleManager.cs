@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System.Collections;
+using System.Collections.Generic;
 using System.Linq;
 using BattleshipGame.Common;
 using BattleshipGame.Localization;
@@ -10,13 +11,24 @@ using BattleshipGame.UI;
 using Colyseus.Schema;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.Tilemaps;
 using static BattleshipGame.Common.GridUtils;
 
 namespace BattleshipGame.Core
 {
     public class BattleManager : MonoBehaviour
     {
+        [SerializeField] private Rules rules;
+        [SerializeField] private BattleMap userMap;
+        [SerializeField] private BattleMap opponentMap;
+        [SerializeField] private PlacementMap placementMap;
+        [SerializeField] private OpponentStatus opponentStatus;
+        [SerializeField] private TurnHighlighter turnHighlighter;
+        [SerializeField] private Tilemap playerGrids;
+        [SerializeField] private Tilemap opponentGrids;
         [SerializeField] private GameObject popUpPrefab;
+        [SerializeField] private ButtonController fireButton;
+        [SerializeField] private ButtonController leaveButton;
         [SerializeField] private Key leaveHeader;
         [SerializeField] private Key leaveMessage;
         [SerializeField] private Key leaveConfirm;
@@ -35,23 +47,17 @@ namespace BattleshipGame.Core
         [SerializeField] private Key statusWaitingDecision;
         [SerializeField] private Key statusWaitingAttack;
         [SerializeField] private Key statusPlayerTurn;
-        [SerializeField] private ButtonController leaveButton;
-        [SerializeField] private ButtonController fireButton;
-        [SerializeField] private BattleMap userMap;
-        [SerializeField] private BattleMap opponentMap;
-        [SerializeField] private TurnHighlighter turnHighlighter;
-        [SerializeField] private OpponentStatus opponentStatus;
-        [SerializeField] private Rules rules;
-        [SerializeField] private PlacementMap placementMap;
         private readonly Dictionary<int, List<int>> _shots = new Dictionary<int, List<int>>();
         private readonly List<int> _shotsInCurrentTurn = new List<int>();
+        private readonly WaitForSecondsRealtime _flashGridInterval = new WaitForSecondsRealtime(0.1f);
+        private const int FlashGridCount = 3;
+        private bool _isFlashingGrids;
         private IClient _client;
         private string _enemy;
         private GameManager _gameManager;
         private bool _leavePopUpIsOn;
         private string _player;
         private State _state;
-        private Vector2Int MapAreaSize => rules.areaSize;
 
         private void Awake()
         {
@@ -128,7 +134,7 @@ namespace BattleshipGame.Core
 
         public void HighlightShotsInTheSameTurn(Vector3Int coordinate)
         {
-            int cellIndex = CoordinateToCellIndex(coordinate, MapAreaSize);
+            int cellIndex = CoordinateToCellIndex(coordinate, rules.areaSize);
             foreach (var keyValuePair in from keyValuePair in _shots
                 from cell in keyValuePair.Value
                 where cell == cellIndex
@@ -148,7 +154,7 @@ namespace BattleshipGame.Core
         public void MarkTarget(Vector3Int targetCoordinate)
         {
             if (_state.playerTurn != _client.GetSessionId()) return;
-            int targetIndex = CoordinateToCellIndex(targetCoordinate, MapAreaSize);
+            int targetIndex = CoordinateToCellIndex(targetCoordinate, rules.areaSize);
             if (_shotsInCurrentTurn.Contains(targetIndex))
             {
                 _shotsInCurrentTurn.Remove(targetIndex);
@@ -238,6 +244,11 @@ namespace BattleshipGame.Core
             {
                 opponentMap.IsMarkingTargets = true;
                 _gameManager.SetStatusText(statusPlayerTurn);
+                if (!_isFlashingGrids)
+                {
+                    StartCoroutine(FlashGrids(opponentGrids));
+                }
+
 #if UNITY_ANDROID
             Handheld.Vibrate();
 #endif
@@ -246,7 +257,28 @@ namespace BattleshipGame.Core
             void TurnToEnemy()
             {
                 _gameManager.SetStatusText(statusWaitingAttack);
+                if (!_isFlashingGrids)
+                {
+                    StartCoroutine(FlashGrids(playerGrids));
+                }
             }
+        }
+
+        private IEnumerator FlashGrids(Tilemap grids)
+        {
+            _isFlashingGrids = true;
+            var colorCache = grids.color;
+            var flashGridColor = new Color(colorCache.r, colorCache.g, colorCache.b, 0.66f);
+            for (var i = 0; i < FlashGridCount; i++)
+            {
+                yield return _flashGridInterval;
+                grids.color = flashGridColor;
+                yield return _flashGridInterval;
+                // ReSharper disable once Unity.InefficientPropertyAccess
+                grids.color = colorCache;
+            }
+
+            _isFlashingGrids = false;
         }
 
         private PopUpWindow BuildPopUp()
@@ -289,7 +321,7 @@ namespace BattleshipGame.Core
                 from part in placement.ship.partCoordinates
                 select placement.Coordinate + (Vector3Int) part
                 into partCoordinate
-                let shot = CellIndexToCoordinate(cellIndex, MapAreaSize.x)
+                let shot = CellIndexToCoordinate(cellIndex, rules.areaSize.x)
                 where partCoordinate.Equals(shot)
                 select partCoordinate).Any()
                 ? Marker.Missed
