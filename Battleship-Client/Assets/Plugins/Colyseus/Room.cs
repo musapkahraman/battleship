@@ -311,10 +311,6 @@ namespace Colyseus
 
 					handler.Invoke(message);
 				}
-				else
-				{
-					Debug.LogError("room.OnMessage not registered for: " + type);
-				}
 			}
 		}
 

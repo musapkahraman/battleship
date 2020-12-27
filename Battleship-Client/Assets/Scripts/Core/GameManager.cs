@@ -26,7 +26,7 @@ namespace BattleshipGame.Core
             FinishNetworkClient();
         }
 
-        public void ConnectToServer(Action onSuccess, Action<string> onError)
+        public void ConnectToServer(Action onSuccess, Action onError)
         {
             switch (Client)
             {
@@ -46,8 +46,9 @@ namespace BattleshipGame.Core
             };
             var networkClient = (NetworkClient) Client;
             SetStatusText(statusConnecting);
-            networkClient.Connect(networkOptions.EndPoint, () => { onSuccess?.Invoke(); },
-                errorMessage => { onError?.Invoke(errorMessage); });
+            networkClient.Connect(networkOptions.EndPoint,
+                () => { onSuccess?.Invoke(); },
+                () => { onError?.Invoke(); });
         }
 
         public void StartLocalClient()

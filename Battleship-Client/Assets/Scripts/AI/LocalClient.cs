@@ -57,7 +57,7 @@ namespace BattleshipGame.AI
             return PlayerId;
         }
 
-        public void Connect(string endPoint, Action success, Action<string> error)
+        public void Connect(string endPoint, Action success, Action error)
         {
             _room.Start();
         }

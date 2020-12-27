@@ -9,6 +9,7 @@ _UpgradeReport_Files/
 [Oo]bj/
 [Tt]emp/
 /[Uu]ser[Ss]ettings/
+ProjectSettings/AndroidLogcatSettings.asset
 
 # MemoryCaptures can get excessive in size.
 # They also could contain extremely sensitive data

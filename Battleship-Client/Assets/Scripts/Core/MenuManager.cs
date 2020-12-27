@@ -101,12 +101,11 @@ namespace BattleshipGame.Core
                         {
                             GameSceneManager.Instance.GoToLobby();
                         }
-                    }, errorMessage =>
+                    }, () =>
                     {
                         _isConnecting = false;
                         _isConnectionCanceled = false;
                         gameManager.SetStatusText(statusNetworkError);
-                        Debug.LogError(errorMessage);
                         ResetMenu();
                     });
                 }

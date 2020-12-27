@@ -53,7 +53,7 @@ namespace BattleshipGame.Network
 
         public event Action<Dictionary<string, Room>> RoomsChanged;
 
-        public async void Connect(string endPoint, Action success, Action<string> error)
+        public async void Connect(string endPoint, Action success, Action error)
         {
             if (_lobby != null && _lobby.Connection.IsOpen) return;
             _client = new Client(endPoint);
@@ -63,9 +63,9 @@ namespace BattleshipGame.Network
                 success?.Invoke();
                 RegisterLobbyHandlers();
             }
-            catch (Exception exception)
+            catch (Exception)
             {
-                error?.Invoke(exception.Message);
+                error?.Invoke();
             }
         }
 
