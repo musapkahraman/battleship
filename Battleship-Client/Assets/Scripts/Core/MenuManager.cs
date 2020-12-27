@@ -1,5 +1,5 @@
-﻿using System.Collections;
-using BattleshipGame.AI;
+﻿using System;
+using System.Collections;
 using BattleshipGame.Common;
 using BattleshipGame.Localization;
 using BattleshipGame.UI;
@@ -25,9 +25,9 @@ namespace BattleshipGame.Core
         [SerializeField] private Options options;
         [SerializeField] private GameObject popUpPrefab;
         [SerializeField] private GameObject progressBarCanvasPrefab;
-        private GameObject _progressBar;
         private bool _isConnecting;
         private bool _isConnectionCanceled;
+        private GameObject _progressBar;
 
         private void Start()
         {
@@ -36,39 +36,29 @@ namespace BattleshipGame.Core
             multiplayerButton.AddListener(PlayWithFriends);
             optionsButton.AddListener(() => { optionsCanvas.enabled = true; });
 
-            void Quit()
-            {
-#if UNITY_EDITOR
-                EditorApplication.isPlaying = false;
-#elif UNITY_WEBGL
-                Application.OpenURL(webQuitPage);
-#else
-                Application.Quit();
-#endif
-            }
-
             void PlayAgainstAI()
             {
-                BuildPopUp().Show(popupSingleHeader, popupSingleMessage, popupSingleConfirm, popupSingleDecline,
-                    OnEasyMode, OnHardMode);
-
-                void OnEasyMode()
-                {
-                    options.aiDifficulty = Difficulty.Easy;
-                    StartLocalRoom();
-                }
-
-                void OnHardMode()
-                {
-                    options.aiDifficulty = Difficulty.Hard;
-                    StartLocalRoom();
-                }
-
-                void StartLocalRoom()
-                {
-                    if (!GameManager.TryGetInstance(out var gameManager)) return;
-                    gameManager.StartLocalClient();
-                }
+                // *** Hard AI is under construction. ***
+                // BuildPopUp().Show(popupSingleHeader, popupSingleMessage, popupSingleConfirm, popupSingleDecline,
+                //     OnEasyMode, OnHardMode);
+                //
+                // void OnEasyMode()
+                // {
+                //     options.aiDifficulty = Difficulty.Easy;
+                //     StartLocalRoom();
+                // }
+                //
+                // void OnHardMode()
+                // {
+                //     options.aiDifficulty = Difficulty.Hard;
+                //     StartLocalRoom();
+                // }
+                //
+                // void StartLocalRoom()
+                // {
+                if (!GameManager.TryGetInstance(out var gameManager)) return;
+                gameManager.StartLocalClient();
+                // }
             }
 
             void PlayWithFriends()
@@ -94,13 +84,9 @@ namespace BattleshipGame.Core
                     {
                         _isConnecting = false;
                         if (_isConnectionCanceled)
-                        {
                             StartCoroutine(FinishNetworkClient());
-                        }
                         else
-                        {
                             GameSceneManager.Instance.GoToLobby();
-                        }
                     }, () =>
                     {
                         _isConnecting = false;
@@ -129,6 +115,24 @@ namespace BattleshipGame.Core
                     multiplayerButton.SetInteractable(true);
                 }
             }
+        }
+
+        private void Update()
+        {
+            if (Input.GetKey(KeyCode.Escape)) OnNavigateBack?.Invoke();
+        }
+
+        public event Action OnNavigateBack;
+
+        private static void Quit()
+        {
+#if UNITY_EDITOR
+            EditorApplication.isPlaying = false;
+#elif UNITY_WEBGL
+                Application.OpenURL(webQuitPage);
+#else
+                Application.Quit();
+#endif
         }
 
         private PopUpWindow BuildPopUp()

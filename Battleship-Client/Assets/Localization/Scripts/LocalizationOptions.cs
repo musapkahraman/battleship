@@ -18,8 +18,6 @@ namespace BattleshipGame.Localization
             }
         }
 
-        public event Action OnLanguageChanged;
-
         private void OnValidate()
         {
             if (language == SystemLanguage.English || language == SystemLanguage.Turkish)
@@ -27,5 +25,7 @@ namespace BattleshipGame.Localization
             else
                 language = Language;
         }
+
+        public event Action OnLanguageChanged;
     }
 }
