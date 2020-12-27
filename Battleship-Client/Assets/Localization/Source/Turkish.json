@@ -9,6 +9,10 @@
             "value": "İKİ OYUNCU"
         },
         {
+            "key": "btn_cancel",
+            "value": "İPTAL"
+        },
+        {
             "key": "btn_options",
             "value": "SEÇENEKLER"
         },

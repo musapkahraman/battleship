@@ -11,11 +11,8 @@ namespace BattleshipGame.Core
     {
         [SerializeField] private NetworkOptions networkOptions;
         [SerializeField] private LocalizedText statusText;
-        [SerializeField] private GameObject progressBarCanvasPrefab;
         [SerializeField] private Key statusSelectMode;
         [SerializeField] private Key statusConnecting;
-        [SerializeField] private Key statusNetworkError;
-        private GameObject _progressBar;
         public IClient Client { get; private set; }
 
         protected override void Awake()
@@ -29,7 +26,7 @@ namespace BattleshipGame.Core
             FinishNetworkClient();
         }
 
-        public void ConnectToServer(Action onError = null)
+        public void ConnectToServer(Action onSuccess, Action<string> onError)
         {
             switch (Client)
             {
@@ -45,23 +42,12 @@ namespace BattleshipGame.Core
             Client.GamePhaseChanged += phase =>
             {
                 if (phase != "place") return;
-                Destroy(_progressBar);
                 GameSceneManager.Instance.GoToPlanScene();
             };
             var networkClient = (NetworkClient) Client;
             SetStatusText(statusConnecting);
-            if (progressBarCanvasPrefab) _progressBar = Instantiate(progressBarCanvasPrefab);
-            networkClient.Connect(networkOptions.GetEndpoint(), () =>
-            {
-                Destroy(_progressBar);
-                GameSceneManager.Instance.GoToLobby();
-            }, errorMessage =>
-            {
-                Destroy(_progressBar);
-                SetStatusText(statusNetworkError);
-                Debug.LogError(errorMessage);
-                onError?.Invoke();
-            });
+            networkClient.Connect(networkOptions.EndPoint, () => { onSuccess?.Invoke(); },
+                errorMessage => { onError?.Invoke(errorMessage); });
         }
 
         public void StartLocalClient()
@@ -75,15 +61,16 @@ namespace BattleshipGame.Core
                 if (phase != "place") return;
                 GameSceneManager.Instance.GoToPlanScene();
             };
-            Client.Connect(string.Empty);
+            Client.Connect();
         }
 
-        private void FinishNetworkClient()
+        public void FinishNetworkClient()
         {
             if (Client is NetworkClient networkClient)
             {
                 networkClient.LeaveRoom();
                 networkClient.LeaveLobby();
+                Client = null;
             }
         }
 

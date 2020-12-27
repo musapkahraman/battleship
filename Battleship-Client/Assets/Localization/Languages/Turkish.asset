@@ -18,6 +18,8 @@ MonoBehaviour:
     value: TEK OYUNCU
   - key: {fileID: 11400000, guid: b2f4fef974b067746bd397b246a8c8a7, type: 2}
     value: "\u0130K\u0130 OYUNCU"
+  - key: {fileID: 11400000, guid: 3ff14d31b54719c4abeccad34ab455ea, type: 2}
+    value: "\u0130PTAL"
   - key: {fileID: 11400000, guid: b9ebc95b2665e9f46b9a23a92e0bcbf5, type: 2}
     value: "SE\xC7ENEKLER"
   - key: {fileID: 11400000, guid: e8ef3800822174041bf0479d1845e818, type: 2}

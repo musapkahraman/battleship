@@ -1,4 +1,6 @@
-﻿using BattleshipGame.AI;
+﻿using System.Collections;
+using BattleshipGame.AI;
+using BattleshipGame.Common;
 using BattleshipGame.Localization;
 using BattleshipGame.UI;
 using UnityEditor;
@@ -12,6 +14,9 @@ namespace BattleshipGame.Core
         [SerializeField] private Key popupSingleMessage;
         [SerializeField] private Key popupSingleConfirm;
         [SerializeField] private Key popupSingleDecline;
+        [SerializeField] private Key statusNetworkError;
+        [SerializeField] private Key cancel;
+        [SerializeField] private ColorVariable cancelColor;
         [SerializeField] private ButtonController quitButton;
         [SerializeField] private ButtonController singlePlayerButton;
         [SerializeField] private ButtonController multiplayerButton;
@@ -19,8 +24,10 @@ namespace BattleshipGame.Core
         [SerializeField] private Canvas optionsCanvas;
         [SerializeField] private Options options;
         [SerializeField] private GameObject popUpPrefab;
-
-        private GameManager _gameManager;
+        [SerializeField] private GameObject progressBarCanvasPrefab;
+        private GameObject _progressBar;
+        private bool _isConnecting;
+        private bool _isConnectionCanceled;
 
         private void Start()
         {
@@ -59,16 +66,69 @@ namespace BattleshipGame.Core
 
                 void StartLocalRoom()
                 {
-                    if (!GameManager.TryGetInstance(out _gameManager)) return;
-                    _gameManager.StartLocalClient();
+                    if (!GameManager.TryGetInstance(out var gameManager)) return;
+                    gameManager.StartLocalClient();
                 }
             }
 
             void PlayWithFriends()
             {
-                if (!GameManager.TryGetInstance(out _gameManager)) return;
-                _gameManager.ConnectToServer(() => multiplayerButton.SetInteractable(true));
-                multiplayerButton.SetInteractable(false);
+                if (!GameManager.TryGetInstance(out var gameManager)) return;
+
+                if (_isConnecting)
+                {
+                    _isConnectionCanceled = true;
+                    multiplayerButton.SetInteractable(false);
+                    ResetMenu();
+                }
+                else
+                {
+                    _isConnecting = true;
+                    singlePlayerButton.SetInteractable(false);
+                    optionsButton.SetInteractable(false);
+                    quitButton.SetInteractable(false);
+                    multiplayerButton.ChangeText(cancel);
+                    multiplayerButton.ChangeColor(cancelColor);
+                    if (progressBarCanvasPrefab) _progressBar = Instantiate(progressBarCanvasPrefab);
+                    gameManager.ConnectToServer(() =>
+                    {
+                        _isConnecting = false;
+                        if (_isConnectionCanceled)
+                        {
+                            StartCoroutine(FinishNetworkClient());
+                        }
+                        else
+                        {
+                            GameSceneManager.Instance.GoToLobby();
+                        }
+                    }, errorMessage =>
+                    {
+                        _isConnecting = false;
+                        _isConnectionCanceled = false;
+                        gameManager.SetStatusText(statusNetworkError);
+                        Debug.LogError(errorMessage);
+                        ResetMenu();
+                    });
+                }
+
+                void ResetMenu()
+                {
+                    singlePlayerButton.SetInteractable(true);
+                    optionsButton.SetInteractable(true);
+                    quitButton.SetInteractable(true);
+                    multiplayerButton.ResetText();
+                    multiplayerButton.ResetColor();
+                    Destroy(_progressBar);
+                    gameManager.ClearStatusText();
+                }
+
+                IEnumerator FinishNetworkClient()
+                {
+                    yield return new WaitForSecondsRealtime(1);
+                    gameManager.FinishNetworkClient();
+                    _isConnectionCanceled = false;
+                    multiplayerButton.SetInteractable(true);
+                }
             }
         }
 

@@ -9,6 +9,10 @@
             "value": "Multiplayer"
         },
         {
+            "key": "btn_cancel",
+            "value": "Cancel"
+        },
+        {
             "key": "btn_options",
             "value": "Options"
         },

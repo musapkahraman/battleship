@@ -248,7 +248,7 @@ namespace BattleshipGame.Core
                     StartCoroutine(FlashGrids());
                 }
 
-#if UNITY_ANDROID
+#if UNITY_ANDROID || UNITY_IOS
             Handheld.Vibrate();
 #endif
             }

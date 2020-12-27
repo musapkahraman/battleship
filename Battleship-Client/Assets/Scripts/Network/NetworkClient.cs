@@ -53,7 +53,7 @@ namespace BattleshipGame.Network
 
         public event Action<Dictionary<string, Room>> RoomsChanged;
 
-        public async void Connect(string endPoint, Action success = null, Action<string> error = null)
+        public async void Connect(string endPoint, Action success, Action<string> error)
         {
             if (_lobby != null && _lobby.Connection.IsOpen) return;
             _client = new Client(endPoint);

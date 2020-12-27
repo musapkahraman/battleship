@@ -388,6 +388,9 @@ MonoBehaviour:
   popupSingleMessage: {fileID: 11400000, guid: b39f0a34d1f42c64896399b800cede56, type: 2}
   popupSingleConfirm: {fileID: 11400000, guid: 40d06b0f47dbac14494df9bfabc13877, type: 2}
   popupSingleDecline: {fileID: 11400000, guid: a2ad99fc809be7c439932533f3407d2b, type: 2}
+  statusNetworkError: {fileID: 11400000, guid: 35a339a664576714c83365856c352726, type: 2}
+  cancel: {fileID: 11400000, guid: 3ff14d31b54719c4abeccad34ab455ea, type: 2}
+  cancelColor: {fileID: 11400000, guid: 307c23cad879fa64fac6e8d5a2c0ee02, type: 2}
   quitButton: {fileID: 673905443}
   singlePlayerButton: {fileID: 1553283945}
   multiplayerButton: {fileID: 89234409}
@@ -395,6 +398,8 @@ MonoBehaviour:
   optionsCanvas: {fileID: 1715903434}
   options: {fileID: 11400000, guid: 1876bb38ec668184ca7bf39de1057257, type: 2}
   popUpPrefab: {fileID: 7357745371994881862, guid: ba583779d4e278147998a361ee83dd31,
+    type: 3}
+  progressBarCanvasPrefab: {fileID: 868588383397605981, guid: b5624325612bcf0438993606f5726bef,
     type: 3}
 --- !u!114 &254574307
 MonoBehaviour:

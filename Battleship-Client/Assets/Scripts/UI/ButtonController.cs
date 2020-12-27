@@ -1,4 +1,6 @@
-﻿using TMPro;
+﻿using BattleshipGame.Common;
+using BattleshipGame.Localization;
+using TMPro;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.UI;
@@ -11,11 +13,15 @@ namespace BattleshipGame.UI
         [SerializeField] private TMP_Text buttonText;
         private Button _button;
         private Color _colorCache;
+        private Image _buttonImage;
+        private string _textCache;
 
         private void Awake()
         {
             _button = GetComponent<Button>();
-            _colorCache = _button.GetComponent<Image>().color;
+            _buttonImage = _button.GetComponent<Image>();
+            _colorCache = _buttonImage.color;
+            _textCache = buttonText.text;
         }
 
         public void SetInteractable(bool state)
@@ -27,12 +33,12 @@ namespace BattleshipGame.UI
                 if (state)
                 {
                     buttonTextColor.a /= 0.5f;
-                    _button.GetComponent<Image>().color = _colorCache;
+                    _buttonImage.color = _colorCache;
                 }
                 else
                 {
                     buttonTextColor.a *= 0.5f;
-                    _button.GetComponent<Image>().color = new Color(0.5f,0.5f,0.55f,0.5f);
+                    _buttonImage.color = new Color(0.5f,0.5f,0.55f,0.5f);
                 }
 
                 buttonText.color = buttonTextColor;
@@ -44,6 +50,30 @@ namespace BattleshipGame.UI
         public void AddListener(UnityAction call)
         {
             _button.onClick.AddListener(call);
+        }
+
+        public void ChangeText(Key text)
+        {
+            var localizedText = _button.GetComponentInChildren<LocalizedText>();
+            if (localizedText)
+            {
+                localizedText.SetText(text);
+            }
+        }
+
+        public void ResetText()
+        {
+            buttonText.text = _textCache;
+        }
+
+        public void ChangeColor(ColorVariable color)
+        {
+            _buttonImage.color = color.Value;
+        }
+
+        public void ResetColor()
+        {
+            _buttonImage.color = _colorCache;
         }
     }
 }
