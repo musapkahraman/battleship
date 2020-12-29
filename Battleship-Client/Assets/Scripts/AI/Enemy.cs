@@ -4,7 +4,6 @@ using System.Collections.Generic;
 using System.Linq;
 using BattleshipGame.Common;
 using BattleshipGame.Core;
-using BattleshipGame.ScriptableObjects;
 using UnityEngine;
 using Random = UnityEngine.Random;
 

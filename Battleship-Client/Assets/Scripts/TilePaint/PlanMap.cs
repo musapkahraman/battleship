@@ -1,5 +1,4 @@
 ﻿using BattleshipGame.Core;
-using BattleshipGame.ScriptableObjects;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 

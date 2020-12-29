@@ -5,7 +5,6 @@ using BattleshipGame.Common;
 using BattleshipGame.Localization;
 using BattleshipGame.Network;
 using BattleshipGame.Schemas;
-using BattleshipGame.ScriptableObjects;
 using BattleshipGame.TilePaint;
 using BattleshipGame.UI;
 using Colyseus.Schema;

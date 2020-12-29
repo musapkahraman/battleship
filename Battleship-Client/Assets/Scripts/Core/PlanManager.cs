@@ -2,7 +2,6 @@
 using System.Linq;
 using BattleshipGame.Localization;
 using BattleshipGame.Network;
-using BattleshipGame.ScriptableObjects;
 using BattleshipGame.TilePaint;
 using BattleshipGame.UI;
 using UnityEngine;

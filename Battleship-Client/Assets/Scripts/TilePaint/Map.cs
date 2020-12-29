@@ -1,4 +1,4 @@
-﻿using BattleshipGame.ScriptableObjects;
+﻿using BattleshipGame.Core;
 using UnityEngine;
 
 namespace BattleshipGame.TilePaint

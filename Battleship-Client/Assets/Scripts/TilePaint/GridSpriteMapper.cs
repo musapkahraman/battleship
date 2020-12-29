@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using BattleshipGame.ScriptableObjects;
+using BattleshipGame.Core;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 

@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using BattleshipGame.ScriptableObjects;
+using BattleshipGame.Core;
 using TMPro;
 using UnityEngine;
 #if UNITY_EDITOR

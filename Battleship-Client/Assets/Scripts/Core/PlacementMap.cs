@@ -2,9 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
-using UnityEngine.Serialization;
 
-namespace BattleshipGame.ScriptableObjects
+namespace BattleshipGame.Core
 {
     [CreateAssetMenu(fileName = "New Placement Map", menuName = "Battleship/Placement Map", order = 3)]
     public class PlacementMap : ScriptableObject

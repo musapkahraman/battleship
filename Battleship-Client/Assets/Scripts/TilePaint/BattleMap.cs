@@ -1,7 +1,6 @@
 ﻿using System;
 using BattleshipGame.Common;
 using BattleshipGame.Core;
-using BattleshipGame.ScriptableObjects;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.Tilemaps;

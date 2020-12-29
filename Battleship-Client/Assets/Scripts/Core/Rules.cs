@@ -1,9 +1,8 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using BattleshipGame.AI;
 using UnityEngine;
 
-namespace BattleshipGame.ScriptableObjects
+namespace BattleshipGame.Core
 {
     [CreateAssetMenu(fileName = "New Rules", menuName = "Battleship/Rules", order = 1)]
     public class Rules : ScriptableObject
