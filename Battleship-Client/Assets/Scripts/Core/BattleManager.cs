@@ -63,7 +63,6 @@ namespace BattleshipGame.Core
             if (GameManager.TryGetInstance(out _gameManager))
             {
                 _client = _gameManager.Client;
-                _client.FirstRoomStateReceived += OnFirstRoomStateReceived;
                 _client.GamePhaseChanged += OnGamePhaseChanged;
             }
             else
@@ -78,20 +77,37 @@ namespace BattleshipGame.Core
                 userMap.SetShip(placement.ship, placement.Coordinate);
 
             _gameManager.ClearStatusText();
-
             leaveButton.AddListener(LeaveGame);
             fireButton.AddListener(FireShots);
-
             fireButton.SetInteractable(false);
 
-            if (_client.GetRoomState() != null) OnFirstRoomStateReceived(_client.GetRoomState());
+            _state = _client.GetRoomState();
+            _player = _state.players[_client.GetSessionId()].sessionId;
+
+            foreach (string key in _state.players.Keys)
+                if (key != _client.GetSessionId())
+                {
+                    _enemy = _state.players[key].sessionId;
+                    break;
+                }
+
+            RegisterToStateEvents();
+            OnGamePhaseChanged(_state.phase);
+            Debug.Log(_state.phase);
+
+            void RegisterToStateEvents()
+            {
+                _state.OnChange += OnStateChanged;
+                _state.players[_player].shots.OnChange += OnPlayerShotsChanged;
+                _state.players[_enemy].ships.OnChange += OnEnemyShipsChanged;
+                _state.players[_enemy].shots.OnChange += OnEnemyShotsChanged;
+            }
         }
 
         private void OnDestroy()
         {
             placementMap.Clear();
             if (_client == null) return;
-            _client.FirstRoomStateReceived -= OnFirstRoomStateReceived;
             _client.GamePhaseChanged -= OnGamePhaseChanged;
             UnRegisterFromStateEvents();
 
@@ -107,27 +123,47 @@ namespace BattleshipGame.Core
             }
         }
 
-        private void OnFirstRoomStateReceived(State initialState)
+        private void OnGamePhaseChanged(string phase)
         {
-            _state = initialState;
-            _player = _state.players[_client.GetSessionId()].sessionId;
-
-            foreach (string key in _state.players.Keys)
-                if (key != _client.GetSessionId())
-                {
-                    _enemy = _state.players[key].sessionId;
-                    break;
-                }
-
-            RegisterToStateEvents();
-            OnGamePhaseChanged(_state.phase);
-
-            void RegisterToStateEvents()
+            switch (phase)
             {
-                _state.OnChange += OnStateChanged;
-                _state.players[_player].shots.OnChange += OnPlayerShotsChanged;
-                _state.players[_enemy].ships.OnChange += OnEnemyShipsChanged;
-                _state.players[_enemy].shots.OnChange += OnEnemyShotsChanged;
+                case "battle":
+                    SwitchTurns();
+                    break;
+                case "result":
+                    ShowResult();
+                    break;
+                case "waiting":
+                    if (_leavePopUpIsOn) break;
+                    BuildPopUp().Show(leaveHeader, leaveMessage, leaveConfirm, GoBackToLobby);
+                    break;
+                case "leave":
+                    _leavePopUpIsOn = true;
+                    BuildPopUp().Show(leaveHeader, notRematchMessage, leaveConfirm, GoBackToLobby);
+                    break;
+            }
+
+            void GoBackToLobby()
+            {
+                GameSceneManager.Instance.GoToLobby();
+            }
+
+            void ShowResult()
+            {
+                _gameManager.ClearStatusText();
+                bool isWinner = _state.winningPlayer == _client.GetSessionId();
+                var headerText = isWinner ? resultWinHeader : resultLostHeader;
+                var messageText = isWinner ? resultWinMessage : resultLostMessage;
+                var declineButtonText = isWinner ? rematchDeclineWin : rematchDeclineLost;
+                BuildPopUp().Show(headerText, messageText, rematchConfirm, declineButtonText, () =>
+                {
+                    _client.SendRematch(true);
+                    _gameManager.SetStatusText(statusWaitingDecision);
+                }, () =>
+                {
+                    _client.SendRematch(false);
+                    LeaveGame();
+                });
             }
         }
 
@@ -177,50 +213,6 @@ namespace BattleshipGame.Core
             _shotsInCurrentTurn.Clear();
         }
 
-        private void OnGamePhaseChanged(string phase)
-        {
-            switch (phase)
-            {
-                case "battle":
-                    SwitchTurns();
-                    break;
-                case "result":
-                    ShowResult();
-                    break;
-                case "waiting":
-                    if (_leavePopUpIsOn) break;
-                    BuildPopUp().Show(leaveHeader, leaveMessage, leaveConfirm, GoBackToLobby);
-                    break;
-                case "leave":
-                    _leavePopUpIsOn = true;
-                    BuildPopUp().Show(leaveHeader, notRematchMessage, leaveConfirm, GoBackToLobby);
-                    break;
-            }
-
-            void GoBackToLobby()
-            {
-                GameSceneManager.Instance.GoToLobby();
-            }
-
-            void ShowResult()
-            {
-                _gameManager.ClearStatusText();
-                bool isWinner = _state.winningPlayer == _client.GetSessionId();
-                var headerText = isWinner ? resultWinHeader : resultLostHeader;
-                var messageText = isWinner ? resultWinMessage : resultLostMessage;
-                var declineButtonText = isWinner ? rematchDeclineWin : rematchDeclineLost;
-                BuildPopUp().Show(headerText, messageText, rematchConfirm, declineButtonText, () =>
-                {
-                    _client.SendRematch(true);
-                    _gameManager.SetStatusText(statusWaitingDecision);
-                }, () =>
-                {
-                    _client.SendRematch(false);
-                    LeaveGame();
-                });
-            }
-        }
-
         private void LeaveGame()
         {
             var popup = BuildPopUp();
@@ -249,7 +241,7 @@ namespace BattleshipGame.Core
                 }
 
 #if UNITY_ANDROID || UNITY_IOS
-            Handheld.Vibrate();
+                Handheld.Vibrate();
 #endif
             }
 

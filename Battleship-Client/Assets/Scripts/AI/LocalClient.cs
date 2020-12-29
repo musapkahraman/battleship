@@ -44,7 +44,6 @@ namespace BattleshipGame.AI
             _room = null;
         }
 
-        public event Action<State> FirstRoomStateReceived;
         public event Action<string> GamePhaseChanged;
 
         public State GetRoomState()

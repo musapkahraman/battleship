@@ -14,10 +14,8 @@ namespace BattleshipGame.Network
         private const string LobbyName = "lobby";
         private readonly Dictionary<string, Room> _rooms = new Dictionary<string, Room>();
         private Client _client;
-        private bool _isFirstRoomStateReceived;
         private Room<LobbyState> _lobby;
         private Room<State> _room;
-        public event Action<State> FirstRoomStateReceived;
         public event Action<string> GamePhaseChanged;
 
         public State GetRoomState()
@@ -131,19 +129,10 @@ namespace BattleshipGame.Network
 
         private void RegisterRoomHandlers()
         {
-            _room.OnStateChange += OnStateChange;
             _room.State.OnChange += OnRoomStateChange;
-
-            void OnStateChange(State state, bool isFirstState)
-            {
-                if (!isFirstState) return;
-                _isFirstRoomStateReceived = true;
-                FirstRoomStateReceived?.Invoke(state);
-            }
 
             void OnRoomStateChange(List<DataChange> changes)
             {
-                if (!_isFirstRoomStateReceived) return;
                 foreach (var change in changes.Where(change => change.Field == "phase"))
                     GamePhaseChanged?.Invoke((string) change.Value);
             }
