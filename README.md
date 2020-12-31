@@ -6,7 +6,7 @@ Client code is written in C# to make use of the [Unity](https://unity.com/) game
 
 Server code is written in TypeScript.
 
-You can [play this game](https://muk.itch.io/battleship) on my itch.io page.
+You can [play this game](https://muk.itch.io/amiral) on my itch.io page.
 
 ## Game
 
