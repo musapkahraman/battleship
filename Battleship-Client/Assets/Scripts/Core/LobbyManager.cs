@@ -10,9 +10,6 @@ namespace BattleshipGame.Core
 {
     public class LobbyManager : MonoBehaviour
     {
-#pragma warning disable CS0414
-        [SerializeField] private string webQuitPage = "about:blank";
-#pragma warning restore CS0414
         [SerializeField] private RoomListManager roomList;
         [SerializeField] private GameObject popUpPrefab;
         [SerializeField] private Key newGameHeader;

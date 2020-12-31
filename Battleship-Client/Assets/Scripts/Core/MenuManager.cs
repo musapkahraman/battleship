@@ -10,6 +10,9 @@ namespace BattleshipGame.Core
 {
     public class MenuManager : MonoBehaviour
     {
+#pragma warning disable CS0414
+        [SerializeField] private string webQuitPage = "about:blank";
+#pragma warning restore CS0414
         [SerializeField] private Key popupSingleHeader;
         [SerializeField] private Key popupSingleMessage;
         [SerializeField] private Key popupSingleConfirm;
@@ -124,7 +127,8 @@ namespace BattleshipGame.Core
 
         public event Action OnNavigateBack;
 
-        private static void Quit()
+        // ReSharper disable once MemberCanBeMadeStatic.Local
+        private void Quit()
         {
 #if UNITY_EDITOR
             EditorApplication.isPlaying = false;
