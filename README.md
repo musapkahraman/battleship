@@ -48,6 +48,14 @@ The application starts from the Main scene (Assets/Scenes/Main.unity)
 
 - Choose the server type in Assets/Data/NetworkOptions.
 
+### WebGL Builds
+
+You will need to edit the HTML file in the build. Add the following line inside the `<head>` element in your index.html 
+
+`<meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">`
+
+Depending on your domain setup, you might need to create an HTTPS server as well.
+
 ## License
 
 [MIT](https://choosealicense.com/licenses/mit/)
