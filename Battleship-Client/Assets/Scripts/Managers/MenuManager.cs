@@ -1,24 +1,21 @@
 ﻿using System;
 using System.Collections;
-using BattleshipGame.Common;
+using BattleshipGame.Core;
 using BattleshipGame.Localization;
 using BattleshipGame.UI;
 using UnityEditor;
 using UnityEngine;
 
-namespace BattleshipGame.Core
+namespace BattleshipGame.Managers
 {
     public class MenuManager : MonoBehaviour
     {
 #pragma warning disable CS0414
         [SerializeField] private string webQuitPage = "about:blank";
 #pragma warning restore CS0414
-        [SerializeField] private Key popupSingleHeader;
-        [SerializeField] private Key popupSingleMessage;
-        [SerializeField] private Key popupSingleConfirm;
-        [SerializeField] private Key popupSingleDecline;
         [SerializeField] private Key statusNetworkError;
         [SerializeField] private Key cancel;
+        [SerializeField] private OptionDialog singlePlayerOptionDialog;
         [SerializeField] private ColorVariable cancelColor;
         [SerializeField] private ButtonController quitButton;
         [SerializeField] private ButtonController singlePlayerButton;
@@ -26,7 +23,6 @@ namespace BattleshipGame.Core
         [SerializeField] private ButtonController optionsButton;
         [SerializeField] private Canvas optionsCanvas;
         [SerializeField] private Options options;
-        [SerializeField] private GameObject popUpPrefab;
         [SerializeField] private GameObject progressBarCanvasPrefab;
         private bool _isConnecting;
         private bool _isConnectionCanceled;
@@ -41,27 +37,21 @@ namespace BattleshipGame.Core
 
             void PlayAgainstAI()
             {
-                // *** Hard AI is under construction. ***
-                // BuildPopUp().Show(popupSingleHeader, popupSingleMessage, popupSingleConfirm, popupSingleDecline,
-                //     OnEasyMode, OnHardMode);
-                //
-                // void OnEasyMode()
-                // {
-                //     options.aiDifficulty = Difficulty.Easy;
-                //     StartLocalRoom();
-                // }
-                //
-                // void OnHardMode()
-                // {
-                //     options.aiDifficulty = Difficulty.Hard;
-                //     StartLocalRoom();
-                // }
-                //
-                // void StartLocalRoom()
-                // {
-                if (!GameManager.TryGetInstance(out var gameManager)) return;
-                gameManager.StartLocalClient();
-                // }
+                singlePlayerOptionDialog.Show(() =>
+                {
+                    options.aiDifficulty = Difficulty.Easy;
+                    StartLocalRoom();
+                }, () =>
+                {
+                    options.aiDifficulty = Difficulty.Hard;
+                    StartLocalRoom();
+                });
+
+                void StartLocalRoom()
+                {
+                    if (!GameManager.TryGetInstance(out var gameManager)) return;
+                    gameManager.StartLocalClient();
+                }
             }
 
             void PlayWithFriends()
@@ -137,11 +127,6 @@ namespace BattleshipGame.Core
 #else
                 Application.Quit();
 #endif
-        }
-
-        private PopUpWindow BuildPopUp()
-        {
-            return Instantiate(popUpPrefab).GetComponent<PopUpWindow>();
         }
     }
 }

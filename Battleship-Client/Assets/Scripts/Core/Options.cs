@@ -1,5 +1,4 @@
-﻿using BattleshipGame.AI;
-using UnityEngine;
+﻿using UnityEngine;
 
 namespace BattleshipGame.Core
 {

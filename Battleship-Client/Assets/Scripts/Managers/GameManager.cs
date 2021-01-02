@@ -1,11 +1,12 @@
 ﻿using System;
 using BattleshipGame.AI;
 using BattleshipGame.Common;
+using BattleshipGame.Core;
 using BattleshipGame.Localization;
 using BattleshipGame.Network;
 using UnityEngine;
 
-namespace BattleshipGame.Core
+namespace BattleshipGame.Managers
 {
     public class GameManager : Singleton<GameManager>
     {

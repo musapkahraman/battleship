@@ -1,4 +1,4 @@
-﻿namespace BattleshipGame.AI
+﻿namespace BattleshipGame.Core
 {
     public enum Difficulty
     {

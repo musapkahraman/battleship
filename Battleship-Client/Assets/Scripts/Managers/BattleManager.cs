@@ -1,7 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using BattleshipGame.Common;
+using BattleshipGame.Core;
 using BattleshipGame.Localization;
 using BattleshipGame.Network;
 using BattleshipGame.Schemas;
@@ -11,40 +11,30 @@ using Colyseus.Schema;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.Tilemaps;
-using static BattleshipGame.Common.GridUtils;
+using static BattleshipGame.Core.GridUtils;
 
-namespace BattleshipGame.Core
+namespace BattleshipGame.Managers
 {
-    public class BattleManager : MonoBehaviour
+    public class BattleManager : MonoBehaviour, IBattleMapClickListener, ITurnClickListener
     {
         [SerializeField] private Rules rules;
         [SerializeField] private BattleMap userMap;
         [SerializeField] private BattleMap opponentMap;
         [SerializeField] private PlacementMap placementMap;
         [SerializeField] private OpponentStatus opponentStatus;
-        [SerializeField] private TurnHighlighter turnHighlighter;
+        [SerializeField] private TurnHighlighter opponentTurnHighlighter;
+        [SerializeField] private TurnHighlighter opponentStatusMapTurnHighlighter;
         [SerializeField] private Tilemap opponentGrids;
-        [SerializeField] private GameObject popUpPrefab;
         [SerializeField] private ButtonController fireButton;
         [SerializeField] private ButtonController leaveButton;
-        [SerializeField] private Key leaveHeader;
-        [SerializeField] private Key leaveMessage;
-        [SerializeField] private Key leaveConfirm;
-        [SerializeField] private Key leaveConfirmationHeader;
-        [SerializeField] private Key leaveConfirmationMessage;
-        [SerializeField] private Key leaveConfirmationOk;
-        [SerializeField] private Key leaveConfirmationCancel;
-        [SerializeField] private Key rematchConfirm;
-        [SerializeField] private Key rematchDeclineWin;
-        [SerializeField] private Key rematchDeclineLost;
-        [SerializeField] private Key notRematchMessage;
-        [SerializeField] private Key resultWinHeader;
-        [SerializeField] private Key resultWinMessage;
-        [SerializeField] private Key resultLostHeader;
-        [SerializeField] private Key resultLostMessage;
         [SerializeField] private Key statusWaitingDecision;
         [SerializeField] private Key statusWaitingAttack;
         [SerializeField] private Key statusPlayerTurn;
+        [SerializeField] private MessageDialog leaveMessageDialog;
+        [SerializeField] private MessageDialog leaveNotRematchMessageDialog;
+        [SerializeField] private OptionDialog winnerOptionDialog;
+        [SerializeField] private OptionDialog loserOptionDialog;
+        [SerializeField] private OptionDialog leaveConfirmationDialog;
         private readonly Dictionary<int, List<int>> _shots = new Dictionary<int, List<int>>();
         private readonly List<int> _shotsInCurrentTurn = new List<int>();
         private readonly WaitForSecondsRealtime _flashGridInterval = new WaitForSecondsRealtime(0.3f);
@@ -72,6 +62,10 @@ namespace BattleshipGame.Core
 
         private void Start()
         {
+            opponentMap.SetClickListener(this);
+            opponentTurnHighlighter.SetClickListener(this);
+            opponentStatusMapTurnHighlighter.SetClickListener(this);
+
             foreach (var placement in placementMap.GetPlacements())
                 userMap.SetShip(placement.ship, placement.Coordinate);
 
@@ -92,7 +86,6 @@ namespace BattleshipGame.Core
 
             RegisterToStateEvents();
             OnGamePhaseChanged(_state.phase);
-            Debug.Log(_state.phase);
 
             void RegisterToStateEvents()
             {
@@ -134,11 +127,11 @@ namespace BattleshipGame.Core
                     break;
                 case "waiting":
                     if (_leavePopUpIsOn) break;
-                    BuildPopUp().Show(leaveHeader, leaveMessage, leaveConfirm, GoBackToLobby);
+                    leaveMessageDialog.Show(GoBackToLobby);
                     break;
                 case "leave":
                     _leavePopUpIsOn = true;
-                    BuildPopUp().Show(leaveHeader, notRematchMessage, leaveConfirm, GoBackToLobby);
+                    leaveNotRematchMessageDialog.Show(GoBackToLobby);
                     break;
             }
 
@@ -150,19 +143,26 @@ namespace BattleshipGame.Core
             void ShowResult()
             {
                 _gameManager.ClearStatusText();
-                bool isWinner = _state.winningPlayer == _client.GetSessionId();
-                var headerText = isWinner ? resultWinHeader : resultLostHeader;
-                var messageText = isWinner ? resultWinMessage : resultLostMessage;
-                var declineButtonText = isWinner ? rematchDeclineWin : rematchDeclineLost;
-                BuildPopUp().Show(headerText, messageText, rematchConfirm, declineButtonText, () =>
+                if (_state.winningPlayer == _client.GetSessionId())
+                {
+                    winnerOptionDialog.Show(Rematch, Leave);
+                }
+                else
+                {
+                    loserOptionDialog.Show(Rematch, Leave);
+                }
+
+                void Rematch()
                 {
                     _client.SendRematch(true);
                     _gameManager.SetStatusText(statusWaitingDecision);
-                }, () =>
+                }
+
+                void Leave()
                 {
                     _client.SendRematch(false);
                     LeaveGame();
-                });
+                }
             }
         }
 
@@ -182,22 +182,22 @@ namespace BattleshipGame.Core
         public void HighlightTurn(int turn)
         {
             if (!_shots.ContainsKey(turn)) return;
-            turnHighlighter.HighlightTurns(_shots[turn]);
+            opponentTurnHighlighter.HighlightTurns(_shots[turn]);
         }
 
-        public void MarkTarget(Vector3Int targetCoordinate)
+        public void OnOpponentMapClicked(Vector3Int cell)
         {
             if (_state.playerTurn != _client.GetSessionId()) return;
-            int targetIndex = CoordinateToCellIndex(targetCoordinate, rules.areaSize);
-            if (_shotsInCurrentTurn.Contains(targetIndex))
+            int cellIndex = CoordinateToCellIndex(cell, rules.areaSize);
+            if (_shotsInCurrentTurn.Contains(cellIndex))
             {
-                _shotsInCurrentTurn.Remove(targetIndex);
-                opponentMap.ClearMarker(targetCoordinate);
+                _shotsInCurrentTurn.Remove(cellIndex);
+                opponentMap.ClearMarker(cell);
             }
             else if (_shotsInCurrentTurn.Count < rules.shotsPerTurn &&
-                     opponentMap.SetMarker(targetIndex, Marker.MarkedTarget))
+                     opponentMap.SetMarker(cellIndex, Marker.MarkedTarget))
             {
-                _shotsInCurrentTurn.Add(targetIndex);
+                _shotsInCurrentTurn.Add(cellIndex);
             }
 
             fireButton.SetInteractable(_shotsInCurrentTurn.Count == rules.shotsPerTurn);
@@ -214,13 +214,16 @@ namespace BattleshipGame.Core
 
         private void LeaveGame()
         {
-            var popup = BuildPopUp();
-            popup.Show(leaveConfirmationHeader, leaveConfirmationMessage, leaveConfirmationOk, leaveConfirmationCancel,
-                () =>
+            leaveConfirmationDialog.Show(() =>
+            {
+                _client.LeaveRoom();
+                if (_client is NetworkClient) GameSceneManager.Instance.GoToLobby();
+                else
                 {
-                    _client.LeaveRoom();
-                    if (_client is NetworkClient) GameSceneManager.Instance.GoToLobby();
-                }, () => { Destroy(popup.gameObject); });
+                    GameManager.Instance.ClearStatusText();
+                    GameSceneManager.Instance.GoToMenu();
+                }
+            });
         }
 
         private void SwitchTurns()
@@ -265,11 +268,6 @@ namespace BattleshipGame.Core
             }
 
             _isFlashingGrids = false;
-        }
-
-        private PopUpWindow BuildPopUp()
-        {
-            return Instantiate(popUpPrefab).GetComponent<PopUpWindow>();
         }
 
         private void OnStateChanged(List<DataChange> changes)

@@ -2,7 +2,7 @@
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-namespace BattleshipGame.Core
+namespace BattleshipGame.Managers
 {
     public class GameSceneManager : Singleton<GameSceneManager>
     {

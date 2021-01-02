@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-namespace BattleshipGame.Common
+namespace BattleshipGame.Core
 {
     public static class GridUtils
     {

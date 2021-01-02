@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using BattleshipGame.Common;
 using BattleshipGame.Core;
 using UnityEngine;
 using UnityEngine.EventSystems;
@@ -11,13 +10,12 @@ namespace BattleshipGame.TilePaint
     {
         [SerializeField] private Camera sceneCamera;
         [SerializeField] private Rules rules;
-        [SerializeField] private BattleManager manager;
-        [SerializeField] private BattleMap battleMap;
         [SerializeField] private Tilemap layer;
         [SerializeField] private Tile tile;
 
         private Grid _grid;
         private OpponentStatus _status;
+        private ITurnClickListener _clickListener;
 
         private void Start()
         {
@@ -31,12 +29,17 @@ namespace BattleshipGame.TilePaint
             if (_status)
             {
                 int shotTurn = _status.GetShotTurn(coordinate);
-                manager.HighlightTurn(shotTurn);
+                _clickListener.HighlightTurn(shotTurn);
             }
             else
             {
-                manager.HighlightShotsInTheSameTurn(coordinate);
+                _clickListener.HighlightShotsInTheSameTurn(coordinate);
             }
+        }
+
+        public void SetClickListener(ITurnClickListener clickListener)
+        {
+            _clickListener = clickListener;
         }
 
         public void HighlightTurns(IEnumerable<int> cells)

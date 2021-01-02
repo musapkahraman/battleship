@@ -27,7 +27,7 @@ using UnityEditor.VersionControl;
 // as modified despite having just reverted. This only happens on the fist time, and reverting again fix it. 
 // Under the hood the state is still always valid and serialized correctly regardless.
 
-namespace BattleshipGame.Common
+namespace BattleshipGame.Managers
 {
     /// <summary>
     ///     A wrapper that provides the means to safely serialize Scene Asset References.

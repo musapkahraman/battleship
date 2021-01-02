@@ -3,9 +3,9 @@ using BattleshipGame.UI;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 
-namespace BattleshipGame.TilePaint
+namespace BattleshipGame.Managers
 {
-    public class Pool : MonoBehaviour
+    public class PoolManager : MonoBehaviour
     {
         [SerializeField] private ButtonController clearButton;
         [SerializeField] private ButtonController randomButton;

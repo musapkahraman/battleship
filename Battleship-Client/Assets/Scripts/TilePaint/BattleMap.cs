@@ -1,17 +1,15 @@
 ﻿using System;
-using BattleshipGame.Common;
 using BattleshipGame.Core;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.Tilemaps;
-using static BattleshipGame.Common.GridUtils;
+using static BattleshipGame.Core.GridUtils;
 
 namespace BattleshipGame.TilePaint
 {
-    public class BattleMap : Map, IPointerClickHandler,  IBeginDragHandler, IEndDragHandler
+    public class BattleMap : Map, IPointerClickHandler, IBeginDragHandler, IEndDragHandler
     {
         [SerializeField] private Camera sceneCamera;
-        [SerializeField] private BattleManager manager;
         [SerializeField] private Rules rules;
         [SerializeField] private ScreenType screenType;
 
@@ -35,6 +33,7 @@ namespace BattleshipGame.TilePaint
         private Grid _grid;
 
         private bool _isDragging;
+        private IBattleMapClickListener _clickListener;
 
         public bool IsMarkingTargets { get; set; }
 
@@ -47,7 +46,7 @@ namespace BattleshipGame.TilePaint
         public void OnPointerClick(PointerEventData eventData)
         {
             if (!_isDragging && screenType == ScreenType.Opponent)
-                manager.MarkTarget(ScreenToCell(eventData.position, sceneCamera, _grid, rules.areaSize));
+                _clickListener.OnOpponentMapClicked(ScreenToCell(eventData.position, sceneCamera, _grid, rules.areaSize));
         }
 
         public void OnBeginDrag(PointerEventData eventData)
@@ -99,6 +98,11 @@ namespace BattleshipGame.TilePaint
         public override void ClearAllShips()
         {
             fleetLayer.ClearAllTiles();
+        }
+
+        public void SetClickListener(IBattleMapClickListener clickListener)
+        {
+            _clickListener = clickListener;
         }
 
         public void ClearMarker(Vector3Int coordinate)

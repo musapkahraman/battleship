@@ -1,0 +1,20 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b3e7de3cf3084c999ba5a60686f895bd, type: 3}
+  m_Name: WinnerOptionDialog
+  m_EditorClassIdentifier: 
+  popUpPrefab: {fileID: 7357745371994881862, guid: ba583779d4e278147998a361ee83dd31,
+    type: 3}
+  headerText: {fileID: 11400000, guid: 9e93f755bbde41e4aa60a262f909d8d3, type: 2}
+  messageText: {fileID: 11400000, guid: 4fdc81841e5e945409752cbb4f2e86c1, type: 2}
+  confirmButtonText: {fileID: 11400000, guid: 1793b59b4b9ee4848984568b2a3b1267, type: 2}
+  declineButtonText: {fileID: 11400000, guid: 9b5e06cf4d5dc114ab4f5bce3a7eeeec, type: 2}

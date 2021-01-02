@@ -80,8 +80,6 @@ namespace BattleshipGame.AI
 
         public void LeaveRoom()
         {
-            GameManager.Instance.ClearStatusText();
-            GameSceneManager.Instance.GoToMenu();
             enabled = false;
         }
     }

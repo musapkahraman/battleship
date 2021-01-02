@@ -1,0 +1,20 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2d57bd0b0e044dc691667a81bf25bc50, type: 3}
+  m_Name: JoinGameDialog
+  m_EditorClassIdentifier: 
+  popUpPrefab: {fileID: 4672312948394729569, guid: 2aee4b15d99e27d499a098e4742c4f76,
+    type: 3}
+  headerText: {fileID: 11400000, guid: 1cadc8f9b4ae6a843952a87fe22efdbe, type: 2}
+  messageText: {fileID: 11400000, guid: 8aee189c81eb38b488f69898d9682518, type: 2}
+  confirmButtonText: {fileID: 11400000, guid: 0d3e28c52f9ff2a409e171ae744955c1, type: 2}
+  declineButtonText: {fileID: 11400000, guid: 05217b01fcaccc24589f64592e249625, type: 2}

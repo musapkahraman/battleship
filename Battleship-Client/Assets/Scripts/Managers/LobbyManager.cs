@@ -1,26 +1,18 @@
 ﻿using System.Collections.Generic;
 using BattleshipGame.Localization;
 using BattleshipGame.Network;
-using BattleshipGame.Schemas;
 using BattleshipGame.UI;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-namespace BattleshipGame.Core
+namespace BattleshipGame.Managers
 {
-    public class LobbyManager : MonoBehaviour
+    public class LobbyManager : MonoBehaviour, IRoomClickListener
     {
         [SerializeField] private RoomListManager roomList;
-        [SerializeField] private GameObject popUpPrefab;
-        [SerializeField] private Key newGameHeader;
-        [SerializeField] private Key newGameMessage;
-        [SerializeField] private Key newGameConfirm;
-        [SerializeField] private Key newGameDecline;
-        [SerializeField] private Key joinGameHeader;
-        [SerializeField] private Key joinGameMessage;
-        [SerializeField] private Key joinGameConfirm;
-        [SerializeField] private Key joinGameDecline;
         [SerializeField] private Key statusWaitingJoin;
+        [SerializeField] private RoomDialog newRoomDialog;
+        [SerializeField] private RoomDialog joinRoomDialog;
         [SerializeField] private ButtonController mainMenuButton;
         [SerializeField] private ButtonController newGameButton;
         [SerializeField] private ButtonController joinButton;
@@ -66,15 +58,12 @@ namespace BattleshipGame.Core
 
             void NewGame()
             {
-                BuildPopUp().Show(newGameHeader, newGameMessage, newGameConfirm, newGameDecline, null, null, true,
-                    OnCreate);
-
-                void OnCreate(string gameName, string password)
+                newRoomDialog.Show(true, (gameName, password) =>
                 {
                     _networkClient.CreateRoom(gameName, password);
                     WaitForOpponent();
                     joinButton.SetInteractable(false);
-                }
+                });
             }
 
             void JoinGame()
@@ -82,8 +71,7 @@ namespace BattleshipGame.Core
                 if (_cachedRoomIdIsNotValid) return;
 
                 if (_networkClient.IsRoomPasswordProtected(_cachedRoomId))
-                    BuildPopUp().Show(joinGameHeader, joinGameMessage, joinGameConfirm, joinGameDecline, null, null,
-                        false, OnJoin);
+                    joinRoomDialog.Show(false, OnJoin);
                 else
                     OnJoin("", "");
 
@@ -108,7 +96,7 @@ namespace BattleshipGame.Core
                 _networkClient.RoomsChanged -= PopulateRoomList;
         }
 
-        public void SetRoomId(string roomId)
+        public void OnRoomClicked(string roomId)
         {
             if (_networkClient.GetSessionId() != null) return;
             _cachedRoomId = roomId;
@@ -131,12 +119,7 @@ namespace BattleshipGame.Core
                 joinButton.SetInteractable(false);
             }
 
-            roomList.PopulateRoomList(rooms);
-        }
-
-        private PopUpWindow BuildPopUp()
-        {
-            return Instantiate(popUpPrefab).GetComponent<PopUpWindow>();
+            roomList.PopulateRoomList(rooms, this);
         }
     }
 }

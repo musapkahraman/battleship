@@ -1,31 +1,29 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using BattleshipGame.Core;
 using BattleshipGame.Localization;
 using BattleshipGame.Network;
 using BattleshipGame.TilePaint;
 using BattleshipGame.UI;
 using UnityEngine;
 using UnityEngine.SceneManagement;
-using static BattleshipGame.Common.GridUtils;
+using static BattleshipGame.Core.GridUtils;
 
-namespace BattleshipGame.Core
+namespace BattleshipGame.Managers
 {
-    public class PlanManager : MonoBehaviour
+    public class PlanManager : MonoBehaviour, IPlanMapMoveListener
     {
         private const int EmptyCell = -1;
-        [SerializeField] private GameObject popUpPrefab;
-        [SerializeField] private Key leaveHeader;
-        [SerializeField] private Key leaveMessage;
-        [SerializeField] private Key leaveConfirm;
         [SerializeField] private Key statusPlacementImpossible;
         [SerializeField] private Key statusPlacementReady;
         [SerializeField] private Key statusWaitingPlace;
         [SerializeField] private Key statusPlaceShips;
+        [SerializeField] private MessageDialog leaveMessageDialog;
         [SerializeField] private ButtonController leaveButton;
         [SerializeField] private ButtonController clearButton;
         [SerializeField] private ButtonController randomButton;
         [SerializeField] private ButtonController continueButton;
-        [SerializeField] private Map map;
+        [SerializeField] private PlanMap planMap;
         [SerializeField] private GridSpriteMapper gridSpriteMapper;
         [SerializeField] private GridSpriteMapper poolGridSpriteMapper;
         [SerializeField] private Rules rules;
@@ -54,18 +52,25 @@ namespace BattleshipGame.Core
 
         private void Start()
         {
+            planMap.SetPlaceListener(this);
+
             _cellCount = MapAreaSize.x * MapAreaSize.y;
             leaveButton.AddListener(LeaveGame);
             clearButton.AddListener(OnClearButtonPressed);
             randomButton.AddListener(PlaceShipsRandomly);
             continueButton.AddListener(CompletePlacement);
-            
+
             BeginShipPlacement();
 
             void LeaveGame()
             {
                 _client.LeaveRoom();
                 if (_client is NetworkClient) GameSceneManager.Instance.GoToLobby();
+                else
+                {
+                    GameManager.Instance.ClearStatusText();
+                    GameSceneManager.Instance.GoToMenu();
+                }
             }
 
             void OnClearButtonPressed()
@@ -83,7 +88,7 @@ namespace BattleshipGame.Core
                 // Avoid ships that the player dragged into the map.
                 foreach (var placement in _placements.Where(placement => !_shipsNotDragged.Contains(placement.shipId)))
                 {
-                    map.SetShip(placement.ship, placement.Coordinate);
+                    planMap.SetShip(placement.ship, placement.Coordinate);
                     RegisterShipToCells(placement.shipId, placement.ship, placement.Coordinate);
                     placementMap.PlaceShip(placement.shipId, placement.ship, placement.Coordinate);
                 }
@@ -131,7 +136,7 @@ namespace BattleshipGame.Core
             void ResetPlacementMap()
             {
                 BeginShipPlacement();
-                map.ClearAllShips();
+                planMap.ClearAllShips();
                 gridSpriteMapper.ClearSpritePositions();
                 gridSpriteMapper.CacheSpritePositions();
                 poolGridSpriteMapper.ClearSpritePositions();
@@ -179,24 +184,19 @@ namespace BattleshipGame.Core
                 case "result":
                     break;
                 case "waiting":
-                    BuildPopUp().Show(leaveHeader, leaveMessage, leaveConfirm, GoBackToLobby);
+                    leaveMessageDialog.Show(() => GameSceneManager.Instance.GoToLobby());
                     break;
                 case "leave":
                     break;
             }
-
-            PopUpWindow BuildPopUp()
-            {
-                return Instantiate(popUpPrefab).GetComponent<PopUpWindow>();
-            }
-
-            void GoBackToLobby()
-            {
-                GameSceneManager.Instance.GoToLobby();
-            }
         }
 
-        public bool PlaceShip(Ship ship, Vector3Int from, Vector3Int to, bool isMovedIn, int shipId = EmptyCell)
+        public bool OnShipMoved(Ship ship, Vector3Int from, Vector3Int to, bool isMovedIn)
+        {
+            return PlaceShip(ship, from, to, isMovedIn);
+        }
+
+        private bool PlaceShip(Ship ship, Vector3Int from, Vector3Int to, bool isMovedIn, int shipId = EmptyCell)
         {
             var shouldRemoveFromPool = false;
             if (shipId == EmptyCell)
@@ -209,7 +209,7 @@ namespace BattleshipGame.Core
             if (!DoesShipFitIn(shipWidth, shipHeight, to, MapAreaSize)) return false;
             if (DoesCollideWithOtherShip(shipId, to)) return false;
             clearButton.SetInteractable(true);
-            map.SetShip(ship, to);
+            planMap.SetShip(ship, to);
             RegisterShipToCells(shipId, ship, to);
             placementMap.PlaceShip(shipId, ship, to);
             if (shouldRemoveFromPool)

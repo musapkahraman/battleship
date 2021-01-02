@@ -7,7 +7,7 @@ namespace BattleshipGame.TilePaint
     public class PlanMap : Map
     {
         [SerializeField] private Tilemap fleetLayer;
-        [SerializeField] private PlanManager manager;
+        private IPlanMapMoveListener _listener;
 
         public override void SetShip(Ship ship, Vector3Int coordinate)
         {
@@ -16,12 +16,17 @@ namespace BattleshipGame.TilePaint
 
         public override bool MoveShip(Ship ship, Vector3Int from, Vector3Int to, bool isMovedIn)
         {
-            return manager.PlaceShip(ship, from, to, isMovedIn);
+            return _listener.OnShipMoved(ship, from, to, isMovedIn);
         }
 
         public override void ClearAllShips()
         {
             fleetLayer.ClearAllTiles();
+        }
+
+        public void SetPlaceListener(IPlanMapMoveListener listener)
+        {
+            _listener = listener;
         }
     }
 }

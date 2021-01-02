@@ -1,7 +1,7 @@
 ﻿using System;
 using UnityEngine;
 
-namespace BattleshipGame.Common
+namespace BattleshipGame.UI
 {
     [CreateAssetMenu(menuName = "Variable/Color")]
     public class ColorVariable : ScriptableObject, ISerializationCallbackReceiver

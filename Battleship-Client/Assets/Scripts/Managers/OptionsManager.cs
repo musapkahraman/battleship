@@ -1,10 +1,10 @@
 ﻿using System.IO;
-using BattleshipGame.AI;
+using BattleshipGame.Core;
 using BattleshipGame.Localization;
 using BattleshipGame.UI;
 using UnityEngine;
 
-namespace BattleshipGame.Core
+namespace BattleshipGame.Managers
 {
     [RequireComponent(typeof(MenuManager))]
     public class OptionsManager : MonoBehaviour

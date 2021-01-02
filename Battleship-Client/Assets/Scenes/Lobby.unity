@@ -372,7 +372,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   roomListElementPrefab: {fileID: 3785456327242212683, guid: 0191220de7a1d0a4da141423a29f8128,
     type: 3}
-  lobbyManager: {fileID: 254574306}
   contentOffset: 9
 --- !u!1 &168741383
 GameObject:
@@ -483,19 +482,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 529c7d6671b88594793430f97f397a5f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  webQuitPage: https://muk.itch.io/
   roomList: {fileID: 131496669}
-  popUpPrefab: {fileID: 4672312948394729569, guid: 2aee4b15d99e27d499a098e4742c4f76,
-    type: 3}
-  newGameHeader: {fileID: 11400000, guid: 385eac45d16cbc3459be7f5900ee601e, type: 2}
-  newGameMessage: {fileID: 11400000, guid: ba17881284af2ad41b877224b817b1c6, type: 2}
-  newGameConfirm: {fileID: 11400000, guid: 51b1ade5acbdad841acaeeb25f63451e, type: 2}
-  newGameDecline: {fileID: 11400000, guid: bf126cb7538dfeb4eb66029a800a787a, type: 2}
-  joinGameHeader: {fileID: 11400000, guid: 1cadc8f9b4ae6a843952a87fe22efdbe, type: 2}
-  joinGameMessage: {fileID: 11400000, guid: 8aee189c81eb38b488f69898d9682518, type: 2}
-  joinGameConfirm: {fileID: 11400000, guid: 0d3e28c52f9ff2a409e171ae744955c1, type: 2}
-  joinGameDecline: {fileID: 11400000, guid: 05217b01fcaccc24589f64592e249625, type: 2}
   statusWaitingJoin: {fileID: 11400000, guid: f343f65ffbc83c643a218f1c91c3afa6, type: 2}
+  newRoomDialog: {fileID: 11400000, guid: e8973b62c94ad5848989c13959b8815e, type: 2}
+  joinRoomDialog: {fileID: 11400000, guid: f373d7edc315727499adb067e1cff935, type: 2}
   mainMenuButton: {fileID: 537388043}
   newGameButton: {fileID: 1553283945}
   joinButton: {fileID: 89234409}

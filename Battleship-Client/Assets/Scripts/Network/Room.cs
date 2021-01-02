@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace BattleshipGame.Schemas
+namespace BattleshipGame.Network
 {
     [Serializable]
     public class Room
@@ -12,5 +12,12 @@ namespace BattleshipGame.Schemas
         public string name;
         public string processId;
         public string roomId;
+    }
+
+    [Serializable]
+    public class RoomMetaData
+    {
+        public string name;
+        public bool requiresPassword;
     }
 }

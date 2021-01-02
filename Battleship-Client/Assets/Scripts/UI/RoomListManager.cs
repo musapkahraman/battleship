@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using BattleshipGame.Core;
-using BattleshipGame.Schemas;
+using BattleshipGame.Network;
 using UnityEngine;
 
 namespace BattleshipGame.UI
@@ -10,18 +9,19 @@ namespace BattleshipGame.UI
     public class RoomListManager : MonoBehaviour
     {
         [SerializeField] private GameObject roomListElementPrefab;
-        [SerializeField] private LobbyManager lobbyManager;
         [SerializeField] private int contentOffset;
         private readonly Dictionary<string, RoomListElement> _elements = new Dictionary<string, RoomListElement>();
         private RectTransform _rectTransform;
+        private IRoomClickListener _roomClickListener;
 
         private void Awake()
         {
             _rectTransform = GetComponent<RectTransform>();
         }
 
-        public void PopulateRoomList(Dictionary<string, Room> rooms)
+        public void PopulateRoomList(Dictionary<string, Room> rooms, IRoomClickListener roomClickListener)
         {
+            _roomClickListener = roomClickListener;
             foreach (var roomListElement in _elements)
                 Destroy(roomListElement.Value.gameObject);
             _elements.Clear();
@@ -72,7 +72,7 @@ namespace BattleshipGame.UI
 
             if (!_elements.TryGetValue(id, out var roomListElement)) return;
             roomListElement.ChangeBackgroundColorAsSelected();
-            lobbyManager.SetRoomId(roomListElement.RoomId);
+            _roomClickListener.OnRoomClicked(roomListElement.RoomId);
         }
     }
 }

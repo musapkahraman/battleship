@@ -1,5 +1,4 @@
-﻿using BattleshipGame.Common;
-using BattleshipGame.Localization;
+﻿using BattleshipGame.Localization;
 using TMPro;
 using UnityEngine;
 using UnityEngine.Events;

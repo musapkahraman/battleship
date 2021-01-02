@@ -1330,8 +1330,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   sceneCamera: {fileID: 415742562}
   rules: {fileID: 11400000, guid: 536a0464e90bd734190c1b8189b64ddd, type: 2}
-  manager: {fileID: 1832216561}
-  battleMap: {fileID: 1804129002}
   layer: {fileID: 1923975443}
   tile: {fileID: 11400000, guid: 693ba552540c770418093de3b6718a5d, type: 2}
 --- !u!1001 &1184911182
@@ -2384,8 +2382,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   sceneCamera: {fileID: 415742562}
   rules: {fileID: 11400000, guid: 536a0464e90bd734190c1b8189b64ddd, type: 2}
-  manager: {fileID: 1832216561}
-  battleMap: {fileID: 1804129002}
   layer: {fileID: 1663508193}
   tile: {fileID: 11400000, guid: 693ba552540c770418093de3b6718a5d, type: 2}
 --- !u!1 &1832216559
@@ -2436,38 +2432,23 @@ MonoBehaviour:
   opponentMap: {fileID: 1804129002}
   placementMap: {fileID: 11400000, guid: 432e41401bba21546a52dbadb3099a78, type: 2}
   opponentStatus: {fileID: 1093841618}
-  turnHighlighter: {fileID: 1804129007}
-  playerGrids: {fileID: 445893296533894836}
+  opponentTurnHighlighter: {fileID: 1804129007}
+  opponentStatusMapTurnHighlighter: {fileID: 1093841622}
   opponentGrids: {fileID: 1804129004}
-  flashGridColor: {r: 0.22739409, g: 0.6886792, b: 0.22739409, a: 1}
-  popUpPrefab: {fileID: 7357745371994881862, guid: ba583779d4e278147998a361ee83dd31,
-    type: 3}
   fireButton: {fileID: 1547971480}
   leaveButton: {fileID: 1184911184}
-  leaveHeader: {fileID: 11400000, guid: b9302d08149e4744f9196ae3c2f02327, type: 2}
-  leaveMessage: {fileID: 11400000, guid: 7e81c8458b2ceda4eb34089f5b61dfcb, type: 2}
-  leaveConfirm: {fileID: 11400000, guid: e1772d2e2ff245b4fbd4f36d0977744c, type: 2}
-  leaveConfirmationHeader: {fileID: 11400000, guid: fc09360fd70a3a348a582ea9d894d3d3,
-    type: 2}
-  leaveConfirmationMessage: {fileID: 11400000, guid: c629e22e052ceee419921e752d5901f6,
-    type: 2}
-  leaveConfirmationOk: {fileID: 11400000, guid: 0cace234b09edc8448c7a0bcd9fd757f,
-    type: 2}
-  leaveConfirmationCancel: {fileID: 11400000, guid: 963492208423c654d97603e4441ad50e,
-    type: 2}
-  rematchConfirm: {fileID: 11400000, guid: 1793b59b4b9ee4848984568b2a3b1267, type: 2}
-  rematchDeclineWin: {fileID: 11400000, guid: 9b5e06cf4d5dc114ab4f5bce3a7eeeec, type: 2}
-  rematchDeclineLost: {fileID: 11400000, guid: f13ac9662bae7f64e9292f7a8b826d9a, type: 2}
-  notRematchMessage: {fileID: 11400000, guid: cdf1b444b73f3364c97b41cff0cb0e7d, type: 2}
-  resultWinHeader: {fileID: 11400000, guid: 9e93f755bbde41e4aa60a262f909d8d3, type: 2}
-  resultWinMessage: {fileID: 11400000, guid: 4fdc81841e5e945409752cbb4f2e86c1, type: 2}
-  resultLostHeader: {fileID: 11400000, guid: c99c5863ede04794dbc95c29f9be011a, type: 2}
-  resultLostMessage: {fileID: 11400000, guid: 3563094dd7fb68642bfe4df94510fd84, type: 2}
   statusWaitingDecision: {fileID: 11400000, guid: 95de6b00230aecb4d87320511c0289d0,
     type: 2}
   statusWaitingAttack: {fileID: 11400000, guid: d9f9687533159ed498c8ed69bfa39e84,
     type: 2}
   statusPlayerTurn: {fileID: 11400000, guid: b9b627bf575502d4ab39ee094188f0e0, type: 2}
+  leaveMessageDialog: {fileID: 11400000, guid: 83928ac01d3b95b43ba05cc06d49298d, type: 2}
+  leaveNotRematchMessageDialog: {fileID: 11400000, guid: 3386988c78260464f9bc8713e712d86b,
+    type: 2}
+  winnerOptionDialog: {fileID: 11400000, guid: da08f451d9929734688a366349efd26a, type: 2}
+  loserOptionDialog: {fileID: 11400000, guid: 93586e0794f0ef9498796a1b3afdcdbb, type: 2}
+  leaveConfirmationDialog: {fileID: 11400000, guid: 773b859928da6b84b8e46282975deccd,
+    type: 2}
 --- !u!1 &1923975440
 GameObject:
   m_ObjectHideFlags: 0
@@ -2867,9 +2848,3 @@ PrefabInstance:
     - {fileID: 2649060168375701185, guid: 88ddd787738efa54ca51cccc955a634a, type: 3}
     - {fileID: 9212905372763388948, guid: 88ddd787738efa54ca51cccc955a634a, type: 3}
   m_SourcePrefab: {fileID: 100100000, guid: 88ddd787738efa54ca51cccc955a634a, type: 3}
---- !u!1839735485 &445893296533894836 stripped
-Tilemap:
-  m_CorrespondingSourceObject: {fileID: 445893295892899796, guid: 88ddd787738efa54ca51cccc955a634a,
-    type: 3}
-  m_PrefabInstance: {fileID: 445893296533894835}
-  m_PrefabAsset: {fileID: 0}

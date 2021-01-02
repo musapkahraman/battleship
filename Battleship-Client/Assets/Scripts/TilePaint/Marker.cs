@@ -1,4 +1,4 @@
-﻿namespace BattleshipGame.Common
+﻿namespace BattleshipGame.TilePaint
 {
     public enum Marker
     {
