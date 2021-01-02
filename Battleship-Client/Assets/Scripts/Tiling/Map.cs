@@ -1,7 +1,7 @@
 ﻿using BattleshipGame.Core;
 using UnityEngine;
 
-namespace BattleshipGame.TilePaint
+namespace BattleshipGame.Tiling
 {
     public abstract class Map : MonoBehaviour
     {

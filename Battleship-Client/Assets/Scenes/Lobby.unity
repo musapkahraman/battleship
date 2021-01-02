@@ -176,6 +176,12 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 73233770}
     m_Modifications:
+    - target: {fileID: 2363720495385083958, guid: c59cf86ee3eebae4e87100a5365ea47b,
+        type: 3}
+      propertyPath: color
+      value: 
+      objectReference: {fileID: 11400000, guid: c2879dc5195541240ab8f406e4d3adb0,
+        type: 2}
     - target: {fileID: 4777245533030669128, guid: c59cf86ee3eebae4e87100a5365ea47b,
         type: 3}
       propertyPath: key
@@ -483,13 +489,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   roomList: {fileID: 131496669}
-  statusWaitingJoin: {fileID: 11400000, guid: f343f65ffbc83c643a218f1c91c3afa6, type: 2}
   newRoomDialog: {fileID: 11400000, guid: e8973b62c94ad5848989c13959b8815e, type: 2}
   joinRoomDialog: {fileID: 11400000, guid: f373d7edc315727499adb067e1cff935, type: 2}
   mainMenuButton: {fileID: 537388043}
   newGameButton: {fileID: 1553283945}
   joinButton: {fileID: 89234409}
   leaveButton: {fileID: 673905443}
+  gameStateContainer: {fileID: 11400000, guid: 0e5833eefdd94fd47972715dff1481c2, type: 2}
 --- !u!1 &403501903
 GameObject:
   m_ObjectHideFlags: 0
@@ -596,6 +602,12 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 73233770}
     m_Modifications:
+    - target: {fileID: 2363720495385083958, guid: c59cf86ee3eebae4e87100a5365ea47b,
+        type: 3}
+      propertyPath: color
+      value: 
+      objectReference: {fileID: 11400000, guid: e3e76d219f801a14fb0913b1d81e1a0e,
+        type: 2}
     - target: {fileID: 4777245533030669128, guid: c59cf86ee3eebae4e87100a5365ea47b,
         type: 3}
       propertyPath: key
@@ -933,6 +945,12 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 73233770}
     m_Modifications:
+    - target: {fileID: 2363720495385083958, guid: c59cf86ee3eebae4e87100a5365ea47b,
+        type: 3}
+      propertyPath: color
+      value: 
+      objectReference: {fileID: 11400000, guid: 307c23cad879fa64fac6e8d5a2c0ee02,
+        type: 2}
     - target: {fileID: 4777245533030669128, guid: c59cf86ee3eebae4e87100a5365ea47b,
         type: 3}
       propertyPath: key
@@ -1399,6 +1417,12 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 73233770}
     m_Modifications:
+    - target: {fileID: 2363720495385083958, guid: c59cf86ee3eebae4e87100a5365ea47b,
+        type: 3}
+      propertyPath: color
+      value: 
+      objectReference: {fileID: 11400000, guid: c2879dc5195541240ab8f406e4d3adb0,
+        type: 2}
     - target: {fileID: 4777245533030669128, guid: c59cf86ee3eebae4e87100a5365ea47b,
         type: 3}
       propertyPath: key

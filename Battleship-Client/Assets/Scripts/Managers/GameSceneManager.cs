@@ -1,4 +1,4 @@
-﻿using BattleshipGame.Common;
+﻿using BattleshipGame.Core;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 

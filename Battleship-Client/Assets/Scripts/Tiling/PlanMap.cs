@@ -2,7 +2,7 @@
 using UnityEngine;
 using UnityEngine.Tilemaps;
 
-namespace BattleshipGame.TilePaint
+namespace BattleshipGame.Tiling
 {
     public class PlanMap : Map
     {

@@ -5,7 +5,7 @@ using UnityEngine;
 
 namespace BattleshipGame.Core
 {
-    [CreateAssetMenu(fileName = "New Placement Map", menuName = "Battleship/Placement Map", order = 3)]
+    [CreateAssetMenu(fileName = "NewPlacementMap", menuName = "Battleship/Placement Map", order = 3)]
     public class PlacementMap : ScriptableObject
     {
         [SerializeField] private List<Placement> placements = new List<Placement>();

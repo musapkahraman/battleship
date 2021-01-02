@@ -1,14 +1,16 @@
 ﻿using System;
+using System.Collections;
 using BattleshipGame.Core;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.Tilemaps;
 using static BattleshipGame.Core.GridUtils;
 
-namespace BattleshipGame.TilePaint
+namespace BattleshipGame.Tiling
 {
     public class BattleMap : Map, IPointerClickHandler, IBeginDragHandler, IEndDragHandler
     {
+        private const int FlashGridCount = 2;
         [SerializeField] private Camera sceneCamera;
         [SerializeField] private Rules rules;
         [SerializeField] private ScreenType screenType;
@@ -18,6 +20,7 @@ namespace BattleshipGame.TilePaint
         [SerializeField] private Tilemap cursorLayer;
         [SerializeField] private Tilemap markerLayer;
         [SerializeField] private Tilemap fleetLayer;
+        [SerializeField] private Tilemap gridsLayer;
         [Space] 
         [Header("Cursors")] 
         [SerializeField] private Tile activeCursor;
@@ -30,11 +33,12 @@ namespace BattleshipGame.TilePaint
         [SerializeField] private Tile shotTargetMarker;
         [Space] 
         // @formatter:on
-        private Grid _grid;
+        private readonly WaitForSecondsRealtime _flashGridInterval = new WaitForSecondsRealtime(0.3f);
 
-        private bool _isDragging;
         private IBattleMapClickListener _clickListener;
-
+        private Grid _grid;
+        private bool _isDragging;
+        private bool _isFlashingGrids;
         public bool IsMarkingTargets { get; set; }
 
         private void Start()
@@ -46,7 +50,8 @@ namespace BattleshipGame.TilePaint
         public void OnPointerClick(PointerEventData eventData)
         {
             if (!_isDragging && screenType == ScreenType.Opponent)
-                _clickListener.OnOpponentMapClicked(ScreenToCell(eventData.position, sceneCamera, _grid, rules.areaSize));
+                _clickListener.OnOpponentMapClicked(
+                    ScreenToCell(eventData.position, sceneCamera, _grid, rules.areaSize));
         }
 
         public void OnBeginDrag(PointerEventData eventData)
@@ -137,6 +142,28 @@ namespace BattleshipGame.TilePaint
                 return false;
             markerLayer.SetTile(coordinate, markerTile);
             return true;
+        }
+
+        public void FlashGrids()
+        {
+            if (!_isFlashingGrids) StartCoroutine(FlashGridsCoroutine());
+        }
+
+        private IEnumerator FlashGridsCoroutine()
+        {
+            _isFlashingGrids = true;
+            var colorCache = gridsLayer.color;
+            var flashGridColor = new Color(0.9f, 0.5f, 0.5f);
+            for (var i = 0; i < FlashGridCount; i++)
+            {
+                yield return _flashGridInterval;
+                gridsLayer.color = flashGridColor;
+                yield return _flashGridInterval;
+                // ReSharper disable once Unity.InefficientPropertyAccess
+                gridsLayer.color = colorCache;
+            }
+
+            _isFlashingGrids = false;
         }
 
         private enum ScreenType

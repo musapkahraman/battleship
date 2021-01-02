@@ -1339,6 +1339,12 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 1230472446}
     m_Modifications:
+    - target: {fileID: 2363720495385083958, guid: c59cf86ee3eebae4e87100a5365ea47b,
+        type: 3}
+      propertyPath: color
+      value: 
+      objectReference: {fileID: 11400000, guid: 307c23cad879fa64fac6e8d5a2c0ee02,
+        type: 2}
     - target: {fileID: 4777245533030669128, guid: c59cf86ee3eebae4e87100a5365ea47b,
         type: 3}
       propertyPath: key
@@ -1940,6 +1946,12 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 772696990}
     m_Modifications:
+    - target: {fileID: 2363720495385083958, guid: c59cf86ee3eebae4e87100a5365ea47b,
+        type: 3}
+      propertyPath: color
+      value: 
+      objectReference: {fileID: 11400000, guid: c2879dc5195541240ab8f406e4d3adb0,
+        type: 2}
     - target: {fileID: 4777245533030669128, guid: c59cf86ee3eebae4e87100a5365ea47b,
         type: 3}
       propertyPath: key
@@ -2350,12 +2362,6 @@ Tilemap:
     type: 3}
   m_PrefabInstance: {fileID: 1804129001}
   m_PrefabAsset: {fileID: 0}
---- !u!1839735485 &1804129004 stripped
-Tilemap:
-  m_CorrespondingSourceObject: {fileID: 445893295892899796, guid: 88ddd787738efa54ca51cccc955a634a,
-    type: 3}
-  m_PrefabInstance: {fileID: 1804129001}
-  m_PrefabAsset: {fileID: 0}
 --- !u!4 &1804129005 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 445893296377875389, guid: 88ddd787738efa54ca51cccc955a634a,
@@ -2434,14 +2440,8 @@ MonoBehaviour:
   opponentStatus: {fileID: 1093841618}
   opponentTurnHighlighter: {fileID: 1804129007}
   opponentStatusMapTurnHighlighter: {fileID: 1093841622}
-  opponentGrids: {fileID: 1804129004}
   fireButton: {fileID: 1547971480}
   leaveButton: {fileID: 1184911184}
-  statusWaitingDecision: {fileID: 11400000, guid: 95de6b00230aecb4d87320511c0289d0,
-    type: 2}
-  statusWaitingAttack: {fileID: 11400000, guid: d9f9687533159ed498c8ed69bfa39e84,
-    type: 2}
-  statusPlayerTurn: {fileID: 11400000, guid: b9b627bf575502d4ab39ee094188f0e0, type: 2}
   leaveMessageDialog: {fileID: 11400000, guid: 83928ac01d3b95b43ba05cc06d49298d, type: 2}
   leaveNotRematchMessageDialog: {fileID: 11400000, guid: 3386988c78260464f9bc8713e712d86b,
     type: 2}
@@ -2449,6 +2449,7 @@ MonoBehaviour:
   loserOptionDialog: {fileID: 11400000, guid: 93586e0794f0ef9498796a1b3afdcdbb, type: 2}
   leaveConfirmationDialog: {fileID: 11400000, guid: 773b859928da6b84b8e46282975deccd,
     type: 2}
+  gameStateContainer: {fileID: 11400000, guid: 0e5833eefdd94fd47972715dff1481c2, type: 2}
 --- !u!1 &1923975440
 GameObject:
   m_ObjectHideFlags: 0

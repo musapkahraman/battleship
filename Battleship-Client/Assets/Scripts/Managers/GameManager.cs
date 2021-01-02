@@ -1,25 +1,22 @@
 ﻿using System;
 using BattleshipGame.AI;
-using BattleshipGame.Common;
 using BattleshipGame.Core;
-using BattleshipGame.Localization;
 using BattleshipGame.Network;
 using UnityEngine;
+using static BattleshipGame.Core.GameStateContainer.GameState;
 
 namespace BattleshipGame.Managers
 {
     public class GameManager : Singleton<GameManager>
     {
         [SerializeField] private NetworkOptions networkOptions;
-        [SerializeField] private LocalizedText statusText;
-        [SerializeField] private Key statusSelectMode;
-        [SerializeField] private Key statusConnecting;
+        [SerializeField] private GameStateContainer gameStateContainer;
         public IClient Client { get; private set; }
 
         protected override void Awake()
         {
             base.Awake();
-            SetStatusText(statusSelectMode);
+            gameStateContainer.State = GameStart;
         }
 
         private void OnApplicationQuit()
@@ -46,7 +43,7 @@ namespace BattleshipGame.Managers
                 GameSceneManager.Instance.GoToPlanScene();
             };
             var networkClient = (NetworkClient) Client;
-            SetStatusText(statusConnecting);
+            gameStateContainer.State = Connecting;
             networkClient.Connect(networkOptions.EndPoint,
                 () => { onSuccess?.Invoke(); },
                 () => { onError?.Invoke(); });
@@ -74,16 +71,6 @@ namespace BattleshipGame.Managers
                 networkClient.LeaveLobby();
                 Client = null;
             }
-        }
-
-        public void SetStatusText(Key text)
-        {
-            statusText.SetText(text);
-        }
-
-        public void ClearStatusText()
-        {
-            statusText.ClearText();
         }
     }
 }

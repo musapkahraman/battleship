@@ -1,6 +1,5 @@
 ﻿using System;
-using BattleshipGame.Core;
-using BattleshipGame.Schemas;
+using BattleshipGame.Network;
 using UnityEngine;
 
 namespace BattleshipGame.AI

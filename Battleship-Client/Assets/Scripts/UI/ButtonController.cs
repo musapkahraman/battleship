@@ -46,6 +46,16 @@ namespace BattleshipGame.UI
             _button.interactable = state;
         }
 
+        public void Hide()
+        {
+            gameObject.SetActive(false);
+        }
+
+        public void Show()
+        {
+            gameObject.SetActive(true);
+        }
+
         public void AddListener(UnityAction call)
         {
             _button.onClick.AddListener(call);

@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.Tilemaps;
 
-namespace BattleshipGame.TilePaint
+namespace BattleshipGame.Tiling
 {
     public class TurnHighlighter : MonoBehaviour, IPointerClickHandler
     {

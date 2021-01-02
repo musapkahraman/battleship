@@ -1,7 +1,6 @@
 ﻿using System;
-using BattleshipGame.Schemas;
 
-namespace BattleshipGame.Core
+namespace BattleshipGame.Network
 {
     public interface IClient
     {

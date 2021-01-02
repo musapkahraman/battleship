@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.Tilemaps;
 
-namespace BattleshipGame.TilePaint
+namespace BattleshipGame.Tiling
 {
     [RequireComponent(typeof(Grid), typeof(BoxCollider2D), typeof(GridSpriteMapper))]
     public class TileDragger : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHandler

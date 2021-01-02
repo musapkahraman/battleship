@@ -3,7 +3,7 @@ using System.Linq;
 using BattleshipGame.Core;
 using UnityEngine;
 
-namespace BattleshipGame.TilePaint
+namespace BattleshipGame.Tiling
 {
     public class OpponentStatus : MonoBehaviour
     {

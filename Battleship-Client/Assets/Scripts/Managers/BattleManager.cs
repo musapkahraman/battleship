@@ -1,16 +1,13 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using BattleshipGame.Core;
-using BattleshipGame.Localization;
 using BattleshipGame.Network;
-using BattleshipGame.Schemas;
-using BattleshipGame.TilePaint;
+using BattleshipGame.Tiling;
 using BattleshipGame.UI;
 using Colyseus.Schema;
 using UnityEngine;
 using UnityEngine.SceneManagement;
-using UnityEngine.Tilemaps;
+using static BattleshipGame.Core.GameStateContainer.GameState;
 using static BattleshipGame.Core.GridUtils;
 
 namespace BattleshipGame.Managers
@@ -24,34 +21,27 @@ namespace BattleshipGame.Managers
         [SerializeField] private OpponentStatus opponentStatus;
         [SerializeField] private TurnHighlighter opponentTurnHighlighter;
         [SerializeField] private TurnHighlighter opponentStatusMapTurnHighlighter;
-        [SerializeField] private Tilemap opponentGrids;
         [SerializeField] private ButtonController fireButton;
         [SerializeField] private ButtonController leaveButton;
-        [SerializeField] private Key statusWaitingDecision;
-        [SerializeField] private Key statusWaitingAttack;
-        [SerializeField] private Key statusPlayerTurn;
         [SerializeField] private MessageDialog leaveMessageDialog;
         [SerializeField] private MessageDialog leaveNotRematchMessageDialog;
         [SerializeField] private OptionDialog winnerOptionDialog;
         [SerializeField] private OptionDialog loserOptionDialog;
         [SerializeField] private OptionDialog leaveConfirmationDialog;
+        [SerializeField] private GameStateContainer gameStateContainer;
         private readonly Dictionary<int, List<int>> _shots = new Dictionary<int, List<int>>();
         private readonly List<int> _shotsInCurrentTurn = new List<int>();
-        private readonly WaitForSecondsRealtime _flashGridInterval = new WaitForSecondsRealtime(0.3f);
-        private const int FlashGridCount = 3;
-        private bool _isFlashingGrids;
         private IClient _client;
         private string _enemy;
-        private GameManager _gameManager;
         private bool _leavePopUpIsOn;
         private string _player;
         private State _state;
 
         private void Awake()
         {
-            if (GameManager.TryGetInstance(out _gameManager))
+            if (GameManager.TryGetInstance(out var gameManager))
             {
-                _client = _gameManager.Client;
+                _client = gameManager.Client;
                 _client.GamePhaseChanged += OnGamePhaseChanged;
             }
             else
@@ -69,7 +59,7 @@ namespace BattleshipGame.Managers
             foreach (var placement in placementMap.GetPlacements())
                 userMap.SetShip(placement.ship, placement.Coordinate);
 
-            _gameManager.ClearStatusText();
+            gameStateContainer.State = BeginBattle;
             leaveButton.AddListener(LeaveGame);
             fireButton.AddListener(FireShots);
             fireButton.SetInteractable(false);
@@ -142,7 +132,7 @@ namespace BattleshipGame.Managers
 
             void ShowResult()
             {
-                _gameManager.ClearStatusText();
+                gameStateContainer.State = BattleResult;
                 if (_state.winningPlayer == _client.GetSessionId())
                 {
                     winnerOptionDialog.Show(Rematch, Leave);
@@ -155,7 +145,7 @@ namespace BattleshipGame.Managers
                 void Rematch()
                 {
                     _client.SendRematch(true);
-                    _gameManager.SetStatusText(statusWaitingDecision);
+                    gameStateContainer.State = WaitingOpponentRematchDecision;
                 }
 
                 void Leave()
@@ -220,7 +210,7 @@ namespace BattleshipGame.Managers
                 if (_client is NetworkClient) GameSceneManager.Instance.GoToLobby();
                 else
                 {
-                    GameManager.Instance.ClearStatusText();
+                    gameStateContainer.State = MainMenu;
                     GameSceneManager.Instance.GoToMenu();
                 }
             });
@@ -236,11 +226,8 @@ namespace BattleshipGame.Managers
             void TurnToPlayer()
             {
                 opponentMap.IsMarkingTargets = true;
-                _gameManager.SetStatusText(statusPlayerTurn);
-                if (!_isFlashingGrids)
-                {
-                    StartCoroutine(FlashGrids());
-                }
+                gameStateContainer.State = PlayerTurn;
+                opponentMap.FlashGrids();
 
 #if UNITY_ANDROID || UNITY_IOS
                 Handheld.Vibrate();
@@ -249,25 +236,8 @@ namespace BattleshipGame.Managers
 
             void TurnToEnemy()
             {
-                _gameManager.SetStatusText(statusWaitingAttack);
+                gameStateContainer.State = OpponentTurn;
             }
-        }
-
-        private IEnumerator FlashGrids()
-        {
-            _isFlashingGrids = true;
-            var colorCache = opponentGrids.color;
-            var flashGridColor = new Color(colorCache.r, colorCache.g, colorCache.b, 0.66f);
-            for (var i = 0; i < FlashGridCount; i++)
-            {
-                yield return _flashGridInterval;
-                opponentGrids.color = flashGridColor;
-                yield return _flashGridInterval;
-                // ReSharper disable once Unity.InefficientPropertyAccess
-                opponentGrids.color = colorCache;
-            }
-
-            _isFlashingGrids = false;
         }
 
         private void OnStateChanged(List<DataChange> changes)

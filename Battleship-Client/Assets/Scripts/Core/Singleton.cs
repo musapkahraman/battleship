@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-namespace BattleshipGame.Managers
+namespace BattleshipGame.Core
 {
     /// <summary>
     ///     Singleton class.

@@ -146,6 +146,7 @@ GameObject:
   - component: {fileID: 322319178}
   - component: {fileID: 322319180}
   - component: {fileID: 322319181}
+  - component: {fileID: 322319182}
   - component: {fileID: 322319179}
   m_Layer: 5
   m_Name: StatusText
@@ -286,6 +287,34 @@ MonoBehaviour:
   localizationManager: {fileID: 11400000, guid: 4b03bcc08dc3c3d44b0578f6ba6b6ef4,
     type: 2}
   options: {fileID: 11400000, guid: be4c7c8fd4d1eb6468c9ae0dcee42eb6, type: 2}
+--- !u!114 &322319182
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 322319177}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7a9545656eb12a14cb206c2b9019b8d2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  gameStateContainer: {fileID: 11400000, guid: 0e5833eefdd94fd47972715dff1481c2, type: 2}
+  statusSelectMode: {fileID: 11400000, guid: b218aff91e1431049bc00a1ecf7eac5b, type: 2}
+  statusConnecting: {fileID: 11400000, guid: 96f28e78bd9533347834f8fbe583adeb, type: 2}
+  statusNetworkError: {fileID: 11400000, guid: 35a339a664576714c83365856c352726, type: 2}
+  statusWaitingJoin: {fileID: 11400000, guid: f343f65ffbc83c643a218f1c91c3afa6, type: 2}
+  statusPlacementImpossible: {fileID: 11400000, guid: 458424d558a735246bfb13ae40d17fd1,
+    type: 2}
+  statusPlacementReady: {fileID: 11400000, guid: 8f35226fcc30be04fb3075d5b96ae3bc,
+    type: 2}
+  statusWaitingPlace: {fileID: 11400000, guid: 8c732283d28c98a4fbe8c5ea89460484, type: 2}
+  statusPlaceShips: {fileID: 11400000, guid: 514e772fe1f84a142a2705138b7936ae, type: 2}
+  statusWaitingDecision: {fileID: 11400000, guid: 95de6b00230aecb4d87320511c0289d0,
+    type: 2}
+  statusWaitingAttack: {fileID: 11400000, guid: d9f9687533159ed498c8ed69bfa39e84,
+    type: 2}
+  statusPlayerTurn: {fileID: 11400000, guid: b9b627bf575502d4ab39ee094188f0e0, type: 2}
 --- !u!1 &1068387792
 GameObject:
   m_ObjectHideFlags: 0
@@ -457,12 +486,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   networkOptions: {fileID: 11400000, guid: 62dc12998133fc84c983ee6b0b665ab8, type: 2}
-  statusText: {fileID: 322319181}
-  progressBarCanvasPrefab: {fileID: 868588383397605981, guid: b5624325612bcf0438993606f5726bef,
-    type: 3}
-  statusSelectMode: {fileID: 11400000, guid: b218aff91e1431049bc00a1ecf7eac5b, type: 2}
-  statusConnecting: {fileID: 11400000, guid: 96f28e78bd9533347834f8fbe583adeb, type: 2}
-  statusNetworkError: {fileID: 11400000, guid: 35a339a664576714c83365856c352726, type: 2}
+  gameStateContainer: {fileID: 11400000, guid: 0e5833eefdd94fd47972715dff1481c2, type: 2}
 --- !u!4 &1560539549
 Transform:
   m_ObjectHideFlags: 0

@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using BattleshipGame.Core;
-using BattleshipGame.Schemas;
 using Colyseus;
 using DataChange = Colyseus.Schema.DataChange;
 
@@ -49,8 +47,6 @@ namespace BattleshipGame.Network
             _room = null;
         }
 
-        public event Action<Dictionary<string, Room>> RoomsChanged;
-
         public async void Connect(string endPoint, Action success, Action error)
         {
             if (_lobby != null && _lobby.Connection.IsOpen) return;
@@ -66,6 +62,8 @@ namespace BattleshipGame.Network
                 error?.Invoke();
             }
         }
+
+        public event Action<Dictionary<string, Room>> RoomsChanged;
 
         private void RegisterLobbyHandlers()
         {

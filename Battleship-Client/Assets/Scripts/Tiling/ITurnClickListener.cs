@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-namespace BattleshipGame.TilePaint
+namespace BattleshipGame.Tiling
 {
     public interface ITurnClickListener
     {

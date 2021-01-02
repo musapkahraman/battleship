@@ -17,12 +17,7 @@ namespace BattleshipGame.Localization
             Init();
         }
 
-        private void OnEnable()
-        {
-            options.OnLanguageChanged += SetText;
-        }
-
-        private void OnDisable()
+        private void OnDestroy()
         {
             options.OnLanguageChanged -= SetText;
         }
@@ -36,6 +31,7 @@ namespace BattleshipGame.Localization
         {
             if (_textField == null) _textField = GetComponent<TextMeshProUGUI>();
             if (key == null) _isKeyNull = true;
+            options.OnLanguageChanged += SetText;
             SetText();
         }
 

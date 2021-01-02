@@ -128,6 +128,12 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 1293212952}
     m_Modifications:
+    - target: {fileID: 2363720495385083958, guid: c59cf86ee3eebae4e87100a5365ea47b,
+        type: 3}
+      propertyPath: color
+      value: 
+      objectReference: {fileID: 11400000, guid: e3e76d219f801a14fb0913b1d81e1a0e,
+        type: 2}
     - target: {fileID: 4777245533030669128, guid: c59cf86ee3eebae4e87100a5365ea47b,
         type: 3}
       propertyPath: key
@@ -322,6 +328,12 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 1293212952}
     m_Modifications:
+    - target: {fileID: 2363720495385083958, guid: c59cf86ee3eebae4e87100a5365ea47b,
+        type: 3}
+      propertyPath: color
+      value: 
+      objectReference: {fileID: 11400000, guid: c2879dc5195541240ab8f406e4d3adb0,
+        type: 2}
     - target: {fileID: 4777245533030669128, guid: c59cf86ee3eebae4e87100a5365ea47b,
         type: 3}
       propertyPath: key
@@ -465,6 +477,12 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 1293212952}
     m_Modifications:
+    - target: {fileID: 2363720495385083958, guid: c59cf86ee3eebae4e87100a5365ea47b,
+        type: 3}
+      propertyPath: color
+      value: 
+      objectReference: {fileID: 11400000, guid: 307c23cad879fa64fac6e8d5a2c0ee02,
+        type: 2}
     - target: {fileID: 4777245533030669128, guid: c59cf86ee3eebae4e87100a5365ea47b,
         type: 3}
       propertyPath: key
@@ -1260,6 +1278,12 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 1293212952}
     m_Modifications:
+    - target: {fileID: 2363720495385083958, guid: c59cf86ee3eebae4e87100a5365ea47b,
+        type: 3}
+      propertyPath: color
+      value: 
+      objectReference: {fileID: 11400000, guid: e3e76d219f801a14fb0913b1d81e1a0e,
+        type: 2}
     - target: {fileID: 4777245533030669128, guid: c59cf86ee3eebae4e87100a5365ea47b,
         type: 3}
       propertyPath: key
@@ -1424,12 +1448,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fe1a6a60dc57dc442bc0fac42d4bd13e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  statusPlacementImpossible: {fileID: 11400000, guid: 458424d558a735246bfb13ae40d17fd1,
-    type: 2}
-  statusPlacementReady: {fileID: 11400000, guid: 8f35226fcc30be04fb3075d5b96ae3bc,
-    type: 2}
-  statusWaitingPlace: {fileID: 11400000, guid: 8c732283d28c98a4fbe8c5ea89460484, type: 2}
-  statusPlaceShips: {fileID: 11400000, guid: 514e772fe1f84a142a2705138b7936ae, type: 2}
   leaveMessageDialog: {fileID: 11400000, guid: 83928ac01d3b95b43ba05cc06d49298d, type: 2}
   leaveButton: {fileID: 927389760}
   clearButton: {fileID: 1553283944}
@@ -1440,6 +1458,7 @@ MonoBehaviour:
   poolGridSpriteMapper: {fileID: 1093841621}
   rules: {fileID: 11400000, guid: 536a0464e90bd734190c1b8189b64ddd, type: 2}
   placementMap: {fileID: 11400000, guid: 432e41401bba21546a52dbadb3099a78, type: 2}
+  gameStateContainer: {fileID: 11400000, guid: 0e5833eefdd94fd47972715dff1481c2, type: 2}
 --- !u!1001 &1858116180
 PrefabInstance:
   m_ObjectHideFlags: 0

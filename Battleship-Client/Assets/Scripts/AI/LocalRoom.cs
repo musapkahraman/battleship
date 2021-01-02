@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using BattleshipGame.Schemas;
+using BattleshipGame.Network;
 using Colyseus.Schema;
 using UnityEngine;
 

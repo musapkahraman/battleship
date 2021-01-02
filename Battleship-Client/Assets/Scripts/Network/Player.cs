@@ -7,7 +7,7 @@
 
 using Colyseus.Schema;
 
-namespace BattleshipGame.Schemas
+namespace BattleshipGame.Network
 {
     public class Player : Schema
     {

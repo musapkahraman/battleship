@@ -1,58 +1,61 @@
 ﻿using System.Collections.Generic;
-using BattleshipGame.Localization;
+using BattleshipGame.Core;
 using BattleshipGame.Network;
 using BattleshipGame.UI;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using static BattleshipGame.Core.GameStateContainer.GameState;
 
 namespace BattleshipGame.Managers
 {
     public class LobbyManager : MonoBehaviour, IRoomClickListener
     {
         [SerializeField] private RoomListManager roomList;
-        [SerializeField] private Key statusWaitingJoin;
         [SerializeField] private RoomDialog newRoomDialog;
         [SerializeField] private RoomDialog joinRoomDialog;
         [SerializeField] private ButtonController mainMenuButton;
         [SerializeField] private ButtonController newGameButton;
         [SerializeField] private ButtonController joinButton;
         [SerializeField] private ButtonController leaveButton;
+        [SerializeField] private GameStateContainer gameStateContainer;
         private string _cachedRoomId = string.Empty;
         private bool _cachedRoomIdIsNotValid;
-        private GameManager _gameManager;
         private NetworkClient _networkClient;
 
-        private void Start()
+        private void Awake()
         {
-            if (GameManager.TryGetInstance(out _gameManager) && _gameManager.Client is NetworkClient client)
+            if (GameManager.TryGetInstance(out var gameManager) && gameManager.Client is NetworkClient client)
             {
                 _networkClient = client;
                 _networkClient.RoomsChanged += PopulateRoomList;
-
-                _gameManager.ClearStatusText();
-
-                mainMenuButton.AddListener(GoToMainMenu);
-                newGameButton.AddListener(NewGame);
-                joinButton.AddListener(JoinGame);
-                leaveButton.AddListener(LeaveGame);
-
-                joinButton.SetInteractable(false);
-                leaveButton.SetInteractable(false);
-
-                if (_networkClient.GetSessionId() != null)
-                {
-                    _networkClient.RefreshRooms();
-                    WaitForOpponent();
-                }
             }
             else
             {
                 SceneManager.LoadScene(0);
             }
+        }
+
+        private void Start()
+        {
+            gameStateContainer.State = BeginLobby;
+            mainMenuButton.AddListener(GoToMainMenu);
+            newGameButton.AddListener(NewGame);
+            joinButton.AddListener(JoinGame);
+            leaveButton.AddListener(LeaveGame);
+
+            joinButton.SetInteractable(false);
+            leaveButton.SetInteractable(false);
+
+            if (_networkClient.GetSessionId() != null)
+            {
+                _networkClient.RefreshRooms();
+                WaitForOpponent();
+            }
+
 
             void GoToMainMenu()
             {
-                _gameManager.ClearStatusText();
+                gameStateContainer.State = MainMenu;
                 GameSceneManager.Instance.GoToMenu();
             }
 
@@ -86,7 +89,8 @@ namespace BattleshipGame.Managers
                 leaveButton.SetInteractable(false);
                 newGameButton.SetInteractable(true);
                 _networkClient.LeaveRoom();
-                _gameManager.ClearStatusText();
+                // StatusTextController.Instance.ClearStatusText();
+                gameStateContainer.State = MainMenu;
             }
         }
 
@@ -108,7 +112,7 @@ namespace BattleshipGame.Managers
         {
             newGameButton.SetInteractable(false);
             leaveButton.SetInteractable(true);
-            _gameManager.SetStatusText(statusWaitingJoin);
+            gameStateContainer.State = WaitingOpponentJoin;
         }
 
         private void PopulateRoomList(Dictionary<string, Room> rooms)

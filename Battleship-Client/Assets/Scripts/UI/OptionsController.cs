@@ -1,13 +1,12 @@
 ﻿using System.IO;
 using BattleshipGame.Core;
 using BattleshipGame.Localization;
-using BattleshipGame.UI;
+using BattleshipGame.Managers;
 using UnityEngine;
 
-namespace BattleshipGame.Managers
+namespace BattleshipGame.UI
 {
-    [RequireComponent(typeof(MenuManager))]
-    public class OptionsManager : MonoBehaviour
+    public class OptionsController : MonoBehaviour
     {
         [SerializeField] private ButtonController optionsBackButton;
         [SerializeField] private ButtonController languageButton;
@@ -18,10 +17,10 @@ namespace BattleshipGame.Managers
         [SerializeField] private Canvas languageCanvas;
         [SerializeField] private LocalizationOptions localizationOptions;
         [SerializeField] private Options options;
+        [SerializeField] private MenuManager menu;
         private LocalizationOptions _lastSavedLocalizationOptions;
         private Options _lastSavedOptions;
         private string _localizationOptionsFilepath;
-        private MenuManager _menu;
         private string _optionsFilepath;
 
         private void Awake()
@@ -32,8 +31,7 @@ namespace BattleshipGame.Managers
             _optionsFilepath = Path.Combine(Application.persistentDataPath, "options.json");
             _lastSavedOptions = ScriptableObject.CreateInstance<Options>();
             LoadOptions();
-            _menu = GetComponent<MenuManager>();
-            _menu.OnNavigateBack += OnNavigateBack;
+            menu.OnNavigateBack += OnNavigateBack;
         }
 
         private void Start()
@@ -51,7 +49,7 @@ namespace BattleshipGame.Managers
 
         private void OnDestroy()
         {
-            _menu.OnNavigateBack -= OnNavigateBack;
+            menu.OnNavigateBack -= OnNavigateBack;
         }
 
         private void OnNavigateBack()
