@@ -52,13 +52,6 @@ namespace BattleshipGame.Managers
                 WaitForOpponent();
             }
 
-
-            void GoToMainMenu()
-            {
-                gameStateContainer.State = MainMenu;
-                GameSceneManager.Instance.GoToMenu();
-            }
-
             void NewGame()
             {
                 newRoomDialog.Show(true, (gameName, password) =>
@@ -89,9 +82,13 @@ namespace BattleshipGame.Managers
                 leaveButton.SetInteractable(false);
                 newGameButton.SetInteractable(true);
                 _networkClient.LeaveRoom();
-                // StatusTextController.Instance.ClearStatusText();
-                gameStateContainer.State = MainMenu;
+                gameStateContainer.State = BeginLobby;
             }
+        }
+
+        private void Update()
+        {
+            if (Input.GetKeyDown(KeyCode.Escape)) GoToMainMenu();
         }
 
         private void OnDestroy()
@@ -106,6 +103,12 @@ namespace BattleshipGame.Managers
             _cachedRoomId = roomId;
             _cachedRoomIdIsNotValid = false;
             joinButton.SetInteractable(true);
+        }
+
+        private void GoToMainMenu()
+        {
+            gameStateContainer.State = MainMenu;
+            GameSceneManager.Instance.GoToMenu();
         }
 
         private void WaitForOpponent()

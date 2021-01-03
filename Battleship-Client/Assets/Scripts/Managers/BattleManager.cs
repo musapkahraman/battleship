@@ -86,6 +86,11 @@ namespace BattleshipGame.Managers
             }
         }
 
+        private void Update()
+        {
+            if (Input.GetKeyDown(KeyCode.Escape)) LeaveGame();
+        }
+
         private void OnDestroy()
         {
             placementMap.Clear();
@@ -207,7 +212,10 @@ namespace BattleshipGame.Managers
             leaveConfirmationDialog.Show(() =>
             {
                 _client.LeaveRoom();
-                if (_client is NetworkClient) GameSceneManager.Instance.GoToLobby();
+                if (_client is NetworkClient)
+                {
+                    GameSceneManager.Instance.GoToLobby();
+                }
                 else
                 {
                     gameStateContainer.State = MainMenu;

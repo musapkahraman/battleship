@@ -45,8 +45,20 @@ namespace BattleshipGame.Managers
             var networkClient = (NetworkClient) Client;
             gameStateContainer.State = Connecting;
             networkClient.Connect(networkOptions.EndPoint,
-                () => { onSuccess?.Invoke(); },
-                () => { onError?.Invoke(); });
+                () =>
+                {
+                    if (Client is NetworkClient)
+                    {
+                        onSuccess?.Invoke();
+                    }
+                },
+                () =>
+                {
+                    if (Client is NetworkClient)
+                    {
+                        onError?.Invoke();
+                    }
+                });
         }
 
         public void StartLocalClient()

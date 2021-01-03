@@ -58,17 +58,6 @@ namespace BattleshipGame.Managers
 
             BeginShipPlacement();
 
-            void LeaveGame()
-            {
-                _client.LeaveRoom();
-                if (_client is NetworkClient) GameSceneManager.Instance.GoToLobby();
-                else
-                {
-                    gameStateContainer.State = MainMenu;
-                    GameSceneManager.Instance.GoToMenu();
-                }
-            }
-
             void OnClearButtonPressed()
             {
                 _shipsNotDragged.Clear();
@@ -164,10 +153,34 @@ namespace BattleshipGame.Managers
             }
         }
 
+        private void Update()
+        {
+            if (Input.GetKeyDown(KeyCode.Escape)) LeaveGame();
+        }
+
         private void OnDestroy()
         {
             if (_client == null) return;
             _client.GamePhaseChanged -= OnGamePhaseChanged;
+        }
+
+        public bool OnShipMoved(Ship ship, Vector3Int from, Vector3Int to, bool isMovedIn)
+        {
+            return PlaceShip(ship, from, to, isMovedIn);
+        }
+
+        private void LeaveGame()
+        {
+            _client.LeaveRoom();
+            if (_client is NetworkClient)
+            {
+                GameSceneManager.Instance.GoToLobby();
+            }
+            else
+            {
+                gameStateContainer.State = MainMenu;
+                GameSceneManager.Instance.GoToMenu();
+            }
         }
 
         private void OnGamePhaseChanged(string phase)
@@ -185,11 +198,6 @@ namespace BattleshipGame.Managers
                 case "leave":
                     break;
             }
-        }
-
-        public bool OnShipMoved(Ship ship, Vector3Int from, Vector3Int to, bool isMovedIn)
-        {
-            return PlaceShip(ship, from, to, isMovedIn);
         }
 
         private bool PlaceShip(Ship ship, Vector3Int from, Vector3Int to, bool isMovedIn, int shipId = EmptyCell)

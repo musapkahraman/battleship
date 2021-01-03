@@ -85,24 +85,6 @@ namespace BattleshipGame.UI
                     multiplayerButton.SetInteractable(true);
                 }
             }
-
-            void CancelConnection()
-            {
-                _isConnectionCanceled = true;
-                ResetMenu();
-                multiplayerButton.SetInteractable(false);
-            }
-
-            void ResetMenu()
-            {
-                singlePlayerButton.SetInteractable(true);
-                optionsButton.SetInteractable(true);
-                quitButton.SetInteractable(true);
-                multiplayerButton.Show();
-                multiplayerCancelButton.Hide();
-                Destroy(_progressBar);
-                gameStateContainer.State = MainMenu;
-            }
         }
 
         public void Show()
@@ -131,10 +113,31 @@ namespace BattleshipGame.UI
                     case AiSelectionMenu:
                         aiSelectMenuController.Close();
                         break;
+                    case Connecting:
+                        CancelConnection();
+                        break;
                     default:
                         throw new ArgumentOutOfRangeException();
                 }
             }
+        }
+
+        private void CancelConnection()
+        {
+            _isConnectionCanceled = true;
+            ResetMenu();
+            multiplayerButton.SetInteractable(false);
+        }
+
+        private void ResetMenu()
+        {
+            singlePlayerButton.SetInteractable(true);
+            optionsButton.SetInteractable(true);
+            quitButton.SetInteractable(true);
+            multiplayerButton.Show();
+            multiplayerCancelButton.Hide();
+            Destroy(_progressBar);
+            gameStateContainer.State = MainMenu;
         }
 
         // ReSharper disable once MemberCanBeMadeStatic.Local

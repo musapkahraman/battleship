@@ -53,10 +53,7 @@ namespace BattleshipGame.UI
 
         public void Show()
         {
-            if (gameObject)
-            {
-                gameObject.SetActive(true);
-            }
+            gameObject.SetActive(true);
         }
 
         public void AddListener(UnityAction call)
