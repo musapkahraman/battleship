@@ -16,6 +16,10 @@ MonoBehaviour:
   items:
   - key: {fileID: 11400000, guid: 4ef7ef657ba119949a80daf1071235c7, type: 2}
     value: TEK OYUNCU
+  - key: {fileID: 11400000, guid: 40d06b0f47dbac14494df9bfabc13877, type: 2}
+    value: "\xD6\u011ERENC\u0130"
+  - key: {fileID: 11400000, guid: a2ad99fc809be7c439932533f3407d2b, type: 2}
+    value: "AM\u0130RAL"
   - key: {fileID: 11400000, guid: b2f4fef974b067746bd397b246a8c8a7, type: 2}
     value: "\u0130K\u0130 OYUNCU"
   - key: {fileID: 11400000, guid: 3ff14d31b54719c4abeccad34ab455ea, type: 2}
@@ -58,14 +62,6 @@ MonoBehaviour:
     value: "Rakibin oyundan ayr\u0131ld\u0131."
   - key: {fileID: 11400000, guid: e1772d2e2ff245b4fbd4f36d0977744c, type: 2}
     value: TAMAM
-  - key: {fileID: 11400000, guid: 311175e252d9d114ea67271b6e72a5ae, type: 2}
-    value: TEK OYUNCU MODU
-  - key: {fileID: 11400000, guid: b39f0a34d1f42c64896399b800cede56, type: 2}
-    value: "Zorluk se\xE7"
-  - key: {fileID: 11400000, guid: 40d06b0f47dbac14494df9bfabc13877, type: 2}
-    value: "\xD6\u011ERENC\u0130"
-  - key: {fileID: 11400000, guid: a2ad99fc809be7c439932533f3407d2b, type: 2}
-    value: "AM\u0130RAL"
   - key: {fileID: 11400000, guid: cdf1b444b73f3364c97b41cff0cb0e7d, type: 2}
     value: Rakibin oynamak istemiyor.
   - key: {fileID: 11400000, guid: 9e93f755bbde41e4aa60a262f909d8d3, type: 2}
@@ -102,6 +98,8 @@ MonoBehaviour:
     value: DEVAM ET
   - key: {fileID: 11400000, guid: 05217b01fcaccc24589f64592e249625, type: 2}
     value: "\u0130PTAL"
+  - key: {fileID: 11400000, guid: b39f0a34d1f42c64896399b800cede56, type: 2}
+    value: "Zorluk se\xE7"
   - key: {fileID: 11400000, guid: 95de6b00230aecb4d87320511c0289d0, type: 2}
     value: "RAK\u0130B\u0130N KARAR VERMES\u0130 BEKLEN\u0130YOR."
   - key: {fileID: 11400000, guid: d9f9687533159ed498c8ed69bfa39e84, type: 2}
@@ -125,4 +123,8 @@ MonoBehaviour:
     value: "GEM\u0130LER\u0130N\u0130 YERLE\u015ET\u0130R"
   - key: {fileID: 11400000, guid: 35a339a664576714c83365856c352726, type: 2}
     value: "SUNUCUYA BA\u011ELANMAYA \xC7ALI\u015EIRKEN B\u0130R HATA OLU\u015ETU."
-  keyName: 
+  - key: {fileID: 11400000, guid: fd1d0e9c958112b4e870d7818f094670, type: 2}
+    value: "DE\u011E\u0130\u015ET\u0130RMEK \u0130\xC7\u0130N B\u0130R AYAR SE\xC7"
+  - key: {fileID: 11400000, guid: c5c19390e55e1544087de481d7f56831, type: 2}
+    value: "B\u0130R D\u0130L SE\xC7\u0130N"
+  keyName: status_options_language

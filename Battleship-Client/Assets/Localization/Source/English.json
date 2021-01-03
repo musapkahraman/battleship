@@ -5,6 +5,14 @@
             "value": "Single Player"
         },
         {
+            "key": "btn_ai_easy",
+            "value": "Cadet"
+        },
+        {
+            "key": "btn_ai_hard",
+            "value": "Admiral"
+        },
+        {
             "key": "btn_multiplayer",
             "value": "Multiplayer"
         },
@@ -89,22 +97,6 @@
             "value": "OK"
         },
         {
-            "key": "popup_single_header",
-            "value": "Single player mode"
-        },
-        {
-            "key": "popup_single_message",
-            "value": "Select difficulty"
-        },
-        {
-            "key": "popup_single_btn_confirm",
-            "value": "Cadet"
-        },
-        {
-            "key": "popup_single_btn_decline",
-            "value": "Admiral"
-        },
-        {
             "key": "popup_not_rematch_message",
             "value": "Your opponent has decided not to continue for another round."
         },
@@ -177,6 +169,10 @@
             "value": "Cancel"
         },
         {
+            "key": "status_ai_select",
+            "value": "Select difficulty"
+        },
+        {
             "key": "status_waiting_decision",
             "value": "Waiting for the opponent decide."
         },
@@ -219,6 +215,14 @@
         {
             "key": "status_network_error",
             "value": "An error occured while connecting to the server."
+        },
+        {
+            "key": "status_options",
+            "value": "Select an option to modify"
+        },
+        {
+            "key": "status_options_language",
+            "value": "Select a language"
         }
     ],
     "language": 10

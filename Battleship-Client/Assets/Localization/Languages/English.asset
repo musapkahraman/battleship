@@ -16,6 +16,10 @@ MonoBehaviour:
   items:
   - key: {fileID: 11400000, guid: 4ef7ef657ba119949a80daf1071235c7, type: 2}
     value: Single Player
+  - key: {fileID: 11400000, guid: 40d06b0f47dbac14494df9bfabc13877, type: 2}
+    value: Cadet
+  - key: {fileID: 11400000, guid: a2ad99fc809be7c439932533f3407d2b, type: 2}
+    value: Admiral
   - key: {fileID: 11400000, guid: b2f4fef974b067746bd397b246a8c8a7, type: 2}
     value: Multiplayer
   - key: {fileID: 11400000, guid: 3ff14d31b54719c4abeccad34ab455ea, type: 2}
@@ -58,14 +62,6 @@ MonoBehaviour:
     value: Your opponent has quit the game.
   - key: {fileID: 11400000, guid: e1772d2e2ff245b4fbd4f36d0977744c, type: 2}
     value: OK
-  - key: {fileID: 11400000, guid: 311175e252d9d114ea67271b6e72a5ae, type: 2}
-    value: Single player mode
-  - key: {fileID: 11400000, guid: b39f0a34d1f42c64896399b800cede56, type: 2}
-    value: Select difficulty
-  - key: {fileID: 11400000, guid: 40d06b0f47dbac14494df9bfabc13877, type: 2}
-    value: Cadet
-  - key: {fileID: 11400000, guid: a2ad99fc809be7c439932533f3407d2b, type: 2}
-    value: Admiral
   - key: {fileID: 11400000, guid: cdf1b444b73f3364c97b41cff0cb0e7d, type: 2}
     value: Your opponent has decided not to continue for another round.
   - key: {fileID: 11400000, guid: 9e93f755bbde41e4aa60a262f909d8d3, type: 2}
@@ -102,6 +98,8 @@ MonoBehaviour:
     value: Join
   - key: {fileID: 11400000, guid: 05217b01fcaccc24589f64592e249625, type: 2}
     value: Cancel
+  - key: {fileID: 11400000, guid: b39f0a34d1f42c64896399b800cede56, type: 2}
+    value: Select difficulty
   - key: {fileID: 11400000, guid: 95de6b00230aecb4d87320511c0289d0, type: 2}
     value: Waiting for the opponent decide.
   - key: {fileID: 11400000, guid: d9f9687533159ed498c8ed69bfa39e84, type: 2}
@@ -124,4 +122,8 @@ MonoBehaviour:
     value: Place your ships!
   - key: {fileID: 11400000, guid: 35a339a664576714c83365856c352726, type: 2}
     value: An error occured while connecting to the server.
-  keyName: btn_cancel
+  - key: {fileID: 11400000, guid: fd1d0e9c958112b4e870d7818f094670, type: 2}
+    value: Select an option to modify
+  - key: {fileID: 11400000, guid: c5c19390e55e1544087de481d7f56831, type: 2}
+    value: Select a language
+  keyName: status_options_language

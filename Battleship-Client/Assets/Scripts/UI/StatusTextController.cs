@@ -19,8 +19,11 @@ namespace BattleshipGame.UI
         [SerializeField] private Key statusWaitingPlace;
         [SerializeField] private Key statusPlaceShips;
         [SerializeField] private Key statusWaitingDecision;
+        [SerializeField] private Key statusAiSelect;
         [SerializeField] private Key statusWaitingAttack;
         [SerializeField] private Key statusPlayerTurn;
+        [SerializeField] private Key statusOptions;
+        [SerializeField] private Key statusLanguageOptions;
         private LocalizedText _statusText;
 
         private void Awake()
@@ -82,6 +85,15 @@ namespace BattleshipGame.UI
                     break;
                 case WaitingOpponentRematchDecision:
                     _statusText.SetText(statusWaitingDecision);
+                    break;
+                case OptionsMenu:
+                    _statusText.SetText(statusOptions);
+                    break;
+                case LanguageOptionsMenu:
+                    _statusText.SetText(statusLanguageOptions);
+                    break;
+                case AiSelectionMenu:
+                    _statusText.SetText(statusAiSelect);
                     break;
                 default:
                     throw new ArgumentOutOfRangeException(nameof(state), state, null);

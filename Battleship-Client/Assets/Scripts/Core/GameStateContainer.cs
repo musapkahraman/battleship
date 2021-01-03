@@ -10,6 +10,7 @@ namespace BattleshipGame.Core
 
         public GameState State
         {
+            get => _state;
             set
             {
                 _state = value;
@@ -23,6 +24,9 @@ namespace BattleshipGame.Core
         {
             GameStart,
             MainMenu,
+            OptionsMenu,
+            LanguageOptionsMenu,
+            AiSelectionMenu,
             NetworkError,
             BeginLobby,
             Connecting,

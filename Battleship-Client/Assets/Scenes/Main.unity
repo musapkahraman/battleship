@@ -312,9 +312,13 @@ MonoBehaviour:
   statusPlaceShips: {fileID: 11400000, guid: 514e772fe1f84a142a2705138b7936ae, type: 2}
   statusWaitingDecision: {fileID: 11400000, guid: 95de6b00230aecb4d87320511c0289d0,
     type: 2}
+  statusAiSelect: {fileID: 11400000, guid: b39f0a34d1f42c64896399b800cede56, type: 2}
   statusWaitingAttack: {fileID: 11400000, guid: d9f9687533159ed498c8ed69bfa39e84,
     type: 2}
   statusPlayerTurn: {fileID: 11400000, guid: b9b627bf575502d4ab39ee094188f0e0, type: 2}
+  statusOptions: {fileID: 11400000, guid: fd1d0e9c958112b4e870d7818f094670, type: 2}
+  statusLanguageOptions: {fileID: 11400000, guid: c5c19390e55e1544087de481d7f56831,
+    type: 2}
 --- !u!1 &1068387792
 GameObject:
   m_ObjectHideFlags: 0

@@ -37,7 +37,7 @@ namespace BattleshipGame.UI
                 else
                 {
                     buttonTextColor.a *= 0.5f;
-                    _buttonImage.color = new Color(0.5f,0.5f,0.55f,0.5f);
+                    _buttonImage.color = new Color(0.5f, 0.5f, 0.55f, 0.5f);
                 }
 
                 buttonText.color = buttonTextColor;
@@ -53,7 +53,10 @@ namespace BattleshipGame.UI
 
         public void Show()
         {
-            gameObject.SetActive(true);
+            if (gameObject)
+            {
+                gameObject.SetActive(true);
+            }
         }
 
         public void AddListener(UnityAction call)

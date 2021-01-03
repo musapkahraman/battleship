@@ -5,6 +5,14 @@
             "value": "TEK OYUNCU"
         },
         {
+            "key": "btn_ai_easy",
+            "value": "ÖĞRENCİ"
+        },
+        {
+            "key": "btn_ai_hard",
+            "value": "AMİRAL"
+        },
+        {
             "key": "btn_multiplayer",
             "value": "İKİ OYUNCU"
         },
@@ -89,22 +97,6 @@
             "value": "TAMAM"
         },
         {
-            "key": "popup_single_header",
-            "value": "TEK OYUNCU MODU"
-        },
-        {
-            "key": "popup_single_message",
-            "value": "Zorluk seç"
-        },
-        {
-            "key": "popup_single_btn_confirm",
-            "value": "ÖĞRENCİ"
-        },
-        {
-            "key": "popup_single_btn_decline",
-            "value": "AMİRAL"
-        },
-        {
             "key": "popup_not_rematch_message",
             "value": "Rakibin oynamak istemiyor."
         },
@@ -177,6 +169,10 @@
             "value": "İPTAL"
         },
         {
+            "key": "status_ai_select",
+            "value": "Zorluk seç"
+        },
+        {
             "key": "status_waiting_decision",
             "value": "RAKİBİN KARAR VERMESİ BEKLENİYOR."
         },
@@ -219,6 +215,14 @@
         {
             "key": "status_network_error",
             "value": "SUNUCUYA BAĞLANMAYA ÇALIŞIRKEN BİR HATA OLUŞTU."
+        },
+        {
+            "key": "status_options",
+            "value": "DEĞİŞTİRMEK İÇİN BİR AYAR SEÇ"
+        },
+        {
+            "key": "status_options_language",
+            "value": "BİR DİL SEÇİN"
         }
     ],
     "language": 37

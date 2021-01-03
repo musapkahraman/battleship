@@ -1,33 +1,31 @@
 ﻿using System;
 using System.Collections;
 using BattleshipGame.Core;
-using BattleshipGame.UI;
+using BattleshipGame.Managers;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using static BattleshipGame.Core.GameStateContainer.GameState;
 
-namespace BattleshipGame.Managers
+namespace BattleshipGame.UI
 {
-    public class MenuManager : MonoBehaviour
+    public class MainMenuController : MonoBehaviour
     {
-#pragma warning disable CS0414
-        [SerializeField] private string webQuitPage = "about:blank";
-#pragma warning restore CS0414
-        [SerializeField] private OptionDialog singlePlayerOptionDialog;
-        [SerializeField] private ButtonController quitButton;
-        [SerializeField] private ButtonController singlePlayerButton;
-        [SerializeField] private ButtonController multiplayerButton;
-        [SerializeField] private ButtonController cancelButton;
-        [SerializeField] private ButtonController optionsButton;
-        [SerializeField] private Canvas optionsCanvas;
-        [SerializeField] private Options options;
         [SerializeField] private GameObject progressBarCanvasPrefab;
         [SerializeField] private GameStateContainer gameStateContainer;
+        [SerializeField] private AiSelectMenuController aiSelectMenuController;
+        [SerializeField] private OptionsMenuController optionsMenuController;
+        [SerializeField] private LanguageMenuController languageMenuController;
+        [SerializeField] private ButtonController singlePlayerButton;
+        [SerializeField] private ButtonController multiplayerCancelButton;
+        [SerializeField] private ButtonController multiplayerButton;
+        [SerializeField] private ButtonController optionsButton;
+        [SerializeField] private ButtonController quitButton;
         private bool _isConnecting;
         private bool _isConnectionCanceled;
         private GameObject _progressBar;
         private GameManager _gameManager;
+        private Canvas _canvas;
 
         private void Awake()
         {
@@ -36,30 +34,21 @@ namespace BattleshipGame.Managers
 
         private void Start()
         {
-            quitButton.AddListener(Quit);
-            singlePlayerButton.AddListener(PlayAgainstAI);
-            multiplayerButton.AddListener(PlayWithFriends);
-            cancelButton.AddListener(CancelConnection);
-            cancelButton.Hide();
-            optionsButton.AddListener(() => { optionsCanvas.enabled = true; });
-
-            void PlayAgainstAI()
+            _canvas = GetComponent<Canvas>();
+            singlePlayerButton.AddListener(() =>
             {
-                singlePlayerOptionDialog.Show(() =>
-                {
-                    options.aiDifficulty = Difficulty.Easy;
-                    StartLocalRoom();
-                }, () =>
-                {
-                    options.aiDifficulty = Difficulty.Hard;
-                    StartLocalRoom();
-                });
-
-                void StartLocalRoom()
-                {
-                    _gameManager.StartLocalClient();
-                }
-            }
+                _canvas.enabled = false;
+                aiSelectMenuController.Show();
+            });
+            optionsButton.AddListener(() =>
+            {
+                _canvas.enabled = false;
+                optionsMenuController.Show();
+            });
+            multiplayerButton.AddListener(PlayWithFriends);
+            multiplayerCancelButton.AddListener(CancelConnection);
+            multiplayerCancelButton.Hide();
+            quitButton.AddListener(Quit);
 
             void PlayWithFriends()
             {
@@ -70,7 +59,7 @@ namespace BattleshipGame.Managers
                     optionsButton.SetInteractable(false);
                     quitButton.SetInteractable(false);
                     multiplayerButton.Hide();
-                    cancelButton.Show();
+                    multiplayerCancelButton.Show();
                     if (progressBarCanvasPrefab) _progressBar = Instantiate(progressBarCanvasPrefab);
                     _gameManager.ConnectToServer(() =>
                     {
@@ -96,32 +85,57 @@ namespace BattleshipGame.Managers
                     multiplayerButton.SetInteractable(true);
                 }
             }
-            
+
             void CancelConnection()
             {
                 _isConnectionCanceled = true;
                 ResetMenu();
                 multiplayerButton.SetInteractable(false);
             }
-            
+
             void ResetMenu()
             {
                 singlePlayerButton.SetInteractable(true);
                 optionsButton.SetInteractable(true);
                 quitButton.SetInteractable(true);
                 multiplayerButton.Show();
-                cancelButton.Hide();
+                multiplayerCancelButton.Hide();
                 Destroy(_progressBar);
                 gameStateContainer.State = MainMenu;
             }
         }
 
-        private void Update()
+        public void Show()
         {
-            if (Input.GetKey(KeyCode.Escape)) OnNavigateBack?.Invoke();
+            _canvas.enabled = true;
+            gameStateContainer.State = MainMenu;
         }
 
-        public event Action OnNavigateBack;
+        private void Update()
+        {
+            if (Input.GetKeyDown(KeyCode.Escape))
+            {
+                // ReSharper disable once SwitchStatementHandlesSomeKnownEnumValuesWithDefault
+                switch (gameStateContainer.State)
+                {
+                    case GameStart:
+                    case MainMenu:
+                        Quit();
+                        break;
+                    case OptionsMenu:
+                        optionsMenuController.Close();
+                        break;
+                    case LanguageOptionsMenu:
+                        languageMenuController.Close();
+                        break;
+                    case AiSelectionMenu:
+                        aiSelectMenuController.Close();
+                        break;
+                    default:
+                        throw new ArgumentOutOfRangeException();
+                }
+            }
+        }
 
         // ReSharper disable once MemberCanBeMadeStatic.Local
         private void Quit()
@@ -129,7 +143,7 @@ namespace BattleshipGame.Managers
 #if UNITY_EDITOR
             EditorApplication.isPlaying = false;
 #elif UNITY_WEBGL
-                Application.OpenURL(webQuitPage);
+                Application.OpenURL("about:blank");
 #else
                 Application.Quit();
 #endif
