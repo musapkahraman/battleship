@@ -57,6 +57,7 @@ namespace BattleshipGame.Managers
                     if (Client is NetworkClient)
                     {
                         onError?.Invoke();
+                        Client = null;
                     }
                 });
         }

@@ -70,10 +70,10 @@ namespace BattleshipGame.UI
                             GameSceneManager.Instance.GoToLobby();
                     }, () =>
                     {
+                        ResetMenu();
                         _isConnecting = false;
                         _isConnectionCanceled = false;
                         gameStateContainer.State = NetworkError;
-                        ResetMenu();
                     });
                 }
 
