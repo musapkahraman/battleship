@@ -97,6 +97,10 @@
             "value": "OK"
         },
         {
+            "key": "popup_connection_lost_message",
+            "value": "Your connection with the game server is lost."
+        },
+        {
             "key": "popup_not_rematch_message",
             "value": "Your opponent has decided not to continue for another round."
         },

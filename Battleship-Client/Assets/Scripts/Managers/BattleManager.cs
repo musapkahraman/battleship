@@ -23,6 +23,7 @@ namespace BattleshipGame.Managers
         [SerializeField] private TurnHighlighter opponentStatusMapTurnHighlighter;
         [SerializeField] private ButtonController fireButton;
         [SerializeField] private ButtonController leaveButton;
+        [SerializeField] private MessageDialog connectionLostMessageDialog;
         [SerializeField] private MessageDialog leaveMessageDialog;
         [SerializeField] private MessageDialog leaveNotRematchMessageDialog;
         [SerializeField] private OptionDialog winnerOptionDialog;
@@ -43,6 +44,13 @@ namespace BattleshipGame.Managers
             {
                 _client = gameManager.Client;
                 _client.GamePhaseChanged += OnGamePhaseChanged;
+                if (_client is NetworkClient networkClient)
+                {
+                    networkClient.GetRoomConnection().OnClose += code =>
+                    {
+                        connectionLostMessageDialog.Show(() => { SceneManager.LoadScene(0); });
+                    };
+                }
             }
             else
             {

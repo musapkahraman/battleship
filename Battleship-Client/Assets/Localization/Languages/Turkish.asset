@@ -62,6 +62,8 @@ MonoBehaviour:
     value: "Rakibin oyundan ayr\u0131ld\u0131."
   - key: {fileID: 11400000, guid: e1772d2e2ff245b4fbd4f36d0977744c, type: 2}
     value: TAMAM
+  - key: {fileID: 11400000, guid: 96a683305f1559a409e51bea13ef1f0f, type: 2}
+    value: "Oyun sunucusuyla ba\u011Flant\u0131n\u0131z kesildi."
   - key: {fileID: 11400000, guid: cdf1b444b73f3364c97b41cff0cb0e7d, type: 2}
     value: Rakibin oynamak istemiyor.
   - key: {fileID: 11400000, guid: 9e93f755bbde41e4aa60a262f909d8d3, type: 2}
@@ -127,4 +129,4 @@ MonoBehaviour:
     value: "DE\u011E\u0130\u015ET\u0130RMEK \u0130\xC7\u0130N B\u0130R AYAR SE\xC7"
   - key: {fileID: 11400000, guid: c5c19390e55e1544087de481d7f56831, type: 2}
     value: "B\u0130R D\u0130L SE\xC7\u0130N"
-  keyName: status_options_language
+  keyName: 

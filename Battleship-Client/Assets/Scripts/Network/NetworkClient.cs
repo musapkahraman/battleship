@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using Colyseus;
 using DataChange = Colyseus.Schema.DataChange;
@@ -15,6 +16,16 @@ namespace BattleshipGame.Network
         private Room<LobbyState> _lobby;
         private Room<State> _room;
         public event Action<string> GamePhaseChanged;
+
+        public Connection GetRoomConnection()
+        {
+            return _room.Connection;
+        }
+
+        public Connection GetLobbyConnection()
+        {
+            return _lobby.Connection;
+        }
 
         public State GetRoomState()
         {

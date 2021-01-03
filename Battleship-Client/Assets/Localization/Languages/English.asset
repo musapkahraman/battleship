@@ -62,6 +62,8 @@ MonoBehaviour:
     value: Your opponent has quit the game.
   - key: {fileID: 11400000, guid: e1772d2e2ff245b4fbd4f36d0977744c, type: 2}
     value: OK
+  - key: {fileID: 11400000, guid: 96a683305f1559a409e51bea13ef1f0f, type: 2}
+    value: Your connection with the game server is lost.
   - key: {fileID: 11400000, guid: cdf1b444b73f3364c97b41cff0cb0e7d, type: 2}
     value: Your opponent has decided not to continue for another round.
   - key: {fileID: 11400000, guid: 9e93f755bbde41e4aa60a262f909d8d3, type: 2}
@@ -126,4 +128,4 @@ MonoBehaviour:
     value: Select an option to modify
   - key: {fileID: 11400000, guid: c5c19390e55e1544087de481d7f56831, type: 2}
     value: Select a language
-  keyName: status_options_language
+  keyName: popup_connection_lost_message

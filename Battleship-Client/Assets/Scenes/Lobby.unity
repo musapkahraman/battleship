@@ -495,6 +495,8 @@ MonoBehaviour:
   newGameButton: {fileID: 1553283945}
   joinButton: {fileID: 89234409}
   leaveButton: {fileID: 673905443}
+  connectionLostMessageDialog: {fileID: 11400000, guid: df33cafff59f8a14e85d59531c7e765f,
+    type: 2}
   gameStateContainer: {fileID: 11400000, guid: 0e5833eefdd94fd47972715dff1481c2, type: 2}
 --- !u!1 &403501903
 GameObject:

@@ -2442,6 +2442,8 @@ MonoBehaviour:
   opponentStatusMapTurnHighlighter: {fileID: 1093841622}
   fireButton: {fileID: 1547971480}
   leaveButton: {fileID: 1184911184}
+  connectionLostMessageDialog: {fileID: 11400000, guid: df33cafff59f8a14e85d59531c7e765f,
+    type: 2}
   leaveMessageDialog: {fileID: 11400000, guid: 83928ac01d3b95b43ba05cc06d49298d, type: 2}
   leaveNotRematchMessageDialog: {fileID: 11400000, guid: 3386988c78260464f9bc8713e712d86b,
     type: 2}

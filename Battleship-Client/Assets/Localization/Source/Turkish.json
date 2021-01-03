@@ -97,6 +97,10 @@
             "value": "TAMAM"
         },
         {
+            "key": "popup_connection_lost_message",
+            "value": "Oyun sunucusuyla bağlantınız kesildi."
+        },
+        {
             "key": "popup_not_rematch_message",
             "value": "Rakibin oynamak istemiyor."
         },

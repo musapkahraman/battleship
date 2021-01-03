@@ -17,6 +17,7 @@ namespace BattleshipGame.Managers
         [SerializeField] private ButtonController newGameButton;
         [SerializeField] private ButtonController joinButton;
         [SerializeField] private ButtonController leaveButton;
+        [SerializeField] private MessageDialog connectionLostMessageDialog;
         [SerializeField] private GameStateContainer gameStateContainer;
         private string _cachedRoomId = string.Empty;
         private bool _cachedRoomIdIsNotValid;
@@ -28,6 +29,10 @@ namespace BattleshipGame.Managers
             {
                 _networkClient = client;
                 _networkClient.RoomsChanged += PopulateRoomList;
+                _networkClient.GetLobbyConnection().OnClose += code =>
+                {
+                    connectionLostMessageDialog.Show(() => { SceneManager.LoadScene(0); });
+                };
             }
             else
             {
