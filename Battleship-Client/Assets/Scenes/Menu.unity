@@ -716,7 +716,7 @@ GameObject:
   - component: {fileID: 351178567}
   - component: {fileID: 351178571}
   m_Layer: 5
-  m_Name: AISelect
+  m_Name: AISelectMenu
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2227,7 +2227,7 @@ GameObject:
   - component: {fileID: 1715903432}
   - component: {fileID: 1715903436}
   m_Layer: 5
-  m_Name: Options
+  m_Name: OptionsMenu
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2489,7 +2489,7 @@ GameObject:
   - component: {fileID: 1762982125}
   - component: {fileID: 1762982129}
   m_Layer: 5
-  m_Name: Language
+  m_Name: LanguageOptionsMenu
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
