@@ -6,5 +6,6 @@ namespace BattleshipGame.Core
     public class Options : ScriptableObject
     {
         public Difficulty aiDifficulty = Difficulty.Easy;
+        public bool vibration = true;
     }
 }

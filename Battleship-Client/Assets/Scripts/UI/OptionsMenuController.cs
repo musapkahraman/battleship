@@ -1,5 +1,6 @@
 ﻿using System.IO;
 using BattleshipGame.Core;
+using BattleshipGame.Localization;
 using UnityEngine;
 using static BattleshipGame.Core.GameStateContainer.GameState;
 
@@ -11,6 +12,8 @@ namespace BattleshipGame.UI
         [SerializeField] private Options options;
         [SerializeField] private MainMenuController mainMenuController;
         [SerializeField] private LanguageMenuController languageMenuController;
+        [SerializeField] private ButtonController vibrationSwitchButton;
+        [SerializeField] private Key vibrationOnText;
         [SerializeField] private ButtonController languageButton;
         [SerializeField] private ButtonController optionsBackButton;
         private Options _lastSavedOptions;
@@ -33,6 +36,22 @@ namespace BattleshipGame.UI
                 _canvas.enabled = false;
                 languageMenuController.Show();
             });
+            
+            if (!options.vibration) vibrationSwitchButton.ChangeText(vibrationOnText);
+
+            vibrationSwitchButton.AddListener(() =>
+            {
+                if (options.vibration)
+                {
+                    options.vibration = false;
+                    vibrationSwitchButton.ChangeText(vibrationOnText);
+                }
+                else
+                {
+                    options.vibration = true;
+                    vibrationSwitchButton.ResetText();
+                }
+            });
         }
 
         public void Show()
@@ -40,7 +59,7 @@ namespace BattleshipGame.UI
             _canvas.enabled = true;
             gameStateContainer.State = OptionsMenu;
         }
-        
+
         public void Close()
         {
             SaveOptions();
@@ -54,7 +73,7 @@ namespace BattleshipGame.UI
             {
                 string dataAsJson = JsonUtility.ToJson(options);
                 File.WriteAllText(_optionsFilepath, dataAsJson);
-                CopyOptions();
+                CloneOptionsState();
             }
         }
 
@@ -64,22 +83,25 @@ namespace BattleshipGame.UI
             {
                 string json = File.ReadAllText(_optionsFilepath);
                 JsonUtility.FromJsonOverwrite(json, options);
-                CopyOptions();
+                CloneOptionsState();
             }
             else
             {
                 options.aiDifficulty = Difficulty.Easy;
+                options.vibration = true;
             }
         }
 
-        private void CopyOptions()
+        private void CloneOptionsState()
         {
             _lastSavedOptions.aiDifficulty = options.aiDifficulty;
+            _lastSavedOptions.vibration = options.vibration;
         }
 
         private bool IsAnyOptionChanged()
         {
-            return _lastSavedOptions.aiDifficulty != options.aiDifficulty;
+            return _lastSavedOptions.aiDifficulty != options.aiDifficulty ||
+                   _lastSavedOptions.vibration != options.vibration;
         }
     }
 }

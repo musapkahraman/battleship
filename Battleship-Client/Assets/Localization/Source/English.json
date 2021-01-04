@@ -69,6 +69,14 @@
             "value": "Main Menu"
         },
         {
+            "key": "btn_vibration_on",
+            "value": "Vibration on"
+        },
+        {
+            "key": "btn_vibration_off",
+            "value": "Vibration off"
+        },
+        {
             "key": "popup_leave_confirmation_header",
             "value": "Leave game"
         },

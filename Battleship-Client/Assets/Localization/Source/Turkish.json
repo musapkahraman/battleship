@@ -69,6 +69,14 @@
             "value": "ANA MENÜ"
         },
         {
+            "key": "btn_vibration_on",
+            "value": "TİTREŞİM AÇIK"
+        },
+        {
+            "key": "btn_vibration_off",
+            "value": "TİTREŞİM KAPALI"
+        },
+        {
             "key": "popup_leave_confirmation_header",
             "value": "OYUNDAN AYRIL"
         },
