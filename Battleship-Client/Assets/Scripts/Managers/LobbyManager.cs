@@ -104,7 +104,7 @@ namespace BattleshipGame.Managers
 
         public void OnRoomClicked(string roomId)
         {
-            if (_networkClient.GetSessionId() != null) return;
+            if (_networkClient.GetSessionId() != null || _networkClient.IsRoomFull(roomId)) return;
             _cachedRoomId = roomId;
             _cachedRoomIdIsNotValid = false;
             joinButton.SetInteractable(true);

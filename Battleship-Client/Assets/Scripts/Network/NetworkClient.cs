@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Data;
 using System.Linq;
 using Colyseus;
 using DataChange = Colyseus.Schema.DataChange;
@@ -156,6 +155,11 @@ namespace BattleshipGame.Network
         public bool IsRoomPasswordProtected(string roomId)
         {
             return _rooms.TryGetValue(roomId, out var room) && room.metadata.requiresPassword;
+        }
+
+        public bool IsRoomFull(string roomId)
+        {
+            return _rooms.TryGetValue(roomId, out var room) && room.maxClients <= room.clients;
         }
 
         public void RefreshRooms()
