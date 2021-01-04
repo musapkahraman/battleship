@@ -24,6 +24,6 @@ MonoBehaviour:
     linkText: Colyseus 0.13
     url: https://0-13-x.docs.colyseus.io/getting-started/unity3d-client/
   - heading: Project Setup
-    text: Choose the server type in Assets/Data/NetworkOptions.
+    text: Choose the server type in Assets/Data/Options/NetworkOptions
     linkText: 
     url: 

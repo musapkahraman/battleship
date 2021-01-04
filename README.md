@@ -14,9 +14,9 @@ Battleship game with another variant of rules.
 
 You need to create a new game in the lobby and wait for another player to join. You can give a name to your game so that your friend can find your game in the list. You can also set a password for your game to block others.
 
-The rules are a bit different from the classic battleship game. Each player has three shots per turn. This makes it harder to guess the coordinates where your opponent's ships are.
+The rules are a bit different from the classic battleship game. Each player has three shots per turn. This makes it harder to guess the coordinates of your opponent's ships.
 
-You can drag and drop ships into the maps from the pool beside them.  You can also highlight a set of three shots that you fired in previous turns by clicking on a shot. These options help you while guessing where your opponent's ships are.
+You can drag and drop ships into the maps from the pool beside them. You can also highlight a set of three shots that you fired in previous turns by clicking on a shot. These options help you find where your opponent's ships are placed.
 
 ## Usage
 
@@ -39,20 +39,16 @@ npm start
 ### Client
 
 - Add the client folder (Battleship/Battleship-Client) to your projects in Unity Hub.
-- Open the project in Unity 2019.4
-- Enable loading the "main" scene on Play button press in the editor using the menu bar:
-
-Scenes → Scene Autoload → Load Main On Play.
-
-The application starts from the Main scene (Assets/Scenes/Main.unity)
-
-- Choose the server type in Assets/Data/NetworkOptions.
+- Open the project in Unity 2019.4(LTS)
+- Choose the server type in Assets/Data/Options/NetworkOptions
 
 ### WebGL Builds
 
-You will need to edit the HTML file in the build. Add the following line inside the `<head>` element in your index.html 
+You will need to edit the HTML file in the build. Add the following line inside the `<head>` element in your index.html
 
-`<meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">`
+```html
+<meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
+```
 
 Depending on your domain setup, you might need to create an HTTPS server as well.
 
