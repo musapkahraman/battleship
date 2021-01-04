@@ -108,13 +108,14 @@ namespace BattleshipGame.Network
             });
         }
 
-        public async void CreateRoom(string name, string password, Action<string> onError = null)
+        public async void CreateRoom(string name, string password, Action onSuccess = null, Action<string> onError = null)
         {
             try
             {
                 _room = await _client.Create<State>(RoomName,
                     new Dictionary<string, object> {{"name", name}, {"password", password}});
                 RegisterRoomHandlers();
+                onSuccess?.Invoke();
             }
             catch (Exception exception)
             {
