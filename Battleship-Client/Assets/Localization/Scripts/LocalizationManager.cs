@@ -11,14 +11,6 @@ namespace BattleshipGame.Localization
         [SerializeField] private List<Language> languages = new List<Language>();
         public LocalizationOptions options;
 
-        public bool AddLanguage(Language newLanguage)
-        {
-            bool isAlreadyAdded = languages.Any(language => language.title == newLanguage.title);
-            if (isAlreadyAdded) return false;
-            languages.Add(newLanguage);
-            return true;
-        }
-
         public string GetValue(Key key)
         {
             if (languages.Count == 0) return PlaceHolder;
