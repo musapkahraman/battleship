@@ -13,8 +13,10 @@ namespace BattleshipGame.AI
         private const int ShotsSize = GridSize * GridSize;
         public readonly State State;
         private Dictionary<string, int> _health;
+        private bool _isRematching;
         private int _placementCompleteCounter;
         private Dictionary<string, int[]> _placements;
+        private string _startingPlayerLastTurn;
 
         public LocalRoom(string playerId, string enemyId)
         {
@@ -45,16 +47,25 @@ namespace BattleshipGame.AI
             if (_placementCompleteCounter == 2)
             {
                 State.players.ForEach((s, p) => _health[s] = StartingFleetHealth);
-                State.playerTurn = GetRandomUser();
+                State.playerTurn = _startingPlayerLastTurn = GetStartingPlayer();
                 State.phase = "battle";
                 State.TriggerAll();
             }
 
-            string GetRandomUser()
+            string GetStartingPlayer()
             {
-                var keys = new string[2];
+                var keys = new string[State.players.Keys.Count];
                 State.players.Keys.CopyTo(keys, 0);
-                return keys[Random.Range(0, 2)];
+                string startingPlayer = keys[Random.Range(0, keys.Length)];
+                if (_isRematching)
+                {
+                    _isRematching = false;
+                    foreach (string key in keys)
+                        if (!key.Equals(_startingPlayerLastTurn))
+                            return key;
+                }
+
+                return startingPlayer;
             }
         }
 
@@ -152,6 +163,7 @@ namespace BattleshipGame.AI
             State.playerTurn = "";
             State.winningPlayer = "";
             State.currentTurn = 1;
+            _isRematching = true;
             Start();
         }
 
