@@ -5,14 +5,14 @@ using BattleshipGame.Managers;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.SceneManagement;
-using static BattleshipGame.Core.GameStateContainer.GameState;
+using static BattleshipGame.Core.StatusData.Status;
 
 namespace BattleshipGame.UI
 {
     public class MainMenuController : MonoBehaviour
     {
         [SerializeField] private GameObject progressBarCanvasPrefab;
-        [SerializeField] private GameStateContainer gameStateContainer;
+        [SerializeField] private StatusData statusData;
         [SerializeField] private AiSelectMenuController aiSelectMenuController;
         [SerializeField] private OptionsMenuController optionsMenuController;
         [SerializeField] private LanguageMenuController languageMenuController;
@@ -73,7 +73,7 @@ namespace BattleshipGame.UI
                         ResetMenu();
                         _isConnecting = false;
                         _isConnectionCanceled = false;
-                        gameStateContainer.State = NetworkError;
+                        statusData.State = NetworkError;
                     });
                 }
 
@@ -90,7 +90,7 @@ namespace BattleshipGame.UI
         public void Show()
         {
             _canvas.enabled = true;
-            gameStateContainer.State = MainMenu;
+            statusData.State = MainMenu;
         }
 
         private void Update()
@@ -98,7 +98,7 @@ namespace BattleshipGame.UI
             if (Input.GetKeyDown(KeyCode.Escape))
             {
                 // ReSharper disable once SwitchStatementHandlesSomeKnownEnumValuesWithDefault
-                switch (gameStateContainer.State)
+                switch (statusData.State)
                 {
                     case GameStart:
                     case MainMenu:
@@ -137,7 +137,7 @@ namespace BattleshipGame.UI
             multiplayerButton.Show();
             multiplayerCancelButton.Hide();
             Destroy(_progressBar);
-            gameStateContainer.State = MainMenu;
+            statusData.State = MainMenu;
         }
 
         // ReSharper disable once MemberCanBeMadeStatic.Local

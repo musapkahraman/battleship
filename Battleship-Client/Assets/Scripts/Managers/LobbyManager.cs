@@ -4,7 +4,7 @@ using BattleshipGame.Network;
 using BattleshipGame.UI;
 using UnityEngine;
 using UnityEngine.SceneManagement;
-using static BattleshipGame.Core.GameStateContainer.GameState;
+using static BattleshipGame.Core.StatusData.Status;
 
 namespace BattleshipGame.Managers
 {
@@ -18,7 +18,7 @@ namespace BattleshipGame.Managers
         [SerializeField] private ButtonController joinButton;
         [SerializeField] private ButtonController leaveButton;
         [SerializeField] private MessageDialog connectionLostMessageDialog;
-        [SerializeField] private GameStateContainer gameStateContainer;
+        [SerializeField] private StatusData statusData;
         private string _cachedRoomId = string.Empty;
         private bool _cachedRoomIdIsNotValid;
         private NetworkClient _networkClient;
@@ -42,7 +42,7 @@ namespace BattleshipGame.Managers
 
         private void Start()
         {
-            gameStateContainer.State = BeginLobby;
+            statusData.State = BeginLobby;
             mainMenuButton.AddListener(GoToMainMenu);
             newGameButton.AddListener(NewGame);
             joinButton.AddListener(JoinGame);
@@ -94,7 +94,7 @@ namespace BattleshipGame.Managers
                 leaveButton.SetInteractable(false);
                 newGameButton.SetInteractable(true);
                 _networkClient.LeaveRoom();
-                gameStateContainer.State = BeginLobby;
+                statusData.State = BeginLobby;
             }
         }
 
@@ -119,7 +119,7 @@ namespace BattleshipGame.Managers
 
         private void GoToMainMenu()
         {
-            gameStateContainer.State = MainMenu;
+            statusData.State = MainMenu;
             GameSceneManager.Instance.GoToMenu();
         }
 
@@ -127,7 +127,7 @@ namespace BattleshipGame.Managers
         {
             newGameButton.SetInteractable(false);
             leaveButton.SetInteractable(true);
-            gameStateContainer.State = WaitingOpponentJoin;
+            statusData.State = WaitingOpponentJoin;
         }
 
         private void PopulateRoomList(Dictionary<string, Room> rooms)

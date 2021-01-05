@@ -3,20 +3,20 @@ using BattleshipGame.AI;
 using BattleshipGame.Core;
 using BattleshipGame.Network;
 using UnityEngine;
-using static BattleshipGame.Core.GameStateContainer.GameState;
+using static BattleshipGame.Core.StatusData.Status;
 
 namespace BattleshipGame.Managers
 {
     public class GameManager : Singleton<GameManager>
     {
         [SerializeField] private NetworkOptions networkOptions;
-        [SerializeField] private GameStateContainer gameStateContainer;
+        [SerializeField] private StatusData statusData;
         public IClient Client { get; private set; }
 
         protected override void Awake()
         {
             base.Awake();
-            gameStateContainer.State = GameStart;
+            statusData.State = GameStart;
         }
 
         private void OnApplicationQuit()
@@ -43,7 +43,7 @@ namespace BattleshipGame.Managers
                 GameSceneManager.Instance.GoToPlanScene();
             };
             var networkClient = (NetworkClient) Client;
-            gameStateContainer.State = Connecting;
+            statusData.State = Connecting;
             networkClient.Connect(networkOptions.EndPoint,
                 () =>
                 {

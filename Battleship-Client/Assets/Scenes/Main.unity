@@ -299,7 +299,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7a9545656eb12a14cb206c2b9019b8d2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  gameStateContainer: {fileID: 11400000, guid: 0e5833eefdd94fd47972715dff1481c2, type: 2}
+  statusData: {fileID: 11400000, guid: 0e5833eefdd94fd47972715dff1481c2, type: 2}
   statusSelectMode: {fileID: 11400000, guid: b218aff91e1431049bc00a1ecf7eac5b, type: 2}
   statusConnecting: {fileID: 11400000, guid: 96f28e78bd9533347834f8fbe583adeb, type: 2}
   statusNetworkError: {fileID: 11400000, guid: 35a339a664576714c83365856c352726, type: 2}
@@ -490,7 +490,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   networkOptions: {fileID: 11400000, guid: 62dc12998133fc84c983ee6b0b665ab8, type: 2}
-  gameStateContainer: {fileID: 11400000, guid: 0e5833eefdd94fd47972715dff1481c2, type: 2}
+  statusData: {fileID: 11400000, guid: 0e5833eefdd94fd47972715dff1481c2, type: 2}
 --- !u!4 &1560539549
 Transform:
   m_ObjectHideFlags: 0

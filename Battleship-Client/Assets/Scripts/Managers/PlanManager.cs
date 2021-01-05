@@ -6,7 +6,7 @@ using BattleshipGame.Tiling;
 using BattleshipGame.UI;
 using UnityEngine;
 using UnityEngine.SceneManagement;
-using static BattleshipGame.Core.GameStateContainer.GameState;
+using static BattleshipGame.Core.StatusData.Status;
 using static BattleshipGame.Core.GridUtils;
 
 namespace BattleshipGame.Managers
@@ -24,7 +24,7 @@ namespace BattleshipGame.Managers
         [SerializeField] private GridSpriteMapper poolGridSpriteMapper;
         [SerializeField] private Rules rules;
         [SerializeField] private PlacementMap placementMap;
-        [SerializeField] private GameStateContainer gameStateContainer;
+        [SerializeField] private StatusData statusData;
         private int _cellCount;
         private int[] _cells;
         private IClient _client;
@@ -96,7 +96,7 @@ namespace BattleshipGame.Managers
 
                     if (!isPlaced)
                     {
-                        gameStateContainer.State = PlacementImpossible;
+                        statusData.State = PlacementImpossible;
                         clearButton.SetInteractable(true);
                         randomButton.SetInteractable(false);
                         return;
@@ -106,7 +106,7 @@ namespace BattleshipGame.Managers
                 gridSpriteMapper.CacheSpritePositions();
                 poolGridSpriteMapper.CacheSpritePositions();
                 continueButton.SetInteractable(true);
-                gameStateContainer.State = PlacementReady;
+                statusData.State = PlacementReady;
             }
 
             void CompletePlacement()
@@ -115,7 +115,7 @@ namespace BattleshipGame.Managers
                 randomButton.SetInteractable(false);
                 clearButton.SetInteractable(false);
                 _client.SendPlacement(_cells);
-                gameStateContainer.State = WaitingOpponentPlacement;
+                statusData.State = WaitingOpponentPlacement;
             }
 
             void ResetPlacementMap()
@@ -133,7 +133,7 @@ namespace BattleshipGame.Managers
                 randomButton.SetInteractable(true);
                 clearButton.SetInteractable(false);
                 continueButton.SetInteractable(false);
-                gameStateContainer.State = BeginPlacement;
+                statusData.State = BeginPlacement;
                 placementMap.Clear();
                 _cells = new int[_cellCount];
                 for (var i = 0; i < _cellCount; i++) _cells[i] = EmptyCell;
@@ -178,7 +178,7 @@ namespace BattleshipGame.Managers
             }
             else
             {
-                gameStateContainer.State = MainMenu;
+                statusData.State = MainMenu;
                 GameSceneManager.Instance.GoToMenu();
             }
         }
@@ -226,7 +226,7 @@ namespace BattleshipGame.Managers
             if (_pool.Count != 0) return true;
             randomButton.SetInteractable(false);
             continueButton.SetInteractable(true);
-            gameStateContainer.State = PlacementReady;
+            statusData.State = PlacementReady;
             return true;
 
             int GetShipId(Vector3Int grabbedFrom)

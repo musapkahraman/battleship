@@ -1,13 +1,13 @@
 ﻿using BattleshipGame.Core;
 using BattleshipGame.Managers;
 using UnityEngine;
-using static BattleshipGame.Core.GameStateContainer.GameState;
+using static BattleshipGame.Core.StatusData.Status;
 
 namespace BattleshipGame.UI
 {
     public class AiSelectMenuController : MonoBehaviour
     {
-        [SerializeField] private GameStateContainer gameStateContainer;
+        [SerializeField] private StatusData statusData;
         [SerializeField] private Options options;
         [SerializeField] private MainMenuController mainMenuController;
         [SerializeField] private ButtonController easyButton;
@@ -43,7 +43,7 @@ namespace BattleshipGame.UI
         public void Show()
         {
             _canvas.enabled = true;
-            gameStateContainer.State = AiSelectionMenu;
+            statusData.State = AiSelectionMenu;
         }
 
         public void Close()

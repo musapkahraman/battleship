@@ -7,7 +7,7 @@ using BattleshipGame.UI;
 using Colyseus.Schema;
 using UnityEngine;
 using UnityEngine.SceneManagement;
-using static BattleshipGame.Core.GameStateContainer.GameState;
+using static BattleshipGame.Core.StatusData.Status;
 using static BattleshipGame.Core.GridUtils;
 
 namespace BattleshipGame.Managers
@@ -29,7 +29,7 @@ namespace BattleshipGame.Managers
         [SerializeField] private OptionDialog winnerOptionDialog;
         [SerializeField] private OptionDialog loserOptionDialog;
         [SerializeField] private OptionDialog leaveConfirmationDialog;
-        [SerializeField] private GameStateContainer gameStateContainer;
+        [SerializeField] private StatusData statusData;
         private readonly Dictionary<int, List<int>> _shots = new Dictionary<int, List<int>>();
         private readonly List<int> _shotsInCurrentTurn = new List<int>();
         private IClient _client;
@@ -67,7 +67,7 @@ namespace BattleshipGame.Managers
             foreach (var placement in placementMap.GetPlacements())
                 userMap.SetShip(placement.ship, placement.Coordinate);
 
-            gameStateContainer.State = BeginBattle;
+            statusData.State = BeginBattle;
             leaveButton.AddListener(LeaveGame);
             fireButton.AddListener(FireShots);
             fireButton.SetInteractable(false);
@@ -145,7 +145,7 @@ namespace BattleshipGame.Managers
 
             void ShowResult()
             {
-                gameStateContainer.State = BattleResult;
+                statusData.State = BattleResult;
                 if (_state.winningPlayer == _client.GetSessionId())
                 {
                     winnerOptionDialog.Show(Rematch, Leave);
@@ -158,7 +158,7 @@ namespace BattleshipGame.Managers
                 void Rematch()
                 {
                     _client.SendRematch(true);
-                    gameStateContainer.State = WaitingOpponentRematchDecision;
+                    statusData.State = WaitingOpponentRematchDecision;
                 }
 
                 void Leave()
@@ -227,7 +227,7 @@ namespace BattleshipGame.Managers
                 }
                 else
                 {
-                    gameStateContainer.State = MainMenu;
+                    statusData.State = MainMenu;
                     GameSceneManager.Instance.GoToMenu();
                 }
             });
@@ -243,7 +243,7 @@ namespace BattleshipGame.Managers
             void TurnToPlayer()
             {
                 opponentMap.IsMarkingTargets = true;
-                gameStateContainer.State = PlayerTurn;
+                statusData.State = PlayerTurn;
                 opponentMap.FlashGrids();
 
 #if UNITY_ANDROID || UNITY_IOS
@@ -253,7 +253,7 @@ namespace BattleshipGame.Managers
 
             void TurnToEnemy()
             {
-                gameStateContainer.State = OpponentTurn;
+                statusData.State = OpponentTurn;
             }
         }
 

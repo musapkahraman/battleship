@@ -4,11 +4,11 @@ using UnityEngine;
 namespace BattleshipGame.Core
 {
     [CreateAssetMenu(menuName = "Battleship/Game State Container")]
-    public class GameStateContainer : ScriptableObject
+    public class StatusData : ScriptableObject
     {
-        private GameState _state;
+        private Status _state;
 
-        public GameState State
+        public Status State
         {
             get => _state;
             set
@@ -18,9 +18,9 @@ namespace BattleshipGame.Core
             }
         }
 
-        public event Action<GameState> StateChanged;
+        public event Action<Status> StateChanged;
 
-        public enum GameState
+        public enum Status
         {
             GameStart,
             MainMenu,

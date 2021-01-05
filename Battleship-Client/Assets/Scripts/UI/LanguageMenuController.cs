@@ -2,13 +2,13 @@
 using BattleshipGame.Core;
 using BattleshipGame.Localization;
 using UnityEngine;
-using static BattleshipGame.Core.GameStateContainer.GameState;
+using static BattleshipGame.Core.StatusData.Status;
 
 namespace BattleshipGame.UI
 {
     public class LanguageMenuController : MonoBehaviour
     {
-        [SerializeField] private GameStateContainer gameStateContainer;
+        [SerializeField] private StatusData statusData;
         [SerializeField] private LocalizationOptions localizationOptions;
         [SerializeField] private OptionsMenuController optionsMenuController;
         [SerializeField] private ButtonController englishButton;
@@ -36,7 +36,7 @@ namespace BattleshipGame.UI
         public void Show()
         {
             _canvas.enabled = true;
-            gameStateContainer.State = LanguageOptionsMenu;
+            statusData.State = LanguageOptionsMenu;
         }
 
         public void Close()

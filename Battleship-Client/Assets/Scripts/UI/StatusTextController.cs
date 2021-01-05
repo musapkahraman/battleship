@@ -2,14 +2,14 @@
 using BattleshipGame.Core;
 using BattleshipGame.Localization;
 using UnityEngine;
-using static BattleshipGame.Core.GameStateContainer.GameState;
+using static BattleshipGame.Core.StatusData.Status;
 
 namespace BattleshipGame.UI
 {
     [RequireComponent(typeof(LocalizedText))]
     public class StatusTextController : MonoBehaviour
     {
-        [SerializeField] private GameStateContainer gameStateContainer;
+        [SerializeField] private StatusData statusData;
         [SerializeField] private Key statusSelectMode;
         [SerializeField] private Key statusConnecting;
         [SerializeField] private Key statusNetworkError;
@@ -29,15 +29,15 @@ namespace BattleshipGame.UI
         private void Awake()
         {
             _statusText = GetComponent<LocalizedText>();
-            gameStateContainer.StateChanged += OnGameStateChanged;
+            statusData.StateChanged += OnGameStateChanged;
         }
 
         private void OnDestroy()
         {
-            gameStateContainer.StateChanged -= OnGameStateChanged;
+            statusData.StateChanged -= OnGameStateChanged;
         }
 
-        private void OnGameStateChanged(GameStateContainer.GameState state)
+        private void OnGameStateChanged(StatusData.Status state)
         {
             switch (state)
             {
