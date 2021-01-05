@@ -185,7 +185,8 @@ namespace BattleshipGame.Managers
         public void HighlightTurn(int turn)
         {
             if (!_shots.ContainsKey(turn)) return;
-            opponentTurnHighlighter.HighlightTurns(_shots[turn]);
+            opponentTurnHighlighter.HighlightTurnShotsOnOpponentMap(_shots[turn]);
+            opponentStatusMapTurnHighlighter.HighlightTurnShotsOnOpponentStatusMap(turn);
         }
 
         public void OnOpponentMapClicked(Vector3Int cell)

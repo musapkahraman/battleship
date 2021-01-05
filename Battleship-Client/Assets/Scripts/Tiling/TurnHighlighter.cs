@@ -28,6 +28,7 @@ namespace BattleshipGame.Tiling
             var coordinate = GridUtils.ScreenToCell(eventData.position, sceneCamera, _grid, rules.areaSize);
             if (_status)
             {
+                // This is OpponentStatusMap
                 int shotTurn = _status.GetShotTurn(coordinate);
                 _clickListener.HighlightTurn(shotTurn);
             }
@@ -42,11 +43,18 @@ namespace BattleshipGame.Tiling
             _clickListener = clickListener;
         }
 
-        public void HighlightTurns(IEnumerable<int> cells)
+        public void HighlightTurnShotsOnOpponentMap(IEnumerable<int> cells)
         {
             layer.ClearAllTiles();
             foreach (int cell in cells)
                 layer.SetTile(GridUtils.CellIndexToCoordinate(cell, rules.areaSize.x), tile);
+        }
+
+        public void HighlightTurnShotsOnOpponentStatusMap(int turn)
+        {
+            layer.ClearAllTiles();
+            foreach (var coordinate in _status.GetCoordinates(turn))
+                layer.SetTile(coordinate, tile);
         }
     }
 }

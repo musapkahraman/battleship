@@ -31,6 +31,15 @@ namespace BattleshipGame.Tiling
             return NotShot;
         }
 
+        public List<Vector3Int> GetCoordinates(int turn)
+        {
+            var result = new List<Vector3Int>();
+            foreach ((int shotTurn, var vector3Int) in _shipParts)
+                if (shotTurn == turn)
+                    result.Add(vector3Int);
+            return result;
+        }
+
         public void DisplayShotEnemyShipParts(int changedShipPart, int shotTurn)
         {
             var part = _shipParts[changedShipPart];
