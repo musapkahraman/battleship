@@ -16,9 +16,9 @@ namespace BattleshipGame.UI
         [SerializeField] private Key vibrationOnText;
         [SerializeField] private ButtonController languageButton;
         [SerializeField] private ButtonController optionsBackButton;
+        private Canvas _canvas;
         private Options _lastSavedOptions;
         private string _optionsFilepath;
-        private Canvas _canvas;
 
         private void Awake()
         {
@@ -37,8 +37,8 @@ namespace BattleshipGame.UI
                 languageMenuController.Show();
             });
             
+#if UNITY_ANDROID || UNITY_IOS || UNITY_EDITOR
             if (!options.vibration) vibrationSwitchButton.ChangeText(vibrationOnText);
-
             vibrationSwitchButton.AddListener(() =>
             {
                 if (options.vibration)
@@ -52,6 +52,9 @@ namespace BattleshipGame.UI
                     vibrationSwitchButton.ResetText();
                 }
             });
+#else
+            vibrationSwitchButton.Hide();
+#endif
         }
 
         public void Show()
