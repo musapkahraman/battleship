@@ -38,17 +38,17 @@ namespace BattleshipGame.Network
 
         public void SendPlacement(int[] placement)
         {
-            _room.Send("place", placement);
+            _room.Send(RoomMessage.Place, placement);
         }
 
         public void SendTurn(int[] targetIndexes)
         {
-            _room.Send("turn", targetIndexes);
+            _room.Send(RoomMessage.Turn, targetIndexes);
         }
 
         public void SendRematch(bool isRematching)
         {
-            _room.Send("rematch", isRematching);
+            _room.Send(RoomMessage.Rematch, isRematching);
         }
 
         public void LeaveRoom()
@@ -77,7 +77,7 @@ namespace BattleshipGame.Network
 
         private void RegisterLobbyHandlers()
         {
-            _lobby.OnMessage<Room[]>("rooms", message =>
+            _lobby.OnMessage<Room[]>(LobbyMessage.Rooms, message =>
             {
                 foreach (var room in message)
                     if (!_rooms.ContainsKey(room.roomId))
@@ -86,9 +86,10 @@ namespace BattleshipGame.Network
                 RoomsChanged?.Invoke(_rooms);
             });
 
-            _lobby.OnMessage<object[]>("+", message => { _lobby.Send("roomInfo", message[0]); });
+            _lobby.OnMessage<object[]>(LobbyMessage.Add,
+                message => { _lobby.Send(LobbyMessage.RoomInfo, message[0]); });
 
-            _lobby.OnMessage<Room>("roomInfo", room =>
+            _lobby.OnMessage<Room>(LobbyMessage.RoomInfo, room =>
             {
                 if (room == null)
                     _rooms.Clear();
@@ -100,7 +101,7 @@ namespace BattleshipGame.Network
                 RoomsChanged?.Invoke(_rooms);
             });
 
-            _lobby.OnMessage<string>("-", roomId =>
+            _lobby.OnMessage<string>(LobbyMessage.Remove, roomId =>
             {
                 if (!_rooms.ContainsKey(roomId)) return;
                 _rooms.Remove(roomId);
@@ -108,31 +109,32 @@ namespace BattleshipGame.Network
             });
         }
 
-        public async void CreateRoom(string name, string password, Action onSuccess = null, Action<string> onError = null)
+        public async void CreateRoom(string name, string password, Action success = null, Action<string> error = null)
         {
             try
             {
                 _room = await _client.Create<State>(RoomName,
-                    new Dictionary<string, object> {{"name", name}, {"password", password}});
+                    new Dictionary<string, object> {{RoomOption.Name, name}, {RoomOption.Password, password}});
                 RegisterRoomHandlers();
-                onSuccess?.Invoke();
+                success?.Invoke();
             }
             catch (Exception exception)
             {
-                onError?.Invoke(exception.Message);
+                error?.Invoke(exception.Message);
             }
         }
 
-        public async void JoinRoom(string roomId, string password, Action<string> onError = null)
+        public async void JoinRoom(string roomId, string password, Action<string> error = null)
         {
             try
             {
-                _room = await _client.JoinById<State>(roomId, new Dictionary<string, object> {{"password", password}});
+                _room = await _client.JoinById<State>(roomId,
+                    new Dictionary<string, object> {{RoomOption.Name, password}});
                 RegisterRoomHandlers();
             }
             catch (Exception exception)
             {
-                onError?.Invoke(exception.Message);
+                error?.Invoke(exception.Message);
             }
         }
 
@@ -142,7 +144,7 @@ namespace BattleshipGame.Network
 
             void OnRoomStateChange(List<DataChange> changes)
             {
-                foreach (var change in changes.Where(change => change.Field == "phase"))
+                foreach (var change in changes.Where(change => change.Field == RoomState.Phase))
                     GamePhaseChanged?.Invoke((string) change.Value);
             }
         }

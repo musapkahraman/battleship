@@ -25,10 +25,10 @@ namespace BattleshipGame.AI
                 foreach (var change in changes)
                     switch (change.Field)
                     {
-                        case "phase":
+                        case RoomState.Phase:
                             GamePhaseChanged?.Invoke((string) change.Value);
                             break;
-                        case "playerTurn":
+                        case RoomState.PlayerTurn:
                             if (EnemyId.Equals((string) change.Value))
                                 StartCoroutine(_enemy.GetShots(cells => _room.Turn(EnemyId, cells)));
                             break;

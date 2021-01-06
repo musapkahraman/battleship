@@ -20,7 +20,7 @@ namespace BattleshipGame.AI
 
         public LocalRoom(string playerId, string enemyId)
         {
-            State = new State {players = new MapSchema<Player>(), phase = "waiting", currentTurn = 1};
+            State = new State {players = new MapSchema<Player>(), phase = RoomPhase.Waiting, currentTurn = 1};
             var player = new Player {sessionId = playerId};
             var enemy = new Player {sessionId = enemyId};
             State.players.Add(playerId, player);
@@ -35,7 +35,7 @@ namespace BattleshipGame.AI
 
         public void Start()
         {
-            State.phase = "place";
+            State.phase = RoomPhase.Place;
             State.TriggerAll();
         }
 
@@ -48,7 +48,7 @@ namespace BattleshipGame.AI
             {
                 State.players.ForEach((s, p) => _health[s] = StartingFleetHealth);
                 State.playerTurn = _startingPlayerLastTurn = GetStartingPlayer();
-                State.phase = "battle";
+                State.phase = RoomPhase.Battle;
                 State.TriggerAll();
             }
 
@@ -118,7 +118,7 @@ namespace BattleshipGame.AI
             if (_health[opponent.sessionId] <= 0)
             {
                 State.winningPlayer = player.sessionId;
-                State.phase = "result";
+                State.phase = RoomPhase.Result;
             }
             else
             {
@@ -154,14 +154,14 @@ namespace BattleshipGame.AI
         {
             if (!isRematching)
             {
-                State.phase = "leave";
+                State.phase = RoomPhase.Leave;
                 return;
             }
 
             ResetPlayers();
             _placementCompleteCounter = 0;
-            State.playerTurn = "";
-            State.winningPlayer = "";
+            State.playerTurn = string.Empty;
+            State.winningPlayer = string.Empty;
             State.currentTurn = 1;
             _isRematching = true;
             Start();

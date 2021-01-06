@@ -122,17 +122,17 @@ namespace BattleshipGame.Managers
         {
             switch (phase)
             {
-                case "battle":
+                case RoomPhase.Battle:
                     SwitchTurns();
                     break;
-                case "result":
+                case RoomPhase.Result:
                     ShowResult();
                     break;
-                case "waiting":
+                case RoomPhase.Waiting:
                     if (_leavePopUpIsOn) break;
                     leaveMessageDialog.Show(GoBackToLobby);
                     break;
-                case "leave":
+                case RoomPhase.Leave:
                     _leavePopUpIsOn = true;
                     leaveNotRematchMessageDialog.Show(GoBackToLobby);
                     break;
@@ -259,7 +259,7 @@ namespace BattleshipGame.Managers
 
         private void OnStateChanged(List<DataChange> changes)
         {
-            foreach (var _ in changes.Where(change => change.Field == "playerTurn"))
+            foreach (var _ in changes.Where(change => change.Field == RoomState.PlayerTurn))
                 SwitchTurns();
         }
 

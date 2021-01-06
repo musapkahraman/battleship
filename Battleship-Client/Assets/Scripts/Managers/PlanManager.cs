@@ -187,15 +187,15 @@ namespace BattleshipGame.Managers
         {
             switch (phase)
             {
-                case "battle":
+                case RoomPhase.Battle:
                     GameSceneManager.Instance.GoToBattleScene();
                     break;
-                case "result":
+                case RoomPhase.Result:
                     break;
-                case "waiting":
+                case RoomPhase.Waiting:
                     leaveMessageDialog.Show(() => GameSceneManager.Instance.GoToLobby());
                     break;
-                case "leave":
+                case RoomPhase.Leave:
                     break;
             }
         }

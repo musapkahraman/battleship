@@ -39,7 +39,7 @@ namespace BattleshipGame.Managers
             Client = new NetworkClient();
             Client.GamePhaseChanged += phase =>
             {
-                if (phase != "place") return;
+                if (phase != RoomPhase.Place) return;
                 GameSceneManager.Instance.GoToPlanScene();
             };
             var networkClient = (NetworkClient) Client;
@@ -70,7 +70,7 @@ namespace BattleshipGame.Managers
             Client = localClient;
             Client.GamePhaseChanged += phase =>
             {
-                if (phase != "place") return;
+                if (phase != RoomPhase.Place) return;
                 GameSceneManager.Instance.GoToPlanScene();
             };
             Client.Connect();
