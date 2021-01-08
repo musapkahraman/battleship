@@ -39,7 +39,7 @@ npm start
 ### Client
 
 - Add the client folder (Battleship/Battleship-Client) to your projects in Unity Hub.
-- Open the project in Unity 2019.4(LTS)
+- Open the project in Unity 2020.2
 - Choose the server type in Assets/Data/Options/NetworkOptions
 
 ### WebGL Builds

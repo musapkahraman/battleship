@@ -15,6 +15,7 @@ namespace BattleshipGame.Managers
 {
     public class BattleManager : MonoBehaviour, IBattleMapClickListener, ITurnClickListener
     {
+        [SerializeField] private Options options;
         [SerializeField] private Rules rules;
         [SerializeField] private BattleMap userMap;
         [SerializeField] private BattleMap opponentMap;
@@ -248,7 +249,10 @@ namespace BattleshipGame.Managers
                 opponentMap.FlashGrids();
 
 #if UNITY_ANDROID || UNITY_IOS
-                Handheld.Vibrate();
+                if (options.vibration)
+                {
+                    Handheld.Vibrate();
+                }
 #endif
             }
 

@@ -6,7 +6,7 @@ using UnityEngine.Tilemaps;
 
 namespace BattleshipGame.Tiling
 {
-    [RequireComponent(typeof(Grid), typeof(BoxCollider2D), typeof(GridSpriteMapper))]
+    [RequireComponent(typeof(Grid), typeof(BoxCollider2D))]
     public class TileDragger : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHandler
     {
         [SerializeField] private GameObject dragShipPrefab;
