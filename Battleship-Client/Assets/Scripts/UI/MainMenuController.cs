@@ -4,6 +4,7 @@ using BattleshipGame.Core;
 using BattleshipGame.Managers;
 using UnityEditor;
 using UnityEngine;
+using UnityEngine.InputSystem;
 using UnityEngine.SceneManagement;
 using static BattleshipGame.Core.StatusData.Status;
 
@@ -95,7 +96,7 @@ namespace BattleshipGame.UI
 
         private void Update()
         {
-            if (Input.GetKeyDown(KeyCode.Escape))
+            if (Keyboard.current.escapeKey.wasPressedThisFrame)
             {
                 // ReSharper disable once SwitchStatementHandlesSomeKnownEnumValuesWithDefault
                 switch (statusData.State)

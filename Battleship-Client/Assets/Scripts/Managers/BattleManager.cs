@@ -6,6 +6,7 @@ using BattleshipGame.Tiling;
 using BattleshipGame.UI;
 using Colyseus.Schema;
 using UnityEngine;
+using UnityEngine.InputSystem;
 using UnityEngine.SceneManagement;
 using static BattleshipGame.Core.StatusData.Status;
 using static BattleshipGame.Core.GridUtils;
@@ -96,7 +97,7 @@ namespace BattleshipGame.Managers
 
         private void Update()
         {
-            if (Input.GetKeyDown(KeyCode.Escape)) LeaveGame();
+            if (Keyboard.current.escapeKey.wasPressedThisFrame) LeaveGame();
         }
 
         private void OnDestroy()

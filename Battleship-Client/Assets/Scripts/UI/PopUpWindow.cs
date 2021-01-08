@@ -3,7 +3,9 @@ using BattleshipGame.Localization;
 using TMPro;
 using UnityEngine;
 using UnityEngine.Events;
+using UnityEngine.InputSystem;
 using UnityEngine.UI;
+using Key = BattleshipGame.Localization.Key;
 
 namespace BattleshipGame.UI
 {
@@ -28,7 +30,7 @@ namespace BattleshipGame.UI
 
         private void Update()
         {
-            if (!Input.GetKeyDown(KeyCode.Tab) || !passwordInput || !nameInput) return;
+            if (!Keyboard.current.tabKey.wasPressedThisFrame || !passwordInput || !nameInput) return;
             if (nameInput.isFocused)
                 passwordInput.ActivateInputField();
             else

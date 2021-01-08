@@ -3,6 +3,7 @@ using BattleshipGame.Core;
 using BattleshipGame.Network;
 using BattleshipGame.UI;
 using UnityEngine;
+using UnityEngine.InputSystem;
 using UnityEngine.SceneManagement;
 using static BattleshipGame.Core.StatusData.Status;
 
@@ -100,7 +101,7 @@ namespace BattleshipGame.Managers
 
         private void Update()
         {
-            if (Input.GetKeyDown(KeyCode.Escape)) GoToMainMenu();
+            if (Keyboard.current.escapeKey.wasPressedThisFrame) GoToMainMenu();
         }
 
         private void OnDestroy()
