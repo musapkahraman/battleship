@@ -54,7 +54,14 @@ namespace BattleshipGame.Tiling
         {
             if (!_grabbedShip) return;
 
-            bool isOverTheTarget = eventData.hovered.Contains(targetMap.gameObject);
+            var isOverTheTarget = false;
+#if UNITY_ANDROID || UNITY_IOS
+            var ray = sceneCamera.ScreenPointToRay(eventData.position);
+            var raycast2d = Physics2D.Raycast(ray.origin, ray.direction, 100);
+            if (raycast2d) isOverTheTarget = raycast2d.transform.gameObject.Equals(targetMap.gameObject);
+#else
+            isOverTheTarget = eventData.hovered.Contains(targetMap.gameObject);
+#endif
 
             if (removeIfDraggedOut && !isOverTheTarget)
             {
