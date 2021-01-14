@@ -10,7 +10,6 @@ namespace BattleshipGame.Core
         {
             int cellIndex = coordinate.y * areaSize.x + coordinate.x;
             if (cellIndex >= 0 && cellIndex < areaSize.x * areaSize.y) return cellIndex;
-            Debug.LogError($"Out of range! Input: {coordinate} | Output: {cellIndex}");
             return OutOfMap;
         }
 

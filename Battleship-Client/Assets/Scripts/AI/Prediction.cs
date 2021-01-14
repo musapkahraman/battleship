@@ -7,23 +7,26 @@ namespace BattleshipGame.AI
 {
     public class Prediction
     {
-        private Vector2Int _areaSize;
         private readonly SortedDictionary<int, List<Pattern>> _patterns = new SortedDictionary<int, List<Pattern>>();
         private readonly Dictionary<int, List<Probability>> _probabilityMap = new Dictionary<int, List<Probability>>();
+
+        // private readonly List<int> _allShots = new List<int>();
+        private readonly Rules _rules;
         private List<int> _playerShipsHealth = new List<int>(); // To figure out diffs on each Prediction.Update call.
-        private List<int> _shots;
+
+        private List<int> _shotsAtLastTurn;
 
         public Prediction(Rules rules)
         {
-            _areaSize = rules.areaSize;
-            InitProbabilityMap(rules);
+            _rules = rules;
+            InitProbabilityMap();
         }
 
-        private void InitProbabilityMap(Rules rules)
+        private void InitProbabilityMap()
         {
-            int cellCount = rules.areaSize.x * rules.areaSize.y;
+            int cellCount = _rules.areaSize.x * _rules.areaSize.y;
             var shipId = 0;
-            foreach (var ship in rules.ships)
+            foreach (var ship in _rules.ships)
             {
                 float shipProbability = CalculateProbability(ship.partCoordinates.Count, cellCount);
                 for (var i = 0; i < ship.amount; i++)
@@ -56,6 +59,12 @@ namespace BattleshipGame.AI
         {
             var cells = new List<int>();
 
+            for (var shipId = 0; shipId < _playerShipsHealth.Count; shipId++)
+            {
+                if (cells.Count >= size) break;
+                CheckOverShipPattern(shipId, cells);
+            }
+
             var probabilities = (from cell in unmarkedCells
                 let sum = shipIds.Sum(shipId => GetProbabilityValue(shipId, cell))
                 select new Probability(cell, sum)).ToList();
@@ -77,7 +86,8 @@ namespace BattleshipGame.AI
                     randomPool.Remove(cells[i]);
                 }
 
-                _shots = cells.ToList();
+                _shotsAtLastTurn = cells.ToList();
+                // _allShots.AddRange(_shotsAtLastTurn);
                 return cells;
             }
 
@@ -88,8 +98,27 @@ namespace BattleshipGame.AI
                 cells.Add(probability.Cell);
             }
 
-            _shots = cells.ToList();
+            _shotsAtLastTurn = cells.ToList();
+            // _allShots.AddRange(_shotsAtLastTurn);
             return cells;
+        }
+
+        private void CheckOverShipPattern(int shipId, ICollection<int> cells)
+        {
+            if (!_patterns.ContainsKey(shipId)) return;
+            Debug.Log($"Ship {shipId} has {_patterns[shipId].Count} patterns.");
+            foreach (var pattern in _patterns[shipId])
+            foreach (var shipPart in pattern.Ship.partCoordinates)
+            {
+                var checkedParts = pattern.CheckedPartCoordinates.ToList();
+                if (checkedParts.Any(checkedPart => !shipPart.Equals(checkedPart)))
+                {
+                    Debug.Log($"Shooting at pattern for ship {shipId}:{pattern.Ship.name} at {shipPart}");
+                    cells.Add(GridUtils.CoordinateToCellIndex(pattern.Pivot + (Vector3Int) shipPart, _rules.areaSize));
+                    pattern.CheckedPartCoordinates.Add(shipPart);
+                    return;
+                }
+            }
         }
 
         public void Update(List<int> playerShipsHealth, SortedDictionary<int, Ship> pool)
@@ -116,29 +145,29 @@ namespace BattleshipGame.AI
 
             void FindPossiblePatterns()
             {
-                if (_shots == null)
+                if (_shotsAtLastTurn == null)
                 {
                     Debug.Log("This is the first call.");
                     return;
                 }
 
-                foreach (int shot in _shots)
+                foreach (int shot in _shotsAtLastTurn)
                 {
-                    var shotCoordinate = GridUtils.CellIndexToCoordinate(shot, _areaSize.x);
+                    var shotCoordinate = GridUtils.CellIndexToCoordinate(shot, _rules.areaSize.x);
                     Debug.Log($"Pattern try for shot at cell: {shot} -> {shotCoordinate}");
                     foreach (int shipId in damagedShips)
                     {
                         var ship = pool[shipId];
                         Debug.Log($"ship: {shipId}, {ship.name}");
-                        (int shipWidth, int shipHeight) = ship.GetShipSize();
+
                         foreach (var shipPartCoordinate in ship.partCoordinates)
                         {
                             var cellCoordinate = shotCoordinate - (Vector3Int) shipPartCoordinate;
-                            if (CanPatternBePlaced(cellCoordinate, shipWidth, shipHeight))
+                            if (CanPatternBePlaced(cellCoordinate, ship))
                             {
                                 Debug.Log($"{shipPartCoordinate} fits.");
                                 if (!_patterns.ContainsKey(shipId)) _patterns.Add(shipId, new List<Pattern>());
-                                _patterns[shipId].Add(new Pattern(ship, shipPartCoordinate, shot, shotCoordinate));
+                                _patterns[shipId].Add(new Pattern(ship, cellCoordinate, shipPartCoordinate));
                             }
                         }
                     }
@@ -146,12 +175,23 @@ namespace BattleshipGame.AI
             }
         }
 
-        private bool CanPatternBePlaced(Vector3Int cellCoordinate, int shipWidth, int shipHeight)
+        private bool CanPatternBePlaced(Vector3Int cellCoordinate, Ship ship)
         {
-            bool dimensionCheck =
-                GridUtils.DoesShipFitIn(shipWidth, shipHeight, cellCoordinate, _areaSize);
+            (int shipWidth, int shipHeight) = ship.GetShipSize();
+            bool dimensionCheck = GridUtils.DoesShipFitIn(shipWidth, shipHeight, cellCoordinate, _rules.areaSize);
 
             // No missed shots beneath the pattern
+            // bool shotCellsCheck = false;
+            //
+            // foreach (int shot in _allShots)
+            // {
+            //     var shotCoordinate = GridUtils.CellIndexToCoordinate(shot, _rules.areaSize.x);
+            //     foreach (var shipPartCoordinate in ship.partCoordinates)
+            //     {
+            //     var coordinate = shipPartCoordinate+
+            //     
+            //     }
+            // }
 
             // No certainly marked ships and its 1 unit margin beneath the pattern
 

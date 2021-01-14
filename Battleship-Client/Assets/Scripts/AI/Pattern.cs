@@ -1,4 +1,5 @@
-﻿using BattleshipGame.Core;
+﻿using System.Collections.Generic;
+using BattleshipGame.Core;
 using UnityEngine;
 
 namespace BattleshipGame.AI
@@ -6,16 +7,14 @@ namespace BattleshipGame.AI
     public struct Pattern
     {
         public Ship Ship;
-        public Vector2Int ShotPartOfShip;
-        public int ShotCell;
-        public Vector3Int ShotCellCoordinate;
+        public Vector3Int Pivot;
+        public List<Vector2Int> CheckedPartCoordinates;
 
-        public Pattern(Ship ship, Vector2Int shotPartOfShip, int shotCell, Vector3Int shotCellCoordinate)
+        public Pattern(Ship ship, Vector3Int pivot, Vector2Int shotPartOfShip)
         {
             Ship = ship;
-            ShotPartOfShip = shotPartOfShip;
-            ShotCell = shotCell;
-            ShotCellCoordinate = shotCellCoordinate;
+            Pivot = pivot;
+            CheckedPartCoordinates = new List<Vector2Int> {shotPartOfShip};
         }
     }
 }
