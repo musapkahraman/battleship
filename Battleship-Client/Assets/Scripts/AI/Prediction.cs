@@ -167,7 +167,14 @@ namespace BattleshipGame.AI
                 {
                     Debug.Log($"Ship {shipId} was damaged {damage} units.");
                     damagedShips.Add(shipId);
-                    if (damage > 1) Debug.Log($"Ship {shipId} had multiple shots.");
+                    if (damage > 1)
+                    {
+                        Debug.Log($"Ship {shipId} had multiple shots.");
+                        if (FindInPatterns(shipId, out var pattern))
+                        {
+                            RemoveOtherPatterns(shipId, pattern);
+                        }
+                    }
 
                     if (playerShipsHealth[shipId] <= 0) Debug.Log($"Ship {shipId} was sunk.");
                 }
@@ -206,6 +213,32 @@ namespace BattleshipGame.AI
                         }
                     }
                 }
+            }
+
+            bool FindInPatterns(int shipId, out Pattern pattern)
+            {
+                pattern = new Pattern();
+                foreach (var p in _patterns[shipId])
+                {
+                    int counter = (from shipPartCoordinate in p.Ship.partCoordinates
+                        select (Vector3Int) shipPartCoordinate + p.Pivot into partCoordinate
+                        select GridUtils.CoordinateToCellIndex(partCoordinate, _rules.areaSize) into partCellIndex
+                        select _shotsAtLastTurn.Count(shot => shot == partCellIndex)).Sum();
+
+                    if (counter > 1)
+                    {
+                        pattern = p;
+                        return true;
+                    }
+                }
+
+                return false;
+            }
+
+            void RemoveOtherPatterns(int shipId, Pattern pattern)
+            {
+                _patterns[shipId].Clear();
+                _patterns[shipId].Add(pattern);
             }
         }
 
