@@ -6,9 +6,9 @@ namespace BattleshipGame.AI
 {
     public struct Pattern
     {
-        public Ship Ship;
+        public readonly Ship Ship;
         public Vector3Int Pivot;
-        public List<Vector2Int> CheckedPartCoordinates;
+        public readonly List<Vector2Int> CheckedPartCoordinates;
 
         public Pattern(Ship ship, Vector3Int pivot, Vector2Int shotPartOfShip)
         {
