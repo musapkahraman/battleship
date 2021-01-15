@@ -8,12 +8,13 @@ namespace BattleshipGame.AI
     public class Prediction
     {
         private readonly SortedDictionary<int, List<Pattern>> _patterns = new SortedDictionary<int, List<Pattern>>();
+        private readonly Dictionary<int, Pattern> _patternsTrackedLastTurn = new Dictionary<int, Pattern>();
         private readonly Dictionary<int, List<Probability>> _probabilityMap = new Dictionary<int, List<Probability>>();
         private readonly Rules _rules;
         private List<int> _playerShipsHealth = new List<int>(); // To figure out diffs on each Prediction.Update call.
 
         private List<int> _shotsAtLastTurn;
-        // private readonly List<int> _allShots = new List<int>();
+        private readonly List<int> _allShots = new List<int>();
 
         public Prediction(Rules rules)
         {
@@ -86,7 +87,7 @@ namespace BattleshipGame.AI
         public List<int> GetMostProbableCells(IEnumerable<int> unmarkedCells, int size, IEnumerable<int> shipIds)
         {
             var cells = new List<int>();
-
+            _patternsTrackedLastTurn.Clear();
             for (var shipId = 0; shipId < _playerShipsHealth.Count; shipId++)
             {
                 if (cells.Count >= size) break;
@@ -115,7 +116,7 @@ namespace BattleshipGame.AI
                 }
 
                 _shotsAtLastTurn = cells.ToList();
-                // _allShots.AddRange(_shotsAtLastTurn);
+                _allShots.AddRange(_shotsAtLastTurn);
                 return cells;
             }
 
@@ -127,7 +128,7 @@ namespace BattleshipGame.AI
             }
 
             _shotsAtLastTurn = cells.ToList();
-            // _allShots.AddRange(_shotsAtLastTurn);
+            _allShots.AddRange(_shotsAtLastTurn);
             return cells;
 
             void CheckOverShipPattern(int shipId)
@@ -139,12 +140,16 @@ namespace BattleshipGame.AI
                 {
                     if (!IsPartChecked(shipPart, pattern.CheckedPartCoordinates.ToList()))
                     {
-                        Debug.Log($"Shooting at pattern for ship {shipId}:{pattern.Ship.name} on {shipPart}" +
-                                  $" at {GridUtils.CoordinateToCellIndex(pattern.Pivot + (Vector3Int) shipPart, _rules.areaSize)}");
-                        cells.Add(GridUtils.CoordinateToCellIndex(pattern.Pivot + (Vector3Int) shipPart,
-                            _rules.areaSize));
-                        pattern.CheckedPartCoordinates.Add(shipPart);
-                        return;
+                        var coordinate = pattern.Pivot + (Vector3Int) shipPart;
+                        int cellIndex = GridUtils.CoordinateToCellIndex(coordinate, _rules.areaSize);
+                        if (!IsAlreadyShot(cellIndex))
+                        {
+                            cells.Add(cellIndex);
+                            Debug.Log($"Shooting at pattern for ship {shipId} on {shipPart}" + $" at {coordinate}");
+                            pattern.CheckedPartCoordinates.Add(shipPart);
+                            _patternsTrackedLastTurn.Add(shipId, pattern);
+                            return;
+                        }
                     }
                 }
             }
@@ -152,6 +157,11 @@ namespace BattleshipGame.AI
             static bool IsPartChecked(Vector2Int shipPart, IEnumerable<Vector2Int> checkedParts)
             {
                 return checkedParts.Any(shipPart.Equals);
+            }
+
+            bool IsAlreadyShot(int cellIndex)
+            {
+                return _allShots.Any(shot => cellIndex == shot);
             }
         }
 
@@ -176,7 +186,23 @@ namespace BattleshipGame.AI
                         }
                     }
 
-                    if (playerShipsHealth[shipId] <= 0) Debug.Log($"Ship {shipId} was sunk.");
+                    if (playerShipsHealth[shipId] <= 0)
+                    {
+                        Debug.Log($"Ship {shipId} was sunk.");
+                        if (_patterns.ContainsKey(shipId))
+                        {
+                            _patterns.Remove(shipId);
+                        }
+                    }
+                }
+                else
+                {
+                    // No shots on this ship. Remove any tracked pattern intervening with this shot.
+                    if (_patterns.ContainsKey(shipId) && _patternsTrackedLastTurn.ContainsKey(shipId))
+                    {
+                        _patterns[shipId].Remove(_patternsTrackedLastTurn[shipId]);
+                        _patternsTrackedLastTurn.Remove(shipId);
+                    }
                 }
             }
 
@@ -221,8 +247,10 @@ namespace BattleshipGame.AI
                 foreach (var p in _patterns[shipId])
                 {
                     int counter = (from shipPartCoordinate in p.Ship.partCoordinates
-                        select (Vector3Int) shipPartCoordinate + p.Pivot into partCoordinate
-                        select GridUtils.CoordinateToCellIndex(partCoordinate, _rules.areaSize) into partCellIndex
+                        select (Vector3Int) shipPartCoordinate + p.Pivot
+                        into partCoordinate
+                        select GridUtils.CoordinateToCellIndex(partCoordinate, _rules.areaSize)
+                        into partCellIndex
                         select _shotsAtLastTurn.Count(shot => shot == partCellIndex)).Sum();
 
                     if (counter > 1)
