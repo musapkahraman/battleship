@@ -26,6 +26,7 @@ namespace BattleshipGame.AI
                     switch (change.Field)
                     {
                         case RoomState.Phase:
+                            Debug.Log("LocalClient._room.State.OnChange");
                             GamePhaseChanged?.Invoke((string) change.Value);
                             break;
                         case RoomState.PlayerTurn:
@@ -73,6 +74,7 @@ namespace BattleshipGame.AI
 
         public void SendRematch(bool isRematching)
         {
+            Debug.Log($"SendRematch({isRematching})");
             _enemy.ResetForRematch();
             _room.Rematch(isRematching);
         }

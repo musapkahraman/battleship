@@ -55,6 +55,7 @@ namespace BattleshipGame.AI
 
         public void ResetForRematch()
         {
+            Debug.Log("ResetForRematch()");
             OnEnable();
         }
 
@@ -68,6 +69,8 @@ namespace BattleshipGame.AI
                     _playerShipsHealth[ship.Key]--;
                 partIndex++;
             }
+
+            _prediction?.Update(_playerShipsHealth, _pool);
         }
 
         public IEnumerator GetShots(Action<int[]> onComplete)
@@ -89,9 +92,6 @@ namespace BattleshipGame.AI
         private int[] GetPredictedCells()
         {
             if (_prediction == null || _uncheckedCells.Count == 0) return null;
-
-            _prediction.Update(_playerShipsHealth, _pool);
-
             var shipsRemaining = new List<int>();
             for (var shipId = 0; shipId < _playerShipsHealth.Count; shipId++)
                 if (_playerShipsHealth[shipId] > 0)
@@ -143,7 +143,7 @@ namespace BattleshipGame.AI
             bool PlaceShip(int shipId, Ship ship, Vector3Int pivot)
             {
                 (int shipWidth, int shipHeight) = ship.GetShipSize();
-                if (!GridUtils.DoesShipFitIn(shipWidth, shipHeight, pivot, rules.areaSize)) return false;
+                if (!GridUtils.IsInsideBoundaries(shipWidth, shipHeight, pivot, rules.areaSize)) return false;
                 if (DoesCollideWithOtherShip(shipId, pivot, shipWidth, shipHeight)) return false;
                 RegisterShipToCells(shipId, ship, pivot);
                 return true;

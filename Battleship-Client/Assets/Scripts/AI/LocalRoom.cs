@@ -36,6 +36,7 @@ namespace BattleshipGame.AI
         public void Start()
         {
             State.phase = RoomPhase.Place;
+            Debug.Log("LocalRoom.Start");
             State.TriggerAll();
         }
 
@@ -49,6 +50,7 @@ namespace BattleshipGame.AI
                 State.players.ForEach((s, p) => _health[s] = StartingFleetHealth);
                 State.playerTurn = _startingPlayerLastTurn = GetStartingPlayer();
                 State.phase = RoomPhase.Battle;
+                Debug.Log("LocalRoom.Place");
                 State.TriggerAll();
             }
 
@@ -126,6 +128,7 @@ namespace BattleshipGame.AI
                 State.currentTurn++;
             }
 
+            Debug.Log("LocalRoom.Turn");
             State.TriggerAll();
 
             void UpdateShips(ArraySchema<int> ships, int start, int end, int turn)
@@ -152,6 +155,7 @@ namespace BattleshipGame.AI
 
         public void Rematch(bool isRematching)
         {
+            Debug.Log($"LocalRoom.Rematch({isRematching})");
             if (!isRematching)
             {
                 State.phase = RoomPhase.Leave;

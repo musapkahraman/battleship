@@ -7,6 +7,9 @@ namespace BattleshipGame.AI
 {
     public class Prediction
     {
+        private readonly List<int> _allShots = new List<int>();
+        private readonly List<bool> _isShipFound = new List<bool>();
+        private readonly List<int> _missedShots = new List<int>();
         private readonly SortedDictionary<int, List<Pattern>> _patterns = new SortedDictionary<int, List<Pattern>>();
         private readonly Dictionary<int, Pattern> _patternsTrackedLastTurn = new Dictionary<int, Pattern>();
         private readonly Dictionary<int, List<Probability>> _probabilityMap = new Dictionary<int, List<Probability>>();
@@ -14,16 +17,19 @@ namespace BattleshipGame.AI
         private List<int> _playerShipsHealth = new List<int>(); // To figure out diffs on each Prediction.Update call.
 
         private List<int> _shotsAtLastTurn;
-        private readonly List<int> _allShots = new List<int>();
 
         public Prediction(Rules rules)
         {
             _rules = rules;
 
-            // Initialize the local list to hold the health values of player ships. This is to figure out diffs.
             foreach (var ship in _rules.ships)
                 for (var i = 0; i < ship.amount; i++)
+                {
+                    // Initialize the local list to hold the health values of player ships. This is to figure out diffs.
                     _playerShipsHealth.Add(ship.partCoordinates.Count);
+                    // Initialize the tracker for any ship to be found. This is to avoid rebuilding patterns.
+                    _isShipFound.Add(false);
+                }
 
             UpdateProbabilityMap();
         }
@@ -42,9 +48,12 @@ namespace BattleshipGame.AI
                     for (var cellIndex = 0; cellIndex < cellCount; cellIndex++)
                     {
                         var p = 0f;
-                        var cell = GridUtils.CellIndexToCoordinate(cellIndex, _rules.areaSize.x);
-                        if (CanAnyPartOfShipBePlacedOnACell(ship, cell))
-                            p = CalculateProbability(_playerShipsHealth[shipId], numberOfFittingCellsForShip);
+                        if (!IsMissedShot(cellIndex))
+                        {
+                            var cell = GridUtils.CellIndexToCoordinate(cellIndex, _rules.areaSize.x);
+                            if (CanAnyPartOfShipBePlacedOnACell(ship, cell))
+                                p = CalculateProbability(_playerShipsHealth[shipId], numberOfFittingCellsForShip);
+                        }
 
                         shipProbabilities.Add(new Probability(cellIndex, p));
                     }
@@ -137,7 +146,6 @@ namespace BattleshipGame.AI
                 Debug.Log($"Ship {shipId} has {_patterns[shipId].Count} patterns.");
                 foreach (var pattern in _patterns[shipId])
                 foreach (var shipPart in pattern.Ship.partCoordinates)
-                {
                     if (!IsPartChecked(shipPart, pattern.CheckedPartCoordinates.ToList()))
                     {
                         var coordinate = pattern.Pivot + (Vector3Int) shipPart;
@@ -145,13 +153,12 @@ namespace BattleshipGame.AI
                         if (!IsAlreadyShot(cellIndex))
                         {
                             cells.Add(cellIndex);
-                            Debug.Log($"Shooting at pattern for ship {shipId} on {shipPart}" + $" at {coordinate}");
+                            Debug.Log($"Shooting at pattern for ship {shipId} on {shipPart} at {coordinate}");
                             pattern.CheckedPartCoordinates.Add(shipPart);
                             _patternsTrackedLastTurn.Add(shipId, pattern);
                             return;
                         }
                     }
-                }
             }
 
             static bool IsPartChecked(Vector2Int shipPart, IEnumerable<Vector2Int> checkedParts)
@@ -182,16 +189,18 @@ namespace BattleshipGame.AI
                         Debug.Log($"Ship {shipId} had multiple shots.");
                         if (FindInPatterns(shipId, out var pattern))
                         {
+                            _isShipFound[shipId] = true;
                             RemoveOtherPatterns(shipId, pattern);
                         }
                     }
 
-                    if (playerShipsHealth[shipId] <= 0)
+                    if (IsShipSunk(shipId))
                     {
-                        Debug.Log($"Ship {shipId} was sunk.");
+                        Debug.Log($"Ship {shipId} is sunk.");
                         if (_patterns.ContainsKey(shipId))
                         {
                             _patterns.Remove(shipId);
+                            Debug.Log($"Removed all patterns from ship: {shipId}");
                         }
                     }
                 }
@@ -200,13 +209,20 @@ namespace BattleshipGame.AI
                     // No shots on this ship. Remove any tracked pattern intervening with this shot.
                     if (_patterns.ContainsKey(shipId) && _patternsTrackedLastTurn.ContainsKey(shipId))
                     {
+                        Debug.Log($"Removed tracked pattern (pivot: {_patternsTrackedLastTurn[shipId].Pivot})");
                         _patterns[shipId].Remove(_patternsTrackedLastTurn[shipId]);
                         _patternsTrackedLastTurn.Remove(shipId);
                     }
                 }
             }
 
-            if (totalDamage > 0) FindPossiblePatterns();
+            if (_shotsAtLastTurn != null)
+            {
+                if (totalDamage > 0)
+                    FindPossiblePatterns();
+                else
+                    _missedShots.AddRange(_shotsAtLastTurn);
+            }
 
             _playerShipsHealth = playerShipsHealth.ToList();
 
@@ -214,36 +230,40 @@ namespace BattleshipGame.AI
 
             void FindPossiblePatterns()
             {
-                if (_shotsAtLastTurn == null)
-                {
-                    Debug.Log("This is the first call.");
-                    return;
-                }
-
                 foreach (int shot in _shotsAtLastTurn)
                 {
                     var shotCoordinate = GridUtils.CellIndexToCoordinate(shot, _rules.areaSize.x);
                     Debug.Log($"Trying patterns for shot at {shotCoordinate}");
                     foreach (int shipId in damagedShips)
                     {
+                        if (IsShipSunk(shipId) || _isShipFound[shipId]) continue;
                         var ship = pool[shipId];
                         foreach (var shipPartCoordinate in ship.partCoordinates)
                         {
-                            var cellCoordinate = shotCoordinate - (Vector3Int) shipPartCoordinate;
-                            if (CanPatternBePlaced(cellCoordinate, ship))
+                            var pivot = shotCoordinate - (Vector3Int) shipPartCoordinate;
+                            if (CanPatternBePlaced(pivot, ship))
                             {
                                 Debug.Log($"{shipPartCoordinate} fits for ship {shipId}:{ship.name}");
                                 if (!_patterns.ContainsKey(shipId)) _patterns.Add(shipId, new List<Pattern>());
-                                _patterns[shipId].Add(new Pattern(ship, cellCoordinate, shipPartCoordinate));
+                                if (!IsAlreadyInPatterns(shipId, pivot))
+                                {
+                                    _patterns[shipId].Add(new Pattern(ship, pivot, shipPartCoordinate));
+                                }
                             }
                         }
                     }
                 }
             }
 
+            bool IsAlreadyInPatterns(int shipId, Vector3Int pivot)
+            {
+                return _patterns[shipId].Any(p => p.Pivot.Equals(pivot));
+            }
+
             bool FindInPatterns(int shipId, out Pattern pattern)
             {
                 pattern = new Pattern();
+                if (!_patterns.ContainsKey(shipId)) return false;
                 foreach (var p in _patterns[shipId])
                 {
                     int counter = (from shipPartCoordinate in p.Ship.partCoordinates
@@ -267,32 +287,34 @@ namespace BattleshipGame.AI
             {
                 _patterns[shipId].Clear();
                 _patterns[shipId].Add(pattern);
+                Debug.Log($"Removed all patterns except pattern with pivot: {pattern.Pivot} from ship: {shipId}");
+            }
+
+            bool IsShipSunk(int shipId)
+            {
+                return playerShipsHealth[shipId] <= 0;
             }
         }
 
-        private bool CanPatternBePlaced(Vector3Int cellCoordinate, Ship ship)
+        private bool IsMissedShot(int cellIndex)
+        {
+            return _missedShots.Any(missedShot => cellIndex == missedShot);
+        }
+
+        private bool CanPatternBePlaced(Vector3Int pivot, Ship ship)
         {
             (int shipWidth, int shipHeight) = ship.GetShipSize();
-            bool dimensionCheck = GridUtils.DoesShipFitIn(shipWidth, shipHeight, cellCoordinate, _rules.areaSize);
+            bool isInsideBoundaries = GridUtils.IsInsideBoundaries(shipWidth, shipHeight, pivot, _rules.areaSize);
 
             // No missed shots beneath the pattern
-            // bool shotCellsCheck = false;
-            //
-            // foreach (int shot in _allShots)
-            // {
-            //     var shotCoordinate = GridUtils.CellIndexToCoordinate(shot, _rules.areaSize.x);
-            //     foreach (var shipPartCoordinate in ship.partCoordinates)
-            //     {
-            //     var coordinate = shipPartCoordinate+
-            //     
-            //     }
-            // }
+            bool isOnMissedShot = ship.partCoordinates.Select(partCoordinate => pivot + (Vector3Int) partCoordinate)
+                .Any(coordinate => IsMissedShot(GridUtils.CoordinateToCellIndex(coordinate, _rules.areaSize)));
 
             // No certainly marked ships and its 1 unit margin beneath the pattern
 
             // No shots that did not hit this ship from the same group of shots in this turn
 
-            return dimensionCheck;
+            return isInsideBoundaries && !isOnMissedShot;
         }
     }
 }

@@ -128,6 +128,7 @@ namespace BattleshipGame.Managers
                     SwitchTurns();
                     break;
                 case RoomPhase.Result:
+                    Debug.Log("BattleManager.OnGamePhaseChanged Phase:Result");
                     ShowResult();
                     break;
                 case RoomPhase.Waiting:
@@ -140,7 +141,7 @@ namespace BattleshipGame.Managers
                     break;
             }
 
-            void GoBackToLobby()
+            static void GoBackToLobby()
             {
                 GameSceneManager.Instance.GoToLobby();
             }

@@ -31,10 +31,10 @@ namespace BattleshipGame.Core
             return cell;
         }
 
-        public static bool DoesShipFitIn(int shipWidth, int shipHeight, Vector3Int cellCoordinate, Vector2Int areaSize)
+        public static bool IsInsideBoundaries(int shipWidth, int shipHeight, Vector3Int pivot, Vector2Int areaSize)
         {
-            return cellCoordinate.x >= 0 && cellCoordinate.y < areaSize.y &&
-                   cellCoordinate.x + shipWidth <= areaSize.x && cellCoordinate.y - (shipHeight - 1) >= 0;
+            return pivot.x >= 0 && pivot.y < areaSize.y &&
+                   pivot.x + shipWidth <= areaSize.x && pivot.y - (shipHeight - 1) >= 0;
         }
     }
 }
