@@ -10,8 +10,8 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: aa8ae29f04f64277be88d39ab167eb90, type: 3}
-  m_Name: NetworkOptions
+  m_Name: 
   m_EditorClassIdentifier: 
   localEndpoint: ws://localhost:2567
-  onlineEndpoint: ws://bronzehero.herokuapp.com
-  serverType: 1
+  onlineEndpoint: ws://
+  serverType: 0

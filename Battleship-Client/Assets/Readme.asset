@@ -15,15 +15,23 @@ MonoBehaviour:
   title: Battleship
   sections:
   - heading: About
-    text: Battleship is a turn-based multiplayer game that uses Colyseus plugin to
+    text: Battleship is a turn-based multiplayer game that uses Colyseus (0.13) to
       employ a client-server architecture.
-    linkText: GitHub Repository
-    url: https://github.com/musapkahraman/battleship
-  - heading: 
-    text: 
-    linkText: Colyseus 0.13
-    url: https://0-13-x.docs.colyseus.io/getting-started/unity3d-client/
+    linkText: 
+    url: 
   - heading: Project Setup
     text: Choose the server type in Assets/Data/Options/NetworkOptions
     linkText: 
     url: 
+  - heading: Links
+    text: 
+    linkText: 
+    url: 
+  - heading: 
+    text: What is Colyseus?
+    linkText: Colyseus 0.13
+    url: https://0-13-x.docs.colyseus.io/
+  - heading: 
+    text: Look for updates to this project
+    linkText: GitHub Repository
+    url: https://github.com/musapkahraman/battleship
