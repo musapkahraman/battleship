@@ -24,7 +24,7 @@ namespace BattleshipGame.AI
         {
             InitUncheckedCells();
             PopulatePool();
-            _prediction = new Prediction(rules,_playerShipsHealth);
+            _prediction = new Prediction(rules, _uncheckedCells, _playerShipsHealth);
 
             void InitUncheckedCells()
             {
@@ -98,7 +98,7 @@ namespace BattleshipGame.AI
                     shipsRemaining.Add(shipId);
 
             int size = rules.shotsPerTurn;
-            int[] cells = _prediction.GetMostProbableCells(_uncheckedCells.ToList(), size, shipsRemaining).ToArray();
+            int[] cells = _prediction.GetMostProbableCells(size, shipsRemaining).ToArray();
             for (var i = 0; i < size; i++) _uncheckedCells.Remove(cells[i]);
             return cells;
         }
