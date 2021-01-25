@@ -55,7 +55,6 @@ namespace BattleshipGame.AI
 
         public void ResetForRematch()
         {
-            Debug.Log("ResetForRematch()");
             OnEnable();
         }
 
@@ -70,7 +69,7 @@ namespace BattleshipGame.AI
                 partIndex++;
             }
 
-            _prediction?.Update(_playerShipsHealth.ToList(), _pool);
+            if (options.aiDifficulty == Difficulty.Hard) _prediction?.Update(_playerShipsHealth.ToList(), _pool);
         }
 
         public IEnumerator GetShots(Action<int[]> onComplete)

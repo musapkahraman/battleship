@@ -9,6 +9,7 @@ namespace BattleshipGame.AI
         private const string PlayerId = "player";
         private const string EnemyId = "enemy";
         private Enemy _enemy;
+        private bool _isMatchFinished;
         private LocalRoom _room;
 
         private void Awake()
@@ -26,11 +27,12 @@ namespace BattleshipGame.AI
                     switch (change.Field)
                     {
                         case RoomState.Phase:
-                            Debug.Log("LocalClient._room.State.OnChange");
-                            GamePhaseChanged?.Invoke((string) change.Value);
+                            var phase = (string) change.Value;
+                            GamePhaseChanged?.Invoke(phase);
+                            if (phase.Equals(RoomPhase.Result)) _isMatchFinished = true;
                             break;
                         case RoomState.PlayerTurn:
-                            if (EnemyId.Equals((string) change.Value))
+                            if (!_isMatchFinished && EnemyId.Equals((string) change.Value))
                                 StartCoroutine(_enemy.GetShots(cells => _room.Turn(EnemyId, cells)));
                             break;
                     }
@@ -74,7 +76,6 @@ namespace BattleshipGame.AI
 
         public void SendRematch(bool isRematching)
         {
-            Debug.Log($"SendRematch({isRematching})");
             _enemy.ResetForRematch();
             _room.Rematch(isRematching);
         }

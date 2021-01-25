@@ -128,7 +128,6 @@ namespace BattleshipGame.Managers
                     SwitchTurns();
                     break;
                 case RoomPhase.Result:
-                    Debug.Log("BattleManager.OnGamePhaseChanged Phase:Result");
                     ShowResult();
                     break;
                 case RoomPhase.Waiting:
