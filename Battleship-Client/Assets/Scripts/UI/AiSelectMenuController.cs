@@ -33,23 +33,26 @@ namespace BattleshipGame.UI
                 options.aiDifficulty = Difficulty.Hard;
                 StartLocalRoom();
             });
-
-            void StartLocalRoom()
-            {
-                GameManager.Instance.StartLocalClient();
-            }
         }
 
         public void Show()
         {
             _canvas.enabled = true;
             statusData.State = AiSelectionMenu;
+            // Bypass user selection until the feature is complete
+            options.aiDifficulty = Difficulty.Easy;
+            StartLocalRoom();
         }
 
         public void Close()
         {
             _canvas.enabled = false;
             mainMenuController.Show();
+        }
+
+        private static void StartLocalRoom()
+        {
+            GameManager.Instance.StartLocalClient();
         }
     }
 }

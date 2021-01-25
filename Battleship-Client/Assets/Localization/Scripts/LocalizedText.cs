@@ -10,7 +10,7 @@ namespace BattleshipGame.Localization
         [SerializeField] private LocalizationManager localizationManager;
         [SerializeField] private LocalizationOptions options;
         private bool _isKeyNull;
-        private TextMeshProUGUI _textField;
+        private TMP_Text _textField;
 
         private void Awake()
         {
@@ -29,7 +29,7 @@ namespace BattleshipGame.Localization
 
         private void Init()
         {
-            if (_textField == null) _textField = GetComponent<TextMeshProUGUI>();
+            if (_textField == null) _textField = GetComponent<TMP_Text>();
             if (key == null) _isKeyNull = true;
             options.OnLanguageChanged += SetText;
             SetText();

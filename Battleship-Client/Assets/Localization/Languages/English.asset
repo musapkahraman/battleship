@@ -46,6 +46,8 @@ MonoBehaviour:
     value: Join Game
   - key: {fileID: 11400000, guid: d65e293f039444345abf6f7b4a1bb28c, type: 2}
     value: Leave Game
+  - key: {fileID: 11400000, guid: 7f81efe06d0bae44b9ac9d5d6ce409d9, type: 2}
+    value: How to play
   - key: {fileID: 11400000, guid: 9ff8e1de03c391d4d861c5a063219d1a, type: 2}
     value: Main Menu
   - key: {fileID: 11400000, guid: 340e7215d3e3eb348bc8015e1debad97, type: 2}
@@ -132,4 +134,29 @@ MonoBehaviour:
     value: Select an option to modify
   - key: {fileID: 11400000, guid: c5c19390e55e1544087de481d7f56831, type: 2}
     value: Select a language
-  keyName: btn_vibration_off
+  - key: {fileID: 11400000, guid: e752df6245066c44ea5bc10d0e1a9373, type: 2}
+    value: How to play
+  - key: {fileID: 11400000, guid: 55c616549200878418ebabc403f7b2b4, type: 2}
+    value: The grid on the right is where your opponent's ships are hiding. When
+      it's your turn, tap on three different cells in that grid to select your targets.
+      You can tap on a target to delete it. Once you are satisfied with your selected
+      targets you must press the "Fire" button below the grid.
+  - key: {fileID: 11400000, guid: 754bea3c4146bb24ca794c3153336ec7, type: 2}
+    value: The feedback
+  - key: {fileID: 11400000, guid: 20b303039119b9e4f8ac45b3ecf191d2, type: 2}
+    value: If your shots missed your opponent's ships, you will not get any feedback
+      and wait for your opponent to make their shots. If your shots hit one or more
+      ships, you will see that some parts of the ships inside the grid to the right
+      of your opponent's grid turn red. These ships are damage indicators for your
+      opponent's fleet. The red parts do not necessarily show the exact location
+      of your hit, but only show how many parts are from the ship.
+  - key: {fileID: 11400000, guid: a251cbd84a724624b97c418d805c403e, type: 2}
+    value: The prediction
+  - key: {fileID: 11400000, guid: 0caa6da7d5c589b47a5260161ebec566, type: 2}
+    value: You will have to guess which shot made the hit and which shot missed.
+      You can tap on a previous target cell and this will highlight the whole group
+      of targets you marked in that turn. Going back and forth, you will see the
+      patterns. To help you do that, you are given the ability to drag and drop as
+      many ships as you want into your opponent's grid. You can move the ships you
+      put there and delete them by dragging them out.
+  keyName: popup_how_to_play
