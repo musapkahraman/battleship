@@ -5,6 +5,7 @@ using BattleshipGame.Network;
 using BattleshipGame.Tiling;
 using BattleshipGame.UI;
 using Colyseus.Schema;
+using NativeWebSocket;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.SceneManagement;
@@ -47,12 +48,7 @@ namespace BattleshipGame.Managers
                 _client = gameManager.Client;
                 _client.GamePhaseChanged += OnGamePhaseChanged;
                 if (_client is NetworkClient networkClient)
-                {
-                    networkClient.GetRoomConnection().OnClose += code =>
-                    {
-                        connectionLostMessageDialog.Show(() => { SceneManager.LoadScene(0); });
-                    };
-                }
+                    networkClient.GetRoomConnection().OnClose += OnRoomConnectionClose;
             }
             else
             {
@@ -106,6 +102,9 @@ namespace BattleshipGame.Managers
             placementMap.Clear();
             if (_client == null) return;
             _client.GamePhaseChanged -= OnGamePhaseChanged;
+            if (_client is NetworkClient networkClient)
+                networkClient.GetRoomConnection().OnClose -= OnRoomConnectionClose;
+
             UnRegisterFromStateEvents();
 
             void UnRegisterFromStateEvents()
@@ -118,6 +117,50 @@ namespace BattleshipGame.Managers
                 _state.players[_enemy].ships.OnChange -= OnEnemyShipsChanged;
                 _state.players[_enemy].shots.OnChange -= OnEnemyShotsChanged;
             }
+        }
+
+        public void OnOpponentMapClicked(Vector3Int cell)
+        {
+            if (_state.playerTurn != _client.GetSessionId()) return;
+            int cellIndex = CoordinateToCellIndex(cell, rules.areaSize);
+            if (_shotsInCurrentTurn.Contains(cellIndex))
+            {
+                _shotsInCurrentTurn.Remove(cellIndex);
+                opponentMap.ClearMarker(cell);
+            }
+            else if (_shotsInCurrentTurn.Count < rules.shotsPerTurn &&
+                     opponentMap.SetMarker(cellIndex, Marker.MarkedTarget))
+            {
+                _shotsInCurrentTurn.Add(cellIndex);
+            }
+
+            fireButton.SetInteractable(_shotsInCurrentTurn.Count == rules.shotsPerTurn);
+            opponentMap.IsMarkingTargets = _shotsInCurrentTurn.Count != rules.shotsPerTurn;
+        }
+
+        public void HighlightShotsInTheSameTurn(Vector3Int coordinate)
+        {
+            int cellIndex = CoordinateToCellIndex(coordinate, rules.areaSize);
+            foreach (var keyValuePair in from keyValuePair in _shots
+                from cell in keyValuePair.Value
+                where cell == cellIndex
+                select keyValuePair)
+            {
+                HighlightTurn(keyValuePair.Key);
+                return;
+            }
+        }
+
+        public void HighlightTurn(int turn)
+        {
+            if (!_shots.ContainsKey(turn)) return;
+            opponentTurnHighlighter.HighlightTurnShotsOnOpponentMap(_shots[turn]);
+            opponentStatusMapTurnHighlighter.HighlightTurnShotsOnOpponentStatusMap(turn);
+        }
+
+        private void OnRoomConnectionClose(WebSocketCloseCode code)
+        {
+            connectionLostMessageDialog.Show(() => { SceneManager.LoadScene(0); });
         }
 
         private void OnGamePhaseChanged(string phase)
@@ -149,13 +192,9 @@ namespace BattleshipGame.Managers
             {
                 statusData.State = BattleResult;
                 if (_state.winningPlayer == _client.GetSessionId())
-                {
                     winnerOptionDialog.Show(Rematch, Leave);
-                }
                 else
-                {
                     loserOptionDialog.Show(Rematch, Leave);
-                }
 
                 void Rematch()
                 {
@@ -169,45 +208,6 @@ namespace BattleshipGame.Managers
                     LeaveGame();
                 }
             }
-        }
-
-        public void HighlightShotsInTheSameTurn(Vector3Int coordinate)
-        {
-            int cellIndex = CoordinateToCellIndex(coordinate, rules.areaSize);
-            foreach (var keyValuePair in from keyValuePair in _shots
-                from cell in keyValuePair.Value
-                where cell == cellIndex
-                select keyValuePair)
-            {
-                HighlightTurn(keyValuePair.Key);
-                return;
-            }
-        }
-
-        public void HighlightTurn(int turn)
-        {
-            if (!_shots.ContainsKey(turn)) return;
-            opponentTurnHighlighter.HighlightTurnShotsOnOpponentMap(_shots[turn]);
-            opponentStatusMapTurnHighlighter.HighlightTurnShotsOnOpponentStatusMap(turn);
-        }
-
-        public void OnOpponentMapClicked(Vector3Int cell)
-        {
-            if (_state.playerTurn != _client.GetSessionId()) return;
-            int cellIndex = CoordinateToCellIndex(cell, rules.areaSize);
-            if (_shotsInCurrentTurn.Contains(cellIndex))
-            {
-                _shotsInCurrentTurn.Remove(cellIndex);
-                opponentMap.ClearMarker(cell);
-            }
-            else if (_shotsInCurrentTurn.Count < rules.shotsPerTurn &&
-                     opponentMap.SetMarker(cellIndex, Marker.MarkedTarget))
-            {
-                _shotsInCurrentTurn.Add(cellIndex);
-            }
-
-            fireButton.SetInteractable(_shotsInCurrentTurn.Count == rules.shotsPerTurn);
-            opponentMap.IsMarkingTargets = _shotsInCurrentTurn.Count != rules.shotsPerTurn;
         }
 
         private void FireShots()
@@ -249,10 +249,7 @@ namespace BattleshipGame.Managers
                 opponentMap.FlashGrids();
 
 #if UNITY_ANDROID || UNITY_IOS
-                if (options.vibration)
-                {
-                    Handheld.Vibrate();
-                }
+                if (options.vibration) Handheld.Vibrate();
 #endif
             }
 
