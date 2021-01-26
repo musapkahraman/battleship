@@ -2,7 +2,6 @@
 using BattleshipGame.Core;
 using BattleshipGame.Network;
 using BattleshipGame.UI;
-using NativeWebSocket;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.SceneManagement;
@@ -19,7 +18,6 @@ namespace BattleshipGame.Managers
         [SerializeField] private ButtonController newGameButton;
         [SerializeField] private ButtonController joinButton;
         [SerializeField] private ButtonController leaveButton;
-        [SerializeField] private MessageDialog connectionLostMessageDialog;
         [SerializeField] private StatusData statusData;
         private string _cachedRoomId = string.Empty;
         private bool _cachedRoomIdIsNotValid;
@@ -31,7 +29,6 @@ namespace BattleshipGame.Managers
             {
                 _networkClient = client;
                 _networkClient.RoomsChanged += PopulateRoomList;
-                _networkClient.GetLobbyConnection().OnClose += OnRoomConnectionClose;
             }
             else
             {
@@ -101,12 +98,7 @@ namespace BattleshipGame.Managers
 
         private void OnDestroy()
         {
-            if (_networkClient != null)
-            {
-                _networkClient.RoomsChanged -= PopulateRoomList;
-                if (_networkClient.GetRoomConnection() != null)
-                    _networkClient.GetRoomConnection().OnClose -= OnRoomConnectionClose;
-            }
+            if (_networkClient != null) _networkClient.RoomsChanged -= PopulateRoomList;
         }
 
         public void OnRoomClicked(string roomId)
@@ -115,11 +107,6 @@ namespace BattleshipGame.Managers
             _cachedRoomId = roomId;
             _cachedRoomIdIsNotValid = false;
             joinButton.SetInteractable(true);
-        }
-
-        private void OnRoomConnectionClose(WebSocketCloseCode code)
-        {
-            connectionLostMessageDialog.Show(() => { SceneManager.LoadScene(0); });
         }
 
         private void GoToMainMenu()

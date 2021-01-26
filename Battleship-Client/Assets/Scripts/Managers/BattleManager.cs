@@ -5,7 +5,6 @@ using BattleshipGame.Network;
 using BattleshipGame.Tiling;
 using BattleshipGame.UI;
 using Colyseus.Schema;
-using NativeWebSocket;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.SceneManagement;
@@ -26,7 +25,6 @@ namespace BattleshipGame.Managers
         [SerializeField] private TurnHighlighter opponentStatusMapTurnHighlighter;
         [SerializeField] private ButtonController fireButton;
         [SerializeField] private ButtonController leaveButton;
-        [SerializeField] private MessageDialog connectionLostMessageDialog;
         [SerializeField] private MessageDialog leaveMessageDialog;
         [SerializeField] private MessageDialog leaveNotRematchMessageDialog;
         [SerializeField] private OptionDialog winnerOptionDialog;
@@ -47,8 +45,6 @@ namespace BattleshipGame.Managers
             {
                 _client = gameManager.Client;
                 _client.GamePhaseChanged += OnGamePhaseChanged;
-                if (_client is NetworkClient networkClient)
-                    networkClient.GetRoomConnection().OnClose += OnRoomConnectionClose;
             }
             else
             {
@@ -102,8 +98,6 @@ namespace BattleshipGame.Managers
             placementMap.Clear();
             if (_client == null) return;
             _client.GamePhaseChanged -= OnGamePhaseChanged;
-            if (_client is NetworkClient networkClient && networkClient.GetRoomConnection() != null)
-                networkClient.GetRoomConnection().OnClose -= OnRoomConnectionClose;
 
             UnRegisterFromStateEvents();
 
@@ -156,11 +150,6 @@ namespace BattleshipGame.Managers
             if (!_shots.ContainsKey(turn)) return;
             opponentTurnHighlighter.HighlightTurnShotsOnOpponentMap(_shots[turn]);
             opponentStatusMapTurnHighlighter.HighlightTurnShotsOnOpponentStatusMap(turn);
-        }
-
-        private void OnRoomConnectionClose(WebSocketCloseCode code)
-        {
-            connectionLostMessageDialog.Show(() => { SceneManager.LoadScene(0); });
         }
 
         private void OnGamePhaseChanged(string phase)
