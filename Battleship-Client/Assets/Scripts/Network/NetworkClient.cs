@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using Colyseus;
+using UnityEngine;
 using DataChange = Colyseus.Schema.DataChange;
 
 namespace BattleshipGame.Network
@@ -15,16 +16,6 @@ namespace BattleshipGame.Network
         private Room<LobbyState> _lobby;
         private Room<State> _room;
         public event Action<string> GamePhaseChanged;
-
-        public Connection GetRoomConnection()
-        {
-            return _room?.Connection;
-        }
-
-        public Connection GetLobbyConnection()
-        {
-            return _lobby?.Connection;
-        }
 
         public State GetRoomState()
         {
@@ -128,8 +119,7 @@ namespace BattleshipGame.Network
         {
             try
             {
-                _room = await _client.JoinById<State>(roomId,
-                    new Dictionary<string, object> {{RoomOption.Name, password}});
+                _room = await _client.JoinById<State>(roomId, new Dictionary<string, object> {{RoomOption.Password, password}});
                 RegisterRoomHandlers();
             }
             catch (Exception exception)
