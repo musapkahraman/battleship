@@ -103,8 +103,9 @@ namespace BattleshipGame.Managers
         {
             if (_networkClient != null)
             {
-                _networkClient.GetRoomConnection().OnClose -= OnRoomConnectionClose;
                 _networkClient.RoomsChanged -= PopulateRoomList;
+                if (_networkClient.GetRoomConnection() != null)
+                    _networkClient.GetRoomConnection().OnClose -= OnRoomConnectionClose;
             }
         }
 

@@ -102,7 +102,7 @@ namespace BattleshipGame.Managers
             placementMap.Clear();
             if (_client == null) return;
             _client.GamePhaseChanged -= OnGamePhaseChanged;
-            if (_client is NetworkClient networkClient)
+            if (_client is NetworkClient networkClient && networkClient.GetRoomConnection() != null)
                 networkClient.GetRoomConnection().OnClose -= OnRoomConnectionClose;
 
             UnRegisterFromStateEvents();

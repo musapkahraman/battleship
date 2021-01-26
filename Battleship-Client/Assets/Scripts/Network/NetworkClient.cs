@@ -18,12 +18,12 @@ namespace BattleshipGame.Network
 
         public Connection GetRoomConnection()
         {
-            return _room.Connection;
+            return _room?.Connection;
         }
 
         public Connection GetLobbyConnection()
         {
-            return _lobby.Connection;
+            return _lobby?.Connection;
         }
 
         public State GetRoomState()
