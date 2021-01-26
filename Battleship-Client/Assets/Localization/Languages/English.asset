@@ -149,7 +149,7 @@ MonoBehaviour:
       ships, you will see that some parts of the ships inside the grid to the right
       of your opponent's grid turn red. These ships are damage indicators for your
       opponent's fleet. The red parts do not necessarily show the exact location
-      of your hit, but only show how many parts are from the ship.
+      of your hit, but only show how many parts of a ship are left.
   - key: {fileID: 11400000, guid: a251cbd84a724624b97c418d805c403e, type: 2}
     value: The prediction
   - key: {fileID: 11400000, guid: 0caa6da7d5c589b47a5260161ebec566, type: 2}

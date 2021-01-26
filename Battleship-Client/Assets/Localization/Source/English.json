@@ -254,7 +254,7 @@
         },
         {
             "key": "text_desc_feedback",
-            "value": "If your shots missed your opponent's ships, you will not get any feedback and wait for your opponent to make their shots. If your shots hit one or more ships, you will see that some parts of the ships inside the grid to the right of your opponent's grid turn red. These ships are damage indicators for your opponent's fleet. The red parts do not necessarily show the exact location of your hit, but only show how many parts are from the ship."
+            "value": "If your shots missed your opponent's ships, you will not get any feedback and wait for your opponent to make their shots. If your shots hit one or more ships, you will see that some parts of the ships inside the grid to the right of your opponent's grid turn red. These ships are damage indicators for your opponent's fleet. The red parts do not necessarily show the exact location of your hit, but only show how many parts of a ship are left."
         },
         {
             "key": "text_prediction",
