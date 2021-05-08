@@ -2,8 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using Colyseus;
+using Colyseus.Schema;
 using UnityEngine;
-using DataChange = Colyseus.Schema.DataChange;
 
 namespace BattleshipGame.Network
 {
@@ -12,9 +12,9 @@ namespace BattleshipGame.Network
         private const string RoomName = "game";
         private const string LobbyName = "lobby";
         private readonly Dictionary<string, Room> _rooms = new Dictionary<string, Room>();
-        private Client _client;
-        private Room<LobbyState> _lobby;
-        private Room<State> _room;
+        private ColyseusClient _client;
+        private ColyseusRoom<LobbyState> _lobby;
+        private ColyseusRoom<State> _room;
         public event Action<string> GamePhaseChanged;
 
         public State GetRoomState()
@@ -50,11 +50,15 @@ namespace BattleshipGame.Network
 
         public async void Connect(string endPoint, Action success, Action error)
         {
-            if (_lobby != null && _lobby.Connection.IsOpen) return;
-            _client = new Client(endPoint);
+            Debug.Log($"async void Connect(endPoint: {endPoint})");
+            if (_lobby != null && _lobby.colyseusConnection.IsOpen) return;
+            _client = new ColyseusClient(endPoint);
+            Debug.Log($"new ColyseusClient created");
             try
             {
+                Debug.Log($"await _client.JoinOrCreate<LobbyState>(LobbyName: {LobbyName});");
                 _lobby = await _client.JoinOrCreate<LobbyState>(LobbyName);
+                Debug.Log($"Success!");
                 success?.Invoke();
                 RegisterLobbyHandlers();
             }
@@ -119,7 +123,8 @@ namespace BattleshipGame.Network
         {
             try
             {
-                _room = await _client.JoinById<State>(roomId, new Dictionary<string, object> {{RoomOption.Password, password}});
+                _room = await _client.JoinById<State>(roomId,
+                    new Dictionary<string, object> {{RoomOption.Password, password}});
                 RegisterRoomHandlers();
             }
             catch (Exception exception)

@@ -9,9 +9,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: aa8ae29f04f64277be88d39ab167eb90, type: 3}
-  m_Name: NetworkOptions
+  m_Script: {fileID: 11500000, guid: abda5a440b0b5634b8654ff3a0129b80, type: 3}
+  m_Name: BattleshipColyseusServerSettings
   m_EditorClassIdentifier: 
-  localEndpoint: ws://localhost:2567
-  onlineEndpoint: ws://bronzehero.herokuapp.com
-  serverType: 1
+  colyseusServerAddress: bronzehero.herokuapp.com
+  colyseusServerPort: 80
+  useSecureProtocol: 0
+  _requestHeaders: []

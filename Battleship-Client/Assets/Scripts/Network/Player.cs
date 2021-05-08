@@ -13,8 +13,10 @@ namespace BattleshipGame.Network
     {
         [Type(0, "string")] public string sessionId = "";
 
-        [Type(1, "array", "int8")] public ArraySchema<int> shots = new ArraySchema<int>();
+        [Type(1, "array", typeof(ArraySchema<int>), "int8")]
+        public ArraySchema<int> shots = new ArraySchema<int>();
 
-        [Type(2, "array", "int8")] public ArraySchema<int> ships = new ArraySchema<int>();
+        [Type(2, "array", typeof(ArraySchema<int>), "int8")]
+        public ArraySchema<int> ships = new ArraySchema<int>();
     }
 }

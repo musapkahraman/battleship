@@ -2,12 +2,13 @@
 using BattleshipGame.AI;
 using BattleshipGame.Core;
 using BattleshipGame.Network;
+using Colyseus;
 using UnityEngine;
 using static BattleshipGame.Core.StatusData.Status;
 
 namespace BattleshipGame.Managers
 {
-    public class GameManager : Singleton<GameManager>
+    public class GameManager : ColyseusManager<GameManager>
     {
         [SerializeField] private NetworkOptions networkOptions;
         [SerializeField] private StatusData statusData;
@@ -19,16 +20,18 @@ namespace BattleshipGame.Managers
             statusData.State = GameStart;
         }
 
-        private void OnApplicationQuit()
+        protected override void OnApplicationQuit()
         {
             FinishNetworkClient();
         }
 
         public void ConnectToServer(Action onSuccess, Action onError)
         {
+            Debug.Log("Connecting to server..");
             switch (Client)
             {
                 case NetworkClient _:
+                    Debug.Log("Go to lobby");
                     GameSceneManager.Instance.GoToLobby();
                     return;
                 case LocalClient _:
@@ -37,6 +40,7 @@ namespace BattleshipGame.Managers
             }
 
             Client = new NetworkClient();
+            Debug.Log("new NetworkClient is created");
             Client.GamePhaseChanged += phase =>
             {
                 if (phase != RoomPhase.Place) return;
@@ -47,6 +51,7 @@ namespace BattleshipGame.Managers
             networkClient.Connect(networkOptions.EndPoint,
                 () =>
                 {
+                    Debug.Log("new NetworkClient is connected");
                     if (Client is NetworkClient)
                     {
                         onSuccess?.Invoke();

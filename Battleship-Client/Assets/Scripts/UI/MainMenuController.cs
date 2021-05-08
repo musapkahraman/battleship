@@ -25,13 +25,7 @@ namespace BattleshipGame.UI
         private bool _isConnecting;
         private bool _isConnectionCanceled;
         private GameObject _progressBar;
-        private GameManager _gameManager;
         private Canvas _canvas;
-
-        private void Awake()
-        {
-            if (!GameManager.TryGetInstance(out _gameManager)) SceneManager.LoadScene(0);
-        }
 
         private void Start()
         {
@@ -62,8 +56,10 @@ namespace BattleshipGame.UI
                     multiplayerButton.Hide();
                     multiplayerCancelButton.Show();
                     if (progressBarCanvasPrefab) _progressBar = Instantiate(progressBarCanvasPrefab);
-                    _gameManager.ConnectToServer(() =>
+                    Debug.Log("Clicked button to play with friends");
+                    GameManager.Instance.ConnectToServer(() =>
                     {
+                        Debug.Log("Success on connect to server.");
                         _isConnecting = false;
                         if (_isConnectionCanceled)
                             StartCoroutine(FinishNetworkClient());
@@ -81,7 +77,7 @@ namespace BattleshipGame.UI
                 IEnumerator FinishNetworkClient()
                 {
                     yield return new WaitForSecondsRealtime(1);
-                    _gameManager.FinishNetworkClient();
+                    GameManager.Instance.FinishNetworkClient();
                     _isConnectionCanceled = false;
                     multiplayerButton.SetInteractable(true);
                 }

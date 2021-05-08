@@ -41,15 +41,8 @@ namespace BattleshipGame.Managers
 
         private void Awake()
         {
-            if (GameManager.TryGetInstance(out var gameManager))
-            {
-                _client = gameManager.Client;
-                _client.GamePhaseChanged += OnGamePhaseChanged;
-            }
-            else
-            {
-                SceneManager.LoadScene(0);
-            }
+            _client = GameManager.Instance.Client;
+            _client.GamePhaseChanged += OnGamePhaseChanged;
         }
 
         private void Start()

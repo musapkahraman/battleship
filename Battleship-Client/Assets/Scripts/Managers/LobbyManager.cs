@@ -25,14 +25,10 @@ namespace BattleshipGame.Managers
 
         private void Awake()
         {
-            if (GameManager.TryGetInstance(out var gameManager) && gameManager.Client is NetworkClient client)
+            if (GameManager.Instance.Client is NetworkClient client)
             {
                 _networkClient = client;
                 _networkClient.RoomsChanged += PopulateRoomList;
-            }
-            else
-            {
-                SceneManager.LoadScene(0);
             }
         }
 
