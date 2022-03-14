@@ -1,6 +1,10 @@
 {
     "items": [
         {
+            "key": "title_game",
+            "value": "AMİRAL BATTI"
+        },
+        {
             "key": "btn_single_player",
             "value": "TEK OYUNCU"
         },

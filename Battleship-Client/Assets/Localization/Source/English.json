@@ -1,6 +1,10 @@
 {
     "items": [
         {
+            "key": "title_game",
+            "value": "Battleship"
+        },
+        {
             "key": "btn_single_player",
             "value": "Single Player"
         },

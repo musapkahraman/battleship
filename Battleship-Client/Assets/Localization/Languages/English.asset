@@ -14,6 +14,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   title: 10
   items:
+  - key: {fileID: 11400000, guid: 5f5fb7d5f1c2ad84594a8cc5da8d27c5, type: 2}
+    value: Battleship
   - key: {fileID: 11400000, guid: 4ef7ef657ba119949a80daf1071235c7, type: 2}
     value: Single Player
   - key: {fileID: 11400000, guid: 40d06b0f47dbac14494df9bfabc13877, type: 2}
@@ -159,4 +161,4 @@ MonoBehaviour:
       patterns. To help you do that, you are given the ability to drag and drop as
       many ships as you want into your opponent's grid. You can move the ships you
       put there and delete them by dragging them out.
-  keyName: popup_how_to_play
+  keyName: title_game

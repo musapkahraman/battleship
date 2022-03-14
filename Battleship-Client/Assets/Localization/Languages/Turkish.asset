@@ -14,6 +14,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   title: 37
   items:
+  - key: {fileID: 11400000, guid: 5f5fb7d5f1c2ad84594a8cc5da8d27c5, type: 2}
+    value: "AM\u0130RAL BATTI"
   - key: {fileID: 11400000, guid: 4ef7ef657ba119949a80daf1071235c7, type: 2}
     value: TEK OYUNCU
   - key: {fileID: 11400000, guid: 40d06b0f47dbac14494df9bfabc13877, type: 2}
@@ -166,4 +168,4 @@ MonoBehaviour:
       karelerine s\xFCr\xFCkleyip b\u0131rakabilirsiniz. Buraya koydu\u011Funuz gemilerin
       yerini de\u011Fi\u015Ftirebilir ve d\u0131\u015Far\u0131 s\xFCr\xFCkleyerek
       silebilirsiniz."
-  keyName: 
+  keyName: title_game
