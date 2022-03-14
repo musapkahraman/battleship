@@ -51,9 +51,9 @@ MonoBehaviour:
   - key: {fileID: 11400000, guid: 9ff8e1de03c391d4d861c5a063219d1a, type: 2}
     value: "ANA MEN\xDC"
   - key: {fileID: 11400000, guid: 340e7215d3e3eb348bc8015e1debad97, type: 2}
-    value: "T\u0130TRE\u015E\u0130M A\xC7IK"
+    value: "T\u0130TRE\u015E\u0130M\u0130 A\xC7"
   - key: {fileID: 11400000, guid: 65d965200a34a934d909cc024cd8721d, type: 2}
-    value: "T\u0130TRE\u015E\u0130M KAPALI"
+    value: "T\u0130TRE\u015E\u0130M\u0130 KAPAT"
   - key: {fileID: 11400000, guid: fc09360fd70a3a348a582ea9d894d3d3, type: 2}
     value: OYUNDAN AYRIL
   - key: {fileID: 11400000, guid: c629e22e052ceee419921e752d5901f6, type: 2}

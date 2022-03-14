@@ -37,7 +37,7 @@
             "value": "Back"
         },
         {
-            "key": "btn_fire",
+            "key": "Btn_Fire",
             "value": "Fire!"
         },
         {
@@ -74,11 +74,11 @@
         },
         {
             "key": "btn_vibration_on",
-            "value": "Vibration on"
+            "value": "Turn on vibration"
         },
         {
             "key": "btn_vibration_off",
-            "value": "Vibration off"
+            "value": "Turn off vibration"
         },
         {
             "key": "popup_leave_confirmation_header",

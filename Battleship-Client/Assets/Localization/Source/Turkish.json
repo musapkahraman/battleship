@@ -37,7 +37,7 @@
             "value": "GERİ"
         },
         {
-            "key": "btn_fire",
+            "key": "Btn_Fire",
             "value": "ATEŞ!"
         },
         {
@@ -74,11 +74,11 @@
         },
         {
             "key": "btn_vibration_on",
-            "value": "TİTREŞİM AÇIK"
+            "value": "TİTREŞİMİ AÇ"
         },
         {
             "key": "btn_vibration_off",
-            "value": "TİTREŞİM KAPALI"
+            "value": "TİTREŞİMİ KAPAT"
         },
         {
             "key": "popup_leave_confirmation_header",

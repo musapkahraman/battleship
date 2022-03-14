@@ -51,9 +51,9 @@ MonoBehaviour:
   - key: {fileID: 11400000, guid: 9ff8e1de03c391d4d861c5a063219d1a, type: 2}
     value: Main Menu
   - key: {fileID: 11400000, guid: 340e7215d3e3eb348bc8015e1debad97, type: 2}
-    value: Vibration on
+    value: Turn on vibration
   - key: {fileID: 11400000, guid: 65d965200a34a934d909cc024cd8721d, type: 2}
-    value: Vibration off
+    value: Turn off vibration
   - key: {fileID: 11400000, guid: fc09360fd70a3a348a582ea9d894d3d3, type: 2}
     value: Leave game
   - key: {fileID: 11400000, guid: c629e22e052ceee419921e752d5901f6, type: 2}
