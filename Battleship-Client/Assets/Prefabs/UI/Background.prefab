@@ -81,6 +81,7 @@ MonoBehaviour:
   m_FallbackScreenDPI: 96
   m_DefaultSpriteDPI: 96
   m_DynamicPixelsPerUnit: 1
+  m_PresetInfoIsWorld: 0
 --- !u!1 &6911123090018993126
 GameObject:
   m_ObjectHideFlags: 0
@@ -140,13 +141,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0.05660376, g: 0.34662858, b: 0.5, a: 1}
+  m_Color: {r: 0.26508543, g: 0.3175674, b: 0.3490566, a: 1}
   m_RaycastTarget: 0
+  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 0
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: 5162c4641502abc428bd6ba9c6ec79de, type: 3}
+  m_Sprite: {fileID: 21300000, guid: ee6abb683fb757d439b7eca0aa1364bf, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
