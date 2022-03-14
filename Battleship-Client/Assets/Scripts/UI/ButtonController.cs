@@ -13,14 +13,12 @@ namespace BattleshipGame.UI
         private Button _button;
         private Color _colorCache;
         private Image _buttonImage;
-        private string _textCache;
 
         private void Awake()
         {
             _button = GetComponent<Button>();
             _buttonImage = _button.GetComponent<Image>();
             _colorCache = _buttonImage.color;
-            _textCache = buttonText.text;
         }
 
         public void SetInteractable(bool state)
@@ -68,11 +66,6 @@ namespace BattleshipGame.UI
             {
                 localizedText.SetText(text);
             }
-        }
-
-        public void ResetText()
-        {
-            buttonText.text = _textCache;
         }
 
         public void ChangeColor(ColorVariable color)

@@ -14,6 +14,7 @@ namespace BattleshipGame.UI
         [SerializeField] private LanguageMenuController languageMenuController;
         [SerializeField] private ButtonController vibrationSwitchButton;
         [SerializeField] private Key vibrationOnText;
+        [SerializeField] private Key vibrationOffText;
         [SerializeField] private ButtonController languageButton;
         [SerializeField] private ButtonController optionsBackButton;
         private Canvas _canvas;
@@ -38,7 +39,7 @@ namespace BattleshipGame.UI
             });
             
 #if UNITY_ANDROID || UNITY_IOS || UNITY_EDITOR
-            if (!options.vibration) vibrationSwitchButton.ChangeText(vibrationOnText);
+            vibrationSwitchButton.ChangeText(options.vibration ? vibrationOffText : vibrationOnText);
             vibrationSwitchButton.AddListener(() =>
             {
                 if (options.vibration)
@@ -49,7 +50,7 @@ namespace BattleshipGame.UI
                 else
                 {
                     options.vibration = true;
-                    vibrationSwitchButton.ResetText();
+                    vibrationSwitchButton.ChangeText(vibrationOffText);
                 }
             });
 #else

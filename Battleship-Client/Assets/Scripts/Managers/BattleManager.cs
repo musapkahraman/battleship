@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using BattleshipGame.AI;
 using BattleshipGame.Core;
 using BattleshipGame.Network;
 using BattleshipGame.Tiling;
@@ -81,7 +82,6 @@ namespace BattleshipGame.Managers
 
             void RegisterToStateEvents()
             {
-                _state.OnChange += OnStateChanged;
                 _state.players[_player].shots.OnChange += OnPlayerShotsChanged;
                 _state.players[_enemy].ships.OnChange += OnEnemyShipsChanged;
                 _state.players[_enemy].shots.OnChange += OnEnemyShotsChanged;
@@ -103,9 +103,7 @@ namespace BattleshipGame.Managers
 
             void UnRegisterFromStateEvents()
             {
-                if (_state == null) return;
-                _state.OnChange -= OnStateChanged;
-                if (_state.players[_player] == null) return;
+                if (_state?.players[_player] == null) return;
                 _state.players[_player].shots.OnChange -= OnPlayerShotsChanged;
                 if (_state.players[_enemy] == null) return;
                 _state.players[_enemy].ships.OnChange -= OnEnemyShipsChanged;
@@ -136,9 +134,9 @@ namespace BattleshipGame.Managers
         {
             int cellIndex = CoordinateToCellIndex(coordinate, rules.areaSize);
             foreach (var keyValuePair in from keyValuePair in _shots
-                from cell in keyValuePair.Value
-                where cell == cellIndex
-                select keyValuePair)
+                     from cell in keyValuePair.Value
+                     where cell == cellIndex
+                     select keyValuePair)
             {
                 HighlightTurn(keyValuePair.Key);
                 return;
@@ -157,16 +155,20 @@ namespace BattleshipGame.Managers
             switch (phase)
             {
                 case RoomPhase.Battle:
+                    Debug.Log("RoomPhase: Battle");
                     SwitchTurns();
                     break;
                 case RoomPhase.Result:
+                    Debug.Log("RoomPhase: Result");
                     ShowResult();
                     break;
                 case RoomPhase.Waiting:
+                    Debug.Log("RoomPhase: Waiting");
                     if (_leavePopUpIsOn) break;
                     leaveMessageDialog.Show(GoBackToLobby);
                     break;
                 case RoomPhase.Leave:
+                    Debug.Log("RoomPhase: Leave");
                     _leavePopUpIsOn = true;
                     leaveNotRematchMessageDialog.Show(GoBackToLobby);
                     break;
@@ -237,8 +239,11 @@ namespace BattleshipGame.Managers
                 statusData.State = PlayerTurn;
                 opponentMap.FlashGrids();
 
-#if UNITY_ANDROID || UNITY_IOS
-                if (options.vibration) Handheld.Vibrate();
+#if UNITY_ANDROID || UNITY_IOS || UNITY_EDITOR
+                if (options.vibration && _client is NetworkClient _)
+                {
+                    Handheld.Vibrate();
+                }
 #endif
             }
 
@@ -246,12 +251,6 @@ namespace BattleshipGame.Managers
             {
                 statusData.State = OpponentTurn;
             }
-        }
-
-        private void OnStateChanged(List<DataChange> changes)
-        {
-            foreach (var _ in changes.Where(change => change.Field == RoomState.PlayerTurn))
-                SwitchTurns();
         }
 
         private void OnPlayerShotsChanged(int turn, int cellIndex)
@@ -274,14 +273,14 @@ namespace BattleshipGame.Managers
                 if (_shots.ContainsKey(turn))
                     _shots[turn].Add(cellIndex);
                 else
-                    _shots.Add(turn, new List<int> {cellIndex});
+                    _shots.Add(turn, new List<int> { cellIndex });
 
                 return;
             }
 
             userMap.SetMarker(cellIndex, !(from placement in placementMap.GetPlacements()
                 from part in placement.ship.partCoordinates
-                select placement.Coordinate + (Vector3Int) part
+                select placement.Coordinate + (Vector3Int)part
                 into partCoordinate
                 let shot = CellIndexToCoordinate(cellIndex, rules.areaSize.x)
                 where partCoordinate.Equals(shot)
