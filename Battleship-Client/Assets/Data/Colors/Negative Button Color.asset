@@ -12,4 +12,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 35938597577346f4991317cd8b4af85a, type: 3}
   m_Name: Negative Button Color
   m_EditorClassIdentifier: 
-  initialValue: {r: 0.6698113, g: 0.23380207, b: 0.23380207, a: 1}
+  initialValue: {r: 0.7264151, g: 0.18845676, b: 0.18845676, a: 1}

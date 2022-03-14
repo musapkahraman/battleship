@@ -12,4 +12,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 35938597577346f4991317cd8b4af85a, type: 3}
   m_Name: Positive Button Color
   m_EditorClassIdentifier: 
-  initialValue: {r: 0.22745098, g: 0.6901961, b: 0.22745098, a: 1}
+  initialValue: {r: 0.11311853, g: 0.5849056, b: 0.11311853, a: 1}
