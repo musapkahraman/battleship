@@ -259,6 +259,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_MoveRepeatDelay: 0.5
   m_MoveRepeatRate: 0.1
+  m_XRTrackingOrigin: {fileID: 0}
   m_ActionsAsset: {fileID: -944628639613478452, guid: ca9f5fa95ffab41fb9a615ab714db018,
     type: 3}
   m_PointAction: {fileID: 1054132383583890850, guid: ca9f5fa95ffab41fb9a615ab714db018,
@@ -562,7 +563,7 @@ MonoBehaviour:
   m_HandleRect: {fileID: 1229521230}
   m_Direction: 2
   m_Value: 1
-  m_Size: 0.44811237
+  m_Size: 0.4380817
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:
@@ -1322,8 +1323,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 83.405, y: 0}
-  m_SizeDelta: {x: 126.81, y: 0}
+  m_AnchoredPosition: {x: 162.385, y: 0}
+  m_SizeDelta: {x: 284.77, y: 0}
   m_Pivot: {x: 0.5, y: 1}
 --- !u!114 &535866609
 MonoBehaviour:
@@ -1359,7 +1360,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Tahmin
+  m_text: The prediction
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 927fc2404e97ed8489badbbd929d9d42, type: 2}
   m_sharedMaterial: {fileID: -7347495373835640494, guid: 927fc2404e97ed8489badbbd929d9d42,
@@ -1489,8 +1490,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 159.57, y: 0}
-  m_SizeDelta: {x: 279.14, y: 0}
+  m_AnchoredPosition: {x: 141.86499, y: 0}
+  m_SizeDelta: {x: 243.73, y: 0}
   m_Pivot: {x: 0.5, y: 1}
 --- !u!114 &612094241
 MonoBehaviour:
@@ -1526,7 +1527,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Geri bildirim
+  m_text: The feedback
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 927fc2404e97ed8489badbbd929d9d42, type: 2}
   m_sharedMaterial: {fileID: -7347495373835640494, guid: 927fc2404e97ed8489badbbd929d9d42,
@@ -1656,8 +1657,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 273.46924, y: 0}
-  m_SizeDelta: {x: 506.93848, y: 0}
+  m_AnchoredPosition: {x: 273.37823, y: 0}
+  m_SizeDelta: {x: 506.75647, y: 0}
   m_Pivot: {x: 0.5, y: 1}
 --- !u!114 &617791991
 MonoBehaviour:
@@ -1693,14 +1694,12 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: "At\u0131\u015Flar\u0131n\u0131z rakibinizin gemilerini \u0131skalad\u0131ysa
-    herhangi bir geri bildirim almazs\u0131n\u0131z ve rakibinizin at\u0131\u015F
-    yapmas\u0131n\u0131 beklersiniz.  At\u0131\u015Flar\u0131n\u0131z bir veya daha
-    fazla gemiye isabet ederse rakibinizin karelerinin sa\u011F\u0131ndaki gemilerin
-    baz\u0131 k\u0131s\u0131mlar\u0131n\u0131n k\u0131rm\u0131z\u0131ya d\xF6nd\xFC\u011F\xFCn\xFC
-    g\xF6receksiniz. Bu gemiler, rakibinizin hasar durumunu g\xF6sterir. K\u0131rm\u0131z\u0131
-    k\u0131s\u0131mlar vuru\u015Flar\u0131n tam yerlerini g\xF6stermeyebilir ve sadece
-    gemilerin ka\xE7 par\xE7as\u0131n\u0131n vuruldu\u011Funu g\xF6sterir."
+  m_text: If your shots missed your opponent's ships, you will not get any feedback
+    and wait for your opponent to make their shots. If your shots hit one or more
+    ships, you will see that some parts of the ships inside the grid to the right
+    of your opponent's grid turn red. These ships are damage indicators for your
+    opponent's fleet. The red parts do not necessarily show the exact location of
+    your hit, but only show how many parts of a ship are left.
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 927fc2404e97ed8489badbbd929d9d42, type: 2}
   m_sharedMaterial: {fileID: -7347495373835640494, guid: 927fc2404e97ed8489badbbd929d9d42,
@@ -2023,8 +2022,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 159.57, y: 0}
-  m_SizeDelta: {x: 279.14, y: 0}
+  m_AnchoredPosition: {x: 131.60501, y: 0}
+  m_SizeDelta: {x: 223.21, y: 0}
   m_Pivot: {x: 0.5, y: 1}
 --- !u!114 &632118912
 MonoBehaviour:
@@ -2062,7 +2061,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: "Nas\u0131l oynan\u0131r"
+  m_text: How to play
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 927fc2404e97ed8489badbbd929d9d42, type: 2}
   m_sharedMaterial: {fileID: -7347495373835640494, guid: 927fc2404e97ed8489badbbd929d9d42,
@@ -2372,8 +2371,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 273.46924, y: 0}
-  m_SizeDelta: {x: 506.93848, y: 0}
+  m_AnchoredPosition: {x: 273.37823, y: 0}
+  m_SizeDelta: {x: 506.75647, y: 0}
   m_Pivot: {x: 0.5, y: 1}
 --- !u!114 &1076921951
 MonoBehaviour:
@@ -2409,11 +2408,10 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: "Sa\u011Fdaki kareler rakibinizin gemilerinin gizlendi\u011Fi yerlerdir.
-    S\u0131ra size geldi\u011Finde hedeflerinizi se\xE7mek i\xE7in o karelerden \xFC\xE7
-    tanesine dokunun. Se\xE7ili bir hedefi silmek i\xE7in o hedefin \xFCzerine dokunabilirsiniz.
-    Se\xE7ti\u011Finiz hedeflerden emin olunca karelerin alt\u0131ndaki \"Ate\u015F\"
-    d\xFC\u011Fmesine bas\u0131n."
+  m_text: The grid on the right is where your opponent's ships are hiding. When it's
+    your turn, tap on three different cells in that grid to select your targets.
+    You can tap on a target to delete it. Once you are satisfied with your selected
+    targets you must press the "Fire" button below the grid.
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 927fc2404e97ed8489badbbd929d9d42, type: 2}
   m_sharedMaterial: {fileID: -7347495373835640494, guid: 927fc2404e97ed8489badbbd929d9d42,
@@ -2851,7 +2849,7 @@ Transform:
   - {fileID: 507111990}
   - {fileID: 627081489}
   m_Father: {fileID: 0}
-  m_RootOrder: 7
+  m_RootOrder: 6
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &1093841618
 MonoBehaviour:
@@ -3382,7 +3380,7 @@ RectTransform:
   - {fileID: 1184911183}
   - {fileID: 176705861}
   m_Father: {fileID: 0}
-  m_RootOrder: 8
+  m_RootOrder: 7
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
@@ -3560,7 +3558,7 @@ RectTransform:
   - {fileID: 2126457155}
   - {fileID: 1557989805}
   m_Father: {fileID: 0}
-  m_RootOrder: 9
+  m_RootOrder: 8
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
@@ -3577,88 +3575,6 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: f11f3ff294b3d5b439208a7ed6fbf68a, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
---- !u!1001 &1368631453
-PrefabInstance:
-  m_ObjectHideFlags: 0
-  serializedVersion: 2
-  m_Modification:
-    m_TransformParent: {fileID: 0}
-    m_Modifications:
-    - target: {fileID: 831575416949796192, guid: 803a9001cfc2f3844ac9d9076fd8a967,
-        type: 3}
-      propertyPath: m_LocalScale.x
-      value: 44
-      objectReference: {fileID: 0}
-    - target: {fileID: 831575416949796192, guid: 803a9001cfc2f3844ac9d9076fd8a967,
-        type: 3}
-      propertyPath: m_LocalScale.y
-      value: 20
-      objectReference: {fileID: 0}
-    - target: {fileID: 831575416949796194, guid: 803a9001cfc2f3844ac9d9076fd8a967,
-        type: 3}
-      propertyPath: m_IsActive
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 831575416949796195, guid: 803a9001cfc2f3844ac9d9076fd8a967,
-        type: 3}
-      propertyPath: m_Enabled
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 831575416949796195, guid: 803a9001cfc2f3844ac9d9076fd8a967,
-        type: 3}
-      propertyPath: m_SortingLayer
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 831575418199839450, guid: 803a9001cfc2f3844ac9d9076fd8a967,
-        type: 3}
-      propertyPath: m_SortingLayer
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 5563618889755920950, guid: 803a9001cfc2f3844ac9d9076fd8a967,
-        type: 3}
-      propertyPath: m_RootOrder
-      value: 3
-      objectReference: {fileID: 0}
-    - target: {fileID: 5563618889755920950, guid: 803a9001cfc2f3844ac9d9076fd8a967,
-        type: 3}
-      propertyPath: m_LocalEulerAnglesHint.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 5563618889755920950, guid: 803a9001cfc2f3844ac9d9076fd8a967,
-        type: 3}
-      propertyPath: m_LocalEulerAnglesHint.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 5563618889755920950, guid: 803a9001cfc2f3844ac9d9076fd8a967,
-        type: 3}
-      propertyPath: m_LocalEulerAnglesHint.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 6020962482597229466, guid: 803a9001cfc2f3844ac9d9076fd8a967,
-        type: 3}
-      propertyPath: m_Name
-      value: Water
-      objectReference: {fileID: 0}
-    m_RemovedComponents: []
-  m_SourcePrefab: {fileID: 100100000, guid: 803a9001cfc2f3844ac9d9076fd8a967, type: 3}
---- !u!1 &1368631454 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 831575418199839453, guid: 803a9001cfc2f3844ac9d9076fd8a967,
-    type: 3}
-  m_PrefabInstance: {fileID: 1368631453}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &1368631455
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1368631454}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f7c5384b6c9c40c41858f8ea1a475dec, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!850595691 &1373307181
@@ -3799,7 +3715,7 @@ RectTransform:
   - {fileID: 1030016940}
   - {fileID: 451818045}
   m_Father: {fileID: 0}
-  m_RootOrder: 4
+  m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
@@ -4276,7 +4192,7 @@ PrefabInstance:
     - target: {fileID: 445893296377875389, guid: 88ddd787738efa54ca51cccc955a634a,
         type: 3}
       propertyPath: m_RootOrder
-      value: 6
+      value: 5
       objectReference: {fileID: 0}
     - target: {fileID: 445893296377875389, guid: 88ddd787738efa54ca51cccc955a634a,
         type: 3}
@@ -4475,7 +4391,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 10
+  m_RootOrder: 9
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &1832216561
 MonoBehaviour:
@@ -4499,8 +4415,6 @@ MonoBehaviour:
   opponentStatusMapTurnHighlighter: {fileID: 1093841622}
   fireButton: {fileID: 1547971480}
   leaveButton: {fileID: 1184911184}
-  connectionLostMessageDialog: {fileID: 11400000, guid: df33cafff59f8a14e85d59531c7e765f,
-    type: 2}
   leaveMessageDialog: {fileID: 11400000, guid: 83928ac01d3b95b43ba05cc06d49298d, type: 2}
   leaveNotRematchMessageDialog: {fileID: 11400000, guid: 3386988c78260464f9bc8713e712d86b,
     type: 2}
@@ -4545,8 +4459,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 273.46924, y: 0}
-  m_SizeDelta: {x: 506.93848, y: 0}
+  m_AnchoredPosition: {x: 273.37823, y: 0}
+  m_SizeDelta: {x: 506.75647, y: 0}
   m_Pivot: {x: 0.5, y: 1}
 --- !u!114 &1832477927
 MonoBehaviour:
@@ -4582,13 +4496,12 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: "Hangi at\u0131\u015F\u0131n isabetli oldu\u011Funu ve hangisinin \u0131skalad\u0131\u011F\u0131n\u0131
-    tahmin etmeniz gerekiyor. \xD6nceden at\u0131\u015F yapt\u0131\u011F\u0131n\u0131z
-    bir kareye dokunarak o elde i\u015Faretledi\u011Finiz hedef grubu vurgulan\u0131r.
-    \u0130leri geri bakarak gemilerin desenlerini g\xF6rmeye \xE7al\u0131\u015F\u0131n.
-    Bunu kolayla\u015Ft\u0131rmak i\xE7in istedi\u011Finiz kadar gemiyi rakibinizin
-    karelerine s\xFCr\xFCkleyip b\u0131rakabilirsiniz. Buraya koydu\u011Funuz gemilerin
-    yerini de\u011Fi\u015Ftirebilir ve d\u0131\u015Far\u0131 s\xFCr\xFCkleyerek silebilirsiniz."
+  m_text: You will have to guess which shot made the hit and which shot missed. You
+    can tap on a previous target cell and this will highlight the whole group of
+    targets you marked in that turn. Going back and forth, you will see the patterns.
+    To help you do that, you are given the ability to drag and drop as many ships
+    as you want into your opponent's grid. You can move the ships you put there and
+    delete them by dragging them out.
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 927fc2404e97ed8489badbbd929d9d42, type: 2}
   m_sharedMaterial: {fileID: -7347495373835640494, guid: 927fc2404e97ed8489badbbd929d9d42,
@@ -5109,7 +5022,7 @@ PrefabInstance:
     - target: {fileID: 445893296377875389, guid: 88ddd787738efa54ca51cccc955a634a,
         type: 3}
       propertyPath: m_RootOrder
-      value: 5
+      value: 4
       objectReference: {fileID: 0}
     - target: {fileID: 445893296377875389, guid: 88ddd787738efa54ca51cccc955a634a,
         type: 3}
