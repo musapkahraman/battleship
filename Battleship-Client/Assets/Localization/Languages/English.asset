@@ -139,7 +139,7 @@ MonoBehaviour:
   - key: {fileID: 11400000, guid: e752df6245066c44ea5bc10d0e1a9373, type: 2}
     value: How to play
   - key: {fileID: 11400000, guid: 55c616549200878418ebabc403f7b2b4, type: 2}
-    value: The grid on the right is where your opponent's ships are hiding. When
+    value: The grid at the center is where your opponent's ships are hiding. When
       it's your turn, tap on three different cells in that grid to select your targets.
       You can tap on a target to delete it. Once you are satisfied with your selected
       targets you must press the "Fire" button below the grid.
@@ -161,4 +161,6 @@ MonoBehaviour:
       patterns. To help you do that, you are given the ability to drag and drop as
       many ships as you want into your opponent's grid. You can move the ships you
       put there and delete them by dragging them out.
-  keyName: title_game
+  - key: {fileID: 11400000, guid: c6bbeceee7344754ba5d40730fb68262, type: 2}
+    value: Language Options
+  keyName: title_lang_options

@@ -250,7 +250,7 @@
         },
         {
             "key": "text_desc_how_to_play",
-            "value": "Sağdaki kareler rakibinizin gemilerinin gizlendiği yerlerdir. Sıra size geldiğinde hedeflerinizi seçmek için o karelerden üç tanesine dokunun. Seçili bir hedefi silmek için o hedefin üzerine dokunabilirsiniz. Seçtiğiniz hedeflerden emin olunca karelerin altındaki \"Ateş\" düğmesine basın."
+            "value": "Ortadaki kareler rakibinizin gemilerinin gizlendiği yerlerdir. Sıra size geldiğinde hedeflerinizi seçmek için o karelerden üç tanesine dokunun. Seçili bir hedefi silmek için o hedefin üzerine dokunabilirsiniz. Seçtiğiniz hedeflerden emin olunca karelerin altındaki \"Ateş\" düğmesine basın."
         },
         {
             "key": "text_feedback",
@@ -267,6 +267,10 @@
         {
             "key": "text_desc_prediction",
             "value": "Hangi atışın isabetli olduğunu ve hangisinin ıskaladığını tahmin etmeniz gerekiyor. Önceden atış yaptığınız bir kareye dokunarak o elde işaretlediğiniz hedef grubu vurgulanır. İleri geri bakarak gemilerin desenlerini görmeye çalışın. Bunu kolaylaştırmak için istediğiniz kadar gemiyi rakibinizin karelerine sürükleyip bırakabilirsiniz. Buraya koyduğunuz gemilerin yerini değiştirebilir ve dışarı sürükleyerek silebilirsiniz."
+        },
+        {
+            "key": "title_lang_options",
+            "value": "DİL SEÇENEKLERİ"
         }
     ],
     "language": 37

@@ -250,7 +250,7 @@
         },
         {
             "key": "text_desc_how_to_play",
-            "value": "The grid on the right is where your opponent's ships are hiding. When it's your turn, tap on three different cells in that grid to select your targets. You can tap on a target to delete it. Once you are satisfied with your selected targets you must press the \"Fire\" button below the grid."
+            "value": "The grid at the center is where your opponent's ships are hiding. When it's your turn, tap on three different cells in that grid to select your targets. You can tap on a target to delete it. Once you are satisfied with your selected targets you must press the \"Fire\" button below the grid."
         },
         {
             "key": "text_feedback",
@@ -267,6 +267,10 @@
         {
             "key": "text_desc_prediction",
             "value": "You will have to guess which shot made the hit and which shot missed. You can tap on a previous target cell and this will highlight the whole group of targets you marked in that turn. Going back and forth, you will see the patterns. To help you do that, you are given the ability to drag and drop as many ships as you want into your opponent's grid. You can move the ships you put there and delete them by dragging them out."
+        },
+        {
+            "key": "title_lang_options",
+            "value": "Language Options"
         }
     ],
     "language": 10

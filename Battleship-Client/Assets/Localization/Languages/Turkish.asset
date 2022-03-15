@@ -140,9 +140,9 @@ MonoBehaviour:
   - key: {fileID: 11400000, guid: e752df6245066c44ea5bc10d0e1a9373, type: 2}
     value: "Nas\u0131l oynan\u0131r"
   - key: {fileID: 11400000, guid: 55c616549200878418ebabc403f7b2b4, type: 2}
-    value: "Sa\u011Fdaki kareler rakibinizin gemilerinin gizlendi\u011Fi yerlerdir.
-      S\u0131ra size geldi\u011Finde hedeflerinizi se\xE7mek i\xE7in o karelerden
-      \xFC\xE7 tanesine dokunun. Se\xE7ili bir hedefi silmek i\xE7in o hedefin \xFCzerine
+    value: "Ortadaki kareler rakibinizin gemilerinin gizlendi\u011Fi yerlerdir. S\u0131ra
+      size geldi\u011Finde hedeflerinizi se\xE7mek i\xE7in o karelerden \xFC\xE7
+      tanesine dokunun. Se\xE7ili bir hedefi silmek i\xE7in o hedefin \xFCzerine
       dokunabilirsiniz. Se\xE7ti\u011Finiz hedeflerden emin olunca karelerin alt\u0131ndaki
       \"Ate\u015F\" d\xFC\u011Fmesine bas\u0131n."
   - key: {fileID: 11400000, guid: 754bea3c4146bb24ca794c3153336ec7, type: 2}
@@ -168,4 +168,6 @@ MonoBehaviour:
       karelerine s\xFCr\xFCkleyip b\u0131rakabilirsiniz. Buraya koydu\u011Funuz gemilerin
       yerini de\u011Fi\u015Ftirebilir ve d\u0131\u015Far\u0131 s\xFCr\xFCkleyerek
       silebilirsiniz."
-  keyName: title_game
+  - key: {fileID: 11400000, guid: c6bbeceee7344754ba5d40730fb68262, type: 2}
+    value: "D\u0130L SE\xC7ENEKLER\u0130"
+  keyName: title_lang_options
