@@ -250,7 +250,7 @@
         },
         {
             "key": "text_desc_how_to_play",
-            "value": "Ortadaki kareler rakibinizin gemilerinin gizlendiği yerlerdir. Sıra size geldiğinde hedeflerinizi seçmek için o karelerden üç tanesine dokunun. Seçili bir hedefi silmek için o hedefin üzerine dokunabilirsiniz. Seçtiğiniz hedeflerden emin olunca karelerin altındaki \"Ateş\" düğmesine basın."
+            "value": "Ortadaki kareler, rakibinizin gemilerinin saklandığı yerdir. Sıra size geldiğinde, hedeflerinizi seçmek için o karelerde üç farklı hücreye dokunun. Seçtiğiniz hedefi silmek için o hücreye tekrar dokunun. Seçtiğiniz hedeflerden memnun kaldığınızda, karelerin altındaki ateş düğmesine basmalısınız."
         },
         {
             "key": "text_feedback",
@@ -258,7 +258,7 @@
         },
         {
             "key": "text_desc_feedback",
-            "value": "Atışlarınız rakibinizin gemilerini ıskaladıysa herhangi bir geri bildirim almazsınız ve rakibinizin atış yapmasını beklersiniz.  Atışlarınız bir veya daha fazla gemiye isabet ederse rakibinizin karelerinin sağındaki gemilerin bazı kısımlarının kırmızıya döndüğünü göreceksiniz. Bu gemiler, rakibinizin hasar durumunu gösterir. Kırmızı kısımlar vuruşların tam yerlerini göstermeyebilir ve sadece gemilerin kaç parçasının vurulduğunu gösterir."
+            "value": "Atışlarınız rakibinizin gemilerini ıskalarsa herhangi bir geri bildirim almazsınız ve rakibinizin atış yapmasını beklersiniz. Atışlarınız bir veya daha fazla gemiyi vurursa, soldaki karelerde bazı gemilerin kırmızıya döndüğünü görürsünüz. Bu gemilerin bulunduğu bölüm, rakibinizin filosu için bir hasar göstergesidir. Kırmızı bölümler, isabetinizin tam yerini göstermez, sadece bir geminin kaç parçasının vurulduğunu gösterir."
         },
         {
             "key": "text_prediction",
@@ -266,7 +266,7 @@
         },
         {
             "key": "text_desc_prediction",
-            "value": "Hangi atışın isabetli olduğunu ve hangisinin ıskaladığını tahmin etmeniz gerekiyor. Önceden atış yaptığınız bir kareye dokunarak o elde işaretlediğiniz hedef grubu vurgulanır. İleri geri bakarak gemilerin desenlerini görmeye çalışın. Bunu kolaylaştırmak için istediğiniz kadar gemiyi rakibinizin karelerine sürükleyip bırakabilirsiniz. Buraya koyduğunuz gemilerin yerini değiştirebilir ve dışarı sürükleyerek silebilirsiniz."
+            "value": "Hangi atışın isabetli olduğunu ve hangisinin ıskaladığını tahmin etmeniz gerekiyor. Önceden atış yaptığınız bir kareye dokunursanız o elde işaretlediğiniz hedef grubu vurgulanır. İleri geri bakarak gemilerin desenlerini görmeye çalışın. Bunu kolaylaştırmak için istediğiniz kadar gemiyi sol taraftan rakibinizin karelerine sürükleyip bırakabilirsiniz. Buraya koyduğunuz gemilerin yerini değiştirebilir ve dışarı sürükleyerek silebilirsiniz."
         },
         {
             "key": "title_lang_options",
