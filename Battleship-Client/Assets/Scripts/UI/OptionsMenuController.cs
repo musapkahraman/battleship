@@ -51,6 +51,7 @@ namespace BattleshipGame.UI
                 {
                     options.vibration = true;
                     vibrationSwitchButton.ChangeText(vibrationOffText);
+                    Handheld.Vibrate();
                 }
             });
 #else
